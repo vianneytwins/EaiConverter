@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<pd:ProcessDefinition 
+xmlns:pd="http://xmlns.tibco.com/bw/process/2003" 
+xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+xmlns:pfx="http://www.w3.org/2001/XMLSchema1"
+xmlns:pfx2="http://www.w3.org/2001/XMLSchema2"
+xmlns:pfx3="http://www.w3.org/2001/XMLSchema3"
+xmlns:pfx4="http://www.w3.org/2001/XMLSchema4"
+xmlns:pfx21="http://www.w3.org/2001/XMLSchema5"
+xmlns:tib="http://www.w3.org/2001/XMLSchema6"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema5"
+xmlns:xsl="http://www.w3.org/2001/XMLSchema5" 
+xmlns:ns="http://www.w3.org/2001/XMLSchema5"
+xmlns:ns1="http://www.w3.org/2001/XMLSchema5"
+>
+<pd:name>Process/DAI/PNO/Mapping/Common/PrMap.RM3D-to-PNO.Equity-to-Equity.process</pd:name>
+<pd:startName>Start</pd:startName>
+<pd:startType>
+	<xsd:element name="group">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="xmlstring" type="xsd:string" />
+				<xsd:element name="adminID" type="xsd:string" />
+				<xsd:element name="param" minOccurs="0" maxOccurs="unbounded">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="key" type="xsd:string" />
+							<xsd:element name="value" type="xsd:string" />	
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</pd:startType>
+<pd:endName>End</pd:endName>
+<pd:endType>
+	<xsd:element name="result">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="xmlstring" type="xsd:string" />
+				<xsd:element name="ntmServiceSubject" type="xsd:string" />
+				<xsd:element name="SubTypeInfos" minOccurs="0">
+					<xsd:complexType>
+						<xsd:sequence>
+							<xsd:element name="IssueId" type="xsd:string" />
+							<xsd:element name="IdBbUnique" type="xsd:string" />	
+						</xsd:sequence>
+					</xsd:complexType>
+				</xsd:element>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</pd:endType>
+<pd:processVariables>
+	<var>
+		<xsd:element name="group">
+			<xsd:complexType>
+				<xsd:sequence>
+					<xsd:element name="UndlCcy" type="xsd:string" />
+					<xsd:element name="AdminPrice" type="xsd:double" minOccurs="0"/>
+					<xsd:element name="Ccy" type="xsd:string" minOccurs="0"/>
+					<xsd:element name="isFundShare" type="xsd:int" minOccurs="0"/>
+					<xsd:element name="IssueID" type="xsd:string" minOccurs="0"/>	
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:element>
+	</var>
+</pd:processVariables>
+<pd:activity name = "Assign AdminPrice">
+	<pd:type>com.tibco.pe.core.AssignActivity</pd:type>
+	<pd:resourceType>ae.activities.assignActivity</pd:resourceType>
+	<pd:x>804</pd:x>
+	<pd:y>834</pd:y>
+	<config>
+		<variableName>var</variableName>
+	</config>
+	<pd:inputBindings>
+		<group>
+			<UndlCcy>
+				<xsl:value-of select="$var/group/UndlCcy"/>
+			</UndlCcy>
+			<xsl:choose>
+				<xsl:when test="$Parse-Equity/EquityRecord/PositionType = 'equityVarianceSwap'">
+					<AdminPrice>
+						<xsl:value-of select="number($Parse-Equity/EquityRecord/EquityPrice) div 100"/>
+					</AdminPrice>
+				</xsl:when>
+				<xsl:when test="tib:trim($var/group/UndlCcy) != tib:trim($var/group/Ccy)">
+					<AdminPrice>
+						<xsl:value-of select="number($Parse-Equity/EquityRecord/CustomBucketList/item [Name = 'Market Price']/value) div number ($GetUndlEquityDetails/resultSet/Record[1]/PriceFactor) "/>
+					</AdminPrice>
+				</xsl:when>
+				<xsl:otherwise>
+					<AdminPrice>
+						<xsl:value-of select="number($Parse-Equity/EquityRecord/CustomBucketList/item [Name = 'Market Price']/value)"/>
+					</AdminPrice>
+				</xsl:otherwise>
+			</xsl:choose>
+			<xsl:if test="$var/group/Ccy">
+				<Ccy>
+					<xsl:value-of select="$var/group/Ccy"/>
+				</Ccy>
+			</xsl:if>
+			<xsl:if test="$var/group/IssueID">
+				<IssueID>
+					<xsl:value-of select="$var/group/IssueID"/>
+				</IssueID>
+			</xsl:if>
+		</group>
+	</pd:inputBindings>
+</pd:activity>	
+<pd:activity name="GetUndlCurrency" xmlns:pd="http://xmlns.tibco.com/bw/process/2003">
+<pd:type>com.tibco.plugin.jdbc.JDBCQueryActivity</pd:type>
+<config>
+<timeout>10</timeout>
+<commit>false</commit>
+<maxRows>100</maxRows>
+<emptyStrAsNil>false</emptyStrAsNil>
+<jdbcSharedConfig>/Configuration/DAI/PNO/JDBC/JDBCIntegration.sharedjdbc</jdbcSharedConfig>
+<statement>select CRNCY from T_EQUITY_PNO where ID_BB_UNIQUE= ?</statement>
+<Prepared_Param_DataType>
+	<parameter>
+		<parameterName>IdBbUnique</parameterName>
+		<dataType>VARCHAR</dataType>
+	</parameter>
+</Prepared_Param_DataType>
+<QueryOutputCachedSchemaColumns>CRNCY</QueryOutputCachedSchemaColumns>
+<QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
+<QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
+</config>
+</pd:activity>
+<pd:transition>
+	<pd:from>Start</pd:from>
+	<pd:to>Assign AdminPrice</pd:to>
+	<pd:conditionType>always</pd:conditionType>
+</pd:transition>
+<pd:transition>
+	<pd:from>Assign AdminPrice</pd:from>
+	<pd:to>GetUndlCurrency</pd:to>
+	<pd:conditionType>always</pd:conditionType>
+</pd:transition>
+<pd:transition>
+	<pd:from>GetUndlCurrency</pd:from>
+	<pd:to>End</pd:to>
+	<pd:conditionType>always</pd:conditionType>
+</pd:transition>
+</pd:ProcessDefinition>

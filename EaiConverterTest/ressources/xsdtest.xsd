@@ -1,0 +1,18 @@
+﻿
+		<xsd:element name="group" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+			<xsd:complexType>
+				<xsd:sequence>
+					<xsd:element name="xmlstring" type="xsd:string" />
+					<xsd:element name="adminID" type="xsd:string" />
+					<xsd:element name="param" minOccurs="0" maxOccurs="unbounded">
+						<xsd:complexType>
+							<xsd:sequence>
+								<xsd:element name="key" type="xsd:string" />
+								<xsd:element name="value" type="xsd:string" />	
+							</xsd:sequence>
+						</xsd:complexType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:complexType>
+		</xsd:element>
+
