@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{C3889BF9-C18D-4297-978A-B1FCB418DF0E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>EaiConverterTest</RootNamespace>
+    <AssemblyName>EaiConverterTest</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\EaiConverter\EaiConverter.csproj">
+      <Project>{9D31AE9D-5A18-4911-BBCF-2698626FA8A4}</Project>
+      <Name>EaiConverter</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\NUnit\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="pnunit.framework">
+      <HintPath>..\..\NUnit\pnunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Test\JdbcQueryActivityParserTest.cs" />
+    <Compile Include="Test\TibcoBWProcessLinqParserTest.cs" />
+    <Compile Include="Test\TibcoBWProcessTest.cs" />
+    <Compile Include="Test\VariableHelperTest.cs" />
+    <Compile Include="Test\XElementParserUtilsTest.cs" />
+    <Compile Include="Test\XsdParserTest.cs" />
+    <Compile Include="ressources\TestXsd.cs" />
+    <Compile Include="Test\JdbcQueryActivityBuilderTest.cs" />
+    <Compile Include="Test\CoreProcessBuilderTest.cs" />
+    <Compile Include="Test\JdbcCallActivityParserTest.cs" />
+    <Compile Include="Test\DataAccessBuilderTest.cs" />
+    <Compile Include="Test\TransitionUtilsTest.cs" />
+    <Compile Include="Test\TibcoProcessClassesBuilderTest.cs" />
+    <Compile Include="Test\DataAccessServiceBuilderTest.cs" />
+    <Compile Include="Test\XslBuilderTest.cs" />
+    <Compile Include="Test\DataAccessCommonBuilderTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\Account.xsd" />
+    <None Include="ressources\BasicSample.xml" />
+    <None Include="ressources\xsdtest.xsd" />
+    <None Include="ressources\xsdtest2.xsd" />
+  </ItemGroup>
+</Project>

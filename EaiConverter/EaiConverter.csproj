@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{9D31AE9D-5A18-4911-BBCF-2698626FA8A4}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>EaiConverter</RootNamespace>
+    <AssemblyName>EaiConverter</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>true</Externalconsole>
+    <PlatformTarget>x86</PlatformTarget>
+    <Commandlineparameters>../../ressources G_Csharp</Commandlineparameters>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>true</Externalconsole>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Model\Transition.cs" />
+    <Compile Include="Model\ConditionType.cs" />
+    <Compile Include="Model\Activity.cs" />
+    <Compile Include="Model\TibcoBWProcess.cs" />
+    <Compile Include="utils\enumType.cs" />
+    <Compile Include="utils\ClassParamater.cs" />
+    <Compile Include="CodeGenerator\XsdClassGenerator.cs" />
+    <Compile Include="Model\JdbcQueryActivity.cs" />
+    <Compile Include="Parser\TibcoBWProcessLinqParser.cs" />
+    <Compile Include="Parser\XsdParser.cs" />
+    <Compile Include="Parser\JdbcQueryActivityParser.cs" />
+    <Compile Include="Parser\Utils\XElementParserUtils.cs" />
+    <Compile Include="Mapper\InterfaceExtractorFromClass.cs" />
+    <Compile Include="Mapper\TibcoProcessClassesBuilder.cs" />
+    <Compile Include="Mapper\JdbcQueryActivityBuilder.cs" />
+    <Compile Include="CodeGenerator\ISourceCodeGeneratorService.cs" />
+    <Compile Include="Processor\TibcoFileProcessorService.cs" />
+    <Compile Include="Processor\ITibcoFileProcessorService.cs" />
+    <Compile Include="Processor\TibcoBWDirectoryProcessorService.cs" />
+    <Compile Include="CodeGenerator\CsharpSimulationSourceCodeGeneratorService.cs" />
+    <Compile Include="CodeGenerator\CsharpSourceCodeGeneratorService.cs" />
+    <Compile Include="Processor\ITibcoBWDirectoryProcessorService.cs" />
+    <Compile Include="Mapper\DataAccessServiceBuilder.cs" />
+    <Compile Include="Mapper\DataAccessBuilder.cs" />
+    <Compile Include="Mapper\CoreProcessBuilder.cs" />
+    <Compile Include="Mapper\DatabaseAttributeBuilder.cs" />
+    <Compile Include="Mapper\LoggerInterfaceBuilder.cs" />
+    <Compile Include="Processor\ConfigurationApp.cs" />
+    <Compile Include="Mapper\DataAccessInterfacesCommonBuilder.cs" />
+    <Compile Include="Mapper\Utils\JdbcQueryBuilderUtils.cs" />
+    <Compile Include="Mapper\Utils\TransitionUtils.cs" />
+    <Compile Include="Mapper\Utils\TargetAppNameSpaceService.cs" />
+    <Compile Include="CodeGenerator\Utils\Tab.cs" />
+    <Compile Include="CodeGenerator\Utils\VariableHelper.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="ressources\" />
+    <Folder Include="Model\" />
+    <Folder Include="utils\" />
+    <Folder Include="CodeGenerator\" />
+    <Folder Include="Parser\" />
+    <Folder Include="Parser\Utils\" />
+    <Folder Include="Mapper\" />
+    <Folder Include="Processor\" />
+    <Folder Include="Mapper\Utils\" />
+    <Folder Include="CodeGenerator\Utils\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ressources\BasicSample.process" />
+  </ItemGroup>
+</Project>
