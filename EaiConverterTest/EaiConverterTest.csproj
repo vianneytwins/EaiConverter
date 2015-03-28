@@ -37,16 +37,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\NUnit\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="pnunit.framework">
-      <HintPath>..\..\NUnit\pnunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Test\JdbcQueryActivityParserTest.cs" />
@@ -71,5 +68,6 @@
     <None Include="ressources\BasicSample.xml" />
     <None Include="ressources\xsdtest.xsd" />
     <None Include="ressources\xsdtest2.xsd" />
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
