@@ -14,8 +14,9 @@ namespace EaiConverter.Mapper
 		private const string bodyMethodStart = "using (IDataAccess db = this.dataAccessFactory.CreateAccess())\n{\n";
 		private const string dbQuery = "db.Query";
 		const string iDataAccessFactory = "IDataAccessFactory";
-		public const string executeQuery = "ExecuteQuery";
+		public const string executeQueryMethodName = "ExecuteQuery";
 
+        const string SqlQueryStatement = "sqlQueryStatement";
 
 		const string voidString = "void";
 
@@ -60,7 +61,7 @@ namespace EaiConverter.Mapper
 		{
 			var fields = new List<CodeMemberField> {
 				new CodeMemberField {
-					Name = "sqlQueryStatement",
+                    Name = SqlQueryStatement,
 					Type = new CodeTypeReference(typeof(System.String)),
 					Attributes = MemberAttributes.Private | MemberAttributes.Const,
 					InitExpression = new CodePrimitiveExpression( jdbcQueryActivity.QueryStatement )
@@ -115,7 +116,7 @@ namespace EaiConverter.Mapper
 			var method = new CodeMemberMethod ();
 			method.Attributes = MemberAttributes.Public | MemberAttributes.Final;
 
-			method.Name = executeQuery;
+			method.Name = executeQueryMethodName;
 
 			method.ReturnType = this.jdbcQueryBuilderUtils.ConvertSQLTypeToObjectType (jdbcQueryActivity.QueryOutputCachedSchemaDataTypes.ToString ());
 
@@ -139,7 +140,7 @@ namespace EaiConverter.Mapper
 				sb.AppendLine (string.Format ("return {0} <{1}>(", dbQuery, method.ReturnType.BaseType));
 			}
 			tabulation.Increment ();
-			sb.Append (string.Format ("{0}\"{1}\"", tabulation, jdbcQueryActivity.QueryStatement));
+            sb.Append (string.Format ("{0}{1}", tabulation, SqlQueryStatement));
 
 			if (method.Parameters != null && method.Parameters.Count >= 1) {
 				sb.AppendLine (",");

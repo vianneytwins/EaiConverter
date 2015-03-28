@@ -16,8 +16,7 @@ namespace EaiConverter.Mapper
 		public DataAccessServiceBuilder (JdbcQueryBuilderUtils jdbcQueryBuilderUtils){
 			this.jdbcQueryBuilderUtils = jdbcQueryBuilderUtils;
 		}
-
-		//TODO cahnger en 1 seul namespace
+            
 		public CodeNamespace Build (JdbcQueryActivity jdbcQueryActivity){
 
 			var serviceNameSpace = new CodeNamespace (TargetAppNameSpaceService.domainServiceNamespaceName);
@@ -100,7 +99,7 @@ namespace EaiConverter.Mapper
 				var method = new CodeMemberMethod ();
 				method.Attributes = MemberAttributes.Public | MemberAttributes.Final;
 
-				method.Name = DataAccessBuilder.executeQuery;
+				method.Name = DataAccessBuilder.executeQueryMethodName;
 
 				method.ReturnType = this.jdbcQueryBuilderUtils.ConvertSQLTypeToObjectType (jdbcQueryActivity.QueryOutputCachedSchemaDataTypes.ToString ());
 

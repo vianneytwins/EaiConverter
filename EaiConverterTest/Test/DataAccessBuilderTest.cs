@@ -34,7 +34,7 @@ namespace EaiConverter
 			var expected = @"using (IDataAccess db = this.dataAccessFactory.CreateAccess())
 {
 db.Query(
-  ""select 1 from toto where id= ?"",
+  sqlQueryStatement,
   new
     {
       idParam = idParam
@@ -57,7 +57,7 @@ db.Query(
 			var expected = @"using (IDataAccess db = this.dataAccessFactory.CreateAccess())
 {
 db.Query(
-  ""select 1 from toto where id= ?"");
+  sqlQueryStatement);
 }
 
 ";
@@ -75,7 +75,7 @@ db.Query(
 			var expected = @"using (IDataAccess db = this.dataAccessFactory.CreateAccess())
 {
 return db.Query <System.Int>(
-  ""select 1 from toto where id= ?"").FirstOrDefault();
+  sqlQueryStatement).FirstOrDefault();
 }
 
 ";
