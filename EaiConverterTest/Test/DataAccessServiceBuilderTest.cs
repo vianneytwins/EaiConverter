@@ -7,6 +7,7 @@ using System.CodeDom.Compiler;
 using System.IO;
 using System.CodeDom;
 using System.Collections.Generic;
+using EaiConverter.Test.Utils;
 
 namespace EaiConverter
 {
@@ -37,7 +38,7 @@ namespace EaiConverter
 
 			var classesInString = GenerateCode (executeQueryMethod);
 
-			Assert.AreEqual (expected,classesInString);
+            Assert.AreEqual (expected,classesInString.RemoveWindowsReturnLineChar());
 		}
 
 		[Test]
@@ -52,7 +53,7 @@ namespace EaiConverter
 
 			var classesInString = GenerateCode (executeQueryMethod);
 
-			Assert.AreEqual (expected,classesInString);
+            Assert.AreEqual (expected,classesInString.RemoveWindowsReturnLineChar());
 		}
 
 		private string GenerateCode (CodeMemberMethod executeQueryMethod)

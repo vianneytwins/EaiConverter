@@ -62,6 +62,7 @@
     <Compile Include="Test\DataAccessServiceBuilderTest.cs" />
     <Compile Include="Test\XslBuilderTest.cs" />
     <Compile Include="Test\DataAccessCommonBuilderTest.cs" />
+    <Compile Include="Test\Utils\StringWindowsSupportExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />
@@ -69,5 +70,8 @@
     <None Include="ressources\xsdtest.xsd" />
     <None Include="ressources\xsdtest2.xsd" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Test\Utils\" />
   </ItemGroup>
 </Project>

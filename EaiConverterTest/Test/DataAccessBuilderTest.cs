@@ -7,6 +7,7 @@ using System.IO;
 using EaiConverter.Model;
 using System.CodeDom;
 using System.Collections.Generic;
+using EaiConverter.Test.Utils;
 
 namespace EaiConverter
 {
@@ -49,7 +50,7 @@ db.Query(
 
 			var classesInString = GenerateCode (executeQueryMethod);
 
-			Assert.AreEqual (expected,classesInString);
+            Assert.AreEqual (expected, classesInString.RemoveWindowsReturnLineChar());
 		}
 
 		[Test]
@@ -67,7 +68,7 @@ db.Query(
 
 			var classesInString = GenerateCode (executeQueryMethod);
 
-			Assert.AreEqual (expected,classesInString);
+            Assert.AreEqual (expected,classesInString.RemoveWindowsReturnLineChar());
 		}
 
 		[Test]
@@ -85,7 +86,7 @@ return db.Query <System.Int>(
 
 			var classesInString = GenerateCode (executeQueryMethod);
 
-			Assert.AreEqual (expected,classesInString);
+            Assert.AreEqual (expected,classesInString.RemoveWindowsReturnLineChar());
 		}
 
 

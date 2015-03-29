@@ -13,6 +13,8 @@ namespace EaiConverter.CodeGenerator
 			CodeDomProvider provider = CodeDomProvider.CreateProvider ("CSharp");
 			CodeGeneratorOptions options = new CodeGeneratorOptions ();
 			options.BracingStyle = "C";
+            options.IndentString = "    ";
+            options.BlankLinesBetweenMembers = true;
 
 			//var destinationPath = "../../../../TestBW/TestBW/src/";
             var destinationPath = "./";
