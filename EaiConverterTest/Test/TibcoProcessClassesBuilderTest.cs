@@ -52,7 +52,7 @@ namespace EaiConverter
 			}
 
 			//classGenerator.GenerateMethod(classToGenerate.Constructors[0], stringBuilder, new TibcoBWConverter.CodeGenerator.utils.Tab(),false);
-			Assert.AreEqual (expected, classesInString);
+            Assert.AreEqual (expected, classesInString.RemoveWindowsReturnLineChar());
 		}
 
 		[Test]
