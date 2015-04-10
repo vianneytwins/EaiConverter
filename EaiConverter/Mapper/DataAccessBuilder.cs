@@ -150,8 +150,8 @@ namespace EaiConverter.Mapper
 				foreach (CodeParameterDeclarationExpression inputParameter in method.Parameters) {
 					sb.AppendLine (string.Format ("{0}{1} = {1},", tabulation, inputParameter.Name));
 				}
-				// remoev last comma
-				sb.Remove (sb.Length - 2, 1);
+				// remove last comma
+                sb.Remove (sb.ToString().LastIndexOf(','), 1);
 				tabulation.Decrement ();
 				sb.AppendLine (string.Format ("{0}}}", tabulation));
 			}
