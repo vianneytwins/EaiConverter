@@ -24,9 +24,9 @@ namespace EaiConverter.Parser
 				allFileElement.Element (tibcoPrefix + "name").Value
 			);
 
-			tibcoBwProcess.StartActivity = this.ParseStartOrEndActivity (allFileElement, tibcoBwProcess.inputAndOutputNameSpace,  "start");
+            tibcoBwProcess.StartActivity = this.ParseStartOrEndActivity (allFileElement, tibcoBwProcess.inputAndOutputNameSpace,  ActivityType.startType);
 
-			tibcoBwProcess.EndActivity = this.ParseStartOrEndActivity (allFileElement, tibcoBwProcess.inputAndOutputNameSpace, "end");
+            tibcoBwProcess.EndActivity = this.ParseStartOrEndActivity (allFileElement, tibcoBwProcess.inputAndOutputNameSpace, ActivityType.endType);
 
 			this.ParseTransitions (allFileElement, tibcoBwProcess);
 
@@ -38,14 +38,22 @@ namespace EaiConverter.Parser
 			// nom de l activité-> ma list de variable (en conciderant start et end comme des activités ?)
 		}
 
-		public Activity ParseStartOrEndActivity (XElement allFileElement, string inputAndOutputNameSpace, string activityType)
+        public Activity ParseStartOrEndActivity (XElement allFileElement, string inputAndOutputNameSpace, ActivityType activityType)
 		{
 			var xsdParser = new XsdParser ();
-			var xElement = allFileElement.Element (tibcoPrefix + activityType + "Type");
+            var xElement = allFileElement.Element (tibcoPrefix + activityType.ToString());
 			if (xElement == null) {
 				return null;
 			}
-			var activity = new Activity (allFileElement.Element (tibcoPrefix + activityType + "Name").Value, activityType);
+            string activityName = string.Empty;
+            if (activityType == ActivityType.startType)
+            {
+                activityName = "startName";
+            }
+            else if (activityType == ActivityType.endType) {
+                activityName = "endName";
+            }
+            var activity = new Activity (allFileElement.Element (tibcoPrefix + activityName).Value, activityType);
 			var activityParameters = xsdParser.Parse (xElement.Nodes ());
 			activity.Parameters = activityParameters;
 			activity.ObjectXNodes = xElement.Nodes ();
@@ -74,10 +82,10 @@ namespace EaiConverter.Parser
 				var activityType = element.Element (tibcoPrefix + "type").Value;
 				Activity activity;
 				// TODO : faire une factory
-				if (activityType == JdbcQueryActivity.jdbcQueryActivityType || activityType == JdbcQueryActivity.jdbcUpdateActivityType || activityType == JdbcQueryActivity.jdbcCallActivityType ) {
+                if (activityType == ActivityType.jdbcQueryActivityType.ToString() || activityType == ActivityType.jdbcUpdateActivityType.ToString()  || activityType == ActivityType.jdbcCallActivityType.ToString()  ) {
 					activity = new JdbcQueryActivityParser ().Parse (element);
 				} else {
-					activity = new Activity (element.Attribute ("name").Value, activityType);
+                    activity = new Activity (element.Attribute ("name").Value, ActivityType.NotHandleYet);
 				} 
 				tibcoBwProcess.Activities.Add (activity);
 			}

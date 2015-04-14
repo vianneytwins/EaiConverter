@@ -1,16 +1,13 @@
 using System;
 using System.Collections.Generic;
+using EaiConverter.Model;
 
 namespace EaiConverter.Model
 {
 
 	public class JdbcQueryActivity : Activity
 	{
-		public const string jdbcCallActivityType = "com.tibco.plugin.jdbc.JDBCCallActivity";
-		public const string jdbcUpdateActivityType = "com.tibco.plugin.jdbc.JDBCUpdateActivity";
-		public const string jdbcQueryActivityType = "com.tibco.plugin.jdbc.JDBCQueryActivity";
-
-		public JdbcQueryActivity (string name, string type) : base (name, type)
+        public JdbcQueryActivity (string name, ActivityType type) : base (name, type)
 		{
 		}
 

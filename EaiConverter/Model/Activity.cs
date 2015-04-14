@@ -7,7 +7,7 @@ namespace EaiConverter.Model
 {
 	public class Activity
 	{
-		public Activity (string name, string type) {
+	public Activity (string name, ActivityType type) {
 			this.Name = name;
 			this.Type = type;
 		}
@@ -17,7 +17,7 @@ namespace EaiConverter.Model
 		} 
 
 		public string Name { get; set;}
-		public string Type { get; set;}
+        public ActivityType Type { get; set;}
 
 		public List<ClassParameter> Parameters { get; set;}
 

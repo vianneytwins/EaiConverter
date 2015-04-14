@@ -21,7 +21,7 @@ namespace EaiConverter
 		public void SetUp(){
 			this.builder = new DataAccessBuilder (new JdbcQueryBuilderUtils());
 			this.jdbcQueryActivity = new JdbcQueryActivity {
-				Type = JdbcQueryActivity.jdbcCallActivityType,
+                Type = ActivityType.jdbcCallActivityType,
 				Name = "TestJbdcQueryActivity",
 				JdbcSharedConfig = "Panorama",
 				EmptyStringAsNull = false,

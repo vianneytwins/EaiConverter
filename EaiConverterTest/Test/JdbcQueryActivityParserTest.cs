@@ -51,7 +51,7 @@ namespace EaiConverter
 		public void Should_Return_Activity_Type_Is_JDBCQueryActivity (){
 			JdbcQueryActivity jdbcQueryActivity = jdbcQueryActivityParser.Parse (doc);
 
-			Assert.AreEqual ("com.tibco.plugin.jdbc.JDBCQueryActivity", jdbcQueryActivity.Type);
+            Assert.AreEqual ("com.tibco.plugin.jdbc.JDBCQueryActivity", jdbcQueryActivity.Type.ToString());
 		}
 
 		[Test]

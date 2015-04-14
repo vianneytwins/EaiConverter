@@ -132,7 +132,6 @@ namespace EaiConverter.Mapper
 			}
 			else {
 				returnType = tibcoBwProcessToGenerate.EndActivity.Parameters [0].Type;
-
 			}
 
 			startMethod.ReturnType = new CodeTypeReference(returnType);
@@ -159,35 +158,33 @@ namespace EaiConverter.Mapper
 				});
 
 			}
-
-			//Generate startMethod Body 
-			if (returnType != "void") {
-
-				var returnName = VariableHelper.ToVariableName (tibcoBwProcessToGenerate.EndActivity.Parameters [0].Name);
-				var objectCreate = new CodeObjectCreateExpression (new CodeTypeReference (returnType));
-				startMethod.Statements.Add(new CodeVariableDeclarationStatement(
-					new CodeTypeReference(returnType), returnName,
-					objectCreate));
-
-				CodeMethodReturnStatement returnStatement = new CodeMethodReturnStatement(
-					new CodeVariableReferenceExpression(returnName)
-				);
-			
-				startMethod.Statements.Add (returnStatement);
-			}
+                
+            this.GenerateStartMethodBody(tibcoBwProcessToGenerate, startMethod);
 
 			return startMethod;
-
 		}
+
+        public void GenerateStartMethodBody(TibcoBWProcess tibcoBwProcessToGenerate, CodeMemberMethod startMethod)
+        {
+            if (startMethod.ReturnType.BaseType != "void")
+            {
+                var returnName = VariableHelper.ToVariableName(tibcoBwProcessToGenerate.EndActivity.Parameters[0].Name);
+                var objectCreate = new CodeObjectCreateExpression(startMethod.ReturnType);
+                startMethod.Statements.Add(new CodeVariableDeclarationStatement(startMethod.ReturnType, returnName, objectCreate));
+                CodeMethodReturnStatement returnStatement = new CodeMethodReturnStatement(new CodeVariableReferenceExpression(returnName));
+                startMethod.Statements.Add(returnStatement);
+            }
+        }
 
 		public CodeNamespaceCollection GenerateActivityClasses (TibcoBWProcess tibcoBwProcessToGenerate)
 		{
-			//TODO factory
+			//TODO build a factory instead
 			var jdbcQueryBuilderUtils = new JdbcQueryBuilderUtils ();
 			var jdbcQueryActivityBuilder = new JdbcQueryActivityBuilder (new DataAccessBuilder(jdbcQueryBuilderUtils), new DataAccessServiceBuilder(jdbcQueryBuilderUtils), new DataAccessInterfacesCommonBuilder());
+
 			var activityClasses = new CodeNamespaceCollection ();
 			foreach (var activity in tibcoBwProcessToGenerate.Activities) {
-				if (activity.Type == JdbcQueryActivity.jdbcQueryActivityType) {
+                if (activity.Type == ActivityType.jdbcQueryActivityType) {
 					activityClasses.AddRange (jdbcQueryActivityBuilder.Build ((JdbcQueryActivity) activity));
 				}
 			}

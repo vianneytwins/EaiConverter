@@ -65,13 +65,13 @@ namespace EaiConverter
 				@"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
 					<pd:name>repertoire/myProcessName.process</pd:name>
 					<pd:activity name = ""activity2"">
-						<pd:type>ActivityTypeTest2</pd:type>
+						<pd:type>NotHandleYet</pd:type>
 					</pd:activity>
 				</pd:ProcessDefinition>";
 			var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
 			Assert.AreEqual (1, tibcoBWProcess.Activities.Count);
 			Assert.AreEqual ("activity2", tibcoBWProcess.Activities[0].Name);
-			Assert.AreEqual ("ActivityTypeTest2", tibcoBWProcess.Activities[0].Type);
+            Assert.AreEqual ("NotHandleYet", tibcoBWProcess.Activities[0].Type.ToString());
 		}
 
 

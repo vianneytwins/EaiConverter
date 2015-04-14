@@ -74,6 +74,7 @@
     <Compile Include="Mapper\Utils\TargetAppNameSpaceService.cs" />
     <Compile Include="CodeGenerator\Utils\Tab.cs" />
     <Compile Include="CodeGenerator\Utils\VariableHelper.cs" />
+    <Compile Include="Model\ActivityType.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

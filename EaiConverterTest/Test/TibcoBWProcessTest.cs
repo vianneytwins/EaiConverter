@@ -32,17 +32,12 @@ namespace EaiConverter
 			Assert.AreEqual ("PrMapRM3DtoPNOEquitytoEquity", new TibcoBWProcess ("Process/DAI/PNO/Mapping/Common/PrMap.RM3D-to-PNO.Equity-to-Equity.process").ProcessName);
 		}
 
-		[Test]
-		public void Should_Return_TOTOTITI_When_Replacing_is_dash_byEmptyString_in_TOTO_dash_TITI ()
-		{
-			Assert.AreEqual ("TOTOTITI", "TOTO-TITI".Replace("-",""));
-		}
-
-		[Test]
-		public void Should_donothing_When_Replacing_is_dash_byEmptyString_in_TOTO_dash_TITI ()
-		{
-			Assert.AreEqual (8, "T/TO-TIT.I".LastIndexOf("."));
-		}
+        [Test]
+        public void Should_Return_ProcessName_MyProcessName_When_fullProcessName_has_no_Slash_And_No_Dot()
+        {
+            Assert.AreEqual ("MyProcessName", new TibcoBWProcess ("MyProcessName").ProcessName);
+        }
+            
 
 	}
 }

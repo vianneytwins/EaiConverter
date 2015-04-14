@@ -9,9 +9,20 @@ namespace EaiConverter.Model
 		{
 			this.FullProcessName = fullProcessName;
 			var indexOfLastSlash = fullProcessName.LastIndexOf ("/");
-			this.ShortNameSpace = (fullProcessName.Substring (0, indexOfLastSlash)).Replace("/",".");
+            if (indexOfLastSlash == -1)
+            {
+                this.ShortNameSpace = string.Empty;
+            }
+            else
+            {
+                this.ShortNameSpace = (fullProcessName.Substring (0, indexOfLastSlash)).Replace("/",".");
+            }
+
 
 			var indexOfLastDot = fullProcessName.LastIndexOf (".");
+            if (indexOfLastDot == -1) {
+                indexOfLastDot = fullProcessName.Length;
+            }
 			var nameLenght = indexOfLastDot - indexOfLastSlash -1;
 			this.ProcessName = fullProcessName.Substring (indexOfLastSlash+1, nameLenght).Replace("-", string.Empty).Replace(".",string.Empty);
 		}

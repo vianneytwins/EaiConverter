@@ -29,7 +29,6 @@ namespace EaiConverter
 
 			tibcoBWProcess = new TibcoBWProcess ("MyNamespace/myProcessTest.process");
 			tibcoBWProcess.Activities = new List<Activity> ();
-			//stringBuilder = new StringBuilder ();
 		}
 
 		[Test]
@@ -58,14 +57,14 @@ namespace EaiConverter
 		[Test]
 		public void Should_Return_Constructor_with_setter_of_Activity_When_1_Activy_is_declared()
 		{
-			tibcoBWProcess.Activities.Add(new Activity ("MySqlRequestActivity","JbdcQuery"));
+            tibcoBWProcess.Activities.Add(new Activity ("MySqlRequestActivity", ActivityType.NotHandleYet));
 			var expected = "this.mySqlRequestActivityService = mySqlRequestActivityService;\n";
 			var tibcoBWProcessBuilder = new TibcoProcessClassesBuilder ();
 			var classToGenerate = tibcoBWProcessBuilder.Build (tibcoBWProcess);
 
 
 			using (StringWriter writer = new StringWriter ()) {
-				foreach (var member in classToGenerate.Namespaces [0].Types [0].Members) {
+				foreach (var member in classToGenerate.Namespaces[0].Types[0].Members) {
 					if (member is CodeConstructor) {
 						classGenerator.GenerateCodeFromStatement 
 						(((CodeConstructor)member).Statements [1], writer, new CodeGeneratorOptions ());
@@ -110,8 +109,8 @@ namespace EaiConverter
 		[Test]
 		public void Should_return_void_Start_Method_with_no_input_param_When_no_Start_and_Return_type_are_specified()
 		{
-			tibcoBWProcess.StartActivity = new Activity ("Start", "Start");
-			tibcoBWProcess.EndActivity = new Activity ("End", "End");
+            tibcoBWProcess.StartActivity = new Activity ("Start", ActivityType.startType);
+            tibcoBWProcess.EndActivity = new Activity ("End", ActivityType.endType);
 
 			var expected ="void";			
 			var tibcoBWProcessBuilder = new TibcoProcessClassesBuilder ();
@@ -130,7 +129,7 @@ namespace EaiConverter
 		[Test]
 		public void Should_return_Start_Method_with_one_input_param_When_Starttype_is_defined()
 		{
-			tibcoBWProcess.StartActivity = new Activity ("Start", "Start");
+            tibcoBWProcess.StartActivity = new Activity ("Start", ActivityType.startType);
 			tibcoBWProcess.StartActivity.Parameters = new List <ClassParameter> {
 				new ClassParameter
 				{
@@ -138,7 +137,7 @@ namespace EaiConverter
 					Name = "inputName"
 				}
 			};
-			tibcoBWProcess.EndActivity = new Activity ("End", "End");
+            tibcoBWProcess.EndActivity = new Activity ("End", ActivityType.endType);
 
 			var tibcoBWProcessBuilder = new TibcoProcessClassesBuilder ();
 			var classToGenerate = tibcoBWProcessBuilder.Build (tibcoBWProcess);
@@ -156,7 +155,7 @@ namespace EaiConverter
 		[Test]
 		public void Should_return_Start_Method_with_return_type_string_When_Return_is_defined()
 		{
-			tibcoBWProcess.StartActivity = new Activity ("Start", "Start");
+            tibcoBWProcess.StartActivity = new Activity ("Start", ActivityType.startType);
 			tibcoBWProcess.StartActivity.Parameters = new List <ClassParameter> {
 				new ClassParameter
 				{
@@ -164,7 +163,7 @@ namespace EaiConverter
 					Name = "inputName"
 				}
 			};
-			tibcoBWProcess.EndActivity = new Activity ("End", "End");
+            tibcoBWProcess.EndActivity = new Activity ("End", ActivityType.endType);
 			tibcoBWProcess.EndActivity.Parameters = new List <ClassParameter> {
 				new ClassParameter
 				{

@@ -14,7 +14,7 @@ namespace EaiConverter.Parser
 			var jdbcQueryActivity = new JdbcQueryActivity ();
 
 			jdbcQueryActivity.Name = inputElement.Attribute ("name").Value;
-			jdbcQueryActivity.Type = inputElement.Element (TibcoBWProcessLinqParser.tibcoPrefix + "type").Value;
+            jdbcQueryActivity.Type = (ActivityType) inputElement.Element (TibcoBWProcessLinqParser.tibcoPrefix + "type").Value;
 			var configElement = inputElement.Element ("config");
 
 			jdbcQueryActivity.TimeOut = XElementParserUtils.GetIntValue(configElement.Element("timeout"));
@@ -22,7 +22,7 @@ namespace EaiConverter.Parser
 			jdbcQueryActivity.MaxRows = XElementParserUtils.GetIntValue(configElement.Element("maxRows"));
 			jdbcQueryActivity.EmptyStringAsNull = XElementParserUtils.GetBoolValue(configElement.Element("emptyStrAsNil"));
 			jdbcQueryActivity.JdbcSharedConfig = XElementParserUtils.GetStringValue(configElement.Element("jdbcSharedConfig"));
-			if (jdbcQueryActivity.Type == JdbcQueryActivity.jdbcCallActivityType) {
+            if (jdbcQueryActivity.Type == ActivityType.jdbcCallActivityType) {
 				jdbcQueryActivity.QueryStatement = XElementParserUtils.GetStringValue (configElement.Element ("ProcedureName"));
 				// TODO : faut il enlever le ;1 à la fin ? je dirai que oui, à moins que cela donne la position du return dans la liste en dessous..bizarre
 				jdbcQueryActivity.QueryStatement = jdbcQueryActivity.QueryStatement.Remove (jdbcQueryActivity.QueryStatement.LastIndexOf (';'), 2);

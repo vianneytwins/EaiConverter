@@ -18,7 +18,7 @@ namespace EaiConverter
 
 		[SetUp]
 		public void SetUp() {
-			jdbcQueryActivity = new JdbcQueryActivity ("Currency" , JdbcQueryActivity.jdbcQueryActivityType);
+            jdbcQueryActivity = new JdbcQueryActivity ("Currency" , ActivityType.jdbcQueryActivityType);
 			jdbcQueryActivity.QueryStatement = select;
 			jdbcQueryActivity.QueryStatementParameters = new Dictionary<string, string> {
 				{

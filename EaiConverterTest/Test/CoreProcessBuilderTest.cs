@@ -56,6 +56,19 @@ namespace EaiConverter
 			}
 		};
 
+        List <Transition> simpleProcessTransitions = new List <Transition> {
+            new Transition {
+                FromActivity = "start",
+                ToActivity = "step1",
+                ConditionType = ConditionType.always
+            },
+            new Transition {
+                FromActivity = "step1",
+                ToActivity = "End",
+                ConditionType = ConditionType.always
+            }
+        };
+
 		[SetUp]
 		public void SetUp(){
 			this.builder = new CoreProcessBuilder ();
@@ -63,24 +76,13 @@ namespace EaiConverter
 		}
 		[Test]
 		public void Should_Return_Simple_Process(){
-			var transitions = new List <Transition> {
-				new Transition {
-					FromActivity = "start",
-					ToActivity = "step1",
-					ConditionType = ConditionType.always
-				},
-				new Transition {
-					FromActivity = "step1",
-					ToActivity = "End",
-					ConditionType = ConditionType.always
-				}
-			};
+
 			var activityStart = "start";
-			var expected = @"this.DoStart.ExecuteQuery();
-this.DoStep1.ExecuteQuery();
-this.DoEnd.ExecuteQuery();
+            var expected = @"this.DoStart.ExecuteMethod();
+this.DoStep1.ExecuteMethod();
+this.DoEnd.ExecuteMethod();
 ";
-			var codeStatementCollection = this.builder.GenerateCodeStatement (transitions, this.activities ,activityStart, null);
+			var codeStatementCollection = this.builder.GenerateCodeStatement (simpleProcessTransitions, this.activities ,activityStart, null);
 
 			var classesInString = GenerateCode (codeStatementCollection);
 
@@ -92,17 +94,17 @@ this.DoEnd.ExecuteQuery();
 		public void Should_Return_Complex_if_Process(){
 
 			var activityStart = "start";
-			var expected = @"this.DoStart.ExecuteQuery();
+            var expected = @"this.DoStart.ExecuteMethod();
 if (condition1)
 {
-    this.DoStep1.ExecuteQuery();
-    this.DoStep3.ExecuteQuery();
+    this.DoStep1.ExecuteMethod();
+    this.DoStep3.ExecuteMethod();
 }
 else
 {
-    this.DoStep2.ExecuteQuery();
+    this.DoStep2.ExecuteMethod();
 }
-this.DoEnd.ExecuteQuery();
+this.DoEnd.ExecuteMethod();
 ";
 			this.complexProcessTransitions.Sort ();
 			var codeStatementCollection = this.builder.GenerateCodeStatement (this.complexProcessTransitions, this.activities ,activityStart, null);
@@ -111,6 +113,26 @@ this.DoEnd.ExecuteQuery();
 
             Assert.AreEqual (expected, classesInString.RemoveWindowsReturnLineChar());
 		}
+
+        [Test]
+        public void Should_Return_Simple_Start_Method_Body(){
+            var expected = @"this.Dostep1.ExecuteMethod();
+this.DoEnd.ExecuteMethod();
+";
+            var tibcoBWProcess = new TibcoBWProcess("MyTestProcess");
+            tibcoBWProcess.StartActivity = new Activity("start", ActivityType.startType);
+            tibcoBWProcess.EndActivity = new Activity("End", ActivityType.endType);
+            tibcoBWProcess.Transitions = simpleProcessTransitions;
+
+            CodeMemberMethod startMethod = new CodeMemberMethod();
+            var codeStatementCollection = this.builder.GenerateStartCodeStatement (tibcoBWProcess, startMethod, tibcoBWProcess.StartActivity.Name, null);
+
+            var classesInString = GenerateCode (codeStatementCollection);
+
+            Assert.AreEqual (expected, classesInString.RemoveWindowsReturnLineChar());
+        }
+
+
 
 		static string GenerateCode (CodeStatementCollection codeStatementCollection)
 		{
