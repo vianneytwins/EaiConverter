@@ -84,9 +84,9 @@ this.DoEnd.ExecuteMethod();
 ";
 			var codeStatementCollection = this.builder.GenerateCodeStatement (simpleProcessTransitions, this.activities ,activityStart, null);
 
-			var classesInString = GenerateCode (codeStatementCollection);
+            var classesInString = TestCodeGeneratorUtils.GenerateCode (codeStatementCollection);
 
-            Assert.AreEqual (expected, classesInString.RemoveWindowsReturnLineChar());
+            Assert.AreEqual (expected, classesInString);
 		}
 			
 
@@ -109,9 +109,9 @@ this.DoEnd.ExecuteMethod();
 			this.complexProcessTransitions.Sort ();
 			var codeStatementCollection = this.builder.GenerateCodeStatement (this.complexProcessTransitions, this.activities ,activityStart, null);
 
-			var classesInString = GenerateCode (codeStatementCollection);
+            var classesInString = TestCodeGeneratorUtils.GenerateCode (codeStatementCollection);
 
-            Assert.AreEqual (expected, classesInString.RemoveWindowsReturnLineChar());
+            Assert.AreEqual (expected, classesInString);
 		}
 
         [Test]
@@ -127,27 +127,14 @@ this.DoEnd.ExecuteMethod();
             CodeMemberMethod startMethod = new CodeMemberMethod();
             var codeStatementCollection = this.builder.GenerateStartCodeStatement (tibcoBWProcess, startMethod, tibcoBWProcess.StartActivity.Name, null);
 
-            var classesInString = GenerateCode (codeStatementCollection);
+            var classesInString = TestCodeGeneratorUtils.GenerateCode (codeStatementCollection);
 
-            Assert.AreEqual (expected, classesInString.RemoveWindowsReturnLineChar());
+            Assert.AreEqual (expected, classesInString);
         }
 
 
 
-		static string GenerateCode (CodeStatementCollection codeStatementCollection)
-		{
-			var classGenerator = CodeDomProvider.CreateProvider ("CSharp");
-			var options = new CodeGeneratorOptions ();
-			options.BracingStyle = "C";
-			string classesInString;
-			using (StringWriter writer = new StringWriter ()) {
-				foreach (CodeStatement codeStatement in codeStatementCollection) {
-					classGenerator.GenerateCodeFromStatement (codeStatement, writer, options);
-				}
-				classesInString = writer.GetStringBuilder ().ToString ();
-			}
-			return classesInString;
-		}
+
 	}
 }
 

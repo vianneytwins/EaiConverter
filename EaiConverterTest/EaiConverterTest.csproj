@@ -63,6 +63,7 @@
     <Compile Include="Test\XslBuilderTest.cs" />
     <Compile Include="Test\DataAccessCommonBuilderTest.cs" />
     <Compile Include="Test\Utils\StringWindowsSupportExtension.cs" />
+    <Compile Include="Test\Utils\TestCodeGeneratorUtils.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />

@@ -48,9 +48,9 @@ db.Query(
 
 			var executeQueryMethod = this.builder.GenerateExecuteQueryMethod (this.jdbcQueryActivity);
 
-			var classesInString = GenerateCode (executeQueryMethod);
+            var classesInString = TestCodeGeneratorUtils.GenerateCode (executeQueryMethod);
 
-            Assert.AreEqual (expected, classesInString.RemoveWindowsReturnLineChar());
+            Assert.AreEqual (expected, classesInString);
 		}
 
 		[Test]
@@ -66,9 +66,9 @@ db.Query(
 
 			var executeQueryMethod = this.builder.GenerateExecuteQueryMethod (this.jdbcQueryActivity);
 
-			var classesInString = GenerateCode (executeQueryMethod);
+            var classesInString = TestCodeGeneratorUtils.GenerateCode (executeQueryMethod);
 
-            Assert.AreEqual (expected,classesInString.RemoveWindowsReturnLineChar());
+            Assert.AreEqual (expected,classesInString);
 		}
 
 		[Test]
@@ -84,24 +84,13 @@ return db.Query <System.Int>(
 
 			var executeQueryMethod = this.builder.GenerateExecuteQueryMethod (this.jdbcQueryActivity);
 
-			var classesInString = GenerateCode (executeQueryMethod);
+            var classesInString = TestCodeGeneratorUtils.GenerateCode (executeQueryMethod);
 
-            Assert.AreEqual (expected,classesInString.RemoveWindowsReturnLineChar());
+            Assert.AreEqual (expected,classesInString);
 		}
 
 
-		private string GenerateCode (CodeMemberMethod executeQueryMethod)
-		{
-			var classGenerator = CodeDomProvider.CreateProvider ("CSharp");
-			var options = new CodeGeneratorOptions ();
-			options.BracingStyle = "C";
-			string classesInString;
-			using (StringWriter writer = new StringWriter ()) {
-				classGenerator.GenerateCodeFromStatement (executeQueryMethod.Statements [0], writer, options);
-				classesInString = writer.GetStringBuilder ().ToString ();
-			}
-			return classesInString;
-		}
+
 	}
 }
 
