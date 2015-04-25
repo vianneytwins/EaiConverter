@@ -7,12 +7,21 @@ using System.IO;
 using EaiConverter.CodeGenerator.Utils;
 using EaiConverter.Model;
 using EaiConverter.Mapper.Utils;
+using EaiConverter.Processor;
 
 namespace EaiConverter.Mapper
 {
 	public class TibcoProcessClassesBuilder
 	{
-		XsdClassGenerator xsdClassGenerator = new XsdClassGenerator();
+        CoreProcessBuilder coreProcessBuilder;
+
+        Dictionary<string,string> activityNameToServiceNameDictionnary = new Dictionary<string, string> ();
+
+        public TibcoProcessClassesBuilder (){
+            this.coreProcessBuilder = new CoreProcessBuilder();
+        }
+
+        XsdClassGenerator xsdClassGenerator = new XsdClassGenerator();
 
 		public CodeCompileUnit Build (TibcoBWProcess tibcoBwProcessToGenerate){
 
@@ -36,14 +45,13 @@ namespace EaiConverter.Mapper
 			// 5 les properties : ici y en a pas
 			//this.GenerateProperties (tibcoBwProcessToGenerate);
 
-			// 6 la methode start avec input starttype et return du endtype
-			tibcoBwProcessClassModel.Members.AddRange( this.GenerateMethod (tibcoBwProcessToGenerate));
+			
 
 			processNamespace.Types.Add (tibcoBwProcessClassModel);
 
 			targetUnit.Namespaces.Add (processNamespace);
 
-			//7 Mappe les classes des activity
+			//6 Mappe les classes des activity
 			targetUnit.Namespaces.AddRange (this.GenerateActivityClasses (tibcoBwProcessToGenerate));
 
 			if (tibcoBwProcessToGenerate.EndActivity!= null && tibcoBwProcessToGenerate.EndActivity.ObjectXNodes != null) {
@@ -52,7 +60,10 @@ namespace EaiConverter.Mapper
 			if (tibcoBwProcessToGenerate.StartActivity!= null && tibcoBwProcessToGenerate.StartActivity.ObjectXNodes != null) {
 				targetUnit.Namespaces.Add (this.xsdClassGenerator.GenerateCodeFromXsdNodes (tibcoBwProcessToGenerate.StartActivity.ObjectXNodes, tibcoBwProcessToGenerate.inputAndOutputNameSpace));
 			}
-				
+
+            //7 la methode start avec input starttype et return du endtype
+            tibcoBwProcessClassModel.Members.AddRange( this.GenerateMethod (tibcoBwProcessToGenerate));
+
 			return targetUnit;
 		}
 
@@ -119,60 +130,67 @@ namespace EaiConverter.Mapper
 		{
 			return new List<CodeMemberMethod> {GenerateStartMethod (tibcoBwProcessToGenerate)}.ToArray();
 		}
-
-		// TODO : refactoriser car ca commence a etre tres moche
+            
 		public CodeMemberMethod GenerateStartMethod (TibcoBWProcess tibcoBwProcessToGenerate)
 		{
 			var startMethod = new CodeMemberMethod ();
-			startMethod.Attributes = MemberAttributes.Public | MemberAttributes.Final;
+            if (tibcoBwProcessToGenerate.StartActivity == null){
+                return startMethod;
+            }
 
-			string returnType;
-			if (tibcoBwProcessToGenerate.EndActivity ==null || tibcoBwProcessToGenerate.EndActivity.Parameters == null) {
-				returnType = "void";
-			}
-			else {
-				returnType = tibcoBwProcessToGenerate.EndActivity.Parameters [0].Type;
-			}
-
-			startMethod.ReturnType = new CodeTypeReference(returnType);
-			
-
-			string inputType;
-			string inputName;
-
-			if (tibcoBwProcessToGenerate.StartActivity != null){
-				startMethod.Name = tibcoBwProcessToGenerate.StartActivity.Name;
-			}
-
-			if (tibcoBwProcessToGenerate.StartActivity == null || tibcoBwProcessToGenerate.StartActivity.Parameters == null) {
-				inputType = string.Empty;
-				inputName = string.Empty;
-			}
-			else {
-
-				inputType = tibcoBwProcessToGenerate.StartActivity.Parameters [0].Type;
-				inputName = tibcoBwProcessToGenerate.StartActivity.Parameters [0].Name;
-				startMethod.Parameters.Add( new CodeParameterDeclarationExpression {
-					Name = inputName,
-					Type = new CodeTypeReference(inputType)
-				});
-
-			}
+            startMethod.Attributes = MemberAttributes.Public | MemberAttributes.Final;
+            startMethod.Name = tibcoBwProcessToGenerate.StartActivity.Name;
+            startMethod.ReturnType = this.GenerateStartMethodReturnType (tibcoBwProcessToGenerate); 
+           
+            this.GenerateStartMethodInputParameters(tibcoBwProcessToGenerate, startMethod);
                 
             this.GenerateStartMethodBody(tibcoBwProcessToGenerate, startMethod);
 
 			return startMethod;
 		}
 
+        private void GenerateStartMethodInputParameters(TibcoBWProcess tibcoBwProcessToGenerate, CodeMemberMethod startMethod)
+        {
+            if (tibcoBwProcessToGenerate.StartActivity.Parameters != null)
+            {
+                foreach (var parameter in tibcoBwProcessToGenerate.StartActivity.Parameters)
+                {
+                    startMethod.Parameters.Add(new CodeParameterDeclarationExpression {
+                        Name = parameter.Name,
+                        Type = new CodeTypeReference(parameter.Type)
+                    });
+                }
+            }
+        }
+
+        private CodeTypeReference GenerateStartMethodReturnType(TibcoBWProcess tibcoBwProcessToGenerate)
+        {
+            string returnType;
+            if (tibcoBwProcessToGenerate.EndActivity == null || tibcoBwProcessToGenerate.EndActivity.Parameters == null)
+            {
+                returnType = "void";
+            }
+            else
+            {
+                returnType = tibcoBwProcessToGenerate.EndActivity.Parameters[0].Type;
+            }
+            return new CodeTypeReference(returnType);
+        }
+
         public void GenerateStartMethodBody(TibcoBWProcess tibcoBwProcessToGenerate, CodeMemberMethod startMethod)
         {
-            if (startMethod.ReturnType.BaseType != "void")
+            if (tibcoBwProcessToGenerate.Transitions != null)
             {
-                var returnName = VariableHelper.ToVariableName(tibcoBwProcessToGenerate.EndActivity.Parameters[0].Name);
-                var objectCreate = new CodeObjectCreateExpression(startMethod.ReturnType);
-                startMethod.Statements.Add(new CodeVariableDeclarationStatement(startMethod.ReturnType, returnName, objectCreate));
-                CodeMethodReturnStatement returnStatement = new CodeMethodReturnStatement(new CodeVariableReferenceExpression(returnName));
-                startMethod.Statements.Add(returnStatement);
+                startMethod.Statements.AddRange(this.coreProcessBuilder.GenerateStartCodeStatement(tibcoBwProcessToGenerate, startMethod, tibcoBwProcessToGenerate.StartActivity.Name, null, this.activityNameToServiceNameDictionnary));
+                // TODO VC : integrate the following section in in CoreProcessBuilder
+                if (startMethod.ReturnType.BaseType != "void")
+                {
+                    var returnName = VariableHelper.ToVariableName(tibcoBwProcessToGenerate.EndActivity.Parameters[0].Name);
+                    var objectCreate = new CodeObjectCreateExpression(startMethod.ReturnType);
+                    startMethod.Statements.Add(new CodeVariableDeclarationStatement(startMethod.ReturnType, returnName, objectCreate));
+                    CodeMethodReturnStatement returnStatement = new CodeMethodReturnStatement(new CodeVariableReferenceExpression(returnName));
+                    startMethod.Statements.Add(returnStatement);
+                }
             }
         }
 
@@ -184,13 +202,48 @@ namespace EaiConverter.Mapper
 
 			var activityClasses = new CodeNamespaceCollection ();
 			foreach (var activity in tibcoBwProcessToGenerate.Activities) {
-                if (activity.Type == ActivityType.jdbcQueryActivityType) {
-					activityClasses.AddRange (jdbcQueryActivityBuilder.Build ((JdbcQueryActivity) activity));
-				}
+                if (activity.Type == ActivityType.jdbcQueryActivityType || activity.Type == ActivityType.jdbcCallActivityType || activity.Type == ActivityType.jdbcUpdateActivityType)
+                {
+                    var jdbcActivity = (JdbcQueryActivity)activity;
+                    if (this.HasThisSqlRequestAlreadyGenerateAService(jdbcActivity.QueryStatement))
+                    {
+                        this.RegisterThatThisJdbcActivityMapsAnExistingService(tibcoBwProcessToGenerate, jdbcActivity);
+                    }
+                    else
+                    {
+                        var jdbcActivityCodeNameSpaces = jdbcQueryActivityBuilder.Build(jdbcActivity);
+
+                        activityClasses.AddRange(jdbcActivityCodeNameSpaces);
+                        this.RegisterThatThisSqlRequestCorrespondToAService(tibcoBwProcessToGenerate, jdbcActivity, jdbcActivityCodeNameSpaces);
+                    }
+                }
+                else
+                {
+                    this.activityNameToServiceNameDictionnary.Add( activity.Name, VariableHelper.ToVariableName(activity.Name));
+                }
 			}
 			return activityClasses;
 		}
 
+        private bool HasThisSqlRequestAlreadyGenerateAService(string queryStatement)
+        {
+            return SqlRequestToActivityMapper.ContainsKey(queryStatement);
+        }
+
+        private void RegisterThatThisSqlRequestCorrespondToAService(TibcoBWProcess tibcoBwProcessToGenerate, JdbcQueryActivity jdbcActivity, CodeNamespaceCollection jdbcActivityCodeNameSpaces)
+        {
+            // TODO : not safe to rely on indexes to find the service name
+            var jdbcServiceName = jdbcActivityCodeNameSpaces[2].Types[0].Name;
+
+            SqlRequestToActivityMapper.SaveSqlRequest(jdbcActivity.QueryStatement, jdbcServiceName);
+            activityNameToServiceNameDictionnary.Add( jdbcActivity.Name, jdbcServiceName);
+        }
+
+        private void RegisterThatThisJdbcActivityMapsAnExistingService(TibcoBWProcess tibcoBwProcessToGenerate, JdbcQueryActivity jdbcActivity)
+        {
+            var jdbcServiceName = SqlRequestToActivityMapper.GetJdbcServiceName(jdbcActivity.QueryStatement);
+            this.activityNameToServiceNameDictionnary.Add( jdbcActivity.Name, jdbcServiceName);
+        }
 	}
 }
 

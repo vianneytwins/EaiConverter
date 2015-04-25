@@ -155,6 +155,7 @@ namespace EaiConverter
 		[Test]
 		public void Should_return_Start_Method_with_return_type_string_When_Return_is_defined()
 		{
+            // prepare
             tibcoBWProcess.StartActivity = new Activity ("Start", ActivityType.startType);
 			tibcoBWProcess.StartActivity.Parameters = new List <ClassParameter> {
 				new ClassParameter
@@ -173,6 +174,7 @@ namespace EaiConverter
 			};
 		
 			var tibcoBWProcessBuilder = new TibcoProcessClassesBuilder ();
+            // Act
 			var classToGenerate = tibcoBWProcessBuilder.Build (tibcoBWProcess);
 
 
@@ -182,7 +184,7 @@ namespace EaiConverter
 					actual = ((CodeMemberMethod)member).ReturnType.BaseType;
 				}
 			}
-			//classGenerator.GenerateMethod(classToGenerate.Methods[0], stringBuilder, new TibcoBWConverter.CodeGenerator.utils.Tab(),false);
+
 			Assert.AreEqual ("string", actual);
 		}
 	}

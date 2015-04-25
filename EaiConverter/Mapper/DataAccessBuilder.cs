@@ -14,7 +14,6 @@ namespace EaiConverter.Mapper
 		private const string bodyMethodStart = "using (IDataAccess db = this.dataAccessFactory.CreateAccess())\n{\n";
 		private const string dbQuery = "db.Query";
 		const string iDataAccessFactory = "IDataAccessFactory";
-		public const string executeQueryMethodName = "ExecuteQuery";
 
         const string SqlQueryStatement = "sqlQueryStatement";
 
@@ -116,7 +115,7 @@ namespace EaiConverter.Mapper
 			var method = new CodeMemberMethod ();
 			method.Attributes = MemberAttributes.Public | MemberAttributes.Final;
 
-			method.Name = executeQueryMethodName;
+            method.Name = DataAccessServiceBuilder.ExecuteSqlQueryMethodName;
 
 			method.ReturnType = this.jdbcQueryBuilderUtils.ConvertSQLTypeToObjectType (jdbcQueryActivity.QueryOutputCachedSchemaDataTypes.ToString ());
 

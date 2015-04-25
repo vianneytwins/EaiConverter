@@ -15,14 +15,12 @@ namespace EaiConverter
 	[TestFixture]
 	public class CoreProcessBuilderTest
 	{
-		Dictionary <string, string> activities = new Dictionary <string, string> 
-		{
-			{"start","DoStart"},
-			{"step1","DoStep1"},
-			{"End","DoEnd"},
-			{"step2","DoStep2"},
-			{"step3","DoStep3"}
-		};
+        Dictionary <string, string> activitiesToServiceMapping = new Dictionary <string, string> 
+        {
+            {"step1","step1Service"},
+            {"step2","step2Service"},
+            {"step3","step3Service"}
+        };
 
 		CoreProcessBuilder builder;
 
@@ -72,67 +70,49 @@ namespace EaiConverter
 		[SetUp]
 		public void SetUp(){
 			this.builder = new CoreProcessBuilder ();
-
-		}
-		[Test]
-		public void Should_Return_Simple_Process(){
-
-			var activityStart = "start";
-            var expected = @"this.DoStart.ExecuteMethod();
-this.DoStep1.ExecuteMethod();
-this.DoEnd.ExecuteMethod();
-";
-			var codeStatementCollection = this.builder.GenerateCodeStatement (simpleProcessTransitions, this.activities ,activityStart, null);
-
-            var classesInString = TestCodeGeneratorUtils.GenerateCode (codeStatementCollection);
-
-            Assert.AreEqual (expected, classesInString);
-		}
-			
-
-		[Test]
-		public void Should_Return_Complex_if_Process(){
-
-			var activityStart = "start";
-            var expected = @"this.DoStart.ExecuteMethod();
-if (condition1)
-{
-    this.DoStep1.ExecuteMethod();
-    this.DoStep3.ExecuteMethod();
-}
-else
-{
-    this.DoStep2.ExecuteMethod();
-}
-this.DoEnd.ExecuteMethod();
-";
-			this.complexProcessTransitions.Sort ();
-			var codeStatementCollection = this.builder.GenerateCodeStatement (this.complexProcessTransitions, this.activities ,activityStart, null);
-
-            var classesInString = TestCodeGeneratorUtils.GenerateCode (codeStatementCollection);
-
-            Assert.AreEqual (expected, classesInString);
 		}
 
         [Test]
         public void Should_Return_Simple_Start_Method_Body(){
-            var expected = @"this.Dostep1.ExecuteMethod();
-this.DoEnd.ExecuteMethod();
+            var expected = @"this.step1Service.ExecuteQuery();
 ";
             var tibcoBWProcess = new TibcoBWProcess("MyTestProcess");
             tibcoBWProcess.StartActivity = new Activity("start", ActivityType.startType);
             tibcoBWProcess.EndActivity = new Activity("End", ActivityType.endType);
-            tibcoBWProcess.Transitions = simpleProcessTransitions;
+            tibcoBWProcess.Transitions = this.simpleProcessTransitions;
 
             CodeMemberMethod startMethod = new CodeMemberMethod();
-            var codeStatementCollection = this.builder.GenerateStartCodeStatement (tibcoBWProcess, startMethod, tibcoBWProcess.StartActivity.Name, null);
+            var codeStatementCollection = this.builder.GenerateStartCodeStatement (tibcoBWProcess, startMethod, tibcoBWProcess.StartActivity.Name, null, activitiesToServiceMapping);
 
             var classesInString = TestCodeGeneratorUtils.GenerateCode (codeStatementCollection);
 
             Assert.AreEqual (expected, classesInString);
         }
 
+        [Test]
+        public void Should_Return_Complex_Start_Method_Body(){
+            var expected = @"if (condition1)
+{
+    this.step1Service.ExecuteQuery();
+    this.step3Service.ExecuteQuery();
+}
+else
+{
+    this.step2Service.ExecuteQuery();
+}
+";
+            var tibcoBWProcess = new TibcoBWProcess("MyTestProcess");
+            tibcoBWProcess.StartActivity = new Activity("start", ActivityType.startType);
+            tibcoBWProcess.EndActivity = new Activity("End", ActivityType.endType);
+            tibcoBWProcess.Transitions = this.complexProcessTransitions;
 
+            CodeMemberMethod startMethod = new CodeMemberMethod();
+            var codeStatementCollection = this.builder.GenerateStartCodeStatement (tibcoBWProcess, startMethod, tibcoBWProcess.StartActivity.Name, null, activitiesToServiceMapping);
+
+            var classesInString = TestCodeGeneratorUtils.GenerateCode (codeStatementCollection);
+
+            Assert.AreEqual (expected, classesInString);
+        }
 
 
 	}

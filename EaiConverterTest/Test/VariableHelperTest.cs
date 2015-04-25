@@ -26,6 +26,12 @@ namespace EaiConverter
 			Assert.AreEqual ("myVariable",actual);
 		}
 
+        [Test]
+        public void Should_Return_myVariable_When_name_To_Convert_is_My_Variable(){
+            var actual = VariableHelper.ToVariableName ("My Variable");
+            Assert.AreEqual ("myVariable",actual);
+        }
+
 		[Test]
 		public void Should_Return_Empty_String_When_name_is_Null(){
 			var actual = VariableHelper.ToVariableName (null);

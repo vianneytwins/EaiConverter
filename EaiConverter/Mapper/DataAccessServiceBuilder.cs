@@ -13,6 +13,10 @@ namespace EaiConverter.Mapper
 
 		readonly JdbcQueryBuilderUtils jdbcQueryBuilderUtils;
 
+        const string DataAccessVariableName = "dataAccess";
+
+        public const string ExecuteSqlQueryMethodName = "ExecuteQuery";
+
 		public DataAccessServiceBuilder (JdbcQueryBuilderUtils jdbcQueryBuilderUtils){
 			this.jdbcQueryBuilderUtils = jdbcQueryBuilderUtils;
 		}
@@ -44,7 +48,6 @@ namespace EaiConverter.Mapper
 		{
 			return new CodeNamespaceImport[3] {
 				new CodeNamespaceImport ("System"),
-				//TODO : aps beau devrait etre loadé dans une conf
 				new CodeNamespaceImport (TargetAppNameSpaceService.domainContractNamespaceName),
 				new CodeNamespaceImport (TargetAppNameSpaceService.dataAccessNamespace)
 			};
@@ -55,7 +58,7 @@ namespace EaiConverter.Mapper
 		{
 			var fields = new List<CodeMemberField> {
 				new CodeMemberField {
-					Name = "dataAccess",
+                    Name = DataAccessVariableName,
 					Type = new CodeTypeReference (VariableHelper.ToClassName (jdbcQueryActivity.Name) + "DataAccess"),
 					Attributes = MemberAttributes.Private 
 				},
@@ -99,7 +102,7 @@ namespace EaiConverter.Mapper
 				var method = new CodeMemberMethod ();
 				method.Attributes = MemberAttributes.Public | MemberAttributes.Final;
 
-				method.Name = DataAccessBuilder.executeQueryMethodName;
+                method.Name = ExecuteSqlQueryMethodName;
 
 				method.ReturnType = this.jdbcQueryBuilderUtils.ConvertSQLTypeToObjectType (jdbcQueryActivity.QueryOutputCachedSchemaDataTypes.ToString ());
 
@@ -114,14 +117,14 @@ namespace EaiConverter.Mapper
 
 		public CodeStatement GenerateExecuteQueryBody (CodeMemberMethod method)
 		{
-			var dataAccessReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), "dataAccess");
+            var dataAccessReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), DataAccessVariableName);
 			var methodArgumentReferences = new CodeArgumentReferenceExpression[method.Parameters.Count];
 
 			for (int i = 0; i < method.Parameters.Count; i++) {
 				methodArgumentReferences [i] = new CodeArgumentReferenceExpression (method.Parameters[i].Name);
 			}
 		
-			var invocationExpression = new CodeMethodInvokeExpression (dataAccessReference, "ExecuteQuery", methodArgumentReferences);
+            var invocationExpression = new CodeMethodInvokeExpression(dataAccessReference, ExecuteSqlQueryMethodName, methodArgumentReferences);
 
 			if (method.ReturnType.BaseType != "void") {
 				return  new CodeMethodReturnStatement (invocationExpression);

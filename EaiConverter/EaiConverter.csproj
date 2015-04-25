@@ -44,7 +44,6 @@
     <Compile Include="Model\ConditionType.cs" />
     <Compile Include="Model\Activity.cs" />
     <Compile Include="Model\TibcoBWProcess.cs" />
-    <Compile Include="utils\enumType.cs" />
     <Compile Include="utils\ClassParamater.cs" />
     <Compile Include="CodeGenerator\XsdClassGenerator.cs" />
     <Compile Include="Model\JdbcQueryActivity.cs" />
@@ -75,6 +74,7 @@
     <Compile Include="CodeGenerator\Utils\Tab.cs" />
     <Compile Include="CodeGenerator\Utils\VariableHelper.cs" />
     <Compile Include="Model\ActivityType.cs" />
+    <Compile Include="Processor\SqlRequestToActivityMapper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
