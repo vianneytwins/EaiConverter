@@ -1,0 +1,8 @@
+language: csharp
+solution: EaiConverter.sln
+install:
+  - nuget restore EaiConverter.sln
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+script:
+  - xbuild /p:Configuration=Release EaiConverter.sln
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./EaiConverterTests/bin/Release/EaiConverterTest.dll
