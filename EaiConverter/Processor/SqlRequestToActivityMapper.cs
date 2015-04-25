@@ -21,6 +21,10 @@ namespace EaiConverter.Processor
             return sqlToJbdcService.ContainsKey(sqlRequest);
         }
 
+        public static int Count(){
+            return sqlToJbdcService.Count;
+        }
+
         public static string GetJdbcServiceName (string sqlRequest)
         {
             string jdbcServiceName = String.Empty;

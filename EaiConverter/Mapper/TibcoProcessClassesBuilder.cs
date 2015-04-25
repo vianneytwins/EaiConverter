@@ -211,10 +211,10 @@ namespace EaiConverter.Mapper
                     }
                     else
                     {
-                        var jdbcActivityCodeNameSpaces = jdbcQueryActivityBuilder.Build(jdbcActivity);
+                        var jdbcActivityCodeDom = jdbcQueryActivityBuilder.Build(jdbcActivity);
 
-                        activityClasses.AddRange(jdbcActivityCodeNameSpaces);
-                        this.RegisterThatThisSqlRequestCorrespondToAService(tibcoBwProcessToGenerate, jdbcActivity, jdbcActivityCodeNameSpaces);
+                        activityClasses.AddRange(jdbcActivityCodeDom.ClassesToGenerate);
+                        this.RegisterThatThisSqlRequestCorrespondToAService(tibcoBwProcessToGenerate, jdbcActivity, jdbcActivityCodeDom.ClassesToGenerate);
                     }
                 }
                 else

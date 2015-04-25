@@ -7,10 +7,11 @@ using System.IO;
 using System.Text;
 using EaiConverter.Model;
 using EaiConverter.Mapper.Utils;
+using EaiConverter.Mapper;
 
 namespace EaiConverter.Mapper
 {
-	public class JdbcQueryActivityBuilder
+    public class JdbcQueryActivityBuilder : IActivityBuilder
 	{
 		DataAccessBuilder dataAccessBuilder;
 		DataAccessServiceBuilder dataAccessServiceBuilder;
@@ -23,9 +24,10 @@ namespace EaiConverter.Mapper
 			this.dataAccessCommonBuilder = dataAccessCommonBuilder;
 		}
 
-		public CodeNamespaceCollection Build (JdbcQueryActivity jdbcQueryActivity)
+        public ActivityCodeDom Build (Activity activity)
 		{
-			var dataAccessNameSpace = this.dataAccessBuilder.Build (jdbcQueryActivity);
+            JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity) activity;
+            var dataAccessNameSpace = this.dataAccessBuilder.Build (jdbcQueryActivity);
 			var dataAccessInterfaceNameSpace = InterfaceExtractorFromClass.Extract (dataAccessNameSpace.Types[0], TargetAppNameSpaceService.dataAccessNamespace );
 			dataAccessNameSpace.Types[0].BaseTypes.Add(new CodeTypeReference(dataAccessInterfaceNameSpace.Types[0].Name));
 
@@ -33,13 +35,13 @@ namespace EaiConverter.Mapper
 			var serviceInterfaceNameSpace = InterfaceExtractorFromClass.Extract (serviceNameSpaces.Types[0], TargetAppNameSpaceService.domainContractNamespaceName );
 			serviceNameSpaces.Types[0].BaseTypes.Add(new CodeTypeReference(serviceInterfaceNameSpace.Types[0].Name));
 
-			//Todo check if was already generated once
 			var dataCommonNamespace = this.dataAccessCommonBuilder.Build ();
 
 			//TODO inject in construtor ? il faut aller chercher le nom du parametre du custom attributes du constructor ... ugly non ?
 			var dataBaseAttributeNamspace = new DatabaseAttributeBuilder ().Build (GetDataCustomAttributeName (dataAccessNameSpace));
 
-			var result = new CodeNamespaceCollection {
+            var result = new ActivityCodeDom();
+            result.ClassesToGenerate = new CodeNamespaceCollection {
 				dataAccessNameSpace,
 				dataAccessInterfaceNameSpace,
 				serviceNameSpaces,

@@ -5,7 +5,7 @@ using System.CodeDom.Compiler;
 using System.IO;
 using EaiConverter.Mapper;
 
-namespace EaiConverter.Test
+namespace EaiConverter
 {
 	[TestFixture]
 	public class DataAccessCommonBuilderTest
