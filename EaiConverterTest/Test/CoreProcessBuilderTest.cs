@@ -9,17 +9,18 @@ using System.CodeDom.Compiler;
 using System.CodeDom;
 using EaiConverter.Model;
 using EaiConverter.Test.Utils;
+using EaiConverter.CodeGenerator.Utils;
 
 namespace EaiConverter
 {
 	[TestFixture]
 	public class CoreProcessBuilderTest
 	{
-        Dictionary <string, string> activitiesToServiceMapping = new Dictionary <string, string> 
+        Dictionary <string, CodeMethodInvokeExpression> activitiesToServiceMapping = new Dictionary <string, CodeMethodInvokeExpression> 
         {
-            {"step1","step1Service"},
-            {"step2","step2Service"},
-            {"step3","step3Service"}
+            {"step1",DefaultInvocationMethod("step1Service")},
+            {"step2",DefaultInvocationMethod("step2Service")},
+            {"step3",DefaultInvocationMethod("step3Service")}
         };
 
 		CoreProcessBuilder builder;
@@ -115,6 +116,10 @@ else
         }
 
 
+        public static CodeMethodInvokeExpression DefaultInvocationMethod (string activityName){
+            var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(activityName));
+            return new CodeMethodInvokeExpression (activityServiceReference, "ExecuteQuery", new CodeExpression[] {});
+        }
 	}
 }
 

@@ -15,7 +15,7 @@ namespace EaiConverter.Mapper
 	{
         CoreProcessBuilder coreProcessBuilder;
 
-        Dictionary<string,string> activityNameToServiceNameDictionnary = new Dictionary<string, string> ();
+        Dictionary<string,CodeMethodInvokeExpression> activityNameToServiceNameDictionnary = new Dictionary<string, CodeMethodInvokeExpression> ();
 
         public TibcoProcessClassesBuilder (){
             this.coreProcessBuilder = new CoreProcessBuilder();
@@ -202,47 +202,29 @@ namespace EaiConverter.Mapper
 
 			var activityClasses = new CodeNamespaceCollection ();
 			foreach (var activity in tibcoBwProcessToGenerate.Activities) {
+                //TODO : faut il mieux 2 method ou 1 objet avec les 2
+                var tempActivityClasses = new CodeNamespaceCollection ();
+                CodeMethodInvokeExpression activityMethodInvocation; 
                 if (activity.Type == ActivityType.jdbcQueryActivityType || activity.Type == ActivityType.jdbcCallActivityType || activity.Type == ActivityType.jdbcUpdateActivityType)
                 {
-                    var jdbcActivity = (JdbcQueryActivity)activity;
-                    if (this.HasThisSqlRequestAlreadyGenerateAService(jdbcActivity.QueryStatement))
-                    {
-                        this.RegisterThatThisJdbcActivityMapsAnExistingService(tibcoBwProcessToGenerate, jdbcActivity);
-                    }
-                    else
-                    {
-                        var jdbcActivityCodeDom = jdbcQueryActivityBuilder.Build(jdbcActivity);
+                    var activityCodeDom = jdbcQueryActivityBuilder.Build(activity);
+                    tempActivityClasses = activityCodeDom.ClassesToGenerate;
+                    activityMethodInvocation = activityCodeDom.InvocationCode;
 
-                        activityClasses.AddRange(jdbcActivityCodeDom.ClassesToGenerate);
-                        this.RegisterThatThisSqlRequestCorrespondToAService(tibcoBwProcessToGenerate, jdbcActivity, jdbcActivityCodeDom.ClassesToGenerate);
-                    }
                 }
                 else
                 {
-                    this.activityNameToServiceNameDictionnary.Add( activity.Name, VariableHelper.ToVariableName(activity.Name));
+                    activityMethodInvocation = this.DefaultInvocationMethod(activity.Name);
                 }
+                activityClasses.AddRange(tempActivityClasses);
+                this.activityNameToServiceNameDictionnary.Add( activity.Name, activityMethodInvocation);
 			}
 			return activityClasses;
 		}
-
-        private bool HasThisSqlRequestAlreadyGenerateAService(string queryStatement)
-        {
-            return SqlRequestToActivityMapper.ContainsKey(queryStatement);
-        }
-
-        private void RegisterThatThisSqlRequestCorrespondToAService(TibcoBWProcess tibcoBwProcessToGenerate, JdbcQueryActivity jdbcActivity, CodeNamespaceCollection jdbcActivityCodeNameSpaces)
-        {
-            // TODO : not safe to rely on indexes to find the service name
-            var jdbcServiceName = jdbcActivityCodeNameSpaces[2].Types[0].Name;
-
-            SqlRequestToActivityMapper.SaveSqlRequest(jdbcActivity.QueryStatement, jdbcServiceName);
-            activityNameToServiceNameDictionnary.Add( jdbcActivity.Name, jdbcServiceName);
-        }
-
-        private void RegisterThatThisJdbcActivityMapsAnExistingService(TibcoBWProcess tibcoBwProcessToGenerate, JdbcQueryActivity jdbcActivity)
-        {
-            var jdbcServiceName = SqlRequestToActivityMapper.GetJdbcServiceName(jdbcActivity.QueryStatement);
-            this.activityNameToServiceNameDictionnary.Add( jdbcActivity.Name, jdbcServiceName);
+  
+        public CodeMethodInvokeExpression DefaultInvocationMethod (string activityName){
+            var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(activityName));
+            return new CodeMethodInvokeExpression (activityServiceReference, "ExecuteQuery", new CodeExpression[] {});
         }
 	}
 }

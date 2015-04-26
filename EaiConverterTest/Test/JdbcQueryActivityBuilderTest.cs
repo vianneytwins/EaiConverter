@@ -5,6 +5,7 @@ using EaiConverter.Mapper;
 using System.Collections.Generic;
 using System.CodeDom;
 using EaiConverter.Mapper.Utils;
+using EaiConverter.Test.Utils;
 
 namespace EaiConverter
 {
@@ -79,6 +80,14 @@ namespace EaiConverter
             CodeNamespaceCollection classToGenerate = jdbcQueryActivityBuilder.Build (jdbcQueryActivity).ClassesToGenerate;
 			Assert.AreEqual ("idBbUnique", ((CodeMemberMethod)(classToGenerate [0].Types[0].Members[3])).Parameters[0].Name);
 		}
+
+        [Test]
+        public void Should_Return_Invocation_Code(){
+            CodeMethodInvokeExpression invocationExpression = jdbcQueryActivityBuilder.GenerateCodeInvocation ("MyService");
+            var codeCollectionTogenerate = new CodeStatementCollection();
+            codeCollectionTogenerate.Add(invocationExpression);
+            Assert.AreEqual ("this.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(codeCollectionTogenerate));
+        }
 	}
 }
 
