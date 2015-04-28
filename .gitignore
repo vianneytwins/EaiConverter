@@ -1,0 +1,8 @@
+
+*.userprefs
+
+EaiConverter/bin/*
+EaiConverter/obj/*
+
+EaiConverterTest/bin/*
+EaiConverterTest/obj/*
