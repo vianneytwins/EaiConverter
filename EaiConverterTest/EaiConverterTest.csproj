@@ -66,6 +66,9 @@
     <Compile Include="Test\Utils\TestCodeGeneratorUtils.cs" />
     <Compile Include="Test\SqlRequestToActivityMapperTest.cs" />
     <Compile Include="Test\XmlParseActivityParserTest.cs" />
+    <Compile Include="Test\MapperActivityParserTest.cs" />
+    <Compile Include="Test\CallProcessActivityParserTest.cs" />
+    <Compile Include="Test\AssignActivityParserTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />

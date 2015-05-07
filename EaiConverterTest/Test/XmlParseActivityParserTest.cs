@@ -17,13 +17,17 @@ namespace EaiConverter
         {
             xmlParseActivityParser = new XmlParseActivityParser ();
             var xml =
-                @"<pd:activity name=""Parse Equity"" xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"">
+                @"<pd:activity name=""Parse Equity"" xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
 <pd:type>com.tibco.plugin.xml.XMLParseActivity</pd:type>
 <config>
-<inputStyle>text</inputStyle>
-<term ref=""pfx4:EquityRecord""/>
-
+    <inputStyle>text</inputStyle>
+    <term ref=""pfx4:EquityRecord""/>
 </config>
+<pd:inputBindings>
+    <sqlParams>
+        <xsl:value-of select=""testvalue""/>
+    </sqlParams>
+</pd:inputBindings>
 </pd:activity>";
             doc = XElement.Parse(xml);
         }

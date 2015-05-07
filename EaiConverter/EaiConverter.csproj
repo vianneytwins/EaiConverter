@@ -79,6 +79,12 @@
     <Compile Include="Parser\XmlParseActivityParser.cs" />
     <Compile Include="Model\XmlParseActivity.cs" />
     <Compile Include="Model\JdbcQueryActivity.cs" />
+    <Compile Include="Model\MapperActivity.cs" />
+    <Compile Include="Parser\MapperActivityParser.cs" />
+    <Compile Include="Model\CallProcessActivity.cs" />
+    <Compile Include="Parser\CallProcessActivityParser.cs" />
+    <Compile Include="Model\AssignActivity.cs" />
+    <Compile Include="Parser\AssignActivityParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
