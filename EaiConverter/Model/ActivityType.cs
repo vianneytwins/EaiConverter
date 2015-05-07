@@ -12,6 +12,7 @@ namespace EaiConverter.Model
         public static readonly ActivityType jdbcCallActivityType = new ActivityType ("com.tibco.plugin.jdbc.JDBCCallActivity");
         public static readonly ActivityType jdbcUpdateActivityType = new ActivityType ("com.tibco.plugin.jdbc.JDBCUpdateActivity");
         public static readonly ActivityType jdbcQueryActivityType = new ActivityType ("com.tibco.plugin.jdbc.JDBCQueryActivity");
+        public static readonly ActivityType xmlParseActivityType = new ActivityType ("com.tibco.plugin.xml.XMLParseActivity");
         public static readonly ActivityType startType = new ActivityType ("startType");
         public static readonly ActivityType endType = new ActivityType ("endType");
         public static readonly ActivityType NotHandleYet = new ActivityType ("NotHandleYet");

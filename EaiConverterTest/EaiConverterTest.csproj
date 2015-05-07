@@ -65,6 +65,7 @@
     <Compile Include="Test\Utils\StringWindowsSupportExtension.cs" />
     <Compile Include="Test\Utils\TestCodeGeneratorUtils.cs" />
     <Compile Include="Test\SqlRequestToActivityMapperTest.cs" />
+    <Compile Include="Test\XmlParseActivityParserTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />

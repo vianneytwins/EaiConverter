@@ -45,7 +45,7 @@ namespace EaiConverter
 
 		[Test]
 		public void Should_Return_Activity_Type_Is_JDBCQueryActivity (){
-			JdbcQueryActivity jdbcQueryActivity = jdbcQueryActivityParser.Parse (doc);
+            JdbcQueryActivity jdbcQueryActivity = jdbcQueryActivityParser.Parse (doc);
 
             Assert.AreEqual ("com.tibco.plugin.jdbc.JDBCCallActivity", jdbcQueryActivity.Type.ToString());
 		}
@@ -53,14 +53,14 @@ namespace EaiConverter
 
 		[Test]
 		public void Should_Return_QueryStatement_is_select_Something(){
-			JdbcQueryActivity jdbcQueryActivity = jdbcQueryActivityParser.Parse (doc);
+            JdbcQueryActivity jdbcQueryActivity = jdbcQueryActivityParser.Parse (doc);
 
 			Assert.AreEqual ("LyxorSetEUTicker", jdbcQueryActivity.QueryStatement);
 		}
 
 		[Test]
 		public void Should_Return_QueryStatementParameter_is_named_IdBbUnique_and_type_VARCHAR(){
-			JdbcQueryActivity jdbcQueryActivity = jdbcQueryActivityParser.Parse (doc);
+            JdbcQueryActivity jdbcQueryActivity = jdbcQueryActivityParser.Parse (doc);
 
 			Assert.AreEqual ("int", jdbcQueryActivity.QueryStatementParameters["Id_Bb_Unique"]);
 		}

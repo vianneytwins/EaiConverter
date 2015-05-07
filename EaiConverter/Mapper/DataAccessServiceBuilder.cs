@@ -21,7 +21,7 @@ namespace EaiConverter.Mapper
 			this.jdbcQueryBuilderUtils = jdbcQueryBuilderUtils;
 		}
             
-		public CodeNamespace Build (JdbcQueryActivity jdbcQueryActivity){
+        public CodeNamespace Build (JdbcQueryActivity jdbcQueryActivity){
 
 			var serviceNameSpace = new CodeNamespace (TargetAppNameSpaceService.domainServiceNamespaceName);
 			serviceNameSpace.Imports.AddRange (this.GenerateServiceImport (jdbcQueryActivity));
@@ -44,7 +44,7 @@ namespace EaiConverter.Mapper
 		}
 
 
-		public CodeNamespaceImport[] GenerateServiceImport (JdbcQueryActivity jdbcQueryActivity)
+        public CodeNamespaceImport[] GenerateServiceImport (JdbcQueryActivity jdbcQueryActivity)
 		{
 			return new CodeNamespaceImport[3] {
 				new CodeNamespaceImport ("System"),
@@ -54,7 +54,7 @@ namespace EaiConverter.Mapper
 		}
 
 
-		private CodeMemberField[] GenererateFields (JdbcQueryActivity jdbcQueryActivity)
+        private CodeMemberField[] GenererateFields (JdbcQueryActivity jdbcQueryActivity)
 		{
 			var fields = new List<CodeMemberField> {
 				new CodeMemberField {
@@ -66,12 +66,12 @@ namespace EaiConverter.Mapper
 			return fields.ToArray();
 		}
 
-		private CodeMemberMethod[] GenererateMethods (JdbcQueryActivity jdbcQueryActivity)
+        private CodeMemberMethod[] GenererateMethods (JdbcQueryActivity jdbcQueryActivity)
 		{
 			return new CodeMemberMethod[1]{ this.GenerateExecuteQueryMethod(jdbcQueryActivity)};
 		}
 
-		private CodeConstructor[] GenererateContructors (JdbcQueryActivity jdbcQueryActivity, CodeTypeDeclaration classModel)
+        private CodeConstructor[] GenererateContructors (JdbcQueryActivity jdbcQueryActivity, CodeTypeDeclaration classModel)
 		{
 			var constructor = new CodeConstructor();
 			constructor.Attributes = MemberAttributes.Public;
@@ -96,7 +96,7 @@ namespace EaiConverter.Mapper
 			return new List<CodeConstructor> { constructor }.ToArray();
 		}
 
-		public CodeMemberMethod GenerateExecuteQueryMethod (JdbcQueryActivity jdbcQueryActivity)
+        public CodeMemberMethod GenerateExecuteQueryMethod (JdbcQueryActivity jdbcQueryActivity)
 		{
 			{
 				var method = new CodeMemberMethod ();

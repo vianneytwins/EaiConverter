@@ -12,7 +12,7 @@ namespace EaiConverter
 	[TestFixture]
 	public class JdbcQueryActivityBuilderTest
 	{
-		JdbcQueryActivity jdbcQueryActivity;
+        JdbcQueryActivity jdbcQueryActivity;
 		JdbcQueryActivityBuilder jdbcQueryActivityBuilder;
 
 		const string select = "Select 1";

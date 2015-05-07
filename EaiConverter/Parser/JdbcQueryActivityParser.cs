@@ -9,9 +9,9 @@ namespace EaiConverter.Parser
 
 	public class JdbcQueryActivityParser
 	{
-		public JdbcQueryActivity Parse (XElement inputElement)
+        public JdbcQueryActivity Parse (XElement inputElement)
 		{
-			var jdbcQueryActivity = new JdbcQueryActivity ();
+            var jdbcQueryActivity = new JdbcQueryActivity ();
 
 			jdbcQueryActivity.Name = inputElement.Attribute ("name").Value;
             jdbcQueryActivity.Type = (ActivityType) inputElement.Element (TibcoBWProcessLinqParser.tibcoPrefix + "type").Value;

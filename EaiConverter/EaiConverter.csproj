@@ -46,7 +46,6 @@
     <Compile Include="Model\TibcoBWProcess.cs" />
     <Compile Include="utils\ClassParamater.cs" />
     <Compile Include="CodeGenerator\XsdClassGenerator.cs" />
-    <Compile Include="Model\JdbcQueryActivity.cs" />
     <Compile Include="Parser\TibcoBWProcessLinqParser.cs" />
     <Compile Include="Parser\XsdParser.cs" />
     <Compile Include="Parser\JdbcQueryActivityParser.cs" />
@@ -77,6 +76,9 @@
     <Compile Include="Processor\SqlRequestToActivityMapper.cs" />
     <Compile Include="Mapper\IActivityBuilder.cs" />
     <Compile Include="Model\ActivityCodeDom.cs" />
+    <Compile Include="Parser\XmlParseActivityParser.cs" />
+    <Compile Include="Model\XmlParseActivity.cs" />
+    <Compile Include="Model\JdbcQueryActivity.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
