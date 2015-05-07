@@ -39,7 +39,7 @@ namespace EaiConverter
 
         [Test]
         public void Should_Return_Activity_Type_Is_MapperActivity (){
-            MapperActivity mapperActivity = mapperActivityParser.Parse (doc);
+            MapperActivity mapperActivity = (MapperActivity) mapperActivityParser.Parse (doc);
 
             Assert.AreEqual ("com.tibco.plugin.mapper.MapperActivity", mapperActivity.Type.ToString());
         }
@@ -47,7 +47,7 @@ namespace EaiConverter
 
         [Test]
         public void Should_Return_XsdReference_in_Element_config(){
-            MapperActivity mapperActivity = mapperActivityParser.Parse (doc);
+            MapperActivity mapperActivity = (MapperActivity) mapperActivityParser.Parse (doc);
 
             Assert.AreEqual ("pfx2:NTMMessage", mapperActivity.XsdReference);
         }

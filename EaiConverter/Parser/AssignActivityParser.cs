@@ -7,9 +7,9 @@ using EaiConverter.Parser.Utils;
 namespace EaiConverter.Parser
 {
 
-    public class AssignActivityParser
+    public class AssignActivityParser : IActivityParser
 	{
-        public AssignActivity Parse (XElement inputElement)
+        public Activity Parse (XElement inputElement)
 		{
             var assignActivity = new AssignActivity ();
 
@@ -19,7 +19,7 @@ namespace EaiConverter.Parser
 
             assignActivity.VariableName = XElementParserUtils.GetStringValue(configElement.Element("variableName"));
 			
-			// TODO : retrieve the inputbinding
+            assignActivity.InputBindings = inputElement.Element (TibcoBWProcessLinqParser.tibcoPrefix + "inputBindings").Nodes();
 
             return assignActivity;
 		}

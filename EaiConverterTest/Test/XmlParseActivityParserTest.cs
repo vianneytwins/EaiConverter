@@ -34,7 +34,7 @@ namespace EaiConverter
 
         [Test]
         public void Should_Return_Activity_Type_Is_XmlParseActivity (){
-            XmlParseActivity xmlParseActivity = xmlParseActivityParser.Parse (doc);
+            XmlParseActivity xmlParseActivity = (XmlParseActivity) xmlParseActivityParser.Parse (doc);
 
             Assert.AreEqual ("com.tibco.plugin.xml.XMLParseActivity", xmlParseActivity.Type.ToString());
         }
@@ -42,7 +42,7 @@ namespace EaiConverter
 
         [Test]
         public void Should_Return_XsdReference_in_Term_config(){
-            XmlParseActivity xmlParseActivity = xmlParseActivityParser.Parse (doc);
+            XmlParseActivity xmlParseActivity = (XmlParseActivity) xmlParseActivityParser.Parse (doc);
 
             Assert.AreEqual ("pfx4:EquityRecord", xmlParseActivity.XsdReference);
         }

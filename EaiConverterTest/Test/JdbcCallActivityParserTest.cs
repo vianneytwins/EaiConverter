@@ -17,7 +17,7 @@ namespace EaiConverter
 		{
 			jdbcQueryActivityParser = new JdbcQueryActivityParser ();
 			var xml =
-				@"<pd:activity name=""GetUndlCurrency"" xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"">
+                @"<pd:activity name=""GetUndlCurrency"" xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
 <pd:type>com.tibco.plugin.jdbc.JDBCCallActivity</pd:type>
 <config>
 <timeout>10</timeout>
@@ -39,13 +39,23 @@ namespace EaiConverter
 	</parameter>
 </parameterTypes>
 </config>
+<pd:inputBindings>
+    <sqlParams>
+        <FundName>
+            <xsl:value-of select=""testvalue""/>
+        </FundName>
+        <AdminID>
+            <xsl:value-of select=""EVL""/>
+        </AdminID>
+    </sqlParams>
+</pd:inputBindings>
 </pd:activity>";
 			doc = XElement.Parse(xml);
 		}
 
 		[Test]
 		public void Should_Return_Activity_Type_Is_JDBCQueryActivity (){
-            JdbcQueryActivity jdbcQueryActivity = jdbcQueryActivityParser.Parse (doc);
+            JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity) jdbcQueryActivityParser.Parse (doc);
 
             Assert.AreEqual ("com.tibco.plugin.jdbc.JDBCCallActivity", jdbcQueryActivity.Type.ToString());
 		}
@@ -53,14 +63,14 @@ namespace EaiConverter
 
 		[Test]
 		public void Should_Return_QueryStatement_is_select_Something(){
-            JdbcQueryActivity jdbcQueryActivity = jdbcQueryActivityParser.Parse (doc);
+            JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity) jdbcQueryActivityParser.Parse (doc);
 
 			Assert.AreEqual ("LyxorSetEUTicker", jdbcQueryActivity.QueryStatement);
 		}
 
 		[Test]
 		public void Should_Return_QueryStatementParameter_is_named_IdBbUnique_and_type_VARCHAR(){
-            JdbcQueryActivity jdbcQueryActivity = jdbcQueryActivityParser.Parse (doc);
+            JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity) jdbcQueryActivityParser.Parse (doc);
 
 			Assert.AreEqual ("int", jdbcQueryActivity.QueryStatementParameters["Id_Bb_Unique"]);
 		}

@@ -7,9 +7,9 @@ using EaiConverter.Parser.Utils;
 namespace EaiConverter.Parser
 {
 
-    public class CallProcessActivityParser
+    public class CallProcessActivityParser : IActivityParser
 	{
-        public CallProcessActivity Parse (XElement inputElement)
+        public Activity Parse (XElement inputElement)
 		{
             var callProcessActivity = new CallProcessActivity ();
 
@@ -19,7 +19,7 @@ namespace EaiConverter.Parser
 
             callProcessActivity.ProcessName = XElementParserUtils.GetStringValue(configElement.Element("processName"));
 			
-			// TODO : retrieve the inputbinding
+            callProcessActivity.InputBindings = inputElement.Element (TibcoBWProcessLinqParser.tibcoPrefix + "inputBindings").Nodes();
 
             return callProcessActivity;
 		}

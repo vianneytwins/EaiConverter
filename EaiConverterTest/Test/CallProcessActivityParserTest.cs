@@ -39,7 +39,7 @@ namespace EaiConverter
 
         [Test]
         public void Should_Return_Activity_Type_Is_CallProcessActivity (){
-            CallProcessActivity callProcessActivity = callProcessActivityParser.Parse (doc);
+            CallProcessActivity callProcessActivity = (CallProcessActivity) callProcessActivityParser.Parse (doc);
 
             Assert.AreEqual ("com.tibco.pe.core.CallProcessActivity", callProcessActivity.Type.ToString());
         }
@@ -47,7 +47,7 @@ namespace EaiConverter
 
         [Test]
         public void Should_Return_ProcessName_in_config(){
-            CallProcessActivity callProcessActivity = callProcessActivityParser.Parse (doc);
+            CallProcessActivity callProcessActivity = (CallProcessActivity) callProcessActivityParser.Parse (doc);
 
             Assert.AreEqual ("/Process/DAI/PrLookup.Fund.process", callProcessActivity.ProcessName);
         }

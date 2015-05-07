@@ -7,9 +7,9 @@ using EaiConverter.Parser.Utils;
 namespace EaiConverter.Parser
 {
 
-	public class JdbcQueryActivityParser
+    public class JdbcQueryActivityParser : IActivityParser
 	{
-        public JdbcQueryActivity Parse (XElement inputElement)
+        public Activity Parse (XElement inputElement)
 		{
             var jdbcQueryActivity = new JdbcQueryActivity ();
 
@@ -62,8 +62,10 @@ namespace EaiConverter.Parser
 			jdbcQueryActivity.QueryOutputCachedSchemaStatus = XElementParserUtils.GetStringValue(configElement.Element("QueryOutputCachedSchemaStatus"));
 			//var elt1 = inputElement.Element ("config").Element("til;
 
-			// TODO : retrieve the inputbinding
-
+            if (inputElement.Element(TibcoBWProcessLinqParser.tibcoPrefix + "inputBindings") != null)
+            {
+                jdbcQueryActivity.InputBindings = inputElement.Element(TibcoBWProcessLinqParser.tibcoPrefix + "inputBindings").Nodes();
+            }
 
 			return jdbcQueryActivity;
 		}

@@ -85,6 +85,9 @@
     <Compile Include="Parser\CallProcessActivityParser.cs" />
     <Compile Include="Model\AssignActivity.cs" />
     <Compile Include="Parser\AssignActivityParser.cs" />
+    <Compile Include="Parser\IActivityParser.cs" />
+    <Compile Include="Parser\IActivityParserFactory.cs" />
+    <Compile Include="Parser\ActivityParserFactory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

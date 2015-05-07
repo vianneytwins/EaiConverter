@@ -7,9 +7,9 @@ using EaiConverter.Parser.Utils;
 namespace EaiConverter.Parser
 {
 
-    public class XmlParseActivityParser
+    public class XmlParseActivityParser : IActivityParser
 	{
-        public XmlParseActivity Parse (XElement inputElement)
+        public Activity Parse (XElement inputElement)
 		{
             var xmlParseActivity = new XmlParseActivity ();
 
@@ -19,7 +19,7 @@ namespace EaiConverter.Parser
 
             xmlParseActivity.XsdReference = configElement.Element("term").Attribute("ref").Value;
 			
-			// TODO : retrieve the inputbinding
+            xmlParseActivity.InputBindings = inputElement.Element (TibcoBWProcessLinqParser.tibcoPrefix + "inputBindings").Nodes();
 
 
 			return xmlParseActivity;

@@ -7,9 +7,9 @@ using EaiConverter.Parser.Utils;
 namespace EaiConverter.Parser
 {
 
-    public class MapperActivityParser
+    public class MapperActivityParser : IActivityParser
 	{
-        public MapperActivity Parse (XElement inputElement)
+        public Activity Parse (XElement inputElement)
 		{
             var mapperActivity = new MapperActivity ();
 
@@ -19,8 +19,7 @@ namespace EaiConverter.Parser
 
             mapperActivity.XsdReference = configElement.Element("element").Attribute("ref").Value;
 			
-			// TODO : retrieve the inputbinding
-
+            mapperActivity.InputBindings = inputElement.Element (TibcoBWProcessLinqParser.tibcoPrefix + "inputBindings").Nodes();
 
             return mapperActivity;
 		}

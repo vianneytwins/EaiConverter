@@ -78,12 +78,14 @@ namespace EaiConverter.Parser
 			IEnumerable<XElement> activityElements = from element in allFileElement.Elements (tibcoPrefix + "activity")
 			select element;
 			tibcoBwProcess.Activities = new List<Activity> ();
+            var activityParserFactory = new ActivityParserFactory();
+
 			foreach (XElement element in activityElements) {
 				var activityType = element.Element (tibcoPrefix + "type").Value;
 				Activity activity;
-				// TODO : faire une factory
-                if (activityType == ActivityType.jdbcQueryActivityType.ToString() || activityType == ActivityType.jdbcUpdateActivityType.ToString()  || activityType == ActivityType.jdbcCallActivityType.ToString()  ) {
-					activity = new JdbcQueryActivityParser ().Parse (element);
+                var activityParser = activityParserFactory.GetParser(activityType);
+                if (activityParser != null ) {
+                    activity = activityParser.Parse (element);
 				} else {
                     activity = new Activity (element.Attribute ("name").Value, ActivityType.NotHandleYet);
 				} 

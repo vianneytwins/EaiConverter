@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Xml.Linq;
+using System.Collections.Generic;
 
 namespace EaiConverter.Model
 {
@@ -15,7 +16,7 @@ namespace EaiConverter.Model
 
         public string VariableName {get; set;}
 
-        public XElement InputBinding {get; set;}
+        public IEnumerable<XNode> InputBindings {get; set;}
     }
 }
 

@@ -48,7 +48,7 @@ namespace EaiConverter
         public void Should_Return_VariableName_in_config(){
             var assignActivity = assignActivityParser.Parse (doc);
 
-            Assert.AreEqual ("var", assignActivity.VariableName);
+            Assert.AreEqual ("var", ((AssignActivity) assignActivity).VariableName);
         }
     
     }

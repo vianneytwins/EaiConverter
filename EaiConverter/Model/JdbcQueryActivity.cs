@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using EaiConverter.Model;
+using System.Xml.Linq;
 
 namespace EaiConverter.Model
 {
@@ -46,6 +47,8 @@ namespace EaiConverter.Model
 			get;
 			set;
 		}
+
+        public IEnumerable<XNode> InputBindings {get; set;}
 	}
 
 }

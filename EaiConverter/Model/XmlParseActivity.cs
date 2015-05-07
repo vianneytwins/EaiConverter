@@ -18,7 +18,7 @@ namespace EaiConverter.Model
             
         public string XsdReference {get; set;}
 
-        public XElement InputBinding {get; set;}
+        public IEnumerable<XNode> InputBindings {get; set;}
 
 	}
 
