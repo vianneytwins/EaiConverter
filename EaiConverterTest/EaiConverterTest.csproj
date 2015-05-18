@@ -69,6 +69,7 @@
     <Compile Include="Test\MapperActivityParserTest.cs" />
     <Compile Include="Test\CallProcessActivityParserTest.cs" />
     <Compile Include="Test\AssignActivityParserTest.cs" />
+    <Compile Include="Test\XpathBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />

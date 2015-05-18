@@ -89,6 +89,8 @@
     <Compile Include="Parser\IActivityParserFactory.cs" />
     <Compile Include="Parser\ActivityParserFactory.cs" />
     <Compile Include="Mapper\XslBuilder.cs" />
+    <Compile Include="Mapper\XpathBuilder.cs" />
+    <Compile Include="Mapper\IXpathBuilder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
