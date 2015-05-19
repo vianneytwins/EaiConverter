@@ -11,13 +11,6 @@ namespace EaiConverter
 	[TestFixture]
 	public class XsdParserTest
 	{
-
-
-
-		//string xml = yourXml;
-
-		//var doc = XDocument.Parse(xml);
-
 		[Test]
 		public void Should_return_One_element_with_Type_String ()
 		{

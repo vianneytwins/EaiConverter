@@ -70,6 +70,7 @@
     <Compile Include="Test\CallProcessActivityParserTest.cs" />
     <Compile Include="Test\AssignActivityParserTest.cs" />
     <Compile Include="Test\XpathBuilderTest.cs" />
+    <Compile Include="Test\CsharpSourceCodeGeneratorServiceTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />
