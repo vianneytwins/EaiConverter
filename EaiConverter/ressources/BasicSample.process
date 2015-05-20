@@ -144,6 +144,11 @@ xmlns:ns1="http://www.w3.org/2001/XMLSchema5"
 </pd:transition>
 <pd:transition>
 	<pd:from>GetUndlCurrency</pd:from>
+	<pd:to>Assign AdminPrice</pd:to>
+	<pd:conditionType>always</pd:conditionType>
+</pd:transition>
+<pd:transition>
+	<pd:from>Assign AdminPrice</pd:from>
 	<pd:to>End</pd:to>
 	<pd:conditionType>always</pd:conditionType>
 </pd:transition>

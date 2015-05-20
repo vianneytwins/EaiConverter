@@ -198,7 +198,8 @@ namespace EaiConverter.Mapper
 		{
 			//TODO build a factory instead
 			var jdbcQueryBuilderUtils = new JdbcQueryBuilderUtils ();
-            var jdbcQueryActivityBuilder = new JdbcQueryActivityBuilder (new DataAccessBuilder(jdbcQueryBuilderUtils), new DataAccessServiceBuilder(jdbcQueryBuilderUtils), new DataAccessInterfacesCommonBuilder(), new XslBuilder (new XpathBuilder()));
+            var xslBuilder = new XslBuilder (new XpathBuilder());
+            var jdbcQueryActivityBuilder = new JdbcQueryActivityBuilder (new DataAccessBuilder(jdbcQueryBuilderUtils), new DataAccessServiceBuilder(jdbcQueryBuilderUtils), new DataAccessInterfacesCommonBuilder(), xslBuilder);
 
 			var activityClasses = new CodeNamespaceCollection ();
 			foreach (var activity in tibcoBwProcessToGenerate.Activities) {
@@ -211,6 +212,11 @@ namespace EaiConverter.Mapper
                     tempActivityClasses = activityCodeDom.ClassesToGenerate;
                     activityMethodInvocation = activityCodeDom.InvocationCode;
 
+                }else if(activity.Type == ActivityType.assignActivityType){
+                    var assignActivityBuilder = new AssignActivityBuilder(xslBuilder);
+                    var activityCodeDom = assignActivityBuilder.Build(activity);
+                    tempActivityClasses = activityCodeDom.ClassesToGenerate;
+                    activityMethodInvocation = activityCodeDom.InvocationCode;
                 }
                 else
                 {
