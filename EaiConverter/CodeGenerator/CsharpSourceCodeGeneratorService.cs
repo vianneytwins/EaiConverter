@@ -8,7 +8,10 @@ namespace EaiConverter.CodeGenerator
 {
 	public class CsharpSourceCodeGeneratorService : ISourceCodeGeneratorService
 	{
-		public void Generate (CodeCompileUnit targetUnit)
+        //TODO VC : Put the output directory as a parameter";
+        public const string destinationPath = "./GeneratedSolution";
+
+        public void Generate (CodeCompileUnit targetUnit)
 		{
 			CodeDomProvider provider = CodeDomProvider.CreateProvider ("CSharp");
 			CodeGeneratorOptions options = new CodeGeneratorOptions ();
@@ -16,15 +19,19 @@ namespace EaiConverter.CodeGenerator
             options.IndentString = "    ";
             options.BlankLinesBetweenMembers = true;
 
-			//var destinationPath = "../../../../TestBW/TestBW/src/";
-            var destinationPath = "./";
+            if (Directory.Exists(destinationPath)){
+                Directory.Delete(destinationPath,true);
+            }
+            Directory.CreateDirectory(destinationPath);
 			// Build the output file name.
 			foreach (CodeNamespace namespaceUnit in targetUnit.Namespaces) {
-				string sourceFile;
+                var namespaceName = namespaceUnit.Name;
+
+                string sourceFile;
 				if (provider.FileExtension [0] == '.') {
-					sourceFile = destinationPath + namespaceUnit.Types[0].Name + provider.FileExtension;
+                    sourceFile =  this.PathFromNamespace(destinationPath, namespaceName) + "/" + namespaceUnit.Types[0].Name + provider.FileExtension;
 				} else {
-					sourceFile = destinationPath + namespaceUnit.Types[0].Name + "." + provider.FileExtension;
+                    sourceFile = this.PathFromNamespace(destinationPath, namespaceName) + "/" + namespaceUnit.Types[0].Name + "." + provider.FileExtension;
 				}
 
 				using (StreamWriter sw = new StreamWriter (sourceFile, false)) {
@@ -36,6 +43,17 @@ namespace EaiConverter.CodeGenerator
 			}
 
 		}
+
+        // TODO refactor becuase not  really SRP
+        private string PathFromNamespace(string outputPath, string ns)
+        {
+            string path =String.Format("{0}/{1}",
+                outputPath,
+                ns.Replace('.','/')
+            );
+            Directory.CreateDirectory(path);
+            return path;
+        }
 	}
 
 }

@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.CodeDom;
 using EaiConverter.Mapper.Utils;
 using EaiConverter.Test.Utils;
+using System.Xml.Linq;
+using EaiConverter.Parser;
 
 namespace EaiConverter
 {
@@ -29,7 +31,12 @@ namespace EaiConverter
 			};
 			jdbcQueryActivity.JdbcSharedConfig = string.Empty;
 			var jdbcQueryBuilderUtils = new JdbcQueryBuilderUtils ();
-			jdbcQueryActivityBuilder = new JdbcQueryActivityBuilder (new DataAccessBuilder (jdbcQueryBuilderUtils), new DataAccessServiceBuilder (jdbcQueryBuilderUtils), new DataAccessInterfacesCommonBuilder());
+			jdbcQueryActivityBuilder = new JdbcQueryActivityBuilder (
+                new DataAccessBuilder (jdbcQueryBuilderUtils),
+                new DataAccessServiceBuilder (jdbcQueryBuilderUtils),
+                new DataAccessInterfacesCommonBuilder(),
+                new XslBuilder(new XpathBuilder())
+            );
 
 		}
 
@@ -82,11 +89,35 @@ namespace EaiConverter
 		}
 
         [Test]
-        public void Should_Return_Invocation_Code(){
-            CodeMethodInvokeExpression invocationExpression = jdbcQueryActivityBuilder.GenerateCodeInvocation ("MyService");
-            var codeCollectionTogenerate = new CodeStatementCollection();
-            codeCollectionTogenerate.Add(invocationExpression);
-            Assert.AreEqual ("this.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(codeCollectionTogenerate));
+        public void Should_Return_void_Invocation_Code_When_Activity_has_no_return_type_And_No_Input(){
+            CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateCodeInvocation ("MyService", this.jdbcQueryActivity);
+            Assert.AreEqual ("\nthis.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
+        }
+
+        [Test]
+        public void Should_Return_void_Invocation_Code_When_Activity_has_no_return_type_And_1_input_parameter(){
+            
+            var xml =
+                @"
+        <jdbcQueryActivityInput xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
+            <IdBbUnique xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
+                <xsl:value-of select=""'test'""/>
+            </IdBbUnique>
+        </jdbcQueryActivityInput>
+";
+            XElement doc = XElement.Parse(xml);
+
+            this.jdbcQueryActivity.InputBindings = doc.Nodes();
+            jdbcQueryActivity.Parameters = new List<ClassParameter> {
+                new ClassParameter{ Name = "IdBbUnique", Type = "String" }
+            };
+
+            CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateCodeInvocation ("MyService", this.jdbcQueryActivity);
+            Assert.AreEqual (
+                @"string IdBbUnique = ""test"";
+
+this.myService.ExecuteQuery(IdBbUnique);
+", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
         }
 	}
 }

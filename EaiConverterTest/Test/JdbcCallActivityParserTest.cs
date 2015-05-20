@@ -40,14 +40,14 @@ namespace EaiConverter
 </parameterTypes>
 </config>
 <pd:inputBindings>
-    <sqlParams>
+    <jdbcQueryActivityInput>
         <FundName>
             <xsl:value-of select=""testvalue""/>
         </FundName>
         <AdminID>
             <xsl:value-of select=""EVL""/>
         </AdminID>
-    </sqlParams>
+    </jdbcQueryActivityInput>
 </pd:inputBindings>
 </pd:activity>";
 			doc = XElement.Parse(xml);

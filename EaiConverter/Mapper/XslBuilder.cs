@@ -19,7 +19,10 @@ namespace EaiConverter.Mapper
         public List<string> Build (IEnumerable<XNode> inputNodes, string parent){
 
             var codeStatements = new List<string>();
-
+            if (inputNodes == null)
+            {
+                return codeStatements;
+            }
             foreach(var inputNode in inputNodes)
             {
                 var element = (XElement) inputNode;

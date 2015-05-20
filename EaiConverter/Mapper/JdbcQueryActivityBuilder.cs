@@ -17,13 +17,14 @@ namespace EaiConverter.Mapper
 	{
 		DataAccessBuilder dataAccessBuilder;
 		DataAccessServiceBuilder dataAccessServiceBuilder;
-
 		DataAccessInterfacesCommonBuilder dataAccessCommonBuilder;
+        XslBuilder xslBuilder;
 
-		public JdbcQueryActivityBuilder (DataAccessBuilder dataAccessBuilder, DataAccessServiceBuilder dataAccessServiceBuilder, DataAccessInterfacesCommonBuilder dataAccessCommonBuilder){
+        public JdbcQueryActivityBuilder (DataAccessBuilder dataAccessBuilder, DataAccessServiceBuilder dataAccessServiceBuilder, DataAccessInterfacesCommonBuilder dataAccessCommonBuilder, XslBuilder xslBuilder){
 			this.dataAccessBuilder = dataAccessBuilder;
 			this.dataAccessServiceBuilder = dataAccessServiceBuilder;
 			this.dataAccessCommonBuilder = dataAccessCommonBuilder;
+            this.xslBuilder = xslBuilder;
 		}
 
         public ActivityCodeDom Build (Activity activity)
@@ -31,12 +32,12 @@ namespace EaiConverter.Mapper
             JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity) activity;
 
             var result = new ActivityCodeDom();
-
+            string jdbcServiceName;
             if (this.HasThisSqlRequestAlreadyGenerateAService(jdbcQueryActivity.QueryStatement))
             {
                 result.ClassesToGenerate = new CodeNamespaceCollection();
-                var existingJdbcServiceName = this.GetExistingJdbcServiceName(jdbcQueryActivity.QueryStatement);
-                result.InvocationCode = this.GenerateCodeInvocation (existingJdbcServiceName);
+                jdbcServiceName = this.GetExistingJdbcServiceName(jdbcQueryActivity.QueryStatement);
+
             }
             else
             {
@@ -63,8 +64,10 @@ namespace EaiConverter.Mapper
     				dataBaseAttributeNamespace}
     				;
 
-                result.InvocationCode = this.GenerateCodeInvocation (serviceNameSpace.Types[0].Name);
+                jdbcServiceName = serviceNameSpace.Types[0].Name;
             }
+
+            result.InvocationCode = this.GenerateCodeInvocation (jdbcServiceName, jdbcQueryActivity);
 
 			return result;
 		}
@@ -76,9 +79,26 @@ namespace EaiConverter.Mapper
 		}
 
 
-        public CodeMethodInvokeExpression GenerateCodeInvocation (string serviceToInvoke){
+        public CodeStatementCollection GenerateCodeInvocation (string serviceToInvoke, JdbcQueryActivity jdbcQueryActivity){
+
+            var invocationCodeCollection = new CodeStatementCollection();
+
+            invocationCodeCollection.AddRange(this.xslBuilder.Build(jdbcQueryActivity.InputBindings));
             var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(serviceToInvoke));
-            return new CodeMethodInvokeExpression (activityServiceReference, DataAccessServiceBuilder.ExecuteSqlQueryMethodName, new CodeExpression[] {});
+
+            var parameters = new CodeExpression[]{};
+            if (jdbcQueryActivity.Parameters != null)
+            {
+                parameters = new CodeExpression[jdbcQueryActivity.Parameters.Count];
+                for (int i = 0; i < jdbcQueryActivity.Parameters.Count; i++)
+                {
+                    parameters[i] = new CodeSnippetExpression(jdbcQueryActivity.Parameters[i].Name);
+                }
+            }
+            var codeInvocation = new CodeMethodInvokeExpression (activityServiceReference, DataAccessServiceBuilder.ExecuteSqlQueryMethodName, parameters);
+
+            invocationCodeCollection.Add(codeInvocation);
+            return invocationCodeCollection;
         }
 
 

@@ -10,7 +10,7 @@ namespace EaiConverter.Mapper
 {
 	public class CoreProcessBuilder
 	{
-        public CodeMethodInvokeExpression GetActivityInvocationCodeStatement (TibcoBWProcess tibcoProcess, string activityName, Dictionary<string,CodeMethodInvokeExpression> activityToInvocation)
+        public CodeStatementCollection GetActivityInvocationCodeStatement (TibcoBWProcess tibcoProcess, string activityName, Dictionary<string,CodeStatementCollection> activityToInvocation)
         {
             // ce que l'on veut generer :
             // Si c'est les activité Start ou End ou les AssignActivity... c'est des methodes...voir du code direct
@@ -45,18 +45,18 @@ namespace EaiConverter.Mapper
         /// <param name="activities">Activities.</param>
         /// <param name="activityName">Activity name.</param>
         /// <param name="exitBeforeActivityName">Exit before activity name.</param>
-        public CodeStatementCollection  GenerateStartCodeStatement (TibcoBWProcess tibcoBwProcessToGenerate, CodeMemberMethod startMethod, string activityName, string exitBeforeActivityName, Dictionary<string,CodeMethodInvokeExpression> activityToServiceMapping){
+        public CodeStatementCollection  GenerateStartCodeStatement (TibcoBWProcess tibcoBwProcessToGenerate, CodeMemberMethod startMethod, string activityName, string exitBeforeActivityName, Dictionary<string,CodeStatementCollection> activityToServiceMapping){
             tibcoBwProcessToGenerate.Transitions.Sort ();
             var codeStatementCollection = new CodeStatementCollection ();
             if (activityName == exitBeforeActivityName) {
                 return codeStatementCollection;
             }
 
-            var methodCallExpression = this.GetActivityInvocationCodeStatement (tibcoBwProcessToGenerate, activityName, activityToServiceMapping);
+            var invocationCode = this.GetActivityInvocationCodeStatement (tibcoBwProcessToGenerate, activityName, activityToServiceMapping);
 
-            if (methodCallExpression != null)
+            if (invocationCode != null)
             {
-                codeStatementCollection.Add(methodCallExpression);
+                codeStatementCollection.AddRange(invocationCode);
             }
 
             List<Transition> tranz = TransitionUtils.GetTransitionsFrom (tibcoBwProcessToGenerate.Transitions, activityName);

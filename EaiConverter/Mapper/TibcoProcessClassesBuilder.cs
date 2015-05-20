@@ -15,7 +15,7 @@ namespace EaiConverter.Mapper
 	{
         CoreProcessBuilder coreProcessBuilder;
 
-        Dictionary<string,CodeMethodInvokeExpression> activityNameToServiceNameDictionnary = new Dictionary<string, CodeMethodInvokeExpression> ();
+        Dictionary<string,CodeStatementCollection> activityNameToServiceNameDictionnary = new Dictionary<string, CodeStatementCollection> ();
 
         public TibcoProcessClassesBuilder (){
             this.coreProcessBuilder = new CoreProcessBuilder();
@@ -198,13 +198,13 @@ namespace EaiConverter.Mapper
 		{
 			//TODO build a factory instead
 			var jdbcQueryBuilderUtils = new JdbcQueryBuilderUtils ();
-			var jdbcQueryActivityBuilder = new JdbcQueryActivityBuilder (new DataAccessBuilder(jdbcQueryBuilderUtils), new DataAccessServiceBuilder(jdbcQueryBuilderUtils), new DataAccessInterfacesCommonBuilder());
+            var jdbcQueryActivityBuilder = new JdbcQueryActivityBuilder (new DataAccessBuilder(jdbcQueryBuilderUtils), new DataAccessServiceBuilder(jdbcQueryBuilderUtils), new DataAccessInterfacesCommonBuilder(), new XslBuilder (new XpathBuilder()));
 
 			var activityClasses = new CodeNamespaceCollection ();
 			foreach (var activity in tibcoBwProcessToGenerate.Activities) {
                 //TODO : faut il mieux 2 method ou 1 objet avec les 2
                 var tempActivityClasses = new CodeNamespaceCollection ();
-                CodeMethodInvokeExpression activityMethodInvocation; 
+                CodeStatementCollection activityMethodInvocation; 
                 if (activity.Type == ActivityType.jdbcQueryActivityType || activity.Type == ActivityType.jdbcCallActivityType || activity.Type == ActivityType.jdbcUpdateActivityType)
                 {
                     var activityCodeDom = jdbcQueryActivityBuilder.Build(activity);
@@ -222,9 +222,12 @@ namespace EaiConverter.Mapper
 			return activityClasses;
 		}
   
-        public CodeMethodInvokeExpression DefaultInvocationMethod (string activityName){
+        public CodeStatementCollection DefaultInvocationMethod (string activityName){
             var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(activityName));
-            return new CodeMethodInvokeExpression (activityServiceReference, "ExecuteQuery", new CodeExpression[] {});
+            var methodInvocation = new CodeMethodInvokeExpression (activityServiceReference, "ExecuteQuery", new CodeExpression[] {});
+            var invocationCodeCollection = new CodeStatementCollection();
+            invocationCodeCollection.Add(methodInvocation);
+            return invocationCodeCollection;
         }
 	}
 }

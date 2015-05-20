@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using EaiConverter.Model;
 using EaiConverter.Parser.Utils;
+using EaiConverter.Mapper;
 
 namespace EaiConverter.Parser
 {
@@ -62,9 +63,10 @@ namespace EaiConverter.Parser
 			jdbcQueryActivity.QueryOutputCachedSchemaStatus = XElementParserUtils.GetStringValue(configElement.Element("QueryOutputCachedSchemaStatus"));
 			//var elt1 = inputElement.Element ("config").Element("til;
 
-            if (inputElement.Element(TibcoBWProcessLinqParser.tibcoPrefix + "inputBindings") != null)
+            if (inputElement.Element(TibcoBWProcessLinqParser.tibcoPrefix + "inputBindings") != null && inputElement.Element(TibcoBWProcessLinqParser.tibcoPrefix + "inputBindings").Element("jdbcQueryActivityInput") != null)
             {
-                jdbcQueryActivity.InputBindings = inputElement.Element(TibcoBWProcessLinqParser.tibcoPrefix + "inputBindings").Nodes();
+                jdbcQueryActivity.InputBindings = inputElement.Element(TibcoBWProcessLinqParser.tibcoPrefix + "inputBindings").Element("jdbcQueryActivityInput").Nodes();
+                jdbcQueryActivity.Parameters = new XslParser().Build(jdbcQueryActivity.InputBindings);
             }
 
 			return jdbcQueryActivity;

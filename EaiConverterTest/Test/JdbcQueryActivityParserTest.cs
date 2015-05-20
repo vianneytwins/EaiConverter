@@ -44,14 +44,14 @@ namespace EaiConverter
 <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
 </config>
 <pd:inputBindings>
-    <sqlParams>
-        <FundName>
+    <jdbcQueryActivityInput>
+        <IdBbUnique>
             <xsl:value-of select=""testvalue""/>
-        </FundName>
-        <AdminID>
+        </IdBbUnique>
+        <IdBbUnique2>
             <xsl:value-of select=""EVL""/>
-        </AdminID>
-    </sqlParams>
+        </IdBbUnique2>
+    </jdbcQueryActivityInput>
 </pd:inputBindings>
 </pd:activity>";
 			doc = XElement.Parse(xml);
@@ -147,6 +147,13 @@ namespace EaiConverter
 
 			Assert.AreEqual ("VARCHAR", jdbcQueryActivity.QueryStatementParameters["IdBbUnique"]);
 		}
+
+        [Test]
+        public void Should_Return_2_input_parameters_of_for_the_activity(){
+            JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity) jdbcQueryActivityParser.Parse (doc);
+
+            Assert.AreEqual (2, jdbcQueryActivity.Parameters.Count);
+        }
 	}
 }
 

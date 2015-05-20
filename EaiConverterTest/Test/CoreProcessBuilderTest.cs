@@ -16,11 +16,11 @@ namespace EaiConverter
 	[TestFixture]
 	public class CoreProcessBuilderTest
 	{
-        Dictionary <string, CodeMethodInvokeExpression> activitiesToServiceMapping = new Dictionary <string, CodeMethodInvokeExpression> 
+        Dictionary <string, CodeStatementCollection> activitiesToServiceMapping = new Dictionary <string, CodeStatementCollection> 
         {
-            {"step1",DefaultInvocationMethod("step1Service")},
-            {"step2",DefaultInvocationMethod("step2Service")},
-            {"step3",DefaultInvocationMethod("step3Service")}
+            {"step1",new CodeStatementCollection{ DefaultInvocationMethod("step1Service")}},
+            {"step2",new CodeStatementCollection{ DefaultInvocationMethod("step2Service")}},
+            {"step3",new CodeStatementCollection{ DefaultInvocationMethod("step3Service")}}
         };
 
 		CoreProcessBuilder builder;

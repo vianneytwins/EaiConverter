@@ -9,7 +9,7 @@ xmlns:pfx4="http://www.w3.org/2001/XMLSchema4"
 xmlns:pfx21="http://www.w3.org/2001/XMLSchema5"
 xmlns:tib="http://www.w3.org/2001/XMLSchema6"
 xmlns:xsi="http://www.w3.org/2001/XMLSchema5"
-xmlns:xsl="http://www.w3.org/2001/XMLSchema5" 
+xmlns:xsl="http://w3.org/1999/XSL/Transform" 
 xmlns:ns="http://www.w3.org/2001/XMLSchema5"
 xmlns:ns1="http://www.w3.org/2001/XMLSchema5"
 >
@@ -129,6 +129,13 @@ xmlns:ns1="http://www.w3.org/2001/XMLSchema5"
 <QueryOutputCachedSchemaDataTypes>12</QueryOutputCachedSchemaDataTypes>
 <QueryOutputCachedSchemaStatus>OptionalElement</QueryOutputCachedSchemaStatus>
 </config>
+<pd:inputBindings>
+        <jdbcQueryActivityInput>
+            <IdBbUnique >
+                <xsl:value-of select="'test'"/>
+            </IdBbUnique>
+        </jdbcQueryActivityInput>
+       </pd:inputBindings>
 </pd:activity>
 <pd:transition>
 	<pd:from>Start</pd:from>

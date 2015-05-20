@@ -7,7 +7,7 @@ namespace EaiConverter.Model
     {
         public CodeNamespaceCollection ClassesToGenerate { get; set; }
 
-        public CodeMethodInvokeExpression InvocationCode { get; set; }
+        public CodeStatementCollection InvocationCode { get; set; }
     }
 }
 
