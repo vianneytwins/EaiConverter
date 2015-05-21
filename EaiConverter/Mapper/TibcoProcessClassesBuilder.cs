@@ -194,47 +194,24 @@ namespace EaiConverter.Mapper
             }
         }
 
+        // Todo : To rename and refavtor because not SRP
 		public CodeNamespaceCollection GenerateActivityClasses (TibcoBWProcess tibcoBwProcessToGenerate)
 		{
-			//TODO build a factory instead
-			var jdbcQueryBuilderUtils = new JdbcQueryBuilderUtils ();
-            var xslBuilder = new XslBuilder (new XpathBuilder());
-            var jdbcQueryActivityBuilder = new JdbcQueryActivityBuilder (new DataAccessBuilder(jdbcQueryBuilderUtils), new DataAccessServiceBuilder(jdbcQueryBuilderUtils), new DataAccessInterfacesCommonBuilder(), xslBuilder);
-
+            var activityBuilderFactory = new ActivityBuilderFactory();
 			var activityClasses = new CodeNamespaceCollection ();
 			foreach (var activity in tibcoBwProcessToGenerate.Activities) {
                 //TODO : faut il mieux 2 method ou 1 objet avec les 2
-                var tempActivityClasses = new CodeNamespaceCollection ();
-                CodeStatementCollection activityMethodInvocation; 
-                if (activity.Type == ActivityType.jdbcQueryActivityType || activity.Type == ActivityType.jdbcCallActivityType || activity.Type == ActivityType.jdbcUpdateActivityType)
-                {
-                    var activityCodeDom = jdbcQueryActivityBuilder.Build(activity);
-                    tempActivityClasses = activityCodeDom.ClassesToGenerate;
-                    activityMethodInvocation = activityCodeDom.InvocationCode;
+                var activityBuilder = activityBuilderFactory.Get(activity.Type);
 
-                }else if(activity.Type == ActivityType.assignActivityType){
-                    var assignActivityBuilder = new AssignActivityBuilder(xslBuilder);
-                    var activityCodeDom = assignActivityBuilder.Build(activity);
-                    tempActivityClasses = activityCodeDom.ClassesToGenerate;
-                    activityMethodInvocation = activityCodeDom.InvocationCode;
-                }
-                else
-                {
-                    activityMethodInvocation = this.DefaultInvocationMethod(activity.Name);
-                }
-                activityClasses.AddRange(tempActivityClasses);
-                this.activityNameToServiceNameDictionnary.Add( activity.Name, activityMethodInvocation);
+                var activityCodeDom = activityBuilder.Build(activity);
+
+                activityClasses.AddRange(activityCodeDom.ClassesToGenerate);
+                this.activityNameToServiceNameDictionnary.Add( activity.Name, activityCodeDom.InvocationCode);
 			}
 			return activityClasses;
 		}
   
-        public CodeStatementCollection DefaultInvocationMethod (string activityName){
-            var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(activityName));
-            var methodInvocation = new CodeMethodInvokeExpression (activityServiceReference, "ExecuteQuery", new CodeExpression[] {});
-            var invocationCodeCollection = new CodeStatementCollection();
-            invocationCodeCollection.Add(methodInvocation);
-            return invocationCodeCollection;
-        }
+       
 	}
 }
 

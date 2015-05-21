@@ -93,6 +93,8 @@
     <Compile Include="Mapper\IXpathBuilder.cs" />
     <Compile Include="Parser\XslParser.cs" />
     <Compile Include="Mapper\AssignActivityBuilder.cs" />
+    <Compile Include="Mapper\DefaultActivityBuilder.cs" />
+    <Compile Include="Mapper\ActivityBuilderFactory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
