@@ -23,7 +23,7 @@ namespace EaiConverter.Mapper
         public CodeStatementCollection DefaultInvocationMethod (string activityName)
         {
             var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(activityName));
-            var methodInvocation = new CodeMethodInvokeExpression (activityServiceReference, "ExecuteQuery", new CodeExpression[] {});
+            var methodInvocation = new CodeMethodInvokeExpression (activityServiceReference, "Execute", new CodeExpression[] {});
             var invocationCodeCollection = new CodeStatementCollection();
             invocationCodeCollection.AddRange(LogActivity(activityName));
             invocationCodeCollection.Add(methodInvocation);
@@ -33,7 +33,7 @@ namespace EaiConverter.Mapper
         public static CodeStatementCollection LogActivity (string activityName)
         {
             var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName("logger"));
-            var methodInvocation = new CodeMethodInvokeExpression (activityServiceReference, "Info", new CodeExpression[] {new CodePrimitiveExpression("Start Avtivity "+activityName)});
+            var methodInvocation = new CodeMethodInvokeExpression (activityServiceReference, "Info", new CodeExpression[] {new CodePrimitiveExpression("Start Activity: "+activityName)});
            
             var logCallStatements = new CodeStatementCollection();
             logCallStatements.Add(methodInvocation);
