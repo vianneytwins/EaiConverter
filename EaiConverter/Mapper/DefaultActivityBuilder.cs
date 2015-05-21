@@ -20,12 +20,24 @@ namespace EaiConverter.Mapper
         }
         #endregion
 
-        public CodeStatementCollection DefaultInvocationMethod (string activityName){
+        public CodeStatementCollection DefaultInvocationMethod (string activityName)
+        {
             var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(activityName));
             var methodInvocation = new CodeMethodInvokeExpression (activityServiceReference, "ExecuteQuery", new CodeExpression[] {});
             var invocationCodeCollection = new CodeStatementCollection();
+            invocationCodeCollection.AddRange(LogActivity(activityName));
             invocationCodeCollection.Add(methodInvocation);
             return invocationCodeCollection;
+        }
+
+        public static CodeStatementCollection LogActivity (string activityName)
+        {
+            var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName("logger"));
+            var methodInvocation = new CodeMethodInvokeExpression (activityServiceReference, "Info", new CodeExpression[] {new CodePrimitiveExpression("Start Avtivity "+activityName)});
+           
+            var logCallStatements = new CodeStatementCollection();
+            logCallStatements.Add(methodInvocation);
+            return logCallStatements;
         }
 	}
 

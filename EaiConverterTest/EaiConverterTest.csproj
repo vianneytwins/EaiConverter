@@ -71,6 +71,7 @@
     <Compile Include="Test\AssignActivityParserTest.cs" />
     <Compile Include="Test\XpathBuilderTest.cs" />
     <Compile Include="Test\CsharpSourceCodeGeneratorServiceTest.cs" />
+    <Compile Include="Test\DefaultActivityBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />
