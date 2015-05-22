@@ -91,7 +91,7 @@ namespace EaiConverter
         [Test]
         public void Should_Return_void_Invocation_Code_When_Activity_has_no_return_type_And_No_Input(){
             CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateCodeInvocation ("MyService", this.jdbcQueryActivity);
-            Assert.AreEqual ("\nthis.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
+            Assert.AreEqual ("this.logger.Info(\"Start Activity: Currency\");\n\nthis.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
         }
 
         [Test]
@@ -114,7 +114,8 @@ namespace EaiConverter
 
             CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateCodeInvocation ("MyService", this.jdbcQueryActivity);
             Assert.AreEqual (
-                @"string IdBbUnique = ""test"";
+                @"this.logger.Info(""Start Activity: Currency"");
+string IdBbUnique = ""test"";
 
 this.myService.ExecuteQuery(IdBbUnique);
 ", TestCodeGeneratorUtils.GenerateCode(invocationExpression));

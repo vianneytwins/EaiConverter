@@ -83,6 +83,8 @@ namespace EaiConverter.Mapper
 
             var invocationCodeCollection = new CodeStatementCollection();
 
+            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(jdbcQueryActivity.Name));
+
             invocationCodeCollection.AddRange(this.xslBuilder.Build(jdbcQueryActivity.InputBindings));
             var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(serviceToInvoke));
 

@@ -95,6 +95,8 @@
     <Compile Include="Mapper\AssignActivityBuilder.cs" />
     <Compile Include="Mapper\DefaultActivityBuilder.cs" />
     <Compile Include="Mapper\ActivityBuilderFactory.cs" />
+    <Compile Include="Mapper\MapperActivityBuilder.cs" />
+    <Compile Include="Mapper\XmlParseActivityBuilder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

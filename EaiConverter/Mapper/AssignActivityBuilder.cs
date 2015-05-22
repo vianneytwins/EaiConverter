@@ -30,6 +30,7 @@ namespace EaiConverter.Mapper
         public CodeStatementCollection GenerateCodeInvocation ( AssignActivity assignActivity){
 
             var invocationCodeCollection = new CodeStatementCollection();
+            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(assignActivity.Name));
 
             invocationCodeCollection.AddRange(this.xslBuilder.Build(assignActivity.InputBindings));
 
