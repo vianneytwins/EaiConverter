@@ -33,8 +33,8 @@ namespace EaiConverter.Mapper
             invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(mapperActivity.Name));
 
             invocationCodeCollection.AddRange(this.xslBuilder.Build(mapperActivity.InputBindings));
-
-            var variableToAssignReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(mapperActivity.Name));
+            // TODO : set the result of the map in an object of type xsd ref with the variable name of the activty
+            var variableToAssignReference = new CodeVariableReferenceExpression ( VariableHelper.ToVariableName(mapperActivity.Name));
             var codeInvocation = new CodeAssignStatement (variableToAssignReference, new CodeVariableReferenceExpression(VariableHelper.ToVariableName(mapperActivity.Name)));
             invocationCodeCollection.Add(codeInvocation);
             return invocationCodeCollection;
