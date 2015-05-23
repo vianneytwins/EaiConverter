@@ -97,6 +97,7 @@
     <Compile Include="Mapper\ActivityBuilderFactory.cs" />
     <Compile Include="Mapper\MapperActivityBuilder.cs" />
     <Compile Include="Mapper\XmlParseActivityBuilder.cs" />
+    <Compile Include="Parser\Utils\XmlnsConstant.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

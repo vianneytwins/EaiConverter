@@ -14,12 +14,12 @@ namespace EaiConverter.Parser
             var mapperActivity = new MapperActivity ();
 
             mapperActivity.Name = inputElement.Attribute ("name").Value;
-            mapperActivity.Type = (ActivityType) inputElement.Element (TibcoBWProcessLinqParser.tibcoPrefix + "type").Value;
+            mapperActivity.Type = (ActivityType) inputElement.Element (XmlnsConstant.tibcoPrefix + "type").Value;
 			var configElement = inputElement.Element ("config");
 
             mapperActivity.XsdReference = configElement.Element("element").Attribute("ref").Value;
 			
-            mapperActivity.InputBindings = inputElement.Element (TibcoBWProcessLinqParser.tibcoPrefix + "inputBindings").Nodes();
+            mapperActivity.InputBindings = inputElement.Element (XmlnsConstant.tibcoPrefix + "inputBindings").Nodes();
 
             return mapperActivity;
 		}

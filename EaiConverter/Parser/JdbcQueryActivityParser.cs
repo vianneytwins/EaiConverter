@@ -15,7 +15,7 @@ namespace EaiConverter.Parser
             var jdbcQueryActivity = new JdbcQueryActivity ();
 
 			jdbcQueryActivity.Name = inputElement.Attribute ("name").Value;
-            jdbcQueryActivity.Type = (ActivityType) inputElement.Element (TibcoBWProcessLinqParser.tibcoPrefix + "type").Value;
+            jdbcQueryActivity.Type = (ActivityType) inputElement.Element (XmlnsConstant.tibcoPrefix + "type").Value;
 			var configElement = inputElement.Element ("config");
 
 			jdbcQueryActivity.TimeOut = XElementParserUtils.GetIntValue(configElement.Element("timeout"));
@@ -63,9 +63,9 @@ namespace EaiConverter.Parser
 			jdbcQueryActivity.QueryOutputCachedSchemaStatus = XElementParserUtils.GetStringValue(configElement.Element("QueryOutputCachedSchemaStatus"));
 			//var elt1 = inputElement.Element ("config").Element("til;
 
-            if (inputElement.Element(TibcoBWProcessLinqParser.tibcoPrefix + "inputBindings") != null && inputElement.Element(TibcoBWProcessLinqParser.tibcoPrefix + "inputBindings").Element("jdbcQueryActivityInput") != null)
+            if (inputElement.Element(XmlnsConstant.tibcoPrefix + "inputBindings") != null && inputElement.Element(XmlnsConstant.tibcoPrefix + "inputBindings").Element("jdbcQueryActivityInput") != null)
             {
-                jdbcQueryActivity.InputBindings = inputElement.Element(TibcoBWProcessLinqParser.tibcoPrefix + "inputBindings").Element("jdbcQueryActivityInput").Nodes();
+                jdbcQueryActivity.InputBindings = inputElement.Element(XmlnsConstant.tibcoPrefix + "inputBindings").Element("jdbcQueryActivityInput").Nodes();
                 jdbcQueryActivity.Parameters = new XslParser().Build(jdbcQueryActivity.InputBindings);
             }
 

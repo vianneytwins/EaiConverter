@@ -14,12 +14,12 @@ namespace EaiConverter.Parser
             var callProcessActivity = new CallProcessActivity ();
 
             callProcessActivity.Name = inputElement.Attribute ("name").Value;
-            callProcessActivity.Type = (ActivityType) inputElement.Element (TibcoBWProcessLinqParser.tibcoPrefix + "type").Value;
+            callProcessActivity.Type = (ActivityType) inputElement.Element (XmlnsConstant.tibcoPrefix + "type").Value;
 			var configElement = inputElement.Element ("config");
 
             callProcessActivity.ProcessName = XElementParserUtils.GetStringValue(configElement.Element("processName"));
 			
-            callProcessActivity.InputBindings = inputElement.Element (TibcoBWProcessLinqParser.tibcoPrefix + "inputBindings").Nodes();
+            callProcessActivity.InputBindings = inputElement.Element (XmlnsConstant.tibcoPrefix + "inputBindings").Nodes();
 
             return callProcessActivity;
 		}
