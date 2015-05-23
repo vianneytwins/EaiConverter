@@ -10,7 +10,13 @@ namespace EaiConverter.Parser
 {
 	public class TibcoBWProcessLinqParser
 	{
-		public TibcoBWProcess Parse (string filePath)
+		
+        XsdParser xsdParser;
+
+        public TibcoBWProcessLinqParser(){
+            this.xsdParser = new XsdParser ();
+        }
+        public TibcoBWProcess Parse (string filePath)
 		{
 			XElement allFileElement = XElement.Load(filePath);
 			return this.Parse (allFileElement);
@@ -41,7 +47,7 @@ namespace EaiConverter.Parser
 
         public Activity ParseStartOrEndActivity (XElement allFileElement, string inputAndOutputNameSpace, ActivityType activityType)
 		{
-			var xsdParser = new XsdParser ();
+			
             var xElement = allFileElement.Element (XmlnsConstant.tibcoPrefix + activityType.ToString());
 			if (xElement == null) {
 				return null;
@@ -55,7 +61,7 @@ namespace EaiConverter.Parser
                 activityName = "endName";
             }
             var activity = new Activity (allFileElement.Element (XmlnsConstant.tibcoPrefix + activityName).Value, activityType);
-			var activityParameters = xsdParser.Parse (xElement.Nodes ());
+			var activityParameters = this.xsdParser.Parse (xElement.Nodes ());
 			activity.Parameters = activityParameters;
 			activity.ObjectXNodes = xElement.Nodes ();
 
@@ -72,8 +78,13 @@ namespace EaiConverter.Parser
             var processVariables = new List<ProcessVariable>();
             foreach (var variable in xElement.Elements())
             {
+                var variableParameters = this.xsdParser.Parse (variable.Nodes ());
+
                 var processVariable = new ProcessVariable{
-                    Name = variable.Name.LocalName,
+                    Parameter = new ClassParameter{
+                        Name = variable.Name.LocalName,
+                        Type = variableParameters[0].Type
+                    },
                     ObjectXNodes = variable.Nodes()
                 };
                 processVariables.Add(processVariable);

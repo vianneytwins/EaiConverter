@@ -75,20 +75,35 @@ namespace EaiConverter
 		}
 
         [Test]
-        public void Should_return_One_Process_Variable ()
+        public void Should_return_One_Process_Variable_named_variable1 ()
         {
             string xml =
                 @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
                     <pd:name>repertoire/myProcessName.process</pd:name>
                     <pd:processVariables>
-                        <var>
+                        <variable1>
 <xsd:element name=""UdlCcy"" type=""xsd:string""/>
-                        </var>
+                        </variable1>
                     </pd:processVariables>
                 </pd:ProcessDefinition>";
             var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
-            Assert.AreEqual (1, tibcoBWProcess.ProcessVariables.Count);
-            Assert.AreEqual ("var", tibcoBWProcess.ProcessVariables[0].Name);
+            Assert.AreEqual ("variable1", tibcoBWProcess.ProcessVariables[0].Parameter.Name);
+        }
+
+        [Test]
+        public void Should_return_One_Process_Variable_of_type_String ()
+        {
+            string xml =
+                @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+                    <pd:name>repertoire/myProcessName.process</pd:name>
+                    <pd:processVariables>
+                        <variable1>
+                            <xsd:element name=""UdlCcy"" type=""xsd:string""/>
+                        </variable1>
+                    </pd:processVariables>
+                </pd:ProcessDefinition>";
+            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+            Assert.AreEqual ("string", tibcoBWProcess.ProcessVariables[0].Parameter.Type);
         }
 	}
 }

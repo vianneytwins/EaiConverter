@@ -9,6 +9,7 @@ using System.IO;
 using System.CodeDom;
 using EaiConverter.Model;
 using EaiConverter.Test.Utils;
+using System.Xml.Linq;
 
 namespace EaiConverter
 {
@@ -79,20 +80,65 @@ namespace EaiConverter
 
 
 		[Test]
-		public void Should_Return_1_privateField_When_NoActivies_are_declared()
+		public void Should_Return_logger_as_a_privateField()
 		{
 
 			var tibcoBWProcessBuilder = new TibcoProcessClassesBuilder ();
 			var classToGenerate = tibcoBWProcessBuilder.Build (tibcoBWProcess);
-			int fieldCount = 0;
-			foreach (var member in classToGenerate.Namespaces [0].Types [0].Members) {
-				if (member is CodeMemberField) {
-					fieldCount++;
-				}
-			}
-
-			Assert.AreEqual (1, fieldCount);
+            var fieldName = ((CodeMemberField)classToGenerate.Namespaces[0].Types[0].Members[0]).Name;
+            Assert.AreEqual ("logger", fieldName);
 		}
+
+        [Test]
+        public void Should_Return_privateField_When_a_Process_Variable_is_declared()
+        {
+
+            var tibcoBWProcessBuilder = new TibcoProcessClassesBuilder ();
+            tibcoBWProcess.ProcessVariables = new List<ProcessVariable>{
+                new ProcessVariable{
+                    Parameter = new ClassParameter{Name = "var",Type = "string"}
+                }
+            };
+            var classToGenerate = tibcoBWProcessBuilder.Build (tibcoBWProcess);
+
+            var fieldName = ((CodeMemberField)classToGenerate.Namespaces[0].Types[0].Members[1]).Name;
+
+            Assert.AreEqual ("var", fieldName);
+        }
+
+        [Test]
+        public void Should_Return_Generate_Class_For_Process_Variable_When_type_is_not_basic()
+        {
+            var xml =
+                @"<var xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+                <xsd:element name=""group"">
+    <xsd:complexType>
+        <xsd:sequence>
+            <xsd:element name=""UndlCcy"" type=""xsd:string""/>
+            <xsd:element name=""Ccy"" type=""xsd:string"" minOccurs=""0""/>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:element>
+</var>";
+            var doc = XElement.Parse(xml);
+
+
+            var tibcoBWProcessBuilder = new TibcoProcessClassesBuilder ();
+            tibcoBWProcess.ProcessVariables = new List<ProcessVariable>{
+                new ProcessVariable{
+                    Parameter = new ClassParameter{Name = "var",Type = "group"},
+                    ObjectXNodes = doc.Nodes()
+                }
+            };
+            var classToGenerate = tibcoBWProcessBuilder.Build (tibcoBWProcess);
+
+            var className = classToGenerate.Namespaces[1].Types[0].Name;
+
+            Assert.AreEqual ("group", className);
+            Assert.AreEqual ("MyNamespace.myProcessTest", classToGenerate.Namespaces[1].Name);
+        }
+
+
 
 		[Test]
 		public void Should_Return_4_import_For_Empty_Process()

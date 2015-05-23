@@ -6,7 +6,7 @@ namespace EaiConverter.Model
 {
 	public class ProcessVariable
 	{
-        public string Name { get; set;}
+        public ClassParameter Parameter { get; set;}
 
         public IEnumerable<XNode> ObjectXNodes {
             get;

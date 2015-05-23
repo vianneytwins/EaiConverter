@@ -42,16 +42,12 @@ namespace EaiConverter.Mapper
 			// 4 le ctor avec injection des activités + logger
 			tibcoBwProcessClassModel.Members.AddRange( this.GenerateConstructors (tibcoBwProcessToGenerate, tibcoBwProcessClassModel));
 
-			// 5 les properties : ici y en a pas
-			//this.GenerateProperties (tibcoBwProcessToGenerate);
-
-			
 
 			processNamespace.Types.Add (tibcoBwProcessClassModel);
 
 			targetUnit.Namespaces.Add (processNamespace);
 
-			//6 Mappe les classes des activity
+			//7 Mappe les classes des activity
 			targetUnit.Namespaces.AddRange (this.GenerateActivityClasses (tibcoBwProcessToGenerate));
 
 			if (tibcoBwProcessToGenerate.EndActivity!= null && tibcoBwProcessToGenerate.EndActivity.ObjectXNodes != null) {
@@ -60,7 +56,15 @@ namespace EaiConverter.Mapper
 			if (tibcoBwProcessToGenerate.StartActivity!= null && tibcoBwProcessToGenerate.StartActivity.ObjectXNodes != null) {
 				targetUnit.Namespaces.Add (this.xsdClassGenerator.GenerateCodeFromXsdNodes (tibcoBwProcessToGenerate.StartActivity.ObjectXNodes, tibcoBwProcessToGenerate.inputAndOutputNameSpace));
 			}
-
+            if (tibcoBwProcessToGenerate.ProcessVariables!= null) {
+                foreach (var item in tibcoBwProcessToGenerate.ProcessVariables)
+                {
+                    if (!IsBasicType(item.Parameter.Type))
+                    {
+                        targetUnit.Namespaces.Add(this.xsdClassGenerator.GenerateCodeFromXsdNodes(item.ObjectXNodes, tibcoBwProcessToGenerate.NameSpace));
+                    }
+                }
+            }
             //7 la methode start avec input starttype et return du endtype
             tibcoBwProcessClassModel.Members.AddRange( this.GenerateMethod (tibcoBwProcessToGenerate));
 
@@ -90,6 +94,20 @@ namespace EaiConverter.Mapper
 				Name= "logger",
 				Attributes = MemberAttributes.Private 
 			});
+
+            if (tibcoBwProcessToGenerate.ProcessVariables != null)
+            {
+                foreach (var variable in tibcoBwProcessToGenerate.ProcessVariables)
+                {
+                    fields.Add(new CodeMemberField
+                        {
+                            Type = new CodeTypeReference(tibcoBwProcessToGenerate.NameSpace + "." + variable.Parameter.Type),
+                            Name = VariableHelper.ToVariableName(variable.Parameter.Name),
+                            Attributes = MemberAttributes.Private
+                        });
+                }
+            }
+
 			foreach (Activity activity in tibcoBwProcessToGenerate.Activities) {
 				fields.Add (new CodeMemberField {
 					Type = new CodeTypeReference("I" + VariableHelper.ToClassName (activity.Name + "Service")),
@@ -212,6 +230,24 @@ namespace EaiConverter.Mapper
 		}
   
        
+        bool IsBasicType(string type)
+        {
+            switch (type) {
+                case "string" :
+                        return true;
+                case "int" :
+                    return true;
+                case "DateTime" :
+                    return true;
+                case "bool" :
+                    return true;
+                case "double" :
+                    return true;
+                default:
+                    return false; 
+            }
+
+        }
 	}
 }
 
