@@ -27,6 +27,8 @@ namespace EaiConverter.Parser
 
             tibcoBwProcess.EndActivity = this.ParseStartOrEndActivity (allFileElement, tibcoBwProcess.inputAndOutputNameSpace, ActivityType.endType);
 
+            tibcoBwProcess.ProcessVariables = this.ParseProcessVariables (allFileElement);
+
 			this.ParseTransitions (allFileElement, tibcoBwProcess);
 
 			this.ParseActivities (allFileElement, tibcoBwProcess);
@@ -60,13 +62,36 @@ namespace EaiConverter.Parser
 			return activity;
 		}
 
+        public List<ProcessVariable> ParseProcessVariables(XElement allFileElement)
+        {
+            var xElement = allFileElement.Element (XmlnsConstant.tibcoPrefix + "processVariables");
+            if (xElement == null) {
+                return null;
+            }
+
+            var processVariables = new List<ProcessVariable>();
+            foreach (var variable in xElement.Elements())
+            {
+                var processVariable = new ProcessVariable{
+                    Name = variable.Name.LocalName,
+                    ObjectXNodes = variable.Nodes()
+                };
+                processVariables.Add(processVariable);
+            }
+            return processVariables;
+        }
+
 		public void ParseTransitions (XElement allFileElement, TibcoBWProcess tibcoBwProcess)
 		{
             IEnumerable<XElement> transitionElements = from element in allFileElement.Elements (XmlnsConstant.tibcoPrefix + "transition")
 			select element;
 			tibcoBwProcess.Transitions = new List<Transition> ();
 			foreach (XElement element in transitionElements) {
-                var transition = new Transition (element.Element (XmlnsConstant.tibcoPrefix + "from").Value, element.Element (XmlnsConstant.tibcoPrefix + "to").Value, (ConditionType)Enum.Parse (typeof(ConditionType), element.Element (XmlnsConstant.tibcoPrefix + "conditionType").Value));
+                var transition = new Transition {
+                    FromActivity = element.Element (XmlnsConstant.tibcoPrefix + "from").Value,
+                    ToActivity = element.Element (XmlnsConstant.tibcoPrefix + "to").Value,
+                    ConditionType = (ConditionType)Enum.Parse (typeof(ConditionType), element.Element (XmlnsConstant.tibcoPrefix + "conditionType").Value)
+                };
 				tibcoBwProcess.Transitions.Add (transition);
 			}
 			tibcoBwProcess.Transitions.Sort ();

@@ -98,6 +98,7 @@
     <Compile Include="Mapper\MapperActivityBuilder.cs" />
     <Compile Include="Mapper\XmlParseActivityBuilder.cs" />
     <Compile Include="Parser\Utils\XmlnsConstant.cs" />
+    <Compile Include="Model\ProcessVariable.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

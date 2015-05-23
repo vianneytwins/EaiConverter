@@ -74,9 +74,22 @@ namespace EaiConverter
             Assert.AreEqual ("NotHandleYet", tibcoBWProcess.Activities[0].Type.ToString());
 		}
 
-
-
-		//todo et si on injectait le XsdParser car a priori pas tres SRP
+        [Test]
+        public void Should_return_One_Process_Variable ()
+        {
+            string xml =
+                @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+                    <pd:name>repertoire/myProcessName.process</pd:name>
+                    <pd:processVariables>
+                        <var>
+<xsd:element name=""UdlCcy"" type=""xsd:string""/>
+                        </var>
+                    </pd:processVariables>
+                </pd:ProcessDefinition>";
+            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+            Assert.AreEqual (1, tibcoBWProcess.ProcessVariables.Count);
+            Assert.AreEqual ("var", tibcoBWProcess.ProcessVariables[0].Name);
+        }
 	}
 }
 

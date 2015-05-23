@@ -35,6 +35,7 @@ namespace EaiConverter.Model
 
 		public List<Activity> Activities { get; set;}
 		public List<Transition> Transitions { get; set;}
+        public List<ProcessVariable> ProcessVariables { get; set;}
 
 		public string ShortNameSpace {
 			get;

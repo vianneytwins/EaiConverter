@@ -4,15 +4,7 @@ namespace EaiConverter.Model
 {
 	public class Transition : IComparable
 	{
-		public Transition ( string fromActivity, string toActivity, ConditionType conditionType){
-			this.FromActivity = fromActivity;
-			this.ToActivity = toActivity;
-			this.ConditionType = conditionType;
-		}
-		public Transition ( ){
-		}
-
-		public string FromActivity { get; set;}
+        public string FromActivity { get; set;}
 		public string ToActivity { get; set;}
 		public ConditionType ConditionType { get; set;}
 		public string ConditionPredicateName { get; set; }
