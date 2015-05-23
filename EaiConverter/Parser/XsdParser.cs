@@ -2,6 +2,7 @@
 using System.Xml.Linq;
 using System.Linq;
 using System.Collections.Generic;
+using EaiConverter.Parser.Utils;
 
 namespace EaiConverter.Parser
 {
@@ -13,16 +14,14 @@ namespace EaiConverter.Parser
 			
 		public List<ClassParameter> Parse (IEnumerable<XNode> inputNodes)
 		{
-			XNamespace xsdNameSpace = "http://www.w3.org/2001/XMLSchema";
-
-			var classProperties = new List <ClassParameter> ();
+            var classProperties = new List <ClassParameter> ();
 
 			foreach(var inputNode in inputNodes)
 			{
 
 				var element = (XElement) inputNode;
 				string type = string.Empty;
-				if (element.Name.LocalName == "element" && element.Name.NamespaceName == xsdNameSpace) {
+                if (element.Name.LocalName == "element" && element.Name.NamespaceName == XmlnsConstant.xsdNameSpace) {
 					if (element.Attribute ("type") != null) {
 						type = element.Attribute ("type").Value.ToString().Remove(0,4);
 						classProperties.Add (new ClassParameter {
@@ -38,7 +37,7 @@ namespace EaiConverter.Parser
 					}
 
 				}
-				if ((element.Name.LocalName == "complexType" || element.Name.LocalName == "sequence") && element.Name.NamespaceName == xsdNameSpace)
+                if ((element.Name.LocalName == "complexType" || element.Name.LocalName == "sequence") && element.Name.NamespaceName == XmlnsConstant.xsdNameSpace)
 				{
 					return this.Parse (element.Nodes ());
 				}

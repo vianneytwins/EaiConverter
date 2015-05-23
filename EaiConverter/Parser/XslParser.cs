@@ -3,17 +3,13 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Text;
 using System.CodeDom;
+using EaiConverter.Parser.Utils;
 
 namespace EaiConverter.Mapper
 {
     public class XslParser
     {
-
-
-        XNamespace xslNameSpace = "http://w3.org/1999/XSL/Transform";
-
-
-        public List<ClassParameter> Build (IEnumerable<XNode> inputNodes){
+         public List<ClassParameter> Build (IEnumerable<XNode> inputNodes){
 
             var paramaters = new List<ClassParameter>();
             if (inputNodes == null)
@@ -23,7 +19,7 @@ namespace EaiConverter.Mapper
             foreach(var inputNode in inputNodes)
             {
                 var element = (XElement) inputNode;
-                if (element.Name.NamespaceName != this.xslNameSpace) {
+                if (element.Name.NamespaceName != XmlnsConstant.xslNameSpace) {
                     string returnType = this.DefineReturnType(element);
                     if (this.IsBasicReturnType(returnType))
                     {
@@ -98,7 +94,7 @@ namespace EaiConverter.Mapper
         {
             foreach (XElement item in inputedElement)
             {
-                if (item.Name.NamespaceName != this.xslNameSpace)
+                if (item.Name.NamespaceName != XmlnsConstant.xslNameSpace)
                 {
                     elementTypes.Add(item.Name.ToString());
                 }
