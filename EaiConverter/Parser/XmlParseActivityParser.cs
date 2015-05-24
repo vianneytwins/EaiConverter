@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using EaiConverter.Model;
 using EaiConverter.Parser.Utils;
+using EaiConverter.Mapper;
 
 namespace EaiConverter.Parser
 {
@@ -21,6 +22,7 @@ namespace EaiConverter.Parser
 			
             xmlParseActivity.InputBindings = inputElement.Element (XmlnsConstant.tibcoPrefix + "inputBindings").Nodes();
 
+            xmlParseActivity.Parameters = new XslParser().Build(xmlParseActivity.InputBindings);
 
 			return xmlParseActivity;
 		}

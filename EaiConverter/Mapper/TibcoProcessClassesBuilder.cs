@@ -108,12 +108,31 @@ namespace EaiConverter.Mapper
                 }
             }
 
+            bool IsXmlParserServiceAllReadyAdded = false;
 			foreach (Activity activity in tibcoBwProcessToGenerate.Activities) {
-				fields.Add (new CodeMemberField {
-					Type = new CodeTypeReference("I" + VariableHelper.ToClassName (activity.Name + "Service")),
-					Name = VariableHelper.ToVariableName (VariableHelper.ToClassName (activity.Name + "Service")),
-					Attributes = MemberAttributes.Private
-					});
+                if (activity.Type == ActivityType.xmlParseActivityType && !IsXmlParserServiceAllReadyAdded)
+                {
+                    fields.Add(new CodeMemberField
+                        {
+                            Type = new CodeTypeReference(XmlParserHelperBuilder.IXmlParserHelperServiceName),
+                            Name = VariableHelper.ToVariableName(VariableHelper.ToClassName(XmlParserHelperBuilder.XmlParserHelperServiceName)),
+                            Attributes = MemberAttributes.Private
+                        });
+                    IsXmlParserServiceAllReadyAdded = true;
+                }
+                if (activity.Type == ActivityType.assignActivityType || activity.Type == ActivityType.mapperActivityType)
+                {
+                    // DO nothing for those type
+                }
+                else
+                {
+                    fields.Add(new CodeMemberField
+                        {
+                            Type = new CodeTypeReference("I" + VariableHelper.ToClassName(activity.Name + "Service")),
+                            Name = VariableHelper.ToVariableName(VariableHelper.ToClassName(activity.Name + "Service")),
+                            Attributes = MemberAttributes.Private
+                        });
+                }
 			}
 
 			return fields.ToArray();

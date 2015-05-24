@@ -47,6 +47,20 @@ namespace EaiConverter
             Assert.AreEqual ("pfx4:EquityRecord", xmlParseActivity.XsdReference);
         }
     
+
+        [Test]
+        public void Should_Return_One_Parameter_Named_SqlParam(){
+            XmlParseActivity xmlParseActivity = (XmlParseActivity) xmlParseActivityParser.Parse (doc);
+
+            Assert.AreEqual ("sqlParams", xmlParseActivity.Parameters[0].Name);
+        }
+
+        [Test]
+        public void Should_Return_One_Parameter_of_type_string(){
+            XmlParseActivity xmlParseActivity = (XmlParseActivity) xmlParseActivityParser.Parse (doc);
+
+            Assert.AreEqual ("string", xmlParseActivity.Parameters[0].Type);
+        }
     }
 }
 

@@ -11,17 +11,27 @@ namespace EaiConverter.Mapper
             var xslBuilder = new XslBuilder (new XpathBuilder());
             var jdbcQueryActivityBuilder = new JdbcQueryActivityBuilder (new DataAccessBuilder(jdbcQueryBuilderUtils), new DataAccessServiceBuilder(jdbcQueryBuilderUtils), new DataAccessInterfacesCommonBuilder(), xslBuilder);
 
-                if (activityType == ActivityType.jdbcQueryActivityType || activityType == ActivityType.jdbcCallActivityType || activityType == ActivityType.jdbcUpdateActivityType)
-                {
-                    return jdbcQueryActivityBuilder;
+            if (activityType == ActivityType.jdbcQueryActivityType || activityType == ActivityType.jdbcCallActivityType || activityType == ActivityType.jdbcUpdateActivityType)
+            {
+                return jdbcQueryActivityBuilder;
 
-                }else if(activityType == ActivityType.assignActivityType){
-                    return new AssignActivityBuilder(xslBuilder);
-                }
-                else
-                {
-                   return new DefaultActivityBuilder(xslBuilder);
-                }
+            }
+            else if (activityType == ActivityType.assignActivityType)
+            {
+                return new AssignActivityBuilder(xslBuilder);
+            }
+            else if (activityType == ActivityType.xmlParseActivityType)
+            {
+                return new XmlParseActivityBuilder(xslBuilder, new XmlParserHelperBuilder());
+            }
+            else if (activityType == ActivityType.mapperActivityType)
+            {
+                return new MapperActivityBuilder(xslBuilder);
+            }
+            else
+            {
+               return new DefaultActivityBuilder(xslBuilder);
+            }
                
         }
     }

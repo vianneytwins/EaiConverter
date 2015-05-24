@@ -82,10 +82,12 @@ namespace EaiConverter.Mapper
         public CodeStatementCollection GenerateCodeInvocation (string serviceToInvoke, JdbcQueryActivity jdbcQueryActivity){
 
             var invocationCodeCollection = new CodeStatementCollection();
-
+            // Add the log
             invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(jdbcQueryActivity.Name));
-
+            // Add the input bindings
             invocationCodeCollection.AddRange(this.xslBuilder.Build(jdbcQueryActivity.InputBindings));
+
+            // Add the invocation itself
             var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(serviceToInvoke));
 
             var parameters = new CodeExpression[]{};

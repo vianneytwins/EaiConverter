@@ -9,6 +9,7 @@ namespace EaiConverter.Mapper.Utils
 		public const string dataAccessNamespace = "MyApp.Mydomain.DataAccess";
 		public const string dataAccessCommonNamespace = "MyApp.Mydomain.DataAccess.Common";
 		public const string loggerNameSpace =  "MyApp.Tools.Logging";
+        public const string xmlToolsNameSpace =  "MyApp.Tools.Xml";
 		public const string domainContractNamespaceName = "MyApp.Mydomain.Service.Contract";
 
 	}
