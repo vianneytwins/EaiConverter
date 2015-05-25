@@ -28,7 +28,7 @@ namespace EaiConverter.Mapper
 			var targetUnit = new CodeCompileUnit();
 
 			//create the namespace
-			CodeNamespace processNamespace = new CodeNamespace(tibcoBwProcessToGenerate.NameSpace);
+			CodeNamespace processNamespace = new CodeNamespace(tibcoBwProcessToGenerate.ShortNameSpace);
 
 			processNamespace.Imports.AddRange (this.GenerateImport (tibcoBwProcessToGenerate));
 
