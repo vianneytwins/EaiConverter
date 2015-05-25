@@ -29,6 +29,8 @@ namespace EaiConverter.Parser
                 allFileElement.Element (XmlnsConstant.tibcoPrefix + "name").Value
 			);
 
+            tibcoBwProcess.XsdImports = this.ParseXsdImports (allFileElement);
+
             tibcoBwProcess.StartActivity = this.ParseStartOrEndActivity (allFileElement, tibcoBwProcess.inputAndOutputNameSpace,  ActivityType.startType);
 
             tibcoBwProcess.EndActivity = this.ParseStartOrEndActivity (allFileElement, tibcoBwProcess.inputAndOutputNameSpace, ActivityType.endType);
@@ -44,6 +46,27 @@ namespace EaiConverter.Parser
 			// TODO : As t'on interet a mettre toutes les variables dans un grosse map du style :
 			// nom de l activité-> ma list de variable (en conciderant start et end comme des activités ?)
 		}
+
+        public List<XsdImport> ParseXsdImports(XElement allFileElement)
+        {
+            IEnumerable<XElement> xElement = from element in allFileElement.Elements (XmlnsConstant.xsdNameSpace + "import")
+                select element;
+            if (xElement == null) {
+                return null;
+            }
+            var xsdImports = new List<XsdImport>();
+            foreach (var element in xElement)
+            {
+                var xsdImport = new XsdImport
+                    {
+                        Namespace = element.Attribute("namespace").Value,
+                        SchemaLocation = element.Attribute("schemaLocation").Value
+                    };
+                xsdImports.Add(xsdImport);
+            }
+            return xsdImports;
+
+        }
 
         public Activity ParseStartOrEndActivity (XElement allFileElement, string inputAndOutputNameSpace, ActivityType activityType)
 		{

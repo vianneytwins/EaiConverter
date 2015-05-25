@@ -78,13 +78,31 @@ namespace EaiConverter.Mapper
 		/// <param name="tibcoBwProcessToGenerate">Tibco bw process to generate.</param>
 		public CodeNamespaceImport[] GenerateImport (TibcoBWProcess tibcoBwProcessToGenerate)
 		{
-			return new CodeNamespaceImport[4] {
+            var imports = new List<CodeNamespaceImport> {
 				new CodeNamespaceImport ("System"),
 				new CodeNamespaceImport (TargetAppNameSpaceService.domainContractNamespaceName),
 				new CodeNamespaceImport (tibcoBwProcessToGenerate.inputAndOutputNameSpace),
 				new CodeNamespaceImport (TargetAppNameSpaceService.loggerNameSpace)
 			};
+
+            if (tibcoBwProcessToGenerate.XsdImports != null)
+            {
+                foreach (var xsdImport in tibcoBwProcessToGenerate.XsdImports)
+                {
+                    imports.Add(new CodeNamespaceImport (this.ConvertXsdImport(xsdImport)));
+                }
+            }
+
+            return imports.ToArray();
 		}
+
+        public string ConvertXsdImport(XsdImport xsdImport)
+        {
+            string filePath = xsdImport.SchemaLocation.Substring(0, xsdImport.SchemaLocation.LastIndexOf("/"));
+            filePath = filePath.Remove(0, 1);
+            filePath = filePath.Remove(0, filePath.IndexOf("/")+1);
+            return filePath.Replace("/",".");
+        }
 
 		public CodeMemberField[] GeneratePrivateFields (TibcoBWProcess tibcoBwProcessToGenerate)
 		{

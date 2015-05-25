@@ -100,6 +100,7 @@
     <Compile Include="Parser\Utils\XmlnsConstant.cs" />
     <Compile Include="Model\ProcessVariable.cs" />
     <Compile Include="Mapper\XmlParserHelperBuilder.cs" />
+    <Compile Include="Model\XsdImport.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

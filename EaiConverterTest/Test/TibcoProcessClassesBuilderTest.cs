@@ -16,17 +16,15 @@ namespace EaiConverter
 	[TestFixture]
 	public class TibcoProcessClassesBuilderTest
 	{
-		CodeDomProvider classGenerator;
+	
 		TibcoBWProcess tibcoBWProcess;
-		string classesInString;
-		CodeGeneratorOptions options;
+        TibcoProcessClassesBuilder tibcoBWProcessBuilder;
+
 
 		[SetUp]
 		public void SetUp ()
 		{
-			classGenerator = CodeDomProvider.CreateProvider("CSharp");
-			options = new CodeGeneratorOptions();
-			options.BracingStyle = "C";
+            tibcoBWProcessBuilder = new TibcoProcessClassesBuilder ();
 
 			tibcoBWProcess = new TibcoBWProcess ("MyNamespace/myProcessTest.process");
 			tibcoBWProcess.Activities = new List<Activity> ();
@@ -37,45 +35,37 @@ namespace EaiConverter
 		{
 
 			var expected ="this.logger = logger;\n";
-			var tibcoBWProcessBuilder = new TibcoProcessClassesBuilder ();
-			var classToGenerate = tibcoBWProcessBuilder.Build (tibcoBWProcess);
+			var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
 
+            string classesInString = string.Empty;
 
-			using (StringWriter writer = new StringWriter ()) {
-				foreach (var member in classToGenerate.Namespaces [0].Types [0].Members) {
-					if (member is CodeConstructor) {
-						classGenerator.GenerateCodeFromStatement 
-						(((CodeConstructor)member).Statements [0], writer, new CodeGeneratorOptions ());
-						classesInString = writer.GetStringBuilder ().ToString ();
-					}
+			foreach (var member in classToGenerate.Namespaces [0].Types [0].Members) {
+				if (member is CodeConstructor) {
+                    classesInString = TestCodeGeneratorUtils.GenerateCode(((CodeConstructor)member).Statements);
 				}
 			}
 
-			//classGenerator.GenerateMethod(classToGenerate.Constructors[0], stringBuilder, new TibcoBWConverter.CodeGenerator.utils.Tab(),false);
-            Assert.AreEqual (expected, classesInString.RemoveWindowsReturnLineChar());
+            Assert.AreEqual (expected, classesInString);
 		}
 
 		[Test]
 		public void Should_Return_Constructor_with_setter_of_Activity_When_1_Activy_is_declared()
 		{
             tibcoBWProcess.Activities.Add(new Activity ("MySqlRequestActivity", ActivityType.NotHandleYet));
-			var expected = "this.mySqlRequestActivityService = mySqlRequestActivityService;\n";
-			var tibcoBWProcessBuilder = new TibcoProcessClassesBuilder ();
-			var classToGenerate = tibcoBWProcessBuilder.Build (tibcoBWProcess);
+            var expected = "this.logger = logger;\nthis.mySqlRequestActivityService = mySqlRequestActivityService;\n";
+			
+            var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
 
+            string classesInString = string.Empty;
 
-			using (StringWriter writer = new StringWriter ()) {
-				foreach (var member in classToGenerate.Namespaces[0].Types[0].Members) {
-					if (member is CodeConstructor) {
-						classGenerator.GenerateCodeFromStatement 
-						(((CodeConstructor)member).Statements [1], writer, new CodeGeneratorOptions ());
-						classesInString = writer.GetStringBuilder ().ToString ();
-					}
-				}
-			}
+            foreach (var member in classToGenerate.Namespaces [0].Types [0].Members) {
+                if (member is CodeConstructor) {
+                    classesInString = TestCodeGeneratorUtils.GenerateCode(((CodeConstructor)member).Statements);
+                }
+            }
 
 			//classGenerator.GenerateMethod(classToGenerate.Constructors[0], stringBuilder, new TibcoBWConverter.CodeGenerator.utils.Tab(),false);
-            Assert.AreEqual (expected, classesInString.RemoveWindowsReturnLineChar());
+            Assert.AreEqual (expected, classesInString);
 		}
 
 
@@ -92,14 +82,12 @@ namespace EaiConverter
         [Test]
         public void Should_Return_privateField_When_a_Process_Variable_is_declared()
         {
-
-            var tibcoBWProcessBuilder = new TibcoProcessClassesBuilder ();
             tibcoBWProcess.ProcessVariables = new List<ProcessVariable>{
                 new ProcessVariable{
                     Parameter = new ClassParameter{Name = "var",Type = "string"}
                 }
             };
-            var classToGenerate = tibcoBWProcessBuilder.Build (tibcoBWProcess);
+            var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
 
             var fieldName = ((CodeMemberField)classToGenerate.Namespaces[0].Types[0].Members[1]).Name;
 
@@ -122,15 +110,13 @@ namespace EaiConverter
 </var>";
             var doc = XElement.Parse(xml);
 
-
-            var tibcoBWProcessBuilder = new TibcoProcessClassesBuilder ();
             tibcoBWProcess.ProcessVariables = new List<ProcessVariable>{
                 new ProcessVariable{
                     Parameter = new ClassParameter{Name = "var",Type = "group"},
                     ObjectXNodes = doc.Nodes()
                 }
             };
-            var classToGenerate = tibcoBWProcessBuilder.Build (tibcoBWProcess);
+            var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
 
             var className = classToGenerate.Namespaces[1].Types[0].Name;
 
@@ -143,12 +129,8 @@ namespace EaiConverter
 		[Test]
 		public void Should_Return_4_import_For_Empty_Process()
 		{
-		
-			var tibcoBWProcessBuilder = new TibcoProcessClassesBuilder ();
-			var classToGenerate = tibcoBWProcessBuilder.Build (tibcoBWProcess);
+            var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
 
-
-			//classGenerator.GenerateImport(classToGenerate.Imports, stringBuilder, new TibcoBWConverter.CodeGenerator.utils.Tab());
 			Assert.AreEqual (4, classToGenerate.Namespaces[0].Imports.Count);
 		}
 
@@ -158,9 +140,8 @@ namespace EaiConverter
             tibcoBWProcess.StartActivity = new Activity ("Start", ActivityType.startType);
             tibcoBWProcess.EndActivity = new Activity ("End", ActivityType.endType);
 
-			var expected ="void";			
-			var tibcoBWProcessBuilder = new TibcoProcessClassesBuilder ();
-			var classToGenerate = tibcoBWProcessBuilder.Build (tibcoBWProcess);
+			var expected ="void";
+            var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
 			string actual = string.Empty;
 			foreach (var member in classToGenerate.Namespaces [0].Types [0].Members) {
 				if (member is CodeMemberMethod &&  ((CodeMemberMethod)member).Name == "Start") {
@@ -185,8 +166,8 @@ namespace EaiConverter
 			};
             tibcoBWProcess.EndActivity = new Activity ("End", ActivityType.endType);
 
-			var tibcoBWProcessBuilder = new TibcoProcessClassesBuilder ();
-			var classToGenerate = tibcoBWProcessBuilder.Build (tibcoBWProcess);
+			
+            var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
 
 			string actual = string.Empty;
 			foreach (var member in classToGenerate.Namespaces [0].Types [0].Members) {
@@ -219,9 +200,9 @@ namespace EaiConverter
 				}
 			};
 		
-			var tibcoBWProcessBuilder = new TibcoProcessClassesBuilder ();
+			
             // Act
-			var classToGenerate = tibcoBWProcessBuilder.Build (tibcoBWProcess);
+            var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
 
 
 			string actual = string.Empty;
@@ -233,6 +214,23 @@ namespace EaiConverter
 
 			Assert.AreEqual ("string", actual);
 		}
+
+        [Test]
+        public void Should_Convert_XsdImport_in_Code_namespace_to_import(){
+            // Arrange
+            var expected = "DAI.PNO.XSD";
+
+            // Act
+            var import = this.tibcoBWProcessBuilder.ConvertXsdImport (
+                new XsdImport
+                {
+                    Namespace="http://www.tibco.com/ns/no_namspace_schema_location/XmlSchemas/DAI/PNO/XSD/RM3D.xsd",
+                    SchemaLocation="/XmlSchemas/DAI/PNO/XSD/RM3D.xsd"
+                });
+
+            // Assert
+            Assert.AreEqual(expected,import);
+        }
 	}
 }
 

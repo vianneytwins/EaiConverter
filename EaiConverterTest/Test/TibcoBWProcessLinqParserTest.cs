@@ -19,13 +19,26 @@ namespace EaiConverter
 		}
 	
 
-		[Test]
-		public void Should_return_full_process_name_is_repertoire_dash_myProcessName ()
-		{
-			string xml = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""><pd:name>repertoire/myProcessName.process</pd:name></pd:ProcessDefinition>";
-			var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
-			Assert.AreEqual ("repertoire/myProcessName.process", tibcoBWProcess.FullProcessName);
-		}
+        [Test]
+        public void Should_return_full_process_name_is_repertoire_dash_myProcessName ()
+        {
+            string xml = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""><pd:name>repertoire/myProcessName.process</pd:name></pd:ProcessDefinition>";
+            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+            Assert.AreEqual ("repertoire/myProcessName.process", tibcoBWProcess.FullProcessName);
+        }
+
+        [Test]
+        public void Should_return_Xsd_Import ()
+        {
+            string xml = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""><pd:name>repertoire/myProcessName.process</pd:name>
+            <xsd:import namespace=""http://www.tibco.com/ns/no_namspace_schema_location/XmlSchemas/DAI/PNO/XSD/RM3D.xsd"" schemaLocation=""/XmlSchemas/DAI/PNO/XSD/RM3D.xsd""/>
+</pd:ProcessDefinition>"
+
+                ;
+            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+            Assert.AreEqual ("http://www.tibco.com/ns/no_namspace_schema_location/XmlSchemas/DAI/PNO/XSD/RM3D.xsd", tibcoBWProcess.XsdImports[0].Namespace);
+            Assert.AreEqual ("/XmlSchemas/DAI/PNO/XSD/RM3D.xsd", tibcoBWProcess.XsdImports[0].SchemaLocation);
+        }
 
 		[Test]
 		public void Should_return_start_Activity_name_is_Start ()
