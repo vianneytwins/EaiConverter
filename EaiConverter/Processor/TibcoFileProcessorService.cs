@@ -9,7 +9,7 @@ using EaiConverter.Mapper;
 
 namespace EaiConverter.Processor
 {
-	public class TibcoFileProcessorService : ITibcoFileProcessorService
+	public class TibcoFileProcessorService : IFileProcessorService
 	{
 		ISourceCodeGeneratorService sourceCodeGeneratorService;
 

@@ -45,7 +45,6 @@
     <Compile Include="Model\Activity.cs" />
     <Compile Include="Model\TibcoBWProcess.cs" />
     <Compile Include="utils\ClassParamater.cs" />
-    <Compile Include="CodeGenerator\XsdClassGenerator.cs" />
     <Compile Include="Parser\TibcoBWProcessLinqParser.cs" />
     <Compile Include="Parser\XsdParser.cs" />
     <Compile Include="Parser\JdbcQueryActivityParser.cs" />
@@ -55,7 +54,6 @@
     <Compile Include="Mapper\JdbcQueryActivityBuilder.cs" />
     <Compile Include="CodeGenerator\ISourceCodeGeneratorService.cs" />
     <Compile Include="Processor\TibcoFileProcessorService.cs" />
-    <Compile Include="Processor\ITibcoFileProcessorService.cs" />
     <Compile Include="Processor\TibcoBWDirectoryProcessorService.cs" />
     <Compile Include="CodeGenerator\CsharpSimulationSourceCodeGeneratorService.cs" />
     <Compile Include="CodeGenerator\CsharpSourceCodeGeneratorService.cs" />
@@ -101,6 +99,9 @@
     <Compile Include="Model\ProcessVariable.cs" />
     <Compile Include="Mapper\XmlParserHelperBuilder.cs" />
     <Compile Include="Model\XsdImport.cs" />
+    <Compile Include="Processor\IFileProcessorService.cs" />
+    <Compile Include="Mapper\XsdBuilder.cs" />
+    <Compile Include="Processor\XsdFileProcessorService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -117,5 +118,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\BasicSample.process" />
+    <None Include="ressources\Account.xsd" />
   </ItemGroup>
 </Project>

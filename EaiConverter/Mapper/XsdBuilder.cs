@@ -14,10 +14,10 @@ using Microsoft.CSharp;
 using System.Xml.Linq;
 
 
-namespace EaiConverter
+namespace EaiConverter.Mapper
 {
 
-	public class XsdClassGenerator
+	public class XsdBuilder
 	{
 		const string httpwwwworgXMLSchema = "http://www.w3.org/2001/XMLSchema";
 
@@ -25,7 +25,7 @@ namespace EaiConverter
 
 		const string xsd = "xsd";
 
-		public CodeNamespace GenerateCodeFromXsdNodes(IEnumerable<XNode> inputNodes, string nameSpace)
+		public CodeNamespace Build(IEnumerable<XNode> inputNodes, string nameSpace)
 		{
 			MemoryStream stream = new MemoryStream ();
 
@@ -33,11 +33,19 @@ namespace EaiConverter
 			var rootElement = new XElement (xsdPrefix + schema , new XAttribute (XNamespace.Xmlns + xsd, xsdPrefix), inputNodes);
 
 			rootElement.Save (stream);
-			var xsdClassInString = GeneratedClassFromStream (stream, nameSpace);
+            var xsdCodeNamespace = GeneratedClassFromStream (stream, nameSpace);
 
-			return xsdClassInString;
-
+			return xsdCodeNamespace;
 		}
+
+        public CodeNamespace Build(string fileName)
+        {
+            FileStream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+  
+            var xsdCodeNamespace = GeneratedClassFromStream (stream, TibcoProcessClassesBuilder.ConvertXsdImportToNameSpace(fileName));
+
+            return xsdCodeNamespace;
+        }
 
 		private CodeNamespace GeneratedClassFromStream (Stream stream, string nameSpace)
 		{
@@ -49,7 +57,8 @@ namespace EaiConverter
 			}
 				
 			XmlSchemas xsds = new XmlSchemas ();
-			xsds.Add (xsd);
+
+            xsds.Add (xsd);
 			xsds.Compile (null, true);
 			XmlSchemaImporter schemaImporter = new XmlSchemaImporter (xsds);
 

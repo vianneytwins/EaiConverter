@@ -8,10 +8,12 @@ namespace EaiConverter.Processor
 {
 	public class TibcoBWDirectoryProcessorService : ITibcoBWDirectoryProcessorService
 	{
-		ITibcoFileProcessorService tibcoFileProcessorService;
+		IFileProcessorService tibcoFileProcessorService;
+        IFileProcessorService xsdFileProcessorService;
 
-		public TibcoBWDirectoryProcessorService (ITibcoFileProcessorService tibcoFileProcessorService){
+        public TibcoBWDirectoryProcessorService (IFileProcessorService tibcoFileProcessorService, IFileProcessorService xsdFileProcessorService){
 			this.tibcoFileProcessorService = tibcoFileProcessorService;
+            this.xsdFileProcessorService = xsdFileProcessorService;
 		}
 
 		public void Process(string directory) { 
@@ -39,6 +41,11 @@ namespace EaiConverter.Processor
 					//file treatement
 					this.tibcoFileProcessorService.Process (file);
 				}
+                if (file.EndsWith (".xsd"))
+                {
+                    //file treatement
+                    this.xsdFileProcessorService.Process (file);
+                }
 			} 
 			foreach(string subDirectory in directories) 
 			{ 

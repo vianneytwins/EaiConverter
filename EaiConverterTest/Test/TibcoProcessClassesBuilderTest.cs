@@ -221,12 +221,7 @@ namespace EaiConverter
             var expected = "DAI.PNO.XSD";
 
             // Act
-            var import = this.tibcoBWProcessBuilder.ConvertXsdImport (
-                new XsdImport
-                {
-                    Namespace="http://www.tibco.com/ns/no_namspace_schema_location/XmlSchemas/DAI/PNO/XSD/RM3D.xsd",
-                    SchemaLocation="/XmlSchemas/DAI/PNO/XSD/RM3D.xsd"
-                });
+            var import = TibcoProcessClassesBuilder.ConvertXsdImportToNameSpace ("/XmlSchemas/DAI/PNO/XSD/RM3D.xsd");
 
             // Assert
             Assert.AreEqual(expected,import);

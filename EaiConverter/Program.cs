@@ -13,7 +13,8 @@ namespace EaiConverter
 		public static void Main (string[] args)
 		{
 			ITibcoBWDirectoryProcessorService tibcoFileReaderService;
-			ITibcoFileProcessorService tibcoFileProcessorService;
+			IFileProcessorService tibcoFileProcessorService;
+            IFileProcessorService xsdFileProcessorService;
 			ISourceCodeGeneratorService sourceCodeGeneratorService;
 
 			if (args.Length > 1){
@@ -25,12 +26,14 @@ namespace EaiConverter
 				if (mode == "S_Csharp") {
 					sourceCodeGeneratorService = new CsharpSimulationSourceCodeGeneratorService ();
 					tibcoFileProcessorService = new TibcoFileProcessorService (sourceCodeGeneratorService);
-					tibcoFileReaderService = new TibcoBWDirectoryProcessorService (tibcoFileProcessorService);
+                    xsdFileProcessorService = new XsdFileProcessorService (sourceCodeGeneratorService);
+                    tibcoFileReaderService = new TibcoBWDirectoryProcessorService (tibcoFileProcessorService, xsdFileProcessorService);
 					tibcoFileReaderService.Process (sourceDirectory);
 				} else if (mode == "G_Csharp") {
 					sourceCodeGeneratorService = new CsharpSourceCodeGeneratorService ();
 					tibcoFileProcessorService = new TibcoFileProcessorService (sourceCodeGeneratorService);
-					tibcoFileReaderService = new TibcoBWDirectoryProcessorService (tibcoFileProcessorService);
+                    xsdFileProcessorService = new XsdFileProcessorService (sourceCodeGeneratorService);
+                    tibcoFileReaderService = new TibcoBWDirectoryProcessorService (tibcoFileProcessorService, xsdFileProcessorService);
 					tibcoFileReaderService.Process (sourceDirectory);
 				} else {
                     Console.WriteLine ("Program is going to exit - sorry only MODE S_Csharp and G_Csharp is managed for the moment");

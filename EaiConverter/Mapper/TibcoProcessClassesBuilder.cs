@@ -21,7 +21,7 @@ namespace EaiConverter.Mapper
             this.coreProcessBuilder = new CoreProcessBuilder();
         }
 
-        XsdClassGenerator xsdClassGenerator = new XsdClassGenerator();
+        XsdBuilder xsdClassGenerator = new XsdBuilder();
 
 		public CodeCompileUnit Build (TibcoBWProcess tibcoBwProcessToGenerate){
 
@@ -51,17 +51,17 @@ namespace EaiConverter.Mapper
 			targetUnit.Namespaces.AddRange (this.GenerateActivityClasses (tibcoBwProcessToGenerate));
 
 			if (tibcoBwProcessToGenerate.EndActivity!= null && tibcoBwProcessToGenerate.EndActivity.ObjectXNodes != null) {
-				targetUnit.Namespaces.Add (this.xsdClassGenerator.GenerateCodeFromXsdNodes (tibcoBwProcessToGenerate.EndActivity.ObjectXNodes, tibcoBwProcessToGenerate.inputAndOutputNameSpace));
+				targetUnit.Namespaces.Add (this.xsdClassGenerator.Build (tibcoBwProcessToGenerate.EndActivity.ObjectXNodes, tibcoBwProcessToGenerate.inputAndOutputNameSpace));
 			}
 			if (tibcoBwProcessToGenerate.StartActivity!= null && tibcoBwProcessToGenerate.StartActivity.ObjectXNodes != null) {
-				targetUnit.Namespaces.Add (this.xsdClassGenerator.GenerateCodeFromXsdNodes (tibcoBwProcessToGenerate.StartActivity.ObjectXNodes, tibcoBwProcessToGenerate.inputAndOutputNameSpace));
+				targetUnit.Namespaces.Add (this.xsdClassGenerator.Build (tibcoBwProcessToGenerate.StartActivity.ObjectXNodes, tibcoBwProcessToGenerate.inputAndOutputNameSpace));
 			}
             if (tibcoBwProcessToGenerate.ProcessVariables!= null) {
                 foreach (var item in tibcoBwProcessToGenerate.ProcessVariables)
                 {
                     if (!IsBasicType(item.Parameter.Type))
                     {
-                        targetUnit.Namespaces.Add(this.xsdClassGenerator.GenerateCodeFromXsdNodes(item.ObjectXNodes, tibcoBwProcessToGenerate.NameSpace));
+                        targetUnit.Namespaces.Add(this.xsdClassGenerator.Build(item.ObjectXNodes, tibcoBwProcessToGenerate.NameSpace));
                     }
                 }
             }
@@ -89,16 +89,16 @@ namespace EaiConverter.Mapper
             {
                 foreach (var xsdImport in tibcoBwProcessToGenerate.XsdImports)
                 {
-                    imports.Add(new CodeNamespaceImport (this.ConvertXsdImport(xsdImport)));
+                    imports.Add(new CodeNamespaceImport (ConvertXsdImportToNameSpace(xsdImport.SchemaLocation)));
                 }
             }
 
             return imports.ToArray();
 		}
 
-        public string ConvertXsdImport(XsdImport xsdImport)
+        public static string ConvertXsdImportToNameSpace(string schemaLocation)
         {
-            string filePath = xsdImport.SchemaLocation.Substring(0, xsdImport.SchemaLocation.LastIndexOf("/"));
+            string filePath = schemaLocation.Substring(0, schemaLocation.LastIndexOf("/"));
             filePath = filePath.Remove(0, 1);
             filePath = filePath.Remove(0, filePath.IndexOf("/")+1);
             return filePath.Replace("/",".");
@@ -175,10 +175,6 @@ namespace EaiConverter.Mapper
 			}
 
 			return new List<CodeConstructor> { constructor }.ToArray();
-		}
-
-		public void GenerateProperties(TibcoBWProcess tibcoBwProcessToGenerate)
-		{
 		}
 
 		public CodeMemberMethod[] GenerateMethod (TibcoBWProcess tibcoBwProcessToGenerate)
