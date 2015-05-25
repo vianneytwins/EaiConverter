@@ -30,13 +30,21 @@ namespace EaiConverter.Mapper
         public CodeStatementCollection GenerateCodeInvocation ( MapperActivity mapperActivity)
         {
             var invocationCodeCollection = new CodeStatementCollection();
+            // Add the Log
             invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(mapperActivity.Name));
-
+            // Add the mapping
             invocationCodeCollection.AddRange(this.xslBuilder.Build(mapperActivity.InputBindings));
+
             // TODO : set the result of the map in an object of type xsd ref with the variable name of the activty
-            var variableToAssignReference = new CodeVariableReferenceExpression ( VariableHelper.ToVariableName(mapperActivity.Name));
-            var codeInvocation = new CodeAssignStatement (variableToAssignReference, new CodeVariableReferenceExpression(VariableHelper.ToVariableName(mapperActivity.Name)));
-            invocationCodeCollection.Add(codeInvocation);
+            var variableReturnType = mapperActivity.XsdReference.Split(':')[1];
+            var variableName = VariableHelper.ToVariableName(mapperActivity.Name);
+
+            var parameter = new CodeVariableReferenceExpression(mapperActivity.Parameters[0].Name);
+
+            var code = new CodeVariableDeclarationStatement (variableReturnType, variableName, parameter);
+
+            invocationCodeCollection.Add(code);
+
             return invocationCodeCollection;
         }
 
