@@ -3,6 +3,7 @@ using System.Xml;
 using System.IO;
 using System.CodeDom.Compiler;
 using System.CodeDom;
+using EaiConverter.Processor;
 
 namespace EaiConverter.CodeGenerator
 {
@@ -19,8 +20,9 @@ namespace EaiConverter.CodeGenerator
             options.IndentString = "    ";
             options.BlankLinesBetweenMembers = true;
 
-            if (Directory.Exists(destinationPath)){
+            if (Directory.Exists(destinationPath) && ConfigurationApp.GetProperty ("IsGeneratedDirectoryPurged") != "true"){
                 Directory.Delete(destinationPath,true);
+                ConfigurationApp.SaveProperty ("IsGeneratedDirectoryPurged","true");
             }
             Directory.CreateDirectory(destinationPath);
 			// Build the output file name.
