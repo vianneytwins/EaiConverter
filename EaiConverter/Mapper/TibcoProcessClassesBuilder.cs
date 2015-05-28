@@ -206,9 +206,18 @@ namespace EaiConverter.Mapper
             {
                 foreach (var parameter in tibcoBwProcessToGenerate.StartActivity.Parameters)
                 {
+                    CodeTypeReference codeTypeRefernce;
+                    if (this.IsBasicType(parameter.Type))
+                    {
+                        codeTypeRefernce = new CodeTypeReference(parameter.Type);
+                    }
+                    else {
+                        codeTypeRefernce = new CodeTypeReference(tibcoBwProcessToGenerate.inputAndOutputNameSpace+"."+ parameter.Type);
+                    }
+
                     startMethod.Parameters.Add(new CodeParameterDeclarationExpression {
                         Name = parameter.Name,
-                        Type = new CodeTypeReference(parameter.Type)
+                        Type = codeTypeRefernce
                     });
                 }
             }
@@ -223,7 +232,15 @@ namespace EaiConverter.Mapper
             }
             else
             {
-                returnType = tibcoBwProcessToGenerate.EndActivity.Parameters[0].Type;
+                
+                if (this.IsBasicType(tibcoBwProcessToGenerate.EndActivity.Parameters[0].Type))
+                {
+                    returnType = tibcoBwProcessToGenerate.EndActivity.Parameters[0].Type;
+                }
+                else {
+                    returnType = tibcoBwProcessToGenerate.inputAndOutputNameSpace+"."+ tibcoBwProcessToGenerate.EndActivity.Parameters[0].Type;
+                }
+
             }
             return new CodeTypeReference(returnType);
         }
