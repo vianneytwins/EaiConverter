@@ -179,18 +179,38 @@ namespace EaiConverter
 			Assert.AreEqual ("inputName", actual);
 		}
 
+        [Test]
+        public void Should_have_Start_Method_with_one_Complex_input_param()
+        {
+            tibcoBWProcess.StartActivity = new Activity ("Start", ActivityType.startType);
+            tibcoBWProcess.StartActivity.Parameters = new List <ClassParameter> {
+                new ClassParameter
+                {
+                    Type = "NotSimpleType",
+                    Name = "inputName"
+                }
+            };
+            tibcoBWProcess.EndActivity = new Activity ("End", ActivityType.endType);
+
+
+            var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
+
+            string actual = string.Empty;
+            foreach (var member in classToGenerate.Namespaces [0].Types [0].Members) {
+                if (member is CodeMemberMethod &&  ((CodeMemberMethod)member).Name == "Start") {
+                    actual = ((CodeMemberMethod)member).Parameters[0].Type.BaseType;
+                }
+            }
+
+            Assert.AreEqual (tibcoBWProcess.inputAndOutputNameSpace + ".NotSimpleType", actual);
+        }
+
 		[Test]
 		public void Should_return_Start_Method_with_return_type_string_When_Return_is_defined()
 		{
             // prepare
             tibcoBWProcess.StartActivity = new Activity ("Start", ActivityType.startType);
-			tibcoBWProcess.StartActivity.Parameters = new List <ClassParameter> {
-				new ClassParameter
-				{
-					Type = "string",
-					Name = "inputName"
-				}
-			};
+
             tibcoBWProcess.EndActivity = new Activity ("End", ActivityType.endType);
 			tibcoBWProcess.EndActivity.Parameters = new List <ClassParameter> {
 				new ClassParameter
@@ -214,6 +234,36 @@ namespace EaiConverter
 
 			Assert.AreEqual ("string", actual);
 		}
+
+        [Test]
+        public void Should_return_Start_Method_with_complex_return_type()
+        {
+            // prepare
+            tibcoBWProcess.StartActivity = new Activity ("Start", ActivityType.startType);
+
+            tibcoBWProcess.EndActivity = new Activity ("End", ActivityType.endType);
+            tibcoBWProcess.EndActivity.Parameters = new List <ClassParameter> {
+                new ClassParameter
+                {
+                    Type = "NotSimpleType",
+                    Name = "endResult"
+                }
+            };
+
+
+            // Act
+            var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
+
+
+            string actual = string.Empty;
+            foreach (var member in classToGenerate.Namespaces [0].Types [0].Members) {
+                if (member is CodeMemberMethod &&  ((CodeMemberMethod)member).Name == "Start") {
+                    actual = ((CodeMemberMethod)member).ReturnType.BaseType;
+                }
+            }
+
+            Assert.AreEqual (tibcoBWProcess.inputAndOutputNameSpace + ".NotSimpleType", actual);
+        }
 
         [Test]
         public void Should_Convert_XsdImport_in_Code_namespace_to_import(){

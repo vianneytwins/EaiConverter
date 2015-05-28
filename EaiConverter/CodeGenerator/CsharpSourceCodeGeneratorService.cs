@@ -20,9 +20,9 @@ namespace EaiConverter.CodeGenerator
             options.IndentString = "    ";
             options.BlankLinesBetweenMembers = true;
 
-            if (Directory.Exists(destinationPath) && ConfigurationApp.GetProperty ("IsGeneratedDirectoryPurged") != "true"){
+            if (Directory.Exists(destinationPath) && ConfigurationApp.GetProperty ("IsGeneratedSolutionDirectoryPurged") != "true"){
                 Directory.Delete(destinationPath,true);
-                ConfigurationApp.SaveProperty ("IsGeneratedDirectoryPurged","true");
+                ConfigurationApp.SaveProperty ("IsGeneratedSolutionDirectoryPurged","true");
             }
             Directory.CreateDirectory(destinationPath);
 			// Build the output file name.
@@ -46,7 +46,7 @@ namespace EaiConverter.CodeGenerator
 
 		}
 
-        // TODO refactor becuase not  really SRP
+        // TODO refactor because not really SRP
         private string PathFromNamespace(string outputPath, string ns)
         {
             string path =String.Format("{0}/{1}",
