@@ -55,9 +55,7 @@ namespace EaiConverter.Parser
 					);
 				}
 			}
-
-
-
+                
 			jdbcQueryActivity.QueryOutputCachedSchemaColumns = XElementParserUtils.GetStringValue(configElement.Element("QueryOutputCachedSchemaColumns"));
 			jdbcQueryActivity.QueryOutputCachedSchemaDataTypes = XElementParserUtils.GetIntValue(configElement.Element("QueryOutputCachedSchemaDataTypes"));
 			jdbcQueryActivity.QueryOutputCachedSchemaStatus = XElementParserUtils.GetStringValue(configElement.Element("QueryOutputCachedSchemaStatus"));

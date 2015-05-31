@@ -91,9 +91,19 @@ namespace EaiConverter.Mapper
             var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(serviceToInvoke));
 
             var parameters = DefaultActivityBuilder.GenerateParameters(jdbcQueryActivity);
-            var codeInvocation = new CodeMethodInvokeExpression (activityServiceReference, DataAccessServiceBuilder.ExecuteSqlQueryMethodName, parameters);
+   
 
-            invocationCodeCollection.Add(codeInvocation);
+            if (jdbcQueryActivity.QueryOutputCachedSchemaColumns != null)
+            {
+                var codeInvocation = new CodeVariableDeclarationStatement("var", VariableHelper.ToVariableName(jdbcQueryActivity.Name), new CodeMethodInvokeExpression(activityServiceReference, DataAccessServiceBuilder.ExecuteSqlQueryMethodName, parameters));
+                invocationCodeCollection.Add(codeInvocation);
+            }
+            else
+            {
+                var codeInvocation = new CodeMethodInvokeExpression (activityServiceReference, DataAccessServiceBuilder.ExecuteSqlQueryMethodName, parameters);
+                invocationCodeCollection.Add(codeInvocation);
+            }
+
             return invocationCodeCollection;
         }
 
