@@ -8,7 +8,7 @@ namespace EaiConverter.Mapper
 {
     public class DefaultActivityBuilder : IActivityBuilder
 	{
-        public DefaultActivityBuilder(XslBuilder xpathbuilder){    }
+        public DefaultActivityBuilder(XslBuilder xslbuilder){    }
 
         #region IActivityBuilder implementation
         public ActivityCodeDom Build(Activity activity)
@@ -38,6 +38,22 @@ namespace EaiConverter.Mapper
             var logCallStatements = new CodeStatementCollection();
             logCallStatements.Add(methodInvocation);
             return logCallStatements;
+        }
+
+        public static CodeExpression[] GenerateParameters(Activity activity)
+        {
+            var parameters = new CodeExpression[] {
+
+            };
+            if (activity.Parameters != null)
+            {
+                parameters = new CodeExpression[activity.Parameters.Count];
+                for (int i = 0; i < activity.Parameters.Count; i++)
+                {
+                    parameters[i] = new CodeSnippetExpression(activity.Parameters[i].Name);
+                }
+            }
+            return parameters;
         }
 	}
 

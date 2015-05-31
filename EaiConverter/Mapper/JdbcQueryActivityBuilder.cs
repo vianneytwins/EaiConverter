@@ -90,15 +90,7 @@ namespace EaiConverter.Mapper
             // Add the invocation itself
             var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(serviceToInvoke));
 
-            var parameters = new CodeExpression[]{};
-            if (jdbcQueryActivity.Parameters != null)
-            {
-                parameters = new CodeExpression[jdbcQueryActivity.Parameters.Count];
-                for (int i = 0; i < jdbcQueryActivity.Parameters.Count; i++)
-                {
-                    parameters[i] = new CodeSnippetExpression(jdbcQueryActivity.Parameters[i].Name);
-                }
-            }
+            var parameters = DefaultActivityBuilder.GenerateParameters(jdbcQueryActivity);
             var codeInvocation = new CodeMethodInvokeExpression (activityServiceReference, DataAccessServiceBuilder.ExecuteSqlQueryMethodName, parameters);
 
             invocationCodeCollection.Add(codeInvocation);

@@ -102,6 +102,7 @@
     <Compile Include="Processor\IFileProcessorService.cs" />
     <Compile Include="Mapper\XsdBuilder.cs" />
     <Compile Include="Processor\XsdFileProcessorService.cs" />
+    <Compile Include="Mapper\CallProcessActivityBuilder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

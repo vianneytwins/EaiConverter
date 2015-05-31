@@ -49,7 +49,7 @@ namespace EaiConverter.Model
 				return ShortNameSpace + "." + ProcessName;
 			}
 		}
-		public string inputAndOutputNameSpace {
+		public string InputAndOutputNameSpace {
 			get {
 				return NameSpace + ".InputOutputModel";
 			}

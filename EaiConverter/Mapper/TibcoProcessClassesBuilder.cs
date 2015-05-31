@@ -51,10 +51,10 @@ namespace EaiConverter.Mapper
 			targetUnit.Namespaces.AddRange (this.GenerateActivityClasses (tibcoBwProcessToGenerate));
 
 			if (tibcoBwProcessToGenerate.EndActivity!= null && tibcoBwProcessToGenerate.EndActivity.ObjectXNodes != null) {
-				targetUnit.Namespaces.Add (this.xsdClassGenerator.Build (tibcoBwProcessToGenerate.EndActivity.ObjectXNodes, tibcoBwProcessToGenerate.inputAndOutputNameSpace));
+				targetUnit.Namespaces.Add (this.xsdClassGenerator.Build (tibcoBwProcessToGenerate.EndActivity.ObjectXNodes, tibcoBwProcessToGenerate.InputAndOutputNameSpace));
 			}
 			if (tibcoBwProcessToGenerate.StartActivity!= null && tibcoBwProcessToGenerate.StartActivity.ObjectXNodes != null) {
-				targetUnit.Namespaces.Add (this.xsdClassGenerator.Build (tibcoBwProcessToGenerate.StartActivity.ObjectXNodes, tibcoBwProcessToGenerate.inputAndOutputNameSpace));
+				targetUnit.Namespaces.Add (this.xsdClassGenerator.Build (tibcoBwProcessToGenerate.StartActivity.ObjectXNodes, tibcoBwProcessToGenerate.InputAndOutputNameSpace));
 			}
             if (tibcoBwProcessToGenerate.ProcessVariables!= null) {
                 foreach (var item in tibcoBwProcessToGenerate.ProcessVariables)
@@ -81,7 +81,7 @@ namespace EaiConverter.Mapper
             var imports = new List<CodeNamespaceImport> {
 				new CodeNamespaceImport ("System"),
 				new CodeNamespaceImport (TargetAppNameSpaceService.domainContractNamespaceName),
-				new CodeNamespaceImport (tibcoBwProcessToGenerate.inputAndOutputNameSpace),
+				new CodeNamespaceImport (tibcoBwProcessToGenerate.InputAndOutputNameSpace),
 				new CodeNamespaceImport (TargetAppNameSpaceService.loggerNameSpace)
 			};
 
@@ -90,6 +90,16 @@ namespace EaiConverter.Mapper
                 foreach (var xsdImport in tibcoBwProcessToGenerate.XsdImports)
                 {
                     imports.Add(new CodeNamespaceImport (ConvertXsdImportToNameSpace(xsdImport.SchemaLocation)));
+                }
+            }
+
+            foreach (var activity in tibcoBwProcessToGenerate.Activities)
+            {
+                if (activity.Type == ActivityType.callProcessActivityType)
+                {
+                    var callProcessActivity = (CallProcessActivity)activity;
+                    imports.Add(new CodeNamespaceImport (ConvertXsdImportToNameSpace(callProcessActivity.TibcoProcessToCall.ShortNameSpace)));
+                    imports.Add(new CodeNamespaceImport (ConvertXsdImportToNameSpace(callProcessActivity.TibcoProcessToCall.InputAndOutputNameSpace)));
                 }
             }
 
@@ -137,10 +147,19 @@ namespace EaiConverter.Mapper
                             Attributes = MemberAttributes.Private
                         });
                     IsXmlParserServiceAllReadyAdded = true;
-                }
-                if (activity.Type == ActivityType.assignActivityType || activity.Type == ActivityType.mapperActivityType)
+                } else if (activity.Type == ActivityType.assignActivityType || activity.Type == ActivityType.mapperActivityType)
                 {
-                    // DO nothing for those type
+                    // Do nothing for those type
+                }
+                else if (activity.Type == ActivityType.callProcessActivityType)
+                {
+                    var callProcessActivity = (CallProcessActivity)activity;
+                    fields.Add(new CodeMemberField
+                        {
+                            Type = new CodeTypeReference(VariableHelper.ToClassName(callProcessActivity.ProcessName)),
+                            Name = VariableHelper.ToVariableName(VariableHelper.ToClassName(callProcessActivity.ProcessName)),
+                            Attributes = MemberAttributes.Private
+                        });
                 }
                 else
                 {
@@ -212,7 +231,7 @@ namespace EaiConverter.Mapper
                         codeTypeRefernce = new CodeTypeReference(parameter.Type);
                     }
                     else {
-                        codeTypeRefernce = new CodeTypeReference(tibcoBwProcessToGenerate.inputAndOutputNameSpace+"."+ parameter.Type);
+                        codeTypeRefernce = new CodeTypeReference(tibcoBwProcessToGenerate.InputAndOutputNameSpace+"."+ parameter.Type);
                     }
 
                     startMethod.Parameters.Add(new CodeParameterDeclarationExpression {
@@ -238,7 +257,7 @@ namespace EaiConverter.Mapper
                     returnType = tibcoBwProcessToGenerate.EndActivity.Parameters[0].Type;
                 }
                 else {
-                    returnType = tibcoBwProcessToGenerate.inputAndOutputNameSpace+"."+ tibcoBwProcessToGenerate.EndActivity.Parameters[0].Type;
+                    returnType = tibcoBwProcessToGenerate.InputAndOutputNameSpace+"."+ tibcoBwProcessToGenerate.EndActivity.Parameters[0].Type;
                 }
 
             }

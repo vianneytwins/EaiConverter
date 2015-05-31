@@ -61,7 +61,6 @@ namespace EaiConverter.Parser
 			jdbcQueryActivity.QueryOutputCachedSchemaColumns = XElementParserUtils.GetStringValue(configElement.Element("QueryOutputCachedSchemaColumns"));
 			jdbcQueryActivity.QueryOutputCachedSchemaDataTypes = XElementParserUtils.GetIntValue(configElement.Element("QueryOutputCachedSchemaDataTypes"));
 			jdbcQueryActivity.QueryOutputCachedSchemaStatus = XElementParserUtils.GetStringValue(configElement.Element("QueryOutputCachedSchemaStatus"));
-			//var elt1 = inputElement.Element ("config").Element("til;
 
             if (inputElement.Element(XmlnsConstant.tibcoPrefix + "inputBindings") != null && inputElement.Element(XmlnsConstant.tibcoPrefix + "inputBindings").Element("jdbcQueryActivityInput") != null)
             {

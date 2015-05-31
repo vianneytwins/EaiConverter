@@ -35,7 +35,7 @@ namespace EaiConverter.Mapper
             // Add the mapping
             invocationCodeCollection.AddRange(this.xslBuilder.Build(mapperActivity.InputBindings));
 
-            // TODO : set the result of the map in an object of type xsd ref with the variable name of the activty
+            // Add the invocation
             var variableReturnType = mapperActivity.XsdReference.Split(':')[1];
             var variableName = VariableHelper.ToVariableName(mapperActivity.Name);
 

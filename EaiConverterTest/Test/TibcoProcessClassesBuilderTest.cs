@@ -202,7 +202,7 @@ namespace EaiConverter
                 }
             }
 
-            Assert.AreEqual (tibcoBWProcess.inputAndOutputNameSpace + ".NotSimpleType", actual);
+            Assert.AreEqual (tibcoBWProcess.InputAndOutputNameSpace + ".NotSimpleType", actual);
         }
 
 		[Test]
@@ -262,7 +262,7 @@ namespace EaiConverter
                 }
             }
 
-            Assert.AreEqual (tibcoBWProcess.inputAndOutputNameSpace + ".NotSimpleType", actual);
+            Assert.AreEqual (tibcoBWProcess.InputAndOutputNameSpace + ".NotSimpleType", actual);
         }
 
         [Test]

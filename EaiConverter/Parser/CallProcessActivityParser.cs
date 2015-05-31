@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Xml.Linq;
 using EaiConverter.Model;
 using EaiConverter.Parser.Utils;
+using EaiConverter.Mapper;
 
 namespace EaiConverter.Parser
 {
@@ -18,8 +19,13 @@ namespace EaiConverter.Parser
 			var configElement = inputElement.Element ("config");
 
             callProcessActivity.ProcessName = XElementParserUtils.GetStringValue(configElement.Element("processName"));
-			
-            callProcessActivity.InputBindings = inputElement.Element (XmlnsConstant.tibcoPrefix + "inputBindings").Nodes();
+
+
+            if (inputElement.Element(XmlnsConstant.tibcoPrefix + "inputBindings") != null)
+            {
+                callProcessActivity.InputBindings = inputElement.Element(XmlnsConstant.tibcoPrefix + "inputBindings").Nodes();
+                callProcessActivity.Parameters = new XslParser().Build(callProcessActivity.InputBindings);
+            }
 
             return callProcessActivity;
 		}

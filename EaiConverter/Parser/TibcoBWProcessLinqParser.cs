@@ -31,9 +31,9 @@ namespace EaiConverter.Parser
 
             tibcoBwProcess.XsdImports = this.ParseXsdImports (allFileElement);
 
-            tibcoBwProcess.StartActivity = this.ParseStartOrEndActivity (allFileElement, tibcoBwProcess.inputAndOutputNameSpace,  ActivityType.startType);
+            tibcoBwProcess.StartActivity = this.ParseStartOrEndActivity (allFileElement, tibcoBwProcess.InputAndOutputNameSpace,  ActivityType.startType);
 
-            tibcoBwProcess.EndActivity = this.ParseStartOrEndActivity (allFileElement, tibcoBwProcess.inputAndOutputNameSpace, ActivityType.endType);
+            tibcoBwProcess.EndActivity = this.ParseStartOrEndActivity (allFileElement, tibcoBwProcess.InputAndOutputNameSpace, ActivityType.endType);
 
             tibcoBwProcess.ProcessVariables = this.ParseProcessVariables (allFileElement);
 
