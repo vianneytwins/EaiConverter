@@ -17,6 +17,9 @@ namespace EaiConverter.Model
         public static readonly ActivityType callProcessActivityType = new ActivityType ("com.tibco.pe.core.CallProcessActivity");
         public static readonly ActivityType assignActivityType = new ActivityType ("com.tibco.pe.core.AssignActivity");
         public static readonly ActivityType writeToLogActivityType = new ActivityType ("com.tibco.pe.core.WriteToLogActivity");
+        public static readonly ActivityType generateErrorActivity = new ActivityType ("com.tibco.pe.core.GenerateErrorActivity");
+        public static readonly ActivityType javaActivityType = new ActivityType("com.tibco.plugin.java.JavaActivity");
+        public static readonly ActivityType nullActivityType = new ActivityType("com.tibco.plugin.timer.NullActivity");
         public static readonly ActivityType startType = new ActivityType ("startType");
         public static readonly ActivityType endType = new ActivityType ("endType");
         public static readonly ActivityType NotHandleYet = new ActivityType ("NotHandleYet");
