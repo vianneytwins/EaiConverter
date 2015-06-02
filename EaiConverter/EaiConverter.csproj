@@ -103,13 +103,10 @@
     <Compile Include="Mapper\XsdBuilder.cs" />
     <Compile Include="Processor\XsdFileProcessorService.cs" />
     <Compile Include="Mapper\CallProcessActivityBuilder.cs" />
-<<<<<<< Upstream, based on origin/master
     <Compile Include="Model\JavaActivity.cs" />
     <Compile Include="Parser\JavaActivityParser.cs" />
-=======
     <Compile Include="Model\WriteToLogActivity.cs" />
     <Compile Include="Parser\WriteToLogActivityParser.cs" />
->>>>>>> 466fd5c add writeToLogactivityPArser
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
