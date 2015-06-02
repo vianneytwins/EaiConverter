@@ -5,7 +5,7 @@ using System.Text;
 using System.CodeDom;
 using EaiConverter.Parser.Utils;
 
-namespace EaiConverter.Mapper
+namespace EaiConverter.Parser
 {
     public class XslParser
     {

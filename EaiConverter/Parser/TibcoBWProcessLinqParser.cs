@@ -26,7 +26,7 @@ namespace EaiConverter.Parser
 		public TibcoBWProcess Parse (XElement allFileElement){
 
 			TibcoBWProcess tibcoBwProcess = new TibcoBWProcess (
-                allFileElement.Element (XmlnsConstant.tibcoPrefix + "name").Value
+                allFileElement.Element (XmlnsConstant.tibcoProcessNameSpace + "name").Value
 			);
 
             tibcoBwProcess.XsdImports = this.ParseXsdImports (allFileElement);
@@ -71,7 +71,7 @@ namespace EaiConverter.Parser
         public Activity ParseStartOrEndActivity (XElement allFileElement, string inputAndOutputNameSpace, ActivityType activityType)
 		{
 			
-            var xElement = allFileElement.Element (XmlnsConstant.tibcoPrefix + activityType.ToString());
+            var xElement = allFileElement.Element (XmlnsConstant.tibcoProcessNameSpace + activityType.ToString());
 			if (xElement == null) {
 				return null;
 			}
@@ -83,7 +83,7 @@ namespace EaiConverter.Parser
             else if (activityType == ActivityType.endType) {
                 activityName = "endName";
             }
-            var activity = new Activity (allFileElement.Element (XmlnsConstant.tibcoPrefix + activityName).Value, activityType);
+            var activity = new Activity (allFileElement.Element (XmlnsConstant.tibcoProcessNameSpace + activityName).Value, activityType);
 			var activityParameters = this.xsdParser.Parse (xElement.Nodes ());
 			activity.Parameters = activityParameters;
 			activity.ObjectXNodes = xElement.Nodes ();
@@ -93,7 +93,7 @@ namespace EaiConverter.Parser
 
         public List<ProcessVariable> ParseProcessVariables(XElement allFileElement)
         {
-            var xElement = allFileElement.Element (XmlnsConstant.tibcoPrefix + "processVariables");
+            var xElement = allFileElement.Element (XmlnsConstant.tibcoProcessNameSpace + "processVariables");
             if (xElement == null) {
                 return null;
             }
@@ -117,14 +117,14 @@ namespace EaiConverter.Parser
 
 		public void ParseTransitions (XElement allFileElement, TibcoBWProcess tibcoBwProcess)
 		{
-            IEnumerable<XElement> transitionElements = from element in allFileElement.Elements (XmlnsConstant.tibcoPrefix + "transition")
+            IEnumerable<XElement> transitionElements = from element in allFileElement.Elements (XmlnsConstant.tibcoProcessNameSpace + "transition")
 			select element;
 			tibcoBwProcess.Transitions = new List<Transition> ();
 			foreach (XElement element in transitionElements) {
                 var transition = new Transition {
-                    FromActivity = element.Element (XmlnsConstant.tibcoPrefix + "from").Value,
-                    ToActivity = element.Element (XmlnsConstant.tibcoPrefix + "to").Value,
-                    ConditionType = (ConditionType)Enum.Parse (typeof(ConditionType), element.Element (XmlnsConstant.tibcoPrefix + "conditionType").Value)
+                    FromActivity = element.Element (XmlnsConstant.tibcoProcessNameSpace + "from").Value,
+                    ToActivity = element.Element (XmlnsConstant.tibcoProcessNameSpace + "to").Value,
+                    ConditionType = (ConditionType)Enum.Parse (typeof(ConditionType), element.Element (XmlnsConstant.tibcoProcessNameSpace + "conditionType").Value)
                 };
 				tibcoBwProcess.Transitions.Add (transition);
 			}
@@ -133,13 +133,13 @@ namespace EaiConverter.Parser
 
 		public void ParseActivities (XElement allFileElement, TibcoBWProcess tibcoBwProcess)
 		{
-            IEnumerable<XElement> activityElements = from element in allFileElement.Elements (XmlnsConstant.tibcoPrefix + "activity")
+            IEnumerable<XElement> activityElements = from element in allFileElement.Elements (XmlnsConstant.tibcoProcessNameSpace + "activity")
 			select element;
 			tibcoBwProcess.Activities = new List<Activity> ();
             var activityParserFactory = new ActivityParserFactory();
 
 			foreach (XElement element in activityElements) {
-                var activityType = element.Element (XmlnsConstant.tibcoPrefix + "type").Value;
+                var activityType = element.Element (XmlnsConstant.tibcoProcessNameSpace + "type").Value;
 				Activity activity;
                 var activityParser = activityParserFactory.GetParser(activityType);
                 if (activityParser != null ) {

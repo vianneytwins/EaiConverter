@@ -17,6 +17,8 @@ namespace EaiConverter.Parser
                 return new AssignActivityParser ();
             } else if (activityType == ActivityType.mapperActivityType.ToString() ){
                 return new MapperActivityParser ();
+            } else if (activityType == ActivityType.writeToLogActivityType.ToString() ){
+                return new WriteToLogActivityParser ();
             } else {
                 return null;
             } 

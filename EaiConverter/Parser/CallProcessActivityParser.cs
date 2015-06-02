@@ -15,15 +15,15 @@ namespace EaiConverter.Parser
             var callProcessActivity = new CallProcessActivity ();
 
             callProcessActivity.Name = inputElement.Attribute ("name").Value;
-            callProcessActivity.Type = (ActivityType) inputElement.Element (XmlnsConstant.tibcoPrefix + "type").Value;
+            callProcessActivity.Type = (ActivityType) inputElement.Element (XmlnsConstant.tibcoProcessNameSpace + "type").Value;
 			var configElement = inputElement.Element ("config");
 
             callProcessActivity.ProcessName = XElementParserUtils.GetStringValue(configElement.Element("processName"));
 
 
-            if (inputElement.Element(XmlnsConstant.tibcoPrefix + "inputBindings") != null)
+            if (inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings") != null)
             {
-                callProcessActivity.InputBindings = inputElement.Element(XmlnsConstant.tibcoPrefix + "inputBindings").Nodes();
+                callProcessActivity.InputBindings = inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Nodes();
                 callProcessActivity.Parameters = new XslParser().Build(callProcessActivity.InputBindings);
             }
 

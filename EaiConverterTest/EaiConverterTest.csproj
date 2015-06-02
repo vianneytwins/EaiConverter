@@ -76,6 +76,7 @@
     <Compile Include="Test\XmlParserActivityBuilderTest.cs" />
     <Compile Include="Test\MapperActivityBuilderTest.cs" />
     <Compile Include="Test\CallProcessActivityBuilderTest.cs" />
+    <Compile Include="Test\WriteToLogActivityParserTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />

@@ -15,12 +15,12 @@ namespace EaiConverter.Parser
             var xmlParseActivity = new XmlParseActivity ();
 
 			xmlParseActivity.Name = inputElement.Attribute ("name").Value;
-            xmlParseActivity.Type = (ActivityType) inputElement.Element (XmlnsConstant.tibcoPrefix + "type").Value;
+            xmlParseActivity.Type = (ActivityType) inputElement.Element (XmlnsConstant.tibcoProcessNameSpace + "type").Value;
 			var configElement = inputElement.Element ("config");
 
             xmlParseActivity.XsdReference = configElement.Element("term").Attribute("ref").Value;
 			
-            xmlParseActivity.InputBindings = inputElement.Element (XmlnsConstant.tibcoPrefix + "inputBindings").Nodes();
+            xmlParseActivity.InputBindings = inputElement.Element (XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Nodes();
 
             xmlParseActivity.Parameters = new XslParser().Build(xmlParseActivity.InputBindings);
 
