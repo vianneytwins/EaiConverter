@@ -107,6 +107,7 @@
     <Compile Include="Parser\JavaActivityParser.cs" />
     <Compile Include="Model\WriteToLogActivity.cs" />
     <Compile Include="Parser\WriteToLogActivityParser.cs" />
+    <Compile Include="Parser\NullActivityParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
