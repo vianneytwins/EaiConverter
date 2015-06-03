@@ -108,6 +108,12 @@
     <Compile Include="Model\WriteToLogActivity.cs" />
     <Compile Include="Parser\WriteToLogActivityParser.cs" />
     <Compile Include="Parser\NullActivityParser.cs" />
+    <Compile Include="Model\GenerateErrorActivity.cs" />
+    <Compile Include="Parser\GenerateErrorActivityParser.cs" />
+    <Compile Include="Mapper\JavaActivityBuilder.cs" />
+    <Compile Include="Mapper\NullActivityBuilder.cs" />
+    <Compile Include="Mapper\GenerateErrorActivityBuilder.cs" />
+    <Compile Include="Mapper\WriteToLogActivityBuilder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -9,6 +9,8 @@ namespace EaiConverter.Parser.Utils
         public static XNamespace xslNameSpace = "http://w3.org/1999/XSL/Transform";
         public static XNamespace xsdNameSpace = "http://www.w3.org/2001/XMLSchema";
         public static XNamespace writeToLogActivityNameSpace = "http://www.tibco.com/pe/WriteToLogActivitySchema";
+        public static XNamespace generateErrorActivityNameSpace = "http://www.tibco.com/pe/GeneratrErrorActivitySchema";
+
     }
 }
 

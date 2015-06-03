@@ -28,6 +28,22 @@ namespace EaiConverter.Mapper
             {
                 return new MapperActivityBuilder(xslBuilder);
             }
+            else if (activityType == ActivityType.nullActivityType)
+            {
+                return new NullActivityBuilder(xslBuilder);
+            }
+            else if (activityType == ActivityType.javaActivityType)
+            {
+                return new JavaActivityBuilder(xslBuilder);
+            }
+            else if (activityType == ActivityType.writeToLogActivityType)
+            {
+                return new WriteToLogActivityBuilder(xslBuilder);
+            }
+            else if (activityType == ActivityType.generateErrorActivity)
+            {
+                return new GenerateErrorActivityBuilder(xslBuilder);
+            }
             else
             {
                return new DefaultActivityBuilder(xslBuilder);
