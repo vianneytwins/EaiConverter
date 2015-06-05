@@ -8,22 +8,32 @@ namespace EaiConverter.Mapper
 {
     public class GenerateErrorActivityBuilder : IActivityBuilder
 	{
-        public GenerateErrorActivityBuilder (XslBuilder xslbuilder){    }
+        XslBuilder xslBuilder;
+
+        public GenerateErrorActivityBuilder (XslBuilder xslbuilder){
+            this.xslBuilder = xslBuilder;
+        }
 
         #region IActivityBuilder implementation
         public ActivityCodeDom Build(Activity activity)
         {
             var activityCodeDom = new ActivityCodeDom();
             activityCodeDom.ClassesToGenerate = new CodeNamespaceCollection();
-            activityCodeDom.InvocationCode = this.DefaultInvocationMethod(activity.Name);
+
+            var errorActivity = (GenerateErrorActivity)activity;
+            activityCodeDom.InvocationCode = this.InvocationMethod(activity);
             return activityCodeDom;
         }
         #endregion
 
-        public CodeStatementCollection DefaultInvocationMethod (string activityName)
+        public CodeStatementCollection InvocationMethod (GenerateErrorActivity errorActivity)
         {
             var invocationCodeCollection = new CodeStatementCollection();
-            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(activityName));
+
+            // add log
+            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(errorActivity.Name));
+            //add the input
+            invocationCodeCollection.AddRange(this.xslBuilder.Build(errorActivity.InputBindings));
 
             return invocationCodeCollection;
         }
