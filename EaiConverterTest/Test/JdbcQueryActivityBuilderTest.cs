@@ -1,10 +1,10 @@
 ﻿using System;
 using NUnit.Framework;
 using EaiConverter.Model;
-using EaiConverter.Mapper;
+using EaiConverter.Builder;
 using System.Collections.Generic;
 using System.CodeDom;
-using EaiConverter.Mapper.Utils;
+using EaiConverter.Builder.Utils;
 using EaiConverter.Test.Utils;
 using System.Xml.Linq;
 using EaiConverter.Parser;

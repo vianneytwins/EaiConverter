@@ -3,7 +3,7 @@ using NUnit.Framework;
 using System.Xml;
 using System.Xml.Xsl;
 using System.Xml.Linq;
-using EaiConverter.Mapper;
+using EaiConverter.Builder;
 using System.Collections.Generic;
 using System.Text;
 using EaiConverter.Test.Utils;

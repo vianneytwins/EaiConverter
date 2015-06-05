@@ -1,10 +1,10 @@
 using System;
 using EaiConverter.Model;
-using EaiConverter.Mapper.Utils;
+using EaiConverter.Builder.Utils;
 using System.CodeDom;
 using EaiConverter.CodeGenerator.Utils;
 
-namespace EaiConverter.Mapper
+namespace EaiConverter.Builder
 {
     public class NullActivityBuilder : IActivityBuilder
 	{

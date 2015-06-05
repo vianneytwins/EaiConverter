@@ -1,8 +1,8 @@
 ﻿using System;
 using System.CodeDom;
-using EaiConverter.Mapper.Utils;
+using EaiConverter.Builder.Utils;
 
-namespace EaiConverter.Mapper
+namespace EaiConverter.Builder
 {
 	public class LoggerInterfaceBuilder
 	{

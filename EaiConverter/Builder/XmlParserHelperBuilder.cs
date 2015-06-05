@@ -4,10 +4,10 @@
 using System.IO;
 using System.Xml.Serialization;
 using System.CodeDom;
-using EaiConverter.Mapper.Utils;
+using EaiConverter.Builder.Utils;
 using System.Reflection;
 
-namespace EaiConverter.Mapper
+namespace EaiConverter.Builder
 {
     public class XmlParserHelperBuilder
     {

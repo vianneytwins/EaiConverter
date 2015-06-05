@@ -1,8 +1,8 @@
 ﻿using System;
 using EaiConverter.Model;
-using EaiConverter.Mapper.Utils;
+using EaiConverter.Builder.Utils;
 
-namespace EaiConverter.Mapper
+namespace EaiConverter.Builder
 {
     public class ActivityBuilderFactory
     {

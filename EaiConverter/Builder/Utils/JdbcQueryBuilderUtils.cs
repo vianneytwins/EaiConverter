@@ -3,7 +3,7 @@ using System.CodeDom;
 using System.Collections.Generic;
 using EaiConverter.CodeGenerator.Utils;
 
-namespace EaiConverter.Mapper.Utils
+namespace EaiConverter.Builder
 {
 	public class JdbcQueryBuilderUtils
 	{

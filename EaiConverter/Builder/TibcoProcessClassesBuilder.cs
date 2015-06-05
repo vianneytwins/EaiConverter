@@ -6,10 +6,10 @@ using System.CodeDom.Compiler;
 using System.IO;
 using EaiConverter.CodeGenerator.Utils;
 using EaiConverter.Model;
-using EaiConverter.Mapper.Utils;
+using EaiConverter.Builder.Utils;
 using EaiConverter.Processor;
 
-namespace EaiConverter.Mapper
+namespace EaiConverter.Builder
 {
 	public class TibcoProcessClassesBuilder
 	{

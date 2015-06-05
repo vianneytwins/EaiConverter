@@ -1,9 +1,9 @@
 ﻿using System;
 using System.CodeDom;
 using System.Runtime.InteropServices;
-using EaiConverter.Mapper.Utils;
+using EaiConverter.Builder.Utils;
 
-namespace EaiConverter.Mapper
+namespace EaiConverter.Builder
 {
 	public class DataAccessInterfacesCommonBuilder
 	{

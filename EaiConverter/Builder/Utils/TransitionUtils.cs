@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using EaiConverter.Model;
 
-namespace EaiConverter.Mapper.Utils
+namespace EaiConverter.Builder.Utils
 {
 	public class TransitionUtils
 	{

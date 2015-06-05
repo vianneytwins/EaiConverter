@@ -1,6 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
-using EaiConverter.Mapper;
+using EaiConverter.Builder;
 using EaiConverter.Test.Utils;
 
 namespace EaiConverterTest

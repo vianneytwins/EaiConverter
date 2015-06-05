@@ -6,7 +6,7 @@ using System.CodeDom;
 using EaiConverter.CodeGenerator;
 using EaiConverter.Processor;
 using EaiConverter.Parser;
-using EaiConverter.Mapper;
+using EaiConverter.Builder;
 
 namespace EaiConverter.Processor
 {

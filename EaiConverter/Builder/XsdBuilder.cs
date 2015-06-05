@@ -14,7 +14,7 @@ using Microsoft.CSharp;
 using System.Xml.Linq;
 
 
-namespace EaiConverter.Mapper
+namespace EaiConverter.Builder
 {
 
 	public class XsdBuilder

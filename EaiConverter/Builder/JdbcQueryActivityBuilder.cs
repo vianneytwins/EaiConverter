@@ -6,12 +6,12 @@ using System.CodeDom.Compiler;
 using System.IO;
 using System.Text;
 using EaiConverter.Model;
-using EaiConverter.Mapper.Utils;
-using EaiConverter.Mapper;
+using EaiConverter.Builder.Utils;
+using EaiConverter.Builder;
 using EaiConverter.CodeGenerator.Utils;
 using EaiConverter.Processor;
 
-namespace EaiConverter.Mapper
+namespace EaiConverter.Builder
 {
     public class JdbcQueryActivityBuilder : IActivityBuilder
 	{

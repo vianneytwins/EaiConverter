@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EaiConverter.Mapper
+namespace EaiConverter.Builder
 {
     public class XpathBuilder : IXpathBuilder
     {

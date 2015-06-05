@@ -3,7 +3,7 @@ using NUnit.Framework;
 using EaiConverter.CodeGenerator;
 using System.Collections.Generic;
 using System.Text;
-using EaiConverter.Mapper;
+using EaiConverter.Builder;
 using System.CodeDom.Compiler;
 using System.IO;
 using System.CodeDom;

@@ -4,7 +4,7 @@ using System.Xml.Linq;
 using System.Text;
 using System.CodeDom;
 
-namespace EaiConverter.Mapper
+namespace EaiConverter.Builder
 {
     public class XslBuilder
     {

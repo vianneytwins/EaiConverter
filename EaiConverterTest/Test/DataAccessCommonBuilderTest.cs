@@ -3,7 +3,7 @@ using NUnit.Framework;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.IO;
-using EaiConverter.Mapper;
+using EaiConverter.Builder;
 
 namespace EaiConverter
 {

@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using EaiConverter.CodeGenerator.Utils;
-using EaiConverter.Mapper.Utils;
+using EaiConverter.Builder.Utils;
 using EaiConverter.Model;
 
-namespace EaiConverter.Mapper
+namespace EaiConverter.Builder
 {
 	public class DataAccessBuilder
 	{

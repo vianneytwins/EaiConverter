@@ -3,7 +3,7 @@ using EaiConverter.Model;
 using System.CodeDom;
 using EaiConverter.CodeGenerator.Utils;
 
-namespace EaiConverter.Mapper
+namespace EaiConverter.Builder
 {
     public class MapperActivityBuilder : IActivityBuilder
     { 

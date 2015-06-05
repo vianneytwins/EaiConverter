@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EaiConverter.Mapper.Utils
+namespace EaiConverter.Builder.Utils
 {
 	public class TargetAppNameSpaceService
 	{

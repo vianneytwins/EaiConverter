@@ -4,7 +4,7 @@ using EaiConverter.Model;
 using System.Xml.Linq;
 using EaiConverter;
 using System.Collections.Generic;
-using EaiConverter.Mapper;
+using EaiConverter.Builder;
 using EaiConverter.Test.Utils;
 
 namespace EaiConverterTest.Test

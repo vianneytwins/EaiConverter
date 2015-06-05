@@ -1,7 +1,7 @@
 ﻿using System;
 using EaiConverter.Model;
 
-namespace EaiConverter.Mapper
+namespace EaiConverter.Builder
 {
     public interface IActivityBuilder
     {

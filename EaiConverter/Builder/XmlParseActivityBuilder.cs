@@ -4,7 +4,7 @@ using System.CodeDom;
 using EaiConverter.CodeGenerator.Utils;
 using EaiConverter.Processor;
 
-namespace EaiConverter.Mapper
+namespace EaiConverter.Builder
 {
     public class XmlParseActivityBuilder : IActivityBuilder
     { 

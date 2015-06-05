@@ -1,7 +1,7 @@
 ﻿using System;
 using System.CodeDom;
 
-namespace EaiConverter.Mapper
+namespace EaiConverter.Builder
 {
 	public class InterfaceExtractorFromClass
 	{

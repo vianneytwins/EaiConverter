@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
-using EaiConverter.Mapper;
-using EaiConverter.Mapper.Utils;
+using EaiConverter.Builder;
+using EaiConverter.Builder.Utils;
 using System.CodeDom.Compiler;
 using System.IO;
 using EaiConverter.Model;
