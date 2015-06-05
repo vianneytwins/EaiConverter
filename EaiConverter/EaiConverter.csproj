@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -61,7 +61,6 @@
     <Compile Include="Mapper\DataAccessServiceBuilder.cs" />
     <Compile Include="Mapper\DataAccessBuilder.cs" />
     <Compile Include="Mapper\CoreProcessBuilder.cs" />
-    <Compile Include="Mapper\DatabaseAttributeBuilder.cs" />
     <Compile Include="Mapper\LoggerInterfaceBuilder.cs" />
     <Compile Include="Processor\ConfigurationApp.cs" />
     <Compile Include="Mapper\DataAccessInterfacesCommonBuilder.cs" />
@@ -72,6 +71,7 @@
     <Compile Include="CodeGenerator\Utils\VariableHelper.cs" />
     <Compile Include="Model\ActivityType.cs" />
     <Compile Include="Processor\SqlRequestToActivityMapper.cs" />
+    <Compile Include="Mapper\DatabaseAttributeBuilder.cs" />
     <Compile Include="Mapper\IActivityBuilder.cs" />
     <Compile Include="Model\ActivityCodeDom.cs" />
     <Compile Include="Parser\XmlParseActivityParser.cs" />

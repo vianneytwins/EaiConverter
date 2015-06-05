@@ -14,7 +14,7 @@ namespace EaiConverter.Mapper
             this.xslBuilder = xslBuilder;
         }
 
-        public ActivityCodeDom Build (Activity activity)
+        public ActivityCodeDom Build(Activity activity)
         {
             JavaActivity javaActivity = (JavaActivity) activity;
 
@@ -27,8 +27,8 @@ namespace EaiConverter.Mapper
         }
 
 
-        public CodeStatementCollection GenerateCodeInvocation ( JavaActivity javaActivity){
-
+        public CodeStatementCollection GenerateCodeInvocation(JavaActivity javaActivity)
+        {
             var invocationCodeCollection = new CodeStatementCollection();
             invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(javaActivity.Name));
 

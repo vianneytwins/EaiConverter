@@ -21,19 +21,19 @@ namespace EaiConverter.Mapper
             activityCodeDom.ClassesToGenerate = new CodeNamespaceCollection();
 
             var errorActivity = (GenerateErrorActivity)activity;
-            activityCodeDom.InvocationCode = this.InvocationMethod(activity);
+            activityCodeDom.InvocationCode = this.InvocationMethod(errorActivity);
             return activityCodeDom;
         }
         #endregion
 
-        public CodeStatementCollection InvocationMethod (GenerateErrorActivity errorActivity)
+        public CodeStatementCollection InvocationMethod (GenerateErrorActivity activity)
         {
             var invocationCodeCollection = new CodeStatementCollection();
 
             // add log
-            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(errorActivity.Name));
+            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(activity.Name));
             //add the input
-            invocationCodeCollection.AddRange(this.xslBuilder.Build(errorActivity.InputBindings));
+            invocationCodeCollection.AddRange(this.xslBuilder.Build(activity.InputBindings));
 
             return invocationCodeCollection;
         }

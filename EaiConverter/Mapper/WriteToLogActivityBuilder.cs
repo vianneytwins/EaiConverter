@@ -8,22 +8,35 @@ namespace EaiConverter.Mapper
 {
     public class WriteToLogActivityBuilder : IActivityBuilder
 	{
-        public WriteToLogActivityBuilder (XslBuilder xslbuilder){    }
+        XslBuilder xslBuilder;
+
+        public WriteToLogActivityBuilder (XslBuilder xslBuilder)
+        {
+            this.xslBuilder = xslBuilder;
+        }
 
         #region IActivityBuilder implementation
         public ActivityCodeDom Build(Activity activity)
         {
             var activityCodeDom = new ActivityCodeDom();
             activityCodeDom.ClassesToGenerate = new CodeNamespaceCollection();
-            activityCodeDom.InvocationCode = this.DefaultInvocationMethod(activity.Name);
+            activityCodeDom.InvocationCode = this.InvocationMethod((WriteToLogActivity)activity);
             return activityCodeDom;
         }
         #endregion
 
-        public CodeStatementCollection DefaultInvocationMethod (string activityName)
+        public CodeStatementCollection InvocationMethod (WriteToLogActivity activity)
         {
             var invocationCodeCollection = new CodeStatementCollection();
-            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(activityName));
+
+            // add log
+            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(activity.Name));
+            //add the input
+            invocationCodeCollection.AddRange(this.xslBuilder.Build(activity.InputBindings));
+
+
+            var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName("logger"));
+            var methodInvocation = new CodeMethodInvokeExpression (activityServiceReference, activity.Role, new CodeExpression[] {new CodePrimitiveExpression("Todo: ")});
 
             return invocationCodeCollection;
         }
