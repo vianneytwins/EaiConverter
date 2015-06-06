@@ -140,7 +140,7 @@ namespace EaiConverter
             tibcoBWProcess.StartActivity = new Activity ("Start", ActivityType.startType);
             tibcoBWProcess.EndActivity = new Activity ("End", ActivityType.endType);
 
-			var expected ="void";
+			var expected ="System.Void";
             var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
 			string actual = string.Empty;
 			foreach (var member in classToGenerate.Namespaces [0].Types [0].Members) {

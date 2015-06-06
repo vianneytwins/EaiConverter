@@ -8,7 +8,7 @@ namespace EaiConverter.Builder
 	public class JdbcQueryBuilderUtils
 	{
 	
-		const string voidString = "void";
+		const string voidString = "System.Void";
 
 		private Dictionary<string,string> sqlMapping = new Dictionary <string, string> {
 			{"VARCHAR","System.String"},

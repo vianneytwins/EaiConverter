@@ -17,7 +17,7 @@ namespace EaiConverter.Builder
 
         const string SqlQueryStatement = "sqlQueryStatement";
 
-		const string voidString = "void";
+		const string voidString = "System.Void";
 
 		readonly JdbcQueryBuilderUtils jdbcQueryBuilderUtils;
 

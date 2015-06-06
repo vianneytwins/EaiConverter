@@ -126,7 +126,7 @@ namespace EaiConverter.Builder
 		
             var invocationExpression = new CodeMethodInvokeExpression(dataAccessReference, ExecuteSqlQueryMethodName, methodArgumentReferences);
 
-			if (method.ReturnType.BaseType != "void") {
+			if (method.ReturnType.BaseType != "System.Void") {
 				return  new CodeMethodReturnStatement (invocationExpression);
 			} else {
 				return new CodeExpressionStatement(invocationExpression);

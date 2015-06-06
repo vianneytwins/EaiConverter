@@ -276,7 +276,7 @@ namespace EaiConverter.Builder
             string returnType;
             if (tibcoBwProcessToGenerate.EndActivity == null || tibcoBwProcessToGenerate.EndActivity.Parameters == null)
             {
-                returnType = "void";
+                returnType = "System.Void";
             }
             else
             {
@@ -299,7 +299,7 @@ namespace EaiConverter.Builder
             {
                 startMethod.Statements.AddRange(this.coreProcessBuilder.GenerateStartCodeStatement(tibcoBwProcessToGenerate, startMethod, tibcoBwProcessToGenerate.StartActivity.Name, null, this.activityNameToServiceNameDictionnary));
                 // TODO VC : integrate the following section in in CoreProcessBuilder
-                if (startMethod.ReturnType.BaseType != "void")
+                if (startMethod.ReturnType.BaseType != "System.Void")
                 {
                     var returnName = VariableHelper.ToVariableName(tibcoBwProcessToGenerate.EndActivity.Parameters[0].Name);
                     var objectCreate = new CodeObjectCreateExpression(startMethod.ReturnType);
