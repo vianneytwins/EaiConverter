@@ -3,6 +3,7 @@ using EaiConverter.Model;
 using EaiConverter.Builder.Utils;
 using System.CodeDom;
 using EaiConverter.CodeGenerator.Utils;
+using System.Collections.Generic;
 
 namespace EaiConverter.Builder
 {
@@ -40,20 +41,33 @@ namespace EaiConverter.Builder
             return logCallStatements;
         }
 
-        public static CodeExpression[] GenerateParameters(Activity activity)
+        public static CodeExpression[] GenerateParameters(List<string> existingParamaters, Activity activity)
         {
-            var parameters = new CodeExpression[] {
-
-            };
-            if (activity.Parameters != null)
+            var parameterLists = new List<CodeExpression> {};
+            //Add existing Parameter
+            if (existingParamaters != null)
             {
-                parameters = new CodeExpression[activity.Parameters.Count];
-                for (int i = 0; i < activity.Parameters.Count; i++)
+                foreach (var parameter in existingParamaters)
                 {
-                    parameters[i] = new CodeSnippetExpression(activity.Parameters[i].Name);
+                    parameterLists.Add(new CodeSnippetExpression(parameter));
                 }
             }
-            return parameters;
+
+            //Add Activity Paramters
+            if (activity.Parameters != null)
+            {
+                foreach (var parameter in activity.Parameters)
+                {
+                    parameterLists.Add(new CodeSnippetExpression(parameter.Name));
+                }
+            }
+
+            return parameterLists.ToArray();
+        }
+
+        public static CodeExpression[] GenerateParameters(Activity activity)
+        {
+            return GenerateParameters(null, activity);
         }
 	}
 

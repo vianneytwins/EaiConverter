@@ -117,84 +117,113 @@ namespace EaiConverter.Builder
 		public CodeMemberField[] GeneratePrivateFields (TibcoBWProcess tibcoBwProcessToGenerate)
 		{
 			var fields = new List<CodeMemberField> ();
+
 			fields.Add (new CodeMemberField {
 				Type = new CodeTypeReference("ILogger"),
 				Name= "logger",
 				Attributes = MemberAttributes.Private 
 			});
 
+            fields.AddRange (this.GenerateFieldForProcessVariables(tibcoBwProcessToGenerate));
+
+            fields.AddRange (this.GenerateFieldsForActivityServices(tibcoBwProcessToGenerate));
+
+			return fields.ToArray();
+		}
+
+        private List<CodeMemberField> GenerateFieldForProcessVariables(TibcoBWProcess tibcoBwProcessToGenerate)
+        {
+            var fields = new List<CodeMemberField>();
             if (tibcoBwProcessToGenerate.ProcessVariables != null)
             {
                 foreach (var variable in tibcoBwProcessToGenerate.ProcessVariables)
                 {
-                    fields.Add(new CodeMemberField
-                        {
-                            Type = new CodeTypeReference(tibcoBwProcessToGenerate.NameSpace + "." + variable.Parameter.Type),
-                            Name = VariableHelper.ToVariableName(variable.Parameter.Name),
-                            Attributes = MemberAttributes.Private
-                        });
+                    fields.Add(new CodeMemberField {
+                        Type = new CodeTypeReference(tibcoBwProcessToGenerate.NameSpace + "." + variable.Parameter.Type),
+                        Name = VariableHelper.ToVariableName(variable.Parameter.Name),
+                        Attributes = MemberAttributes.Private
+                    });
                 }
             }
+            return fields;
+        }
 
+        private List<CodeMemberField> GenerateFieldsForActivityServices(TibcoBWProcess tibcoBwProcessToGenerate)
+        {
+            var fields = new List<CodeMemberField>();
             bool IsXmlParserServiceAllReadyAdded = false;
-			foreach (Activity activity in tibcoBwProcessToGenerate.Activities) {
+            foreach (Activity activity in tibcoBwProcessToGenerate.Activities)
+            {
                 if (activity.Type == ActivityType.xmlParseActivityType && !IsXmlParserServiceAllReadyAdded)
                 {
-                    fields.Add(new CodeMemberField
-                        {
-                            Type = new CodeTypeReference(XmlParserHelperBuilder.IXmlParserHelperServiceName),
-                            Name = VariableHelper.ToVariableName(VariableHelper.ToClassName(XmlParserHelperBuilder.XmlParserHelperServiceName)),
-                            Attributes = MemberAttributes.Private
-                        });
+                    fields.Add(new CodeMemberField {
+                        Type = new CodeTypeReference(XmlParserHelperBuilder.IXmlParserHelperServiceName),
+                        Name = VariableHelper.ToVariableName(VariableHelper.ToClassName(XmlParserHelperBuilder.XmlParserHelperServiceName)),
+                        Attributes = MemberAttributes.Private
+                    });
                     IsXmlParserServiceAllReadyAdded = true;
-                } else if (activity.Type == ActivityType.assignActivityType || activity.Type == ActivityType.mapperActivityType)
+                }
+                else if (activity.Type == ActivityType.assignActivityType || activity.Type == ActivityType.mapperActivityType || activity.Type == ActivityType.generateErrorActivity || activity.Type == ActivityType.writeToLogActivityType)
                 {
                     // Do nothing for those type
                 }
                 else if (activity.Type == ActivityType.callProcessActivityType)
                 {
                     var callProcessActivity = (CallProcessActivity)activity;
-                    fields.Add(new CodeMemberField
-                        {
-                            Type = new CodeTypeReference(VariableHelper.ToClassName(callProcessActivity.ProcessName)),
-                            Name = VariableHelper.ToVariableName(VariableHelper.ToClassName(callProcessActivity.ProcessName)),
-                            Attributes = MemberAttributes.Private
-                        });
+                    fields.Add(new CodeMemberField {
+                        Type = new CodeTypeReference(VariableHelper.ToClassName(callProcessActivity.ProcessName)),
+                        Name = VariableHelper.ToVariableName(VariableHelper.ToClassName(callProcessActivity.ProcessName)),
+                        Attributes = MemberAttributes.Private
+                    });
                 }
                 else
                 {
-                    fields.Add(new CodeMemberField
-                        {
-                            Type = new CodeTypeReference("I" + VariableHelper.ToClassName(activity.Name + "Service")),
-                            Name = VariableHelper.ToVariableName(VariableHelper.ToClassName(activity.Name + "Service")),
-                            Attributes = MemberAttributes.Private
-                        });
+                    fields.Add(new CodeMemberField {
+                        Type = new CodeTypeReference("I" + VariableHelper.ToClassName(activity.Name + "Service")),
+                        Name = VariableHelper.ToVariableName(VariableHelper.ToClassName(activity.Name + "Service")),
+                        Attributes = MemberAttributes.Private
+                    });
                 }
-			}
-
-			return fields.ToArray();
-		}
+            }
+            return fields;
+        }
 
 		public CodeConstructor[] GenerateConstructors (TibcoBWProcess tibcoBwProcessToGenerate, CodeTypeDeclaration classModel)
 		{
 
 			var constructor = new CodeConstructor();
 			constructor.Attributes = MemberAttributes.Public;
-	
 			foreach (CodeMemberField field in classModel.Members) {
-				constructor.Parameters.Add(new CodeParameterDeclarationExpression(
-					field.Type, field.Name));
-					
-				var parameterReference = new CodeFieldReferenceExpression(
-					new CodeThisReferenceExpression(), field.Name);
-
-				constructor.Statements.Add(new CodeAssignStatement(parameterReference,
-					new CodeArgumentReferenceExpression(field.Name)));
+                if (this.IsNotAProcessVariable(field.Name, tibcoBwProcessToGenerate.ProcessVariables)) {
+                    constructor.Parameters.Add(new CodeParameterDeclarationExpression(
+                        field.Type, field.Name));
+                        
+                    var parameterReference = new CodeFieldReferenceExpression(
+                        new CodeThisReferenceExpression(), field.Name);
+                    
+                    constructor.Statements.Add(new CodeAssignStatement(parameterReference,
+                        new CodeArgumentReferenceExpression(field.Name)));
+                }
 
 			}
 
 			return new List<CodeConstructor> { constructor }.ToArray();
 		}
+
+        bool IsNotAProcessVariable(string fieldName, List<ProcessVariable> processVariables)
+        {
+            if (processVariables != null)
+            {
+                foreach (var processVariable in processVariables)
+                {
+                    if (processVariable.Parameter.Name == fieldName)
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
 
 		public CodeMemberMethod[] GenerateMethod (TibcoBWProcess tibcoBwProcessToGenerate)
 		{
@@ -301,12 +330,12 @@ namespace EaiConverter.Builder
        
         bool IsBasicType(string type)
         {
-            switch (type) {
+            switch (type.ToLower()) {
                 case "string" :
-                        return true;
+                    return true;
                 case "int" :
                     return true;
-                case "DateTime" :
+                case "datetime" :
                     return true;
                 case "bool" :
                     return true;

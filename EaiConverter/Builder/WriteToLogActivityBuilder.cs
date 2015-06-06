@@ -3,6 +3,7 @@ using EaiConverter.Model;
 using EaiConverter.Builder.Utils;
 using System.CodeDom;
 using EaiConverter.CodeGenerator.Utils;
+using System.Collections.Generic;
 
 namespace EaiConverter.Builder
 {
@@ -20,12 +21,12 @@ namespace EaiConverter.Builder
         {
             var activityCodeDom = new ActivityCodeDom();
             activityCodeDom.ClassesToGenerate = new CodeNamespaceCollection();
-            activityCodeDom.InvocationCode = this.InvocationMethod((WriteToLogActivity)activity);
+            activityCodeDom.InvocationCode = this.GenerateCodeInvocation((WriteToLogActivity)activity);
             return activityCodeDom;
         }
         #endregion
 
-        public CodeStatementCollection InvocationMethod (WriteToLogActivity activity)
+        public CodeStatementCollection GenerateCodeInvocation (WriteToLogActivity activity)
         {
             var invocationCodeCollection = new CodeStatementCollection();
 
@@ -34,13 +35,34 @@ namespace EaiConverter.Builder
             //add the input
             invocationCodeCollection.AddRange(this.xslBuilder.Build(activity.InputBindings));
 
-
-            var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName("logger"));
-            var methodInvocation = new CodeMethodInvokeExpression (activityServiceReference, activity.Role, new CodeExpression[] {new CodePrimitiveExpression("Todo: ")});
+            //Add the logger call
+            invocationCodeCollection.Add(this.GenerateLoggerCodeInvocation(activity));
 
             return invocationCodeCollection;
         }
    
+        private CodeMethodInvokeExpression GenerateLoggerCodeInvocation(WriteToLogActivity activity)
+        {
+            var parameters = DefaultActivityBuilder.GenerateParameters(new List<string> {
+                @"""Message : {0}\nMessage code : {1} """
+            }, activity);
+
+
+            CodeMethodInvokeExpression stringFormatCall = new CodeMethodInvokeExpression();
+            stringFormatCall.Parameters.AddRange(parameters);
+
+            CodeMethodReferenceExpression formatMethod = new CodeMethodReferenceExpression();
+            formatMethod.MethodName = "Format";
+            CodeVariableReferenceExpression stringObject = new CodeVariableReferenceExpression();
+            stringObject.VariableName = "String";
+            formatMethod.TargetObject = stringObject;
+            stringFormatCall.Method = formatMethod;
+     
+
+            var loggerReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToVariableName("logger"));
+            var methodInvocation = new CodeMethodInvokeExpression(loggerReference, activity.Role, stringFormatCall);
+            return methodInvocation;
+        }
 	}
 
 }

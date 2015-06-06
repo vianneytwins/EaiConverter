@@ -131,5 +131,6 @@
   <ItemGroup>
     <None Include="ressources\BasicSample.process" />
     <None Include="ressources\Account.xsd" />
+    <None Include="ressources\CodeDomGenerationExample.txt" />
   </ItemGroup>
 </Project>
