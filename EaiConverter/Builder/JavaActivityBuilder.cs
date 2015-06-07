@@ -1,7 +1,9 @@
 ﻿using System;
 using EaiConverter.Model;
 using System.CodeDom;
+using EaiConverter.Builder.Utils;
 using EaiConverter.CodeGenerator.Utils;
+using System.Reflection;
 
 namespace EaiConverter.Builder
 {
@@ -26,6 +28,39 @@ namespace EaiConverter.Builder
             return result;
         }
 
+        public CodeNamespaceCollection Build(JavaActivity activity){
+            var javaNamespace = new CodeNamespace(activity.PackageName);
+
+            // Generate the Service
+            javaNamespace.Imports.AddRange(this.GenerateImports());
+            var javaClass = this.GenerateClass(activity);
+            javaNamespace.Types.Add(javaClass);
+
+            // Generate the corresponding interface
+            var xmlParserHelperServiceInterfaceNameSpace =  InterfaceExtractorFromClass.Extract(javaClass, TargetAppNameSpaceService.xmlToolsNameSpace);
+
+            return new CodeNamespaceCollection{javaNamespace, xmlParserHelperServiceInterfaceNameSpace};
+        }
+
+        public CodeNamespaceImport[] GenerateImports()
+        {
+            return new CodeNamespaceImport[1] {
+                new CodeNamespaceImport ("System")
+            };
+        }
+
+
+        public CodeTypeDeclaration GenerateClass(JavaActivity activity)
+        {
+            var javaClass = new CodeTypeDeclaration(activity.FileName);
+            javaClass.IsClass = true;
+            javaClass.TypeAttributes = TypeAttributes.Public;
+
+            javaClass.Comments.Add(new CodeCommentStatement(activity.FullSource));
+
+            return javaClass;
+
+        }
 
         public CodeStatementCollection GenerateCodeInvocation(JavaActivity javaActivity)
         {

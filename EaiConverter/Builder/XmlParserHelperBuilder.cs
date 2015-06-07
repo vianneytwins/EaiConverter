@@ -82,8 +82,6 @@ namespace EaiConverter.Builder
 
             return fromXmlMethod;
         }
-            
-        //Call it using this code: YourStrongTypedEntity entity = FromXml<YourStrongTypedEntity>(YourMsgString);
     }
 }
 

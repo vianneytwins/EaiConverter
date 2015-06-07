@@ -22,6 +22,8 @@ namespace EaiConverter.Parser
             activity.PackageName = XElementParserUtils.GetStringValue(configElement.Element("packageName"));
             activity.FullSource = XElementParserUtils.GetStringValue(configElement.Element("fullsource"));
 
+            // TODO : retrieve input and output data
+
             activity.InputBindings = inputElement.Element (XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Nodes();
 
             if (inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings") != null && inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("javaCodeActivityInput") != null)
