@@ -81,6 +81,7 @@
     <Compile Include="Test\NullActivityParserTest.cs" />
     <Compile Include="Test\GenerateErrorActivityBuilderTest.cs" />
     <Compile Include="Test\WriteToLogActivityBuilderTest.cs" />
+    <Compile Include="Test\JavaActivityBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />

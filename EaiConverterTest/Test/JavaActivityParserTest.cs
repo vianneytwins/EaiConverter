@@ -4,7 +4,7 @@ using EaiConverter.Model;
 using EaiConverter.Parser;
 using System.Xml.Linq;
 
-namespace EaiConverterTest.Test
+namespace EaiConverterTest
 {
     [TestFixture]
     public class JavaActivityParserTest
@@ -96,6 +96,21 @@ public class MyJavaFileName{
             var activity = (JavaActivity) activityParser.Parse (doc);
 
             Assert.AreEqual ("plt", activity.Parameters[0].Name);
+        }
+
+        [Test]
+        public void Should_Return_inputdata(){
+            var activity = (JavaActivity) activityParser.Parse (doc);
+
+            Assert.AreEqual ("plt", activity.InputData[0].Name);
+        }
+
+
+        [Test]
+        public void Should_Return_Outputdata(){
+            var activity = (JavaActivity) activityParser.Parse (doc);
+
+            Assert.AreEqual ("result", activity.OutputData[0].Name);
         }
     }
 }
