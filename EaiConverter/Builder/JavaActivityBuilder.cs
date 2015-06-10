@@ -4,6 +4,7 @@ using System.CodeDom;
 using EaiConverter.Builder.Utils;
 using EaiConverter.CodeGenerator.Utils;
 using System.Reflection;
+using System.Collections.Generic;
 
 namespace EaiConverter.Builder
 {
@@ -70,13 +71,51 @@ namespace EaiConverter.Builder
             invocationCodeCollection.AddRange(this.xslBuilder.Build(javaActivity.InputBindings));
             var variableReturnType = new CodeTypeReference(javaActivity.PackageName + "." + javaActivity.FileName);
             var creation = new CodeObjectCreateExpression (variableReturnType, new CodeExpression[0]);
-            //var javaClassToAssignReference = new CodeVariableReferenceExpression ( VariableHelper.ToVariableName(javaActivity.FileName));
+
             string javaClassVariableName = VariableHelper.ToVariableName(javaActivity.FileName);
+
             var codeInvocation = new CodeVariableDeclarationStatement(variableReturnType, javaClassVariableName, creation);
+
             invocationCodeCollection.Add(codeInvocation);
+
+            CodeVariableReferenceExpression javaClassReference = new CodeVariableReferenceExpression();
+            javaClassReference.VariableName = javaClassVariableName;
+
+            invocationCodeCollection.AddRange(this.GenerateInputCallOnJavaClass(javaActivity, javaClassReference));
+            invocationCodeCollection.Add(this.GenerateInvokeCallOnJavaClass(javaClassReference));
+
             return invocationCodeCollection;
         }
 
+        private CodeStatementCollection GenerateInputCallOnJavaClass(JavaActivity javaActivity, CodeVariableReferenceExpression javaClassReference)
+        {
+            var invocationCodeCollection = new CodeStatementCollection();
+            foreach (var parameter in javaActivity.Parameters)
+            {
+                CodeMethodInvokeExpression setterCall = new CodeMethodInvokeExpression();
+                setterCall.Parameters.AddRange(new List<CodeExpression> {
+                    new CodeSnippetExpression(parameter.Name)
+                }.ToArray());
+                CodeMethodReferenceExpression setterMethod = new CodeMethodReferenceExpression();
+                setterMethod.MethodName = "set" + parameter.Name;
+                setterMethod.TargetObject = javaClassReference;
+                setterCall.Method = setterMethod;
+                invocationCodeCollection.Add(setterCall);
+            }
+
+            return invocationCodeCollection;
+        }
+
+        private CodeMethodInvokeExpression GenerateInvokeCallOnJavaClass(CodeVariableReferenceExpression javaClassReference)
+        {
+            CodeMethodInvokeExpression invokeCall = new CodeMethodInvokeExpression();
+            invokeCall.Parameters.AddRange(new CodeExpression[0]);
+            CodeMethodReferenceExpression invokeMethod = new CodeMethodReferenceExpression();
+            invokeMethod.MethodName = "invoke";
+            invokeMethod.TargetObject = javaClassReference;
+            invokeCall.Method = invokeMethod;
+            return invokeCall;
+        }
     }
 }
 

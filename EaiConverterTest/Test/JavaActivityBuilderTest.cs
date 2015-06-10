@@ -78,9 +78,9 @@ public void invoke () throws Exception{
 string platform = ""testvalue"";
 
 My.Package.Name.MyJavaFileName myJavaFileName = new My.Package.Name.MyJavaFileName();
-myJavaFileName.setPlatform(platform);
+myJavaFileName.setplatform(platform);
 myJavaFileName.invoke();
-My.Package.Name.MyJavaActivityResult myJavaActivity = new My.Package.Name.MyJavaActivityResult();
+My.Package.Name.MyJavaActivity myJavaActivity = new My.Package.Name.MyJavaActivity.MyJavaActivity();
 myJavaActivity.lastDate = myJavaFileName.getlastDate();
 
 ";
