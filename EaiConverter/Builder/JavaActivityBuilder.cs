@@ -68,9 +68,11 @@ namespace EaiConverter.Builder
             invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(javaActivity.Name));
 
             invocationCodeCollection.AddRange(this.xslBuilder.Build(javaActivity.InputBindings));
-
-            var variableToAssignReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(javaActivity.FileName));
-            var codeInvocation = new CodeAssignStatement (variableToAssignReference, new CodeVariableReferenceExpression(VariableHelper.ToVariableName(javaActivity.FileName)));
+            var variableReturnType = new CodeTypeReference(javaActivity.PackageName + "." + javaActivity.FileName);
+            var creation = new CodeObjectCreateExpression (variableReturnType, new CodeExpression[0]);
+            //var javaClassToAssignReference = new CodeVariableReferenceExpression ( VariableHelper.ToVariableName(javaActivity.FileName));
+            string javaClassVariableName = VariableHelper.ToVariableName(javaActivity.FileName);
+            var codeInvocation = new CodeVariableDeclarationStatement(variableReturnType, javaClassVariableName, creation);
             invocationCodeCollection.Add(codeInvocation);
             return invocationCodeCollection;
         }

@@ -77,11 +77,11 @@ public void invoke () throws Exception{
             var expected = @"this.logger.Info(""Start Activity: My Activity Name"");
 string platform = ""testvalue"";
 
-My.Package.Name.MyJavaFileName myJavaFileName = new My.Package.Name.MyJavaFileName ();
+My.Package.Name.MyJavaFileName myJavaFileName = new My.Package.Name.MyJavaFileName();
 myJavaFileName.setPlatform(platform);
 myJavaFileName.invoke();
-My.Package.Name.MyJavaActivityResult myJavaActivityResult = new My.Package.Name.MyJavaActivityResult();
-myJavaActivityResult.lastDate = myJavaFileName.getlastDate();
+My.Package.Name.MyJavaActivityResult myJavaActivity = new My.Package.Name.MyJavaActivityResult();
+myJavaActivity.lastDate = myJavaFileName.getlastDate();
 
 ";
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateCodeInvocation(this.activity));
