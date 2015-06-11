@@ -130,13 +130,26 @@ namespace EaiConverter.Builder
             var invocationCodeCollection = new CodeStatementCollection();
             foreach (var parameter in javaActivity.OutputData)
             {
+                CodeAssignStatement _assign1 = new CodeAssignStatement();
+
+                CodePropertyReferenceExpression _prop1 = new CodePropertyReferenceExpression();
+                _prop1.PropertyName = parameter.Name;
+                _prop1.TargetObject = activityClassReference;
+                _assign1.Left = _prop1;
+     //           CodePrimitiveExpression _value1 = new CodePrimitiveExpression();
+      //          _value1.Value = "testvalue";
+       //         _assign1.Right = _value1;
+        //        __ctor_ctor1.Statements.Add(_assign1);
+
+
                 CodeMethodInvokeExpression getterCall = new CodeMethodInvokeExpression();
                 getterCall.Parameters.AddRange(new CodeExpression[0]);
                 CodeMethodReferenceExpression getterMethod = new CodeMethodReferenceExpression();
                 getterMethod.MethodName = "get" + parameter.Name;
                 getterMethod.TargetObject = javaClassReference;
                 getterCall.Method = getterMethod;
-                invocationCodeCollection.Add(getterCall);
+                _assign1.Right = getterCall;
+                invocationCodeCollection.Add(_assign1);
             }
 
             return invocationCodeCollection;

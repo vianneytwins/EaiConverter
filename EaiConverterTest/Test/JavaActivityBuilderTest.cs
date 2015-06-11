@@ -70,7 +70,7 @@ public void invoke () throws Exception{
             };
         }
 
-        [Ignore]
+       
         [Test]
         public void Should_Generate_invocation_method()
         {
@@ -82,7 +82,6 @@ myJavaFileName.setplatform(platform);
 myJavaFileName.invoke();
 My.Package.Name.MyActivityName myActivityName = new My.Package.Name.MyActivityName();
 myActivityName.lastDate = myJavaFileName.getlastDate();
-
 ";
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateCodeInvocation(this.activity));
             Assert.AreEqual(expected,generatedCode);
