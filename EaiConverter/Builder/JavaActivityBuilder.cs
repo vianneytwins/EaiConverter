@@ -69,11 +69,12 @@ namespace EaiConverter.Builder
             invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(javaActivity.Name));
 
             invocationCodeCollection.AddRange(this.xslBuilder.Build(javaActivity.InputBindings));
+
+
             var variableReturnType = new CodeTypeReference(javaActivity.PackageName + "." + javaActivity.FileName);
             var creation = new CodeObjectCreateExpression (variableReturnType, new CodeExpression[0]);
 
             string javaClassVariableName = VariableHelper.ToVariableName(javaActivity.FileName);
-
             var codeInvocation = new CodeVariableDeclarationStatement(variableReturnType, javaClassVariableName, creation);
 
             invocationCodeCollection.Add(codeInvocation);
@@ -81,8 +82,26 @@ namespace EaiConverter.Builder
             CodeVariableReferenceExpression javaClassReference = new CodeVariableReferenceExpression();
             javaClassReference.VariableName = javaClassVariableName;
 
+            //add input to java class
             invocationCodeCollection.AddRange(this.GenerateInputCallOnJavaClass(javaActivity, javaClassReference));
+
+            // add call ti invoke methode
             invocationCodeCollection.Add(this.GenerateInvokeCallOnJavaClass(javaClassReference));
+
+            // instanciate the result class
+            var activityReturnType = new CodeTypeReference(javaActivity.PackageName + "." + VariableHelper.ToClassName(javaActivity.Name));
+            var creationActivityReturn = new CodeObjectCreateExpression (activityReturnType, new CodeExpression[0]);
+
+            string activityClassVariableName = VariableHelper.ToVariableName(javaActivity.Name);
+            var codeActivityInvocation = new CodeVariableDeclarationStatement(activityReturnType, activityClassVariableName, creationActivityReturn);
+
+            invocationCodeCollection.Add(codeActivityInvocation);
+
+            // retrieve the output
+            CodeVariableReferenceExpression activityClassReference = new CodeVariableReferenceExpression();
+            activityClassReference.VariableName = activityClassVariableName;
+
+            invocationCodeCollection.AddRange(this.GenerateOutputCallOnJavaClass(javaActivity, javaClassReference, activityClassReference));
 
             return invocationCodeCollection;
         }
@@ -101,6 +120,23 @@ namespace EaiConverter.Builder
                 setterMethod.TargetObject = javaClassReference;
                 setterCall.Method = setterMethod;
                 invocationCodeCollection.Add(setterCall);
+            }
+
+            return invocationCodeCollection;
+        }
+
+        private CodeStatementCollection GenerateOutputCallOnJavaClass(JavaActivity javaActivity, CodeVariableReferenceExpression javaClassReference, CodeVariableReferenceExpression activityClassReference)
+        {
+            var invocationCodeCollection = new CodeStatementCollection();
+            foreach (var parameter in javaActivity.OutputData)
+            {
+                CodeMethodInvokeExpression getterCall = new CodeMethodInvokeExpression();
+                getterCall.Parameters.AddRange(new CodeExpression[0]);
+                CodeMethodReferenceExpression getterMethod = new CodeMethodReferenceExpression();
+                getterMethod.MethodName = "get" + parameter.Name;
+                getterMethod.TargetObject = javaClassReference;
+                getterCall.Method = getterMethod;
+                invocationCodeCollection.Add(getterCall);
             }
 
             return invocationCodeCollection;

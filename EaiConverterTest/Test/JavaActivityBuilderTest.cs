@@ -80,8 +80,8 @@ string platform = ""testvalue"";
 My.Package.Name.MyJavaFileName myJavaFileName = new My.Package.Name.MyJavaFileName();
 myJavaFileName.setplatform(platform);
 myJavaFileName.invoke();
-My.Package.Name.MyJavaActivity myJavaActivity = new My.Package.Name.MyJavaActivity.MyJavaActivity();
-myJavaActivity.lastDate = myJavaFileName.getlastDate();
+My.Package.Name.MyActivityName myActivityName = new My.Package.Name.MyActivityName();
+myActivityName.lastDate = myJavaFileName.getlastDate();
 
 ";
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateCodeInvocation(this.activity));
