@@ -84,10 +84,25 @@ namespace EaiConverter.Parser
                 activityName = "endName";
             }
             var activity = new Activity (allFileElement.Element (XmlnsConstant.tibcoProcessNameSpace + activityName).Value, activityType);
-			var activityParameters = this.xsdParser.Parse (xElement.Nodes ());
-			activity.Parameters = activityParameters;
-			activity.ObjectXNodes = xElement.Nodes ();
+            if (xElement.Attribute("ref") == null)
+            {
+			    var activityParameters = this.xsdParser.Parse (xElement.Nodes ());
+		    	activity.Parameters = activityParameters;
+			    activity.ObjectXNodes = xElement.Nodes ();
+            }
+            else
+            {
+                var inputReferences = xElement.Attribute("ref").Value.Split(':');
 
+                activity.Parameters = new List<ClassParameter>
+                {
+                        new ClassParameter{
+                            Name = inputReferences[1],
+                            // TODO : find out to convert prefx in type
+                            Type = inputReferences[0]
+                        }
+                };
+            }
 			return activity;
 		}
 

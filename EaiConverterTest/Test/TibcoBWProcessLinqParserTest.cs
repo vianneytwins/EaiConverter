@@ -56,6 +56,15 @@ namespace EaiConverter
 			Assert.AreEqual (1, tibcoBWProcess.StartActivity.Parameters.Count);
 		}
 
+        [Ignore]
+        [Test]
+        public void Should_return_start_Activity_with_referenceName_When_ref_is_assigned()
+        {
+            string xml = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:pfx1=""http://testschema/2001/XMLSchema""><pd:name>repertoire/myProcessName.process</pd:name><pd:startName ref=""pfx1:myType"">Start</pd:startName></pd:ProcessDefinition>";
+            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+            Assert.AreEqual ("myType", tibcoBWProcess.StartActivity.Parameters[0].Name);
+        }
+
 		[Test]
 		public void Should_return_1_transition_when_Only_Start_and_End_are_defined_with_condition_type_always ()
 		{

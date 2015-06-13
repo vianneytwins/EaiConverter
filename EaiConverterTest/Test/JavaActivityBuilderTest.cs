@@ -79,7 +79,7 @@ string platform = ""testvalue"";
 
 My.Package.Name.MyJavaFileName myJavaFileName = new My.Package.Name.MyJavaFileName();
 myJavaFileName.setplatform(platform);
-myJavaFileName.invoke();
+myJavaFileName.Invoke();
 My.Package.Name.MyActivityName myActivityName = new My.Package.Name.MyActivityName();
 myActivityName.lastDate = myJavaFileName.getlastDate();
 ";
