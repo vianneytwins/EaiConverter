@@ -5,12 +5,15 @@ using EaiConverter.Builder.Utils;
 using EaiConverter.CodeGenerator.Utils;
 using System.Reflection;
 using System.Collections.Generic;
+using EaiConverter.Processor;
 
 namespace EaiConverter.Builder
 {
     public class JavaActivityBuilder : IActivityBuilder
     { 
         XslBuilder xslBuilder;
+
+        const string InvokeMethodName = "Invoke";
 
         public JavaActivityBuilder(XslBuilder xslBuilder)
         {
@@ -35,12 +38,23 @@ namespace EaiConverter.Builder
             // Generate the Service
             javaNamespace.Imports.AddRange(this.GenerateImports());
             var javaClass = this.GenerateClass(activity);
+            javaClass.Members.Add(this.GenerateInvokeMethod());
             javaNamespace.Types.Add(javaClass);
 
-            // Generate the corresponding interface
-            var xmlParserHelperServiceInterfaceNameSpace =  InterfaceExtractorFromClass.Extract(javaClass, TargetAppNameSpaceService.xmlToolsNameSpace);
 
-            return new CodeNamespaceCollection{javaNamespace, xmlParserHelperServiceInterfaceNameSpace};
+            var codeNameSpaces =  new CodeNamespaceCollection {javaNamespace};
+
+            // Generate the corresponding interface 
+            if (ConfigurationApp.GetProperty ("IsJavaInterfaceAlreadyGenerated") != "true")
+            {
+                //TODO : Refactor because it's a bit dirty
+                var javaServiceInterfaceNameSpace = InterfaceExtractorFromClass.Extract(javaClass, TargetAppNameSpaceService.javaToolsNameSpace);
+                javaServiceInterfaceNameSpace.Types[0].Name = "IJavaActivtyService";
+                codeNameSpaces.Add(javaServiceInterfaceNameSpace);
+                ConfigurationApp.SaveProperty("IsJavaInterfaceAlreadyGenerated", "true");
+            }
+
+            return codeNameSpaces;
         }
 
         public CodeNamespaceImport[] GenerateImports()
@@ -56,11 +70,25 @@ namespace EaiConverter.Builder
             var javaClass = new CodeTypeDeclaration(activity.FileName);
             javaClass.IsClass = true;
             javaClass.TypeAttributes = TypeAttributes.Public;
+            javaClass.BaseTypes.Add(new CodeTypeReference("IJavaActivtyService"));
 
             javaClass.Comments.Add(new CodeCommentStatement(activity.FullSource));
 
             return javaClass;
 
+        }
+
+        public CodeMemberMethod GenerateInvokeMethod ()
+        {
+            {
+                var method = new CodeMemberMethod ();
+                method.Attributes = MemberAttributes.Public | MemberAttributes.Final;
+
+                method.Name = InvokeMethodName;
+
+                method.ReturnType = new CodeTypeReference ("System.Void");
+                return method;
+            }
         }
 
         public CodeStatementCollection GenerateCodeInvocation(JavaActivity javaActivity)
@@ -160,7 +188,7 @@ namespace EaiConverter.Builder
             CodeMethodInvokeExpression invokeCall = new CodeMethodInvokeExpression();
             invokeCall.Parameters.AddRange(new CodeExpression[0]);
             CodeMethodReferenceExpression invokeMethod = new CodeMethodReferenceExpression();
-            invokeMethod.MethodName = "invoke";
+            invokeMethod.MethodName = InvokeMethodName;
             invokeMethod.TargetObject = javaClassReference;
             invokeCall.Method = invokeMethod;
             return invokeCall;
