@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EaiConverter", "EaiConverter\EaiConverter.csproj", "{9D31AE9D-5A18-4911-BBCF-2698626FA8A4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EaiConverterTest", "EaiConverterTest\EaiConverterTest.csproj", "{C3889BF9-C18D-4297-978A-B1FCB418DF0E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EaiConverter.Test", "EaiConverterTest\EaiConverter.Test.csproj", "{C3889BF9-C18D-4297-978A-B1FCB418DF0E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

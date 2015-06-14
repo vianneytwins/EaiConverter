@@ -3,6 +3,7 @@ using System.Xml.Linq;
 using System.Linq;
 using System.Collections.Generic;
 using EaiConverter.Parser.Utils;
+using EaiConverter.Model;
 
 namespace EaiConverter.Parser
 {
@@ -12,7 +13,7 @@ namespace EaiConverter.Parser
 		{
 		}
 			
-		public List<ClassParameter> Parse (IEnumerable<XNode> inputNodes)
+        public List<ClassParameter> Parse (IEnumerable<XNode> inputNodes, string targetNameSpace)
 		{
             var classProperties = new List <ClassParameter> ();
 
@@ -23,7 +24,7 @@ namespace EaiConverter.Parser
 				string type = string.Empty;
                 if (element.Name.LocalName == "element" && element.Name.NamespaceName == XmlnsConstant.xsdNameSpace) {
 					if (element.Attribute ("type") != null) {
-						type = element.Attribute ("type").Value.ToString().Remove(0,4);
+                        type = this.ConvertToBasicType (element.Attribute ("type").Value.ToString().Remove(0,4));
 						classProperties.Add (new ClassParameter {
 							Name = element.Attribute ("name").Value,
 							Type = type
@@ -31,7 +32,7 @@ namespace EaiConverter.Parser
 					} else {
 						classProperties.Add (new ClassParameter {
 							Name = element.Attribute ("name").Value,
-							Type = element.Attribute ("name").Value,
+                            Type = this.ConvertToComplexType(element.Attribute ("name").Value, targetNameSpace),
 							ChildProperties = this.Parse (element.Nodes())
 						});
 					}
@@ -46,6 +47,25 @@ namespace EaiConverter.Parser
 			return classProperties;
 
 		}
+
+        public List<ClassParameter> Parse (IEnumerable<XNode> inputNodes)
+        {
+            return this.Parse(inputNodes, string.Empty);
+        }
+        public string ConvertToBasicType (string xsdType)
+        {
+            return xsdType;
+        }
+
+        public string ConvertToComplexType (string type, string targetNamespace)
+        {
+            if (string.IsNullOrEmpty(targetNamespace))
+            {
+                    return type;
+            }
+                return targetNamespace+"."+type;
+
+        }
 
 	}
 }

@@ -44,7 +44,6 @@
     <Compile Include="Model\ConditionType.cs" />
     <Compile Include="Model\Activity.cs" />
     <Compile Include="Model\TibcoBWProcess.cs" />
-    <Compile Include="utils\ClassParamater.cs" />
     <Compile Include="Parser\TibcoBWProcessLinqParser.cs" />
     <Compile Include="Parser\XsdParser.cs" />
     <Compile Include="Parser\JdbcQueryActivityParser.cs" />
@@ -114,12 +113,12 @@
     <Compile Include="Builder\NullActivityBuilder.cs" />
     <Compile Include="Builder\GenerateErrorActivityBuilder.cs" />
     <Compile Include="Builder\WriteToLogActivityBuilder.cs" />
+    <Compile Include="Model\ClassParamater.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="ressources\" />
     <Folder Include="Model\" />
-    <Folder Include="utils\" />
     <Folder Include="CodeGenerator\" />
     <Folder Include="Parser\" />
     <Folder Include="Parser\Utils\" />

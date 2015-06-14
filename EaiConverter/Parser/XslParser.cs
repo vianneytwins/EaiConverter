@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using System.Text;
 using System.CodeDom;
 using EaiConverter.Parser.Utils;
+using EaiConverter.Model;
 
 namespace EaiConverter.Parser
 {

@@ -254,18 +254,9 @@ namespace EaiConverter.Builder
             {
                 foreach (var parameter in tibcoBwProcessToGenerate.StartActivity.Parameters)
                 {
-                    CodeTypeReference codeTypeRefernce;
-                    if (this.IsBasicType(parameter.Type))
-                    {
-                        codeTypeRefernce = new CodeTypeReference(parameter.Type);
-                    }
-                    else {
-                        codeTypeRefernce = new CodeTypeReference(tibcoBwProcessToGenerate.InputAndOutputNameSpace+"."+ parameter.Type);
-                    }
-
                     startMethod.Parameters.Add(new CodeParameterDeclarationExpression {
                         Name = parameter.Name,
-                        Type = codeTypeRefernce
+                        Type = new CodeTypeReference(parameter.Type)
                     });
                 }
             }

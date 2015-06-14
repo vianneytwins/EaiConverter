@@ -86,7 +86,7 @@ namespace EaiConverter.Parser
             var activity = new Activity (allFileElement.Element (XmlnsConstant.tibcoProcessNameSpace + activityName).Value, activityType);
             if (xElement.Attribute("ref") == null)
             {
-			    var activityParameters = this.xsdParser.Parse (xElement.Nodes ());
+                var activityParameters = this.xsdParser.Parse (xElement.Nodes (), inputAndOutputNameSpace);
 		    	activity.Parameters = activityParameters;
 			    activity.ObjectXNodes = xElement.Nodes ();
             }
@@ -98,7 +98,7 @@ namespace EaiConverter.Parser
                 {
                         new ClassParameter{
                             Name = inputReferences[1],
-                            // TODO : find out to convert prefx in type
+                            // TODO : find out to convert prefix in type
                             Type = inputReferences[0]
                         }
                 };
