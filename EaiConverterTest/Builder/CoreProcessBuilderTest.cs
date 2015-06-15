@@ -82,8 +82,7 @@ namespace EaiConverter.Test.Builder
             tibcoBWProcess.EndActivity = new Activity("End", ActivityType.endType);
             tibcoBWProcess.Transitions = this.simpleProcessTransitions;
 
-            CodeMemberMethod startMethod = new CodeMemberMethod();
-            var codeStatementCollection = this.builder.GenerateStartCodeStatement (tibcoBWProcess, startMethod, tibcoBWProcess.StartActivity.Name, null, activitiesToServiceMapping);
+            var codeStatementCollection = this.builder.GenerateStartCodeStatement (tibcoBWProcess.Transitions, tibcoBWProcess.StartActivity.Name, null, activitiesToServiceMapping);
 
             var classesInString = TestCodeGeneratorUtils.GenerateCode (codeStatementCollection);
 
@@ -107,8 +106,7 @@ else
             tibcoBWProcess.EndActivity = new Activity("End", ActivityType.endType);
             tibcoBWProcess.Transitions = this.complexProcessTransitions;
 
-            CodeMemberMethod startMethod = new CodeMemberMethod();
-            var codeStatementCollection = this.builder.GenerateStartCodeStatement (tibcoBWProcess, startMethod, tibcoBWProcess.StartActivity.Name, null, activitiesToServiceMapping);
+            var codeStatementCollection = this.builder.GenerateStartCodeStatement (tibcoBWProcess.Transitions, tibcoBWProcess.StartActivity.Name, null, activitiesToServiceMapping);
 
             var classesInString = TestCodeGeneratorUtils.GenerateCode (codeStatementCollection);
 

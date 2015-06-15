@@ -288,7 +288,7 @@ namespace EaiConverter.Builder
         {
             if (tibcoBwProcessToGenerate.Transitions != null)
             {
-                startMethod.Statements.AddRange(this.coreProcessBuilder.GenerateStartCodeStatement(tibcoBwProcessToGenerate, startMethod, tibcoBwProcessToGenerate.StartActivity.Name, null, this.activityNameToServiceNameDictionnary));
+                startMethod.Statements.AddRange(this.coreProcessBuilder.GenerateStartCodeStatement(tibcoBwProcessToGenerate.Transitions, tibcoBwProcessToGenerate.StartActivity.Name, null, this.activityNameToServiceNameDictionnary));
                 // TODO VC : integrate the following section in in CoreProcessBuilder
                 if (startMethod.ReturnType.BaseType != "System.Void")
                 {

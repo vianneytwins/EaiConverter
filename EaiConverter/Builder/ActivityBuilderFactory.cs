@@ -44,6 +44,10 @@ namespace EaiConverter.Builder
             {
                 return new GenerateErrorActivityBuilder(xslBuilder);
             }
+            else if (activityType == ActivityType.groupActivityType)
+            {
+                return new GroupActivityBuilder(xslBuilder);
+            }
             else
             {
                return new DefaultActivityBuilder(xslBuilder);

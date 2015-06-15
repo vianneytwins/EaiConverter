@@ -10,30 +10,13 @@ namespace EaiConverter.Builder
 {
 	public class CoreProcessBuilder
 	{
-        public CodeStatementCollection GetActivityInvocationCodeStatement (TibcoBWProcess tibcoProcess, string activityName, Dictionary<string,CodeStatementCollection> activityToInvocation)
+        public CodeStatementCollection GetActivityInvocationCodeStatement (string activityName, Dictionary<string,CodeStatementCollection> activityToInvocation)
         {
-            // ce que l'on veut generer :
-            // Si c'est les activité Start ou End ou les AssignActivity... c'est des methodes...voir du code direct
-            // Pour les autres activités
-            // Si le methode est void :
-            // this.monActivite.TheMethod(inputparams);
-            // Sinon (var pas possible !!!)
-            // monTypeDeRetour resultOfActivy = this.monActivite.TheMethod(inputparams);
-
-            if (activityName == tibcoProcess.EndActivity.Name)
-            {
-                return null;
-            }
-            if (activityName == tibcoProcess.StartActivity.Name)
-            {
-                return null;
-            }
-            else
+            if (activityToInvocation.ContainsKey(activityName))
             {
                 return activityToInvocation[activityName];
             }
-
-
+            return null;
         }
 
 
@@ -45,26 +28,26 @@ namespace EaiConverter.Builder
         /// <param name="activities">Activities.</param>
         /// <param name="activityName">Activity name.</param>
         /// <param name="exitBeforeActivityName">Exit before activity name.</param>
-        public CodeStatementCollection  GenerateStartCodeStatement (TibcoBWProcess tibcoBwProcessToGenerate, CodeMemberMethod startMethod, string activityName, string exitBeforeActivityName, Dictionary<string,CodeStatementCollection> activityToServiceMapping){
-            tibcoBwProcessToGenerate.Transitions.Sort ();
+        public CodeStatementCollection  GenerateStartCodeStatement (List<Transition> processTransitions, string activityName, string exitBeforeActivityName, Dictionary<string,CodeStatementCollection> activityToServiceMapping){
+            processTransitions.Sort ();
             var codeStatementCollection = new CodeStatementCollection ();
             if (activityName == exitBeforeActivityName) {
                 return codeStatementCollection;
             }
 
-            var invocationCode = this.GetActivityInvocationCodeStatement (tibcoBwProcessToGenerate, activityName, activityToServiceMapping);
+            var invocationCode = this.GetActivityInvocationCodeStatement ( activityName, activityToServiceMapping);
 
             if (invocationCode != null)
             {
                 codeStatementCollection.AddRange(invocationCode);
             }
 
-            List<Transition> tranz = TransitionUtils.GetTransitionsFrom (tibcoBwProcessToGenerate.Transitions, activityName);
+            List<Transition> tranz = TransitionUtils.GetTransitionsFrom (processTransitions, activityName);
             if (tranz.Count == 0) {
                 return codeStatementCollection;
             } else if (tranz.Count == 1) {
                 string nextActivity = tranz [0].ToActivity;
-                codeStatementCollection.AddRange ( this.GenerateStartCodeStatement (tibcoBwProcessToGenerate, startMethod, nextActivity, exitBeforeActivityName,activityToServiceMapping));
+                codeStatementCollection.AddRange ( this.GenerateStartCodeStatement (processTransitions, nextActivity, exitBeforeActivityName,activityToServiceMapping));
 
             }
             else
@@ -76,7 +59,7 @@ namespace EaiConverter.Builder
 
                 //CodeConditionStatement(CodeExpression, if true => CodeStatement[], else => CodeStatement[])
                 // TODO c'est moche car cela marche que pour 1 seul If... S'il y en a plus il faut rajouter des ConditionsStatements sans else
-                string nextCommonActivity = TransitionUtils.GetNextCommonActivity (nextActivities, tibcoBwProcessToGenerate.Transitions);
+                string nextCommonActivity = TransitionUtils.GetNextCommonActivity (nextActivities, processTransitions);
 
                 CodeStatement[] trueCodeStatements = new CodeStatement[]{};
                 CodeStatement[] falseCodeStatements = new CodeStatement[]{};
@@ -86,19 +69,19 @@ namespace EaiConverter.Builder
                     var nextActivity = transition.ToActivity;
                     if (ConditionType.xpath == transition.ConditionType) {
                         condition = new CodeVariableReferenceExpression(transition.ConditionPredicateName);
-                        var statementCollection = this.GenerateStartCodeStatement (tibcoBwProcessToGenerate, startMethod ,nextActivity,nextCommonActivity,activityToServiceMapping);
+                        var statementCollection = this.GenerateStartCodeStatement (processTransitions, nextActivity,nextCommonActivity,activityToServiceMapping);
                         trueCodeStatements = new CodeStatement[statementCollection.Count];
                         statementCollection.CopyTo (trueCodeStatements,0);
                     }
                     else if (ConditionType.otherwise == transition.ConditionType) {
-                        var statementCollection = this.GenerateStartCodeStatement (tibcoBwProcessToGenerate, startMethod,nextActivity,nextCommonActivity,activityToServiceMapping);
+                        var statementCollection = this.GenerateStartCodeStatement (processTransitions, nextActivity,nextCommonActivity,activityToServiceMapping);
                         falseCodeStatements = new CodeStatement[statementCollection.Count];
                         statementCollection.CopyTo (falseCodeStatements,0);
                     }
                 }
                 codeStatementCollection.Add (new CodeConditionStatement(condition, trueCodeStatements, falseCodeStatements));
                 //Call nextCommonActivtyCodeStatementGeneration
-                codeStatementCollection.AddRange (this.GenerateStartCodeStatement (tibcoBwProcessToGenerate, startMethod ,nextCommonActivity, null, activityToServiceMapping));
+                codeStatementCollection.AddRange (this.GenerateStartCodeStatement (processTransitions, nextCommonActivity, null, activityToServiceMapping));
             }
             return codeStatementCollection;
         }
