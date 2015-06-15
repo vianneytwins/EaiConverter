@@ -37,9 +37,9 @@ namespace EaiConverter.Parser
 
             tibcoBwProcess.ProcessVariables = this.ParseProcessVariables (allFileElement);
 
-			this.ParseTransitions (allFileElement, tibcoBwProcess);
+            tibcoBwProcess.Transitions = this.ParseTransitions (allFileElement);
 
-			this.ParseActivities (allFileElement, tibcoBwProcess);
+            tibcoBwProcess.Activities = this.ParseActivities (allFileElement);
 
 			return tibcoBwProcess;
 
@@ -130,41 +130,71 @@ namespace EaiConverter.Parser
             return processVariables;
         }
 
-		public void ParseTransitions (XElement allFileElement, TibcoBWProcess tibcoBwProcess)
+        public List<Transition> ParseTransitions (XElement allFileElement)
 		{
             IEnumerable<XElement> transitionElements = from element in allFileElement.Elements (XmlnsConstant.tibcoProcessNameSpace + "transition")
 			select element;
-			tibcoBwProcess.Transitions = new List<Transition> ();
+			var transitions = new List<Transition> ();
 			foreach (XElement element in transitionElements) {
                 var transition = new Transition {
                     FromActivity = element.Element (XmlnsConstant.tibcoProcessNameSpace + "from").Value,
                     ToActivity = element.Element (XmlnsConstant.tibcoProcessNameSpace + "to").Value,
                     ConditionType = (ConditionType)Enum.Parse (typeof(ConditionType), element.Element (XmlnsConstant.tibcoProcessNameSpace + "conditionType").Value)
                 };
-				tibcoBwProcess.Transitions.Add (transition);
+				transitions.Add (transition);
 			}
-			tibcoBwProcess.Transitions.Sort ();
+
+			transitions.Sort ();
+            return transitions;
 		}
 
-		public void ParseActivities (XElement allFileElement, TibcoBWProcess tibcoBwProcess)
+        public List<Activity> ParseActivities (XElement allFileElement)
 		{
+			var activities = new List<Activity> ();
+            activities.AddRange(this.ParseStandardActivities(allFileElement));
+            activities.AddRange(this.ParseGroupActivities(allFileElement));
+
+            return activities;
+		}
+
+        public List<Activity> ParseStandardActivities (XElement allFileElement)
+        {
             IEnumerable<XElement> activityElements = from element in allFileElement.Elements (XmlnsConstant.tibcoProcessNameSpace + "activity")
-			select element;
-			tibcoBwProcess.Activities = new List<Activity> ();
+                select element;
+            var activities = new List<Activity> ();
             var activityParserFactory = new ActivityParserFactory();
 
-			foreach (XElement element in activityElements) {
+            foreach (XElement element in activityElements) {
                 var activityType = element.Element (XmlnsConstant.tibcoProcessNameSpace + "type").Value;
-				Activity activity;
+                Activity activity;
                 var activityParser = activityParserFactory.GetParser(activityType);
                 if (activityParser != null ) {
                     activity = activityParser.Parse (element);
-				} else {
+                } else {
                     activity = new Activity (element.Attribute ("name").Value, ActivityType.NotHandleYet);
-				} 
-				tibcoBwProcess.Activities.Add (activity);
-			}
-		}
+                } 
+                activities.Add (activity);
+            }
+            return activities;
+        }
+
+        public List<Activity> ParseGroupActivities (XElement allFileElement)
+        {
+            IEnumerable<XElement> groupElements = from element in allFileElement.Elements (XmlnsConstant.tibcoProcessNameSpace + "group")
+                select element;
+            var activities = new List<Activity> ();
+            var activityParserFactory = new ActivityParserFactory();
+
+            foreach (XElement element in groupElements) {
+                // var activityType = element.Element (XmlnsConstant.tibcoProcessNameSpace + "type").Value;
+                GroupActivity activity = new GroupActivity();
+                activity.Transitions = this.ParseTransitions(element);
+                activity.Activities = this.ParseStandardActivities(element);
+                activities.Add (activity);
+            }
+
+            return activities;
+         }
 	}
 }
 

@@ -7,6 +7,7 @@ namespace EaiConverter.Model
 		always,
 		xpath,
 		otherwise,
+        error
 	}
 
 }
