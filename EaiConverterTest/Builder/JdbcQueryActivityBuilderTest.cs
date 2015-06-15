@@ -91,14 +91,14 @@ namespace EaiConverter.Test.Builder
         [Test]
         public void Should_Return_void_Invocation_Code_When_Activity_has_no_return_type_And_No_Input(){
             CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateCodeInvocation ("MyService", this.jdbcQueryActivity);
-            Assert.AreEqual ("this.logger.Info(\"Start Activity: Currency\");\n\nthis.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
+            Assert.AreEqual ("this.logger.Info(\"Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity\");\n\nthis.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
         }
 
         [Test]
         public void Should_Return_void_Invocation_Code_When_Activity_has_return_type_And_No_Input(){
             this.jdbcQueryActivity.QueryOutputCachedSchemaColumns = "";
             CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateCodeInvocation ("MyService", this.jdbcQueryActivity);
-            Assert.AreEqual ("this.logger.Info(\"Start Activity: Currency\");\n\nvar currency = this.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
+            Assert.AreEqual ("this.logger.Info(\"Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity\");\n\nvar currency = this.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
         }
 
         [Test]
@@ -121,7 +121,7 @@ namespace EaiConverter.Test.Builder
 
             CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateCodeInvocation ("MyService", this.jdbcQueryActivity);
             Assert.AreEqual (
-                @"this.logger.Info(""Start Activity: Currency"");
+                @"this.logger.Info(""Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity"");
 string IdBbUnique = ""test"";
 
 this.myService.ExecuteQuery(IdBbUnique);

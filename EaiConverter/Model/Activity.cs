@@ -26,6 +26,8 @@ namespace EaiConverter.Model
 			set;
 		}
 
+        public IEnumerable<XNode> InputBindings {get; set;}
+
 		public override string ToString ()
 		{
 			return string.Format ("[Activity: Name={0}, Type={1}]", Name, Type);

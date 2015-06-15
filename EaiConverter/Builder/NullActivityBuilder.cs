@@ -15,15 +15,15 @@ namespace EaiConverter.Builder
         {
             var activityCodeDom = new ActivityCodeDom();
             activityCodeDom.ClassesToGenerate = new CodeNamespaceCollection();
-            activityCodeDom.InvocationCode = this.DefaultInvocationMethod(activity.Name);
+            activityCodeDom.InvocationCode = this.DefaultInvocationMethod(activity);
             return activityCodeDom;
         }
         #endregion
 
-        public CodeStatementCollection DefaultInvocationMethod (string activityName)
+        public CodeStatementCollection DefaultInvocationMethod (Activity activity)
         {
             var invocationCodeCollection = new CodeStatementCollection();
-            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(activityName));
+            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(activity));
 
             return invocationCodeCollection;
         }

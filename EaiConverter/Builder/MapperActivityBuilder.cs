@@ -31,7 +31,7 @@ namespace EaiConverter.Builder
         {
             var invocationCodeCollection = new CodeStatementCollection();
             // Add the Log
-            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(mapperActivity.Name));
+            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(mapperActivity));
             // Add the mapping
             invocationCodeCollection.AddRange(this.xslBuilder.Build(mapperActivity.InputBindings));
 

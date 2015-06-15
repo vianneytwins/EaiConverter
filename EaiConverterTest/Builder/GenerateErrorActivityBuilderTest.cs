@@ -47,7 +47,7 @@ namespace EaiConverter.Test.Builder
         [Test]
         public void Should_Generate_invocation_method()
         {
-            var expected = @"this.logger.Info(""Start Activity: My Activity Name"");
+            var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.pe.core.GenerateErrorActivity"");
 string message = ""testvalue"";
 string messageCode = ""EVL"";
 

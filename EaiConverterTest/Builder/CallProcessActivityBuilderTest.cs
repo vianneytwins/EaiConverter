@@ -41,7 +41,7 @@ namespace EaiConverter.Test.Builder
         [Test]
         public void Should_Return_InvocationCode()
         {
-            var expected = @"this.logger.Info(""Start Activity: My Call Process Activity"");
+            var expected = @"this.logger.Info(""Start Activity: My Call Process Activity of type: com.tibco.pe.core.CallProcessActivity"");
 string xmlString = ""TestString"";
 
 var myCallProcessActivity = this.processToCall.Start(xmlString);

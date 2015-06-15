@@ -42,7 +42,7 @@ namespace EaiConverter.Test.Builder
         [Test]
         public void Should_Generate_invocation_method()
         {
-            var expected = @"this.logger.Info(""Start Activity: My Activity Name"");
+            var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.plugin.mapper.MapperActivity"");
 EquityRecord EquityRecord = new EquityRecord();
 EquityRecord.xmlString = ""TestString"";
 

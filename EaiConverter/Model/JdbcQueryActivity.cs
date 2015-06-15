@@ -47,8 +47,6 @@ namespace EaiConverter.Model
 			get;
 			set;
 		}
-
-        public IEnumerable<XNode> InputBindings {get; set;}
 	}
 
 }

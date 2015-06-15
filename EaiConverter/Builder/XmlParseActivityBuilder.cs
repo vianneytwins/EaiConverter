@@ -42,7 +42,7 @@ namespace EaiConverter.Builder
         {
             var invocationCodeCollection = new CodeStatementCollection();
             // Add log at the beginning
-            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(xmlParseActivity.Name));
+            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(xmlParseActivity));
             // Add the input bindings
             invocationCodeCollection.AddRange(this.xslBuilder.Build(xmlParseActivity.InputBindings));
 

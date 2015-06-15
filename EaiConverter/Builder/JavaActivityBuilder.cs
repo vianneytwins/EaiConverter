@@ -94,7 +94,7 @@ namespace EaiConverter.Builder
         public CodeStatementCollection GenerateCodeInvocation(JavaActivity javaActivity)
         {
             var invocationCodeCollection = new CodeStatementCollection();
-            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(javaActivity.Name));
+            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(javaActivity));
 
             invocationCodeCollection.AddRange(this.xslBuilder.Build(javaActivity.InputBindings));
 

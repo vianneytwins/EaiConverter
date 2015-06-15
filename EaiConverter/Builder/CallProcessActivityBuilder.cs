@@ -30,7 +30,7 @@ namespace EaiConverter.Builder
         {
             var invocationCodeCollection = new CodeStatementCollection();
             // Add the Log
-            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(callProcessActivity.Name));
+            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(callProcessActivity));
             // Add the mapping
             invocationCodeCollection.AddRange(this.xslBuilder.Build(callProcessActivity.InputBindings));
 

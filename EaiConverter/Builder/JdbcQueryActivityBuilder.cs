@@ -83,7 +83,7 @@ namespace EaiConverter.Builder
 
             var invocationCodeCollection = new CodeStatementCollection();
             // Add the log
-            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(jdbcQueryActivity.Name));
+            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(jdbcQueryActivity));
             // Add the input bindings
             invocationCodeCollection.AddRange(this.xslBuilder.Build(jdbcQueryActivity.InputBindings));
 

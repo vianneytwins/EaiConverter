@@ -15,8 +15,6 @@ namespace EaiConverter.Model
         }
 
         public string Role {get; set;}
-
-        public IEnumerable<XNode> InputBindings {get; set;}
     }
 }
 

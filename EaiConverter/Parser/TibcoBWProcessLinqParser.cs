@@ -183,11 +183,21 @@ namespace EaiConverter.Parser
             IEnumerable<XElement> groupElements = from element in allFileElement.Elements (XmlnsConstant.tibcoProcessNameSpace + "group")
                 select element;
             var activities = new List<Activity> ();
-            var activityParserFactory = new ActivityParserFactory();
 
-            foreach (XElement element in groupElements) {
-                // var activityType = element.Element (XmlnsConstant.tibcoProcessNameSpace + "type").Value;
+            foreach (XElement element in groupElements)
+            {
                 GroupActivity activity = new GroupActivity();
+                activity.Name = element.Attribute ("name").Value;
+                activity.Type = (ActivityType) element.Element (XmlnsConstant.tibcoProcessNameSpace + "type").Value;
+                var configElement = element.Element ("config");
+
+                activity.GroupType = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace +"groupType"));
+
+                if (element.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings") != null)
+                {
+                    activity.InputBindings = element.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Nodes();
+                }
+
                 activity.Transitions = this.ParseTransitions(element);
                 activity.Activities = this.ParseStandardActivities(element);
                 activities.Add (activity);

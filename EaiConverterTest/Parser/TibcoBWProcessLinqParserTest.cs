@@ -12,6 +12,23 @@ namespace EaiConverter.Test.Parser
 
 		TibcoBWProcessLinqParser tibcoBWProcessLinqParser;
 
+        string xmlWithGroup = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+                            <pd:name>repertoire/myProcessName.process</pd:name>
+<pd:group name=""groupName"">
+<pd:type>com.tibco.pe.core.LoopGroup</pd:type>
+<config>
+    <pd:groupType>simpleGroup</pd:groupType>
+</config>
+    <pd:transition>
+                                <pd:from>startgroup</pd:from><pd:to>endgroup</pd:to>
+                                <pd:conditionType>always</pd:conditionType>
+                            </pd:transition>
+</pd:group>
+<pd:transition>
+                                <pd:from>Start</pd:from><pd:to>End</pd:to>
+                                <pd:conditionType>always</pd:conditionType>
+                            </pd:transition></pd:ProcessDefinition>";
+        
 		[SetUp]
 		public void SetUp ()
 		{
@@ -130,42 +147,23 @@ namespace EaiConverter.Test.Parser
         [Test]
         public void Should_return_1_transition_even_when_there_is_a_group ()
         {
-            string xml = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-                            <pd:name>repertoire/myProcessName.process</pd:name>
-<pd:group>
-    <pd:transition>
-                                <pd:from>startgroup</pd:from><pd:to>endgroup</pd:to>
-                                <pd:conditionType>always</pd:conditionType>
-                            </pd:transition>
-</pd:group>
-<pd:transition>
-                                <pd:from>Start</pd:from><pd:to>End</pd:to>
-                                <pd:conditionType>always</pd:conditionType>
-                            </pd:transition></pd:ProcessDefinition>";
-            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+
+            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xmlWithGroup));
             Assert.AreEqual (1, tibcoBWProcess.Transitions.Count);
         }
 
         [Test]
         public void Should_return_1_transition_in_the_group ()
         {
-            string xml = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
-                            <pd:name>repertoire/myProcessName.process</pd:name>
-<pd:group>
-    <pd:transition>
-        <pd:from>startgroup</pd:from>
-        <pd:to>endgroup</pd:to>
-        <pd:conditionType>always</pd:conditionType>
-    </pd:transition>
-</pd:group>
-<pd:transition>
-    <pd:from>Start</pd:from>
-    <pd:to>End</pd:to>
-    <pd:conditionType>always</pd:conditionType>
-</pd:transition>
-</pd:ProcessDefinition>";
-            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xmlWithGroup));
             Assert.AreEqual (1, ((GroupActivity)tibcoBWProcess.Activities[0]).Transitions.Count);
+        }
+
+        [Test]
+        public void Should_return_groupType ()
+        {
+            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xmlWithGroup));
+            Assert.AreEqual ("simpleGroup", ((GroupActivity)tibcoBWProcess.Activities[0]).GroupType);
         }
 	}
 }

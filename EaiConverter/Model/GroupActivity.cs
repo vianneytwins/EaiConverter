@@ -13,8 +13,11 @@ namespace EaiConverter.Model
         {
         }
 
+        public string GroupType { get; set;}
+
         public List<Activity> Activities { get; set;}
         public List<Transition> Transitions { get; set;}
+
     }
 }
 

@@ -19,8 +19,6 @@ namespace EaiConverter.Model
         public string FullSource {get; set;}
         public List<ClassParameter> InputData {get; set;}
         public List<ClassParameter> OutputData {get; set;}
-
-        public IEnumerable<XNode> InputBindings {get; set;}
     }
 }
 
