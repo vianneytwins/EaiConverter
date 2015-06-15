@@ -114,6 +114,7 @@
     <Compile Include="Builder\GenerateErrorActivityBuilder.cs" />
     <Compile Include="Builder\WriteToLogActivityBuilder.cs" />
     <Compile Include="Model\ClassParamater.cs" />
+    <Compile Include="Model\GroupActivity.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

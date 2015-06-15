@@ -126,6 +126,25 @@ namespace EaiConverter.Test.Parser
             var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
             Assert.AreEqual ("string", tibcoBWProcess.ProcessVariables[0].Parameter.Type);
         }
+
+        [Test]
+        public void Should_return_1_transition_even_when_there_is_a_group ()
+        {
+            string xml = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+                            <pd:name>repertoire/myProcessName.process</pd:name>
+<pd:group>
+    <pd:transition>
+                                <pd:from>startgroup</pd:from><pd:to>endgroup</pd:to>
+                                <pd:conditionType>always</pd:conditionType>
+                            </pd:transition>
+</pd:group>
+<pd:transition>
+                                <pd:from>Start</pd:from><pd:to>End</pd:to>
+                                <pd:conditionType>always</pd:conditionType>
+                            </pd:transition></pd:ProcessDefinition>";
+            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+            Assert.AreEqual (1, tibcoBWProcess.Transitions.Count);
+        }
 	}
 }
 

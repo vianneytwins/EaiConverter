@@ -20,6 +20,7 @@ namespace EaiConverter.Model
         public static readonly ActivityType generateErrorActivity = new ActivityType ("com.tibco.pe.core.GenerateErrorActivity");
         public static readonly ActivityType javaActivityType = new ActivityType("com.tibco.plugin.java.JavaActivity");
         public static readonly ActivityType nullActivityType = new ActivityType("com.tibco.plugin.timer.NullActivity");
+        public static readonly ActivityType groupActivityType = new ActivityType("com.tibco.pe.core.LoopGroup");
         public static readonly ActivityType startType = new ActivityType ("startType");
         public static readonly ActivityType endType = new ActivityType ("endType");
         public static readonly ActivityType NotHandleYet = new ActivityType ("NotHandleYet");
