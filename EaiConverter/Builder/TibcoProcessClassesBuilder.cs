@@ -276,15 +276,7 @@ namespace EaiConverter.Builder
             }
             else
             {
-                
-                if (this.IsBasicType(tibcoBwProcessToGenerate.EndActivity.Parameters[0].Type))
-                {
-                    returnType = tibcoBwProcessToGenerate.EndActivity.Parameters[0].Type;
-                }
-                else {
-                    returnType = tibcoBwProcessToGenerate.InputAndOutputNameSpace+"."+ tibcoBwProcessToGenerate.EndActivity.Parameters[0].Type;
-                }
-
+                returnType = tibcoBwProcessToGenerate.EndActivity.Parameters[0].Type;
             }
             return new CodeTypeReference(returnType);
         }

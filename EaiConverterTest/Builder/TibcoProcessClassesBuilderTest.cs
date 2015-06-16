@@ -193,13 +193,10 @@ namespace EaiConverter.Test.Builder
 					Name = "endResult"
 				}
 			};
-		
-			
-            // Act
+		    // Act
             var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
 
-
-			string actual = string.Empty;
+            string actual = string.Empty;
 			foreach (var member in classToGenerate.Namespaces [0].Types [0].Members) {
 				if (member is CodeMemberMethod &&  ((CodeMemberMethod)member).Name == "Start") {
 					actual = ((CodeMemberMethod)member).ReturnType.BaseType;
@@ -208,36 +205,6 @@ namespace EaiConverter.Test.Builder
 
 			Assert.AreEqual ("string", actual);
 		}
-
-        [Test]
-        public void Should_return_Start_Method_with_complex_return_type()
-        {
-            // prepare
-            tibcoBWProcess.StartActivity = new Activity ("Start", ActivityType.startType);
-
-            tibcoBWProcess.EndActivity = new Activity ("End", ActivityType.endType);
-            tibcoBWProcess.EndActivity.Parameters = new List <ClassParameter> {
-                new ClassParameter
-                {
-                    Type = "NotSimpleType",
-                    Name = "endResult"
-                }
-            };
-
-
-            // Act
-            var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
-
-
-            string actual = string.Empty;
-            foreach (var member in classToGenerate.Namespaces [0].Types [0].Members) {
-                if (member is CodeMemberMethod &&  ((CodeMemberMethod)member).Name == "Start") {
-                    actual = ((CodeMemberMethod)member).ReturnType.BaseType;
-                }
-            }
-
-            Assert.AreEqual (tibcoBWProcess.InputAndOutputNameSpace + ".NotSimpleType", actual);
-        }
 
         [Test]
         public void Should_Convert_XsdImport_in_Code_namespace_to_import(){
