@@ -126,7 +126,7 @@ namespace EaiConverter.Builder
 
             fields.AddRange (this.GenerateFieldForProcessVariables(tibcoBwProcessToGenerate));
 
-            fields.AddRange (this.GenerateFieldsForActivityServices(tibcoBwProcessToGenerate));
+            fields.AddRange (this.GenerateFieldsForActivityServices(tibcoBwProcessToGenerate.Activities));
 
 			return fields.ToArray();
 		}
@@ -148,11 +148,11 @@ namespace EaiConverter.Builder
             return fields;
         }
 
-        private List<CodeMemberField> GenerateFieldsForActivityServices(TibcoBWProcess tibcoBwProcessToGenerate)
+        private List<CodeMemberField> GenerateFieldsForActivityServices(List<Activity> activities)
         {
             var fields = new List<CodeMemberField>();
             bool IsXmlParserServiceAllReadyAdded = false;
-            foreach (Activity activity in tibcoBwProcessToGenerate.Activities)
+            foreach (Activity activity in activities)
             {
                 if (activity.Type == ActivityType.xmlParseActivityType && !IsXmlParserServiceAllReadyAdded)
                 {
@@ -175,6 +175,11 @@ namespace EaiConverter.Builder
                         Name = VariableHelper.ToVariableName(VariableHelper.ToClassName(callProcessActivity.ProcessName)),
                         Attributes = MemberAttributes.Private
                     });
+                }
+                else if (activity.Type == ActivityType.groupActivityType)
+                {
+                    var groupActivity = (GroupActivity)activity;
+                    fields.AddRange(this.GenerateFieldsForActivityServices(groupActivity.Activities));
                 }
                 else
                 {
