@@ -334,7 +334,7 @@ namespace EaiConverter.Builder
                 }
             }
             return processVariableNameNamespaces;
-        }  
+        }
        
         bool IsBasicType(string type)
         {

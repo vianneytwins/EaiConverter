@@ -18,10 +18,10 @@ namespace EaiConverter.Builder
             this.coreProcessBuilder = new CoreProcessBuilder();
         }
 
-        ActivityCodeDom IActivityBuilder.Build(Activity activity)
+        public ActivityCodeDom Build(Activity activity)
         {
             var activityCodeDom = new ActivityCodeDom();
-            activityCodeDom.ClassesToGenerate = new CodeNamespaceCollection();
+            activityCodeDom.ClassesToGenerate = this.GenerateActivityClasses(((GroupActivity)activity).Activities);
             activityCodeDom.InvocationCode = this.InvocationMethod(activity);
             return activityCodeDom;
         }
@@ -31,7 +31,6 @@ namespace EaiConverter.Builder
             var activityBuilderFactory = new ActivityBuilderFactory();
             var activityClasses = new CodeNamespaceCollection ();
             foreach (var activity in activities) {
-                //TODO : faut il mieux 2 method ou 1 objet avec les 2
                 var activityBuilder = activityBuilderFactory.Get(activity.Type);
 
                 var activityCodeDom = activityBuilder.Build(activity);
@@ -59,7 +58,7 @@ namespace EaiConverter.Builder
 
             // TODO populate the dictionnary
             var dictionary = new Dictionary<string, CodeStatementCollection>();
-            invocationCodeCollection.AddRange(this.coreProcessBuilder.GenerateStartCodeStatement(groupActivity.Transitions, "start", null, dictionary));
+            invocationCodeCollection.AddRange(this.coreProcessBuilder.GenerateStartCodeStatement(groupActivity.Transitions, "start", null, this.activityNameToServiceNameDictionnary));
             return invocationCodeCollection;
         }
 	}

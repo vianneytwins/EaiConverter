@@ -82,6 +82,7 @@
     <Compile Include="Utils\StringWindowsSupportExtension.cs" />
     <Compile Include="Utils\TestCodeGeneratorUtils.cs" />
     <Compile Include="Parser\Utils\XElementParserUtilsTest.cs" />
+    <Compile Include="Builder\GroupActivityBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />
