@@ -17,7 +17,11 @@ namespace EaiConverter.Test.Parser
 <pd:group name=""groupName"">
 <pd:type>com.tibco.pe.core.LoopGroup</pd:type>
 <config>
-    <pd:groupType>simpleGroup</pd:groupType>
+    <pd:groupType>inputLoop</pd:groupType>
+<pd:over>myCollection</pd:over>
+<pd:iterationElementSlot>current</pd:iterationElementSlot>
+<pd:indexSlot>index</pd:indexSlot>
+<pd:accumulateOutput>false</pd:accumulateOutput>
 </config>
     <pd:transition>
                                 <pd:from>startgroup</pd:from><pd:to>endgroup</pd:to>
@@ -160,10 +164,14 @@ namespace EaiConverter.Test.Parser
         }
 
         [Test]
-        public void Should_return_groupType ()
+        public void Should_return_group_config ()
         {
             var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xmlWithGroup));
-            Assert.AreEqual ("simpleGroup", ((GroupActivity)tibcoBWProcess.Activities[0]).GroupType);
+            Assert.AreEqual ("inputLoop", ((GroupActivity)tibcoBWProcess.Activities[0]).GroupType.ToString());
+            Assert.AreEqual ("myCollection", ((GroupActivity)tibcoBWProcess.Activities[0]).Over);
+            Assert.AreEqual ("current", ((GroupActivity)tibcoBWProcess.Activities[0]).IterationElementSlot);
+            Assert.AreEqual ("index", ((GroupActivity)tibcoBWProcess.Activities[0]).IndexSlot);
+            Assert.AreEqual (false, ((GroupActivity)tibcoBWProcess.Activities[0]).AccumulateOutput);
         }
 	}
 }

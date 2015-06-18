@@ -20,21 +20,51 @@ namespace EaiConverter.Test.Builder
         {
             this.groupActivityBuilder = new GroupActivityBuilder(new XslBuilder(new XpathBuilder()));
             this.activity = new GroupActivity( "My Activity Name",ActivityType.groupActivityType);
-            this.activity.GroupType = "simpleLoop";
-            this.activity.Activities = new List<Activity>{ };
-            this.activity.Transitions = new List<Transition>{ };
+
+            this.activity.Activities = new List<Activity>{
+                new Activity("myNullActivity",ActivityType.nullActivityType),
+            };
+            this.activity.Transitions = new List<Transition>{
+                new Transition{
+                    FromActivity="start",
+                    ToActivity="myNullActivity",
+                    ConditionType=ConditionType.always
+                },
+                new Transition{
+                    FromActivity="myNullActivity",
+                    ToActivity="end",
+                    ConditionType=ConditionType.always
+                }
+            };
         }
 
-        [Ignore]
         [Test]
-        public void Should_Generate_invocation_method()
+        public void Should_Generate_invocation_method_For_simpleGroup()
         {
-            var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.plugin.mapper.MapperActivity"");
-EquityRecord EquityRecord = new EquityRecord();
-EquityRecord.xmlString = ""TestString"";
-
-EquityRecord myActivityName = EquityRecord;
+            var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.pe.core.LoopGroup"");
+this.logger.Info(""Start Activity: myNullActivity of type: com.tibco.plugin.timer.NullActivity"");
 ";
+            this.activity.GroupType = GroupType.simpleGroup;
+
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(groupActivityBuilder.Build(this.activity).InvocationCode);
+            Assert.AreEqual(expected,generatedCode);
+        }
+
+        [Test]
+        public void Should_Generate_invocation_method_For_inputLoop()
+        {
+            var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.pe.core.LoopGroup"");
+for (int index = 0; (index < $Paramsets.elements.Lenght); index = (index + 1))
+{
+    var current = $Paramsets.elements[index];
+    this.logger.Info(""Start Activity: myNullActivity of type: com.tibco.plugin.timer.NullActivity"");
+}
+";
+            this.activity.GroupType = GroupType.inputLoop;
+            this.activity.Over = "$Paramsets.elements";
+            this.activity.IndexSlot = "index";
+            this.activity.IterationElementSlot = "current";
+
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(groupActivityBuilder.Build(this.activity).InvocationCode);
             Assert.AreEqual(expected,generatedCode);
         }

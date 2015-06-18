@@ -41,23 +41,52 @@ namespace EaiConverter.Builder
             return activityClasses;
         }
 
-        public CodeStatementCollection InvocationMethod (Activity activity)
+        private CodeStatementCollection InvocationMethod (Activity activity)
         {
             var invocationCodeCollection = new CodeStatementCollection();
             invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(activity));
 
-            invocationCodeCollection.AddRange(this.GenerateCoreGroupMethod((GroupActivity) activity));
+            var groupActivity = (GroupActivity) activity;
 
+
+            if (groupActivity.GroupType == GroupType.simpleGroup)
+            {
+                invocationCodeCollection.AddRange(this.GenerateCoreGroupMethod(groupActivity));
+            }
+            else
+            {
+                var forLoop = this.GenerateForLoop(groupActivity);
+                invocationCodeCollection.Add(forLoop);
+            }
 
             return invocationCodeCollection;
         }
 
-        public CodeStatementCollection GenerateCoreGroupMethod(GroupActivity groupActivity)
+        private CodeIterationStatement GenerateForLoop(GroupActivity groupActivity)
+        {
+            var coreGroupMethodStatement = new CodeStatementCollection();
+
+            // put the current element in the declare variable
+            // TODO convert the $Variable in variable like in Xpath 
+            CodeVariableDeclarationStatement iterationElementSlotDeclaration = new CodeVariableDeclarationStatement("var", groupActivity.IterationElementSlot, new CodeVariableReferenceExpression(groupActivity.Over + "[" + groupActivity.IndexSlot + "]"));
+            coreGroupMethodStatement.Add(iterationElementSlotDeclaration);
+            // get the core loop code
+            coreGroupMethodStatement.AddRange(this.GenerateCoreGroupMethod(groupActivity));
+            var array = new CodeStatement[coreGroupMethodStatement.Count];
+            coreGroupMethodStatement.CopyTo(array, 0);
+
+            // put it then in the loop
+            CodeIterationStatement forLoop = new CodeIterationStatement(new CodeVariableDeclarationStatement(typeof(int), groupActivity.IndexSlot, new CodePrimitiveExpression(0)),
+                new CodeBinaryOperatorExpression(new CodeVariableReferenceExpression(groupActivity.IndexSlot), CodeBinaryOperatorType.LessThan, new CodeVariableReferenceExpression(groupActivity.Over + ".Lenght")),
+                new CodeAssignStatement(new CodeVariableReferenceExpression(groupActivity.IndexSlot), new CodeBinaryOperatorExpression(new CodeVariableReferenceExpression(groupActivity.IndexSlot), CodeBinaryOperatorType.Add, new CodePrimitiveExpression(1))),
+                array);
+            return forLoop;
+        }
+
+        private CodeStatementCollection GenerateCoreGroupMethod(GroupActivity groupActivity)
         {
             var invocationCodeCollection = new CodeStatementCollection();
 
-            // TODO populate the dictionnary
-            var dictionary = new Dictionary<string, CodeStatementCollection>();
             invocationCodeCollection.AddRange(this.coreProcessBuilder.GenerateStartCodeStatement(groupActivity.Transitions, "start", null, this.activityNameToServiceNameDictionnary));
             return invocationCodeCollection;
         }

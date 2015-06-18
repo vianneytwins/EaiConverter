@@ -191,7 +191,16 @@ namespace EaiConverter.Parser
                 activity.Type = (ActivityType) element.Element (XmlnsConstant.tibcoProcessNameSpace + "type").Value;
                 var configElement = element.Element ("config");
 
-                activity.GroupType = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace +"groupType"));
+                var groupTypeString = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace +"groupType"));
+                activity.GroupType = (GroupType) Enum.Parse(typeof(GroupType), groupTypeString);
+
+                if (activity.GroupType == GroupType.inputLoop)
+                {
+                    activity.Over = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace +"over"));
+                    activity.IterationElementSlot = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace +"iterationElementSlot"));
+                    activity.IndexSlot = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace +"indexSlot"));
+                    activity.AccumulateOutput= XElementParserUtils.GetBoolValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace +"accumulateOutput"));
+                }
 
                 if (element.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings") != null)
                 {

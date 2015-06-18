@@ -13,11 +13,24 @@ namespace EaiConverter.Model
         {
         }
 
-        public string GroupType { get; set;}
+        public GroupType GroupType { get; set;}
+
+        public string Over { get; set;}
+
+        public string IterationElementSlot { get; set;}
+
+        public string IndexSlot { get; set;}
+
+        public bool? AccumulateOutput { get; set;}
 
         public List<Activity> Activities { get; set;}
-        public List<Transition> Transitions { get; set;}
 
+        public List<Transition> Transitions { get; set;}
+    }
+
+    public enum GroupType {
+        inputLoop,
+        simpleGroup
     }
 }
 
