@@ -10,6 +10,7 @@ namespace EaiConverter.Builder
 	{
         XslBuilder xslBuilder;
         CoreProcessBuilder coreProcessBuilder;
+        Dictionary<string,CodeStatementCollection> activityNameToServiceNameDictionnary = new Dictionary<string, CodeStatementCollection> ();
 
         public GroupActivityBuilder (XslBuilder xslBuilder)
         {
@@ -23,6 +24,22 @@ namespace EaiConverter.Builder
             activityCodeDom.ClassesToGenerate = new CodeNamespaceCollection();
             activityCodeDom.InvocationCode = this.InvocationMethod(activity);
             return activityCodeDom;
+        }
+
+        public CodeNamespaceCollection GenerateActivityClasses (List<Activity> activities)
+        {
+            var activityBuilderFactory = new ActivityBuilderFactory();
+            var activityClasses = new CodeNamespaceCollection ();
+            foreach (var activity in activities) {
+                //TODO : faut il mieux 2 method ou 1 objet avec les 2
+                var activityBuilder = activityBuilderFactory.Get(activity.Type);
+
+                var activityCodeDom = activityBuilder.Build(activity);
+
+                activityClasses.AddRange(activityCodeDom.ClassesToGenerate);
+                this.activityNameToServiceNameDictionnary.Add( activity.Name, activityCodeDom.InvocationCode);
+            }
+            return activityClasses;
         }
 
         public CodeStatementCollection InvocationMethod (Activity activity)

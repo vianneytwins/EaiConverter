@@ -48,7 +48,7 @@ namespace EaiConverter.Builder
 			targetUnit.Namespaces.Add (processNamespace);
 
 			//7 Mappe les classes des activity
-			targetUnit.Namespaces.AddRange (this.GenerateActivityClasses (tibcoBwProcessToGenerate));
+            targetUnit.Namespaces.AddRange (this.GenerateActivityClasses (tibcoBwProcessToGenerate.Activities));
 
 			if (tibcoBwProcessToGenerate.EndActivity!= null && tibcoBwProcessToGenerate.EndActivity.ObjectXNodes != null) {
 				targetUnit.Namespaces.Add (this.xsdClassGenerator.Build (tibcoBwProcessToGenerate.EndActivity.ObjectXNodes, tibcoBwProcessToGenerate.InputAndOutputNameSpace));
@@ -56,15 +56,7 @@ namespace EaiConverter.Builder
 			if (tibcoBwProcessToGenerate.StartActivity!= null && tibcoBwProcessToGenerate.StartActivity.ObjectXNodes != null) {
 				targetUnit.Namespaces.Add (this.xsdClassGenerator.Build (tibcoBwProcessToGenerate.StartActivity.ObjectXNodes, tibcoBwProcessToGenerate.InputAndOutputNameSpace));
 			}
-            if (tibcoBwProcessToGenerate.ProcessVariables!= null) {
-                foreach (var item in tibcoBwProcessToGenerate.ProcessVariables)
-                {
-                    if (!IsBasicType(item.Parameter.Type))
-                    {
-                        targetUnit.Namespaces.Add(this.xsdClassGenerator.Build(item.ObjectXNodes, tibcoBwProcessToGenerate.NameSpace));
-                    }
-                }
-            }
+            targetUnit.Namespaces.AddRange(this.GenerateProcessVariablesNamespaces(tibcoBwProcessToGenerate));
             //7 la methode start avec input starttype et return du endtype
             tibcoBwProcessClassModel.Members.AddRange( this.GenerateMethod (tibcoBwProcessToGenerate));
 
@@ -93,18 +85,31 @@ namespace EaiConverter.Builder
                 }
             }
 
-            foreach (var activity in tibcoBwProcessToGenerate.Activities)
+            var import4Activities = GenerateImport4Activities(tibcoBwProcessToGenerate.Activities);
+
+            imports.AddRange(import4Activities);
+            return imports.ToArray();
+		}
+
+        public List<CodeNamespaceImport> GenerateImport4Activities(List<Activity> activities)
+        {
+            var import4Activities = new List<CodeNamespaceImport>();
+            foreach (var activity in activities)
             {
                 if (activity.Type == ActivityType.callProcessActivityType)
                 {
                     var callProcessActivity = (CallProcessActivity)activity;
-                    imports.Add(new CodeNamespaceImport (ConvertXsdImportToNameSpace(callProcessActivity.TibcoProcessToCall.ShortNameSpace)));
-                    imports.Add(new CodeNamespaceImport (ConvertXsdImportToNameSpace(callProcessActivity.TibcoProcessToCall.InputAndOutputNameSpace)));
+                    import4Activities.Add(new CodeNamespaceImport(ConvertXsdImportToNameSpace(callProcessActivity.TibcoProcessToCall.ShortNameSpace)));
+                    import4Activities.Add(new CodeNamespaceImport(ConvertXsdImportToNameSpace(callProcessActivity.TibcoProcessToCall.InputAndOutputNameSpace)));
                 }
+                else
+                    if (activity.Type == ActivityType.groupActivityType)
+                    {
+                        import4Activities.AddRange(this.GenerateImport4Activities(((GroupActivity)activity).Activities));
+                    }
             }
-
-            return imports.ToArray();
-		}
+            return import4Activities;
+        }
 
         public static string ConvertXsdImportToNameSpace(string schemaLocation)
         {
@@ -299,11 +304,11 @@ namespace EaiConverter.Builder
         }
 
         // Todo : To rename and refavtor because not SRP
-		public CodeNamespaceCollection GenerateActivityClasses (TibcoBWProcess tibcoBwProcessToGenerate)
+        public CodeNamespaceCollection GenerateActivityClasses (List<Activity> activities)
 		{
             var activityBuilderFactory = new ActivityBuilderFactory();
 			var activityClasses = new CodeNamespaceCollection ();
-			foreach (var activity in tibcoBwProcessToGenerate.Activities) {
+            foreach (var activity in activities) {
                 //TODO : faut il mieux 2 method ou 1 objet avec les 2
                 var activityBuilder = activityBuilderFactory.Get(activity.Type);
 
@@ -314,7 +319,22 @@ namespace EaiConverter.Builder
 			}
 			return activityClasses;
 		}
-  
+
+        CodeNamespaceCollection GenerateProcessVariablesNamespaces(TibcoBWProcess tibcoBwProcessToGenerate)
+        {
+            CodeNamespaceCollection processVariableNameNamespaces = new CodeNamespaceCollection();
+            if (tibcoBwProcessToGenerate.ProcessVariables != null)
+            {
+                foreach (var item in tibcoBwProcessToGenerate.ProcessVariables)
+                {
+                    if (!IsBasicType(item.Parameter.Type))
+                    {
+                        processVariableNameNamespaces.Add(this.xsdClassGenerator.Build(item.ObjectXNodes, tibcoBwProcessToGenerate.NameSpace));
+                    }
+                }
+            }
+            return processVariableNameNamespaces;
+        }  
        
         bool IsBasicType(string type)
         {
