@@ -34,15 +34,29 @@ namespace EaiConverter.Builder
             if (activityName == exitBeforeActivityName) {
                 return codeStatementCollection;
             }
+             
+            var invocationCode = this.GetActivityInvocationCodeStatement(activityName, activityToServiceMapping);
 
-            var invocationCode = this.GetActivityInvocationCodeStatement ( activityName, activityToServiceMapping);
+            string startPointOfTryCatch = TransitionUtils.ToActivityOfErrorTransitionFrom (activityName, processTransitions);
 
-            if (invocationCode != null)
+            if (invocationCode != null && startPointOfTryCatch==null)
             {
                 codeStatementCollection.AddRange(invocationCode);
             }
+            else if (startPointOfTryCatch != null)
+            {
+                // Defines a try statement that calls the ThrowApplicationException method.
+                CodeTryCatchFinallyStatement try1 = new CodeTryCatchFinallyStatement();
+                try1.TryStatements.AddRange( invocationCode );
+                codeStatementCollection.Add( try1 );                    
 
-            List<Transition> tranz = TransitionUtils.GetTransitionsFrom (processTransitions, activityName);
+                // Defines a catch clause for any remaining unhandled exception types.
+                CodeCatchClause catch1 = new CodeCatchClause("ex");
+                catch1.Statements.AddRange( this.GenerateStartCodeStatement (processTransitions, startPointOfTryCatch, null, activityToServiceMapping));
+                try1.CatchClauses.Add( catch1 );
+            }
+
+            List<Transition> tranz = TransitionUtils.GetValidTransitionsFrom ( activityName, processTransitions);
             if (tranz.Count == 0) {
                 return codeStatementCollection;
             } else if (tranz.Count == 1) {
@@ -85,8 +99,7 @@ namespace EaiConverter.Builder
             }
             return codeStatementCollection;
         }
-
-
+            
 	}
 }
 

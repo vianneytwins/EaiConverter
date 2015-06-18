@@ -41,17 +41,37 @@ namespace EaiConverter.Test.Builder.Utils
 			}
 		};
 
+
+        List <Transition> errorProcessTransitions = new List <Transition> {
+            new Transition {
+                FromActivity = "start",
+                ToActivity = "step1",
+                ConditionType = ConditionType.always
+            },
+            new Transition {
+                FromActivity = "step1",
+                ToActivity = "End",
+                ConditionType = ConditionType.xpath,
+                ConditionPredicateName = "Condition1"
+            },
+            new Transition {
+                FromActivity = "step1",
+                ToActivity = "step2",
+                ConditionType = ConditionType.error
+            }
+        };
+
 		[Test]
 		public void Should_Return_Step3_And_End_When_retrieving_of_All_next_Activities_From_Step1 () {
 			List<string> expected = new List<string>{"step3","End" };
-			var nextCommonActivity = TransitionUtils.GetAllNextActivities ( this.complexProcessTransitions, "step1");
+            var nextCommonActivity = TransitionUtils.GetAllNextActivities ( "step1", this.complexProcessTransitions);
 			Assert.AreEqual (expected, nextCommonActivity);
 		}
 
 		[Test]
 		public void Should_Return_All_Activities_When_retrieving_of_All_next_Activities_From_Start () {
 			List<string> expected = new List<string>{"step1","step3","End","step2","End"};
-			var nextCommonActivity = TransitionUtils.GetAllNextActivities ( this.complexProcessTransitions, "start");
+            var nextCommonActivity = TransitionUtils.GetAllNextActivities ( "start", this.complexProcessTransitions);
 			Assert.AreEqual (expected, nextCommonActivity);
 		}
 
@@ -67,6 +87,11 @@ namespace EaiConverter.Test.Builder.Utils
 			this.complexProcessTransitions.Sort ();
 			Assert.AreEqual (ConditionType.otherwise, this.complexProcessTransitions[4].ConditionType);
 		}
+            
+        [Test]
+        public void Should_Return_true_When_an_Error_transition_exist_from_the_given_activity () {
+            Assert.AreEqual ("step2", TransitionUtils.ToActivityOfErrorTransitionFrom( "step1", this.errorProcessTransitions));
+        }
 
 	}
 }

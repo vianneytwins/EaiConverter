@@ -6,16 +6,25 @@ namespace EaiConverter.Builder.Utils
 {
 	public class TransitionUtils
 	{
-		public static List<Transition>  GetTransitionsFrom(List<Transition> transitions, string activityName){
+        public static List<Transition>  GetValidTransitionsFrom(string activityName, List<Transition> transitions){
 			List<Transition>  returnedTransistion = new List<Transition>();
 			foreach (var transition in transitions) {
-				if (transition.FromActivity == activityName) {
+                if (transition.FromActivity == activityName && transition.ConditionType != ConditionType.error) {
 					returnedTransistion.Add (transition);
 				}
 			}
 			return returnedTransistion;
 		}
 
+        public static string ToActivityOfErrorTransitionFrom(string activityName, List<Transition> transitions)
+        {
+            foreach (var transition in transitions) {
+                if (transition.FromActivity == activityName && transition.ConditionType ==ConditionType.error) {
+                    return transition.ToActivity;
+                }
+            }
+            return null;
+        }
 
 		// first draft based on max 2 paths
 		// TODO : Increase number of possible path
@@ -24,25 +33,27 @@ namespace EaiConverter.Builder.Utils
 			if (activityNames.Count != 2) {
 				throw new NotImplementedException();
 			}
-			List<string> allNextActivitiesPath1 = GetAllNextActivities (transitions, activityNames[0] );
-			List<string> allNextActivitiesPath2 = GetAllNextActivities (transitions, activityNames[1] );
+            List<string> allNextActivitiesPath1 = GetAllNextActivities (activityNames[0], transitions);
+            List<string> allNextActivitiesPath2 = GetAllNextActivities (activityNames[1], transitions);
 
 			foreach (var activity in allNextActivitiesPath1) {
 				if (allNextActivitiesPath2.Contains (activity)) {
 					return activity;
 				}
 			}
-			throw new NotImplementedException();
+
+            return null;
+			//throw new NotImplementedException();
 
 		}
 
-		public static List<string> GetAllNextActivities ( List<Transition> transitions, string activityName)
+        public static List<string> GetAllNextActivities (string activityName, List<Transition> transitions)
 		{
-			var transitionFrom = GetTransitionsFrom (transitions, activityName);
+            var transitionFrom = GetValidTransitionsFrom ( activityName, transitions);
 			var nextActivities = new List<string> ();
 			foreach (var transition in transitionFrom) {
 				nextActivities.Add (transition.ToActivity);
-				nextActivities.AddRange (GetAllNextActivities (transitions, transition.ToActivity));
+                nextActivities.AddRange (GetAllNextActivities (transition.ToActivity, transitions));
 			}
 			return nextActivities;
 		}

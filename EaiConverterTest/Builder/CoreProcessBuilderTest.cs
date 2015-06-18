@@ -68,6 +68,25 @@ namespace EaiConverter.Test.Builder
             }
         };
 
+        List <Transition> errorProcessTransitions = new List <Transition> {
+            new Transition {
+                FromActivity = "start",
+                ToActivity = "step1",
+                ConditionType = ConditionType.always
+            },
+            new Transition {
+                FromActivity = "step1",
+                ToActivity = "End",
+                ConditionType = ConditionType.xpath,
+                ConditionPredicateName = "Condition1"
+            },
+            new Transition {
+                FromActivity = "step1",
+                ToActivity = "step2",
+                ConditionType = ConditionType.error
+            }
+        };
+
 		[SetUp]
 		public void SetUp(){
 			this.builder = new CoreProcessBuilder ();
@@ -81,6 +100,29 @@ namespace EaiConverter.Test.Builder
             tibcoBWProcess.StartActivity = new Activity("start", ActivityType.startType);
             tibcoBWProcess.EndActivity = new Activity("End", ActivityType.endType);
             tibcoBWProcess.Transitions = this.simpleProcessTransitions;
+
+            var codeStatementCollection = this.builder.GenerateStartCodeStatement (tibcoBWProcess.Transitions, tibcoBWProcess.StartActivity.Name, null, activitiesToServiceMapping);
+
+            var classesInString = TestCodeGeneratorUtils.GenerateCode (codeStatementCollection);
+
+            Assert.AreEqual (expected, classesInString);
+        }
+
+        [Test]
+        public void Should_Return_ERROR_Start_Method_Body(){
+            var expected = @"try
+{
+    this.step1Service.ExecuteQuery();
+}
+catch (System.Exception ex)
+{
+    this.step2Service.ExecuteQuery();
+}
+";
+            var tibcoBWProcess = new TibcoBWProcess("MyTestProcess");
+            tibcoBWProcess.StartActivity = new Activity("start", ActivityType.startType);
+            tibcoBWProcess.EndActivity = new Activity("End", ActivityType.endType);
+            tibcoBWProcess.Transitions = this.errorProcessTransitions;
 
             var codeStatementCollection = this.builder.GenerateStartCodeStatement (tibcoBWProcess.Transitions, tibcoBWProcess.StartActivity.Name, null, activitiesToServiceMapping);
 
@@ -112,7 +154,6 @@ else
 
             Assert.AreEqual (expected, classesInString);
         }
-
 
         public static CodeMethodInvokeExpression DefaultInvocationMethod (string activityName){
             var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(activityName));
