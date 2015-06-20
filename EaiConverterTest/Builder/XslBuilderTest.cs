@@ -276,6 +276,45 @@ FundCompany.FundNames.Add(FundName);
 
             Assert.AreEqual ("FundCompany.FundName", variableReference);
         }
+
+        [Test]
+        public void Should_manage_Null_value_when_no_Parent(){
+            var xml =
+                @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+                <FundName  xsi:nil=""true""/>
+</pd:inputBindings>
+";
+            XElement doc = XElement.Parse(xml);
+            var codeStatement = xslBuilder.Build (doc.Nodes());
+            string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
+            Assert.AreEqual (
+                @"object FundName = null;
+", generateCode);
+        }
+
+
+        [Test]
+        public void Should_Return_manage_null_value_when_parent_are_present (){
+            var xml =
+                @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+<sqlParams>        
+<FundName>
+            <xsl:value-of select=""'testvalue'""/>
+        </FundName>
+        <AdminID xsi:nil=""true"">
+        </AdminID>
+</sqlParams>  
+</pd:inputBindings>
+";
+            XElement doc = XElement.Parse(xml);
+
+            var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build (doc.Nodes()));
+
+            Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
+sqlParams.FundName = ""testvalue"";
+sqlParams.AdminID = null;
+", generateCode.ToString());
+        }
 	}
 }
 
