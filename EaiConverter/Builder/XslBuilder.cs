@@ -4,6 +4,7 @@ using System.Xml.Linq;
 using System.Text;
 using System.CodeDom;
 using EaiConverter.Parser.Utils;
+using System.Linq;
 
 namespace EaiConverter.Builder
 {
@@ -32,13 +33,36 @@ namespace EaiConverter.Builder
             {
                 return codeStatements;
             }
+            bool isAlistElement = false;
+
+            var listElements = new Dictionary<string,bool>();
+
             foreach(var inputNode in inputNodes)
             {
                 var element = (XElement) inputNode;
                 if (element.Name.NamespaceName != XmlnsConstant.xslNameSpace) {
                     string returnType = this.DefineReturnType(element);
                     string variableReference = this.DefineVariableReference(element, parent);
-                    if (returnType==null)
+                    isAlistElement = this.IsAListElement(element, inputNodes);
+                    var hasTheListBeenInitialised = false;
+
+                    if (isAlistElement)
+                    {
+                        hasTheListBeenInitialised = listElements.ContainsKey(element.Name.ToString());
+                        if (!hasTheListBeenInitialised)
+                        {
+                            if (string.IsNullOrEmpty(parent))
+                            {
+                                codeStatements.Append("List<"+returnType + "> ");
+                            }
+
+                            codeStatements.Append(variableReference + " = new List<" +returnType + ">();\n") ;
+                            listElements.Add(element.Name.ToString(), true);
+                        }
+                        //recursive call to get the value
+                        codeStatements.Append(variableReference + ".Add(" +this.Build(element.Nodes(),parent) + ");\n") ;
+                    }
+                    else if (returnType == null)
                     {
                         //TODO ugly thing need to find a way to get the real type
                         if (string.IsNullOrEmpty(parent))
@@ -56,7 +80,7 @@ namespace EaiConverter.Builder
                         codeStatements.Append(variableReference + " = ");
 
                         //recursive call to get the value
-                        codeStatements.Append(this.Build(element.Nodes(),parent));
+                        codeStatements.Append(this.Build(element.Nodes(),parent)+";\n");
                     }
                     else
                     {
@@ -81,12 +105,13 @@ namespace EaiConverter.Builder
                     }
 
                 } else {
-                    if (element.Name.LocalName =="value-of"){
-                        codeStatements.Append( this.ReturnValue(element) + ";\n");
-                    } else if (element.Name.LocalName =="if"){
-                        codeStatements.Append("if (" + ReturnCondition(element) + "){\n");
-                        codeStatements.Append(this.Build(element.Nodes(), parent));
-                        codeStatements.Append("}\n");
+                    if (element.Name.LocalName =="value-of")
+                    {
+                        codeStatements.Append( this.ReturnValue(element));
+                    }
+                    else if (element.Name.LocalName =="if")
+                    {
+                        codeStatements.Append(this.ManageConditionTag(element, parent, true));
                     }
                     else if (element.Name.LocalName =="choose")
                     {
@@ -94,32 +119,45 @@ namespace EaiConverter.Builder
                     }
                     else if (element.Name.LocalName =="when")
                     {
-                        codeStatements.Append("if (" + ReturnCondition(element) + "){\n");
-                        codeStatements.Append(this.Build(element.Nodes(), parent));
-                        codeStatements.Append("}\n");
+                        codeStatements.Append(this.ManageConditionTag(element, parent, true));
                     }
                     else if (element.Name.LocalName =="otherwise")
                     {
-                        codeStatements.Append("else{\n");
-                        codeStatements.Append(this.Build(element.Nodes(), parent));
-                        codeStatements.Append("}\n");
+                        codeStatements.Append(this.ManageConditionTag(element, parent, false));
                     }
                     else if (element.Name.LocalName =="for-each")
                     {
-                        string returnType = this.DefineReturnType(element);
-                        string variableReference = this.DefineVariableReference((XElement)element.FirstNode, null);
-                        string variableListReference = this.DefineVariableReference((XElement)element.FirstNode, parent) +"s";
-                        codeStatements.Append(variableListReference + " = new List<" + returnType + ">();\n");
-                        codeStatements.Append("foreach (var item in "+ this.ReturnValue(element) + "){\n");
-                        codeStatements.Append(this.Build(element.Nodes(), null));
-                        codeStatements.Append(variableListReference+".Add("+variableReference+");\n");
-                        codeStatements.Append("}\n");
+                        codeStatements.Append(this.ManageIterationTag(element, parent));
                     }
                 }
 
             }
             return codeStatements;
 
+        }
+
+        StringBuilder ManageIterationTag(XElement element, string parent)
+        {
+            var codeStatements = new StringBuilder();
+            string returnType = this.DefineReturnType(element);
+            string variableReference = this.DefineVariableReference((XElement)element.FirstNode, null);
+            string variableListReference = this.DefineVariableReference((XElement)element.FirstNode, parent) + "s";
+            codeStatements.Append(variableListReference + " = new List<" + returnType + ">();\n");
+            codeStatements.Append("foreach (var item in " + this.ReturnValue(element) + "){\n");
+            codeStatements.Append(this.Build(element.Nodes(), null));
+            codeStatements.Append(variableListReference + ".Add(" + variableReference + ");\n");
+            codeStatements.Append("}\n");
+            return codeStatements;
+        }
+
+        StringBuilder ManageConditionTag(XElement element, string parent, bool isIfCondition)
+        {
+            var codeStatements = new StringBuilder();
+            var test = isIfCondition ? "if (" + this.ReturnCondition(element) + "){\n" : "else{\n"; 
+            codeStatements.Append(test);
+            codeStatements.Append(this.Build(element.Nodes(), parent));
+            codeStatements.Append("}\n");
+            return codeStatements;
         }
 
         public string ReturnValue(XElement element)
@@ -180,6 +218,19 @@ namespace EaiConverter.Builder
             return parent+ "." + elementTypes[0];
         }
 
+        public bool IsAListElement(XElement inputElement, IEnumerable<XNode> inputNodes)
+        {
+            int count = (from a in inputNodes
+                    where ((XElement)a).Name == inputElement.Name
+                select a).Count();
+            
+            if (count > 1)
+            {
+                return true;
+            }
+            return false;
+        }
+
         private void RetrieveAllTypeInTheElement(IEnumerable<XNode> inputedElement, List<string> elementTypes)
         {
             foreach (XElement item in inputedElement)
@@ -200,8 +251,6 @@ namespace EaiConverter.Builder
                     else{
                         elementTypes.Add("string");
                     }
-                    
-
                 }
 
                 if (item.HasElements)

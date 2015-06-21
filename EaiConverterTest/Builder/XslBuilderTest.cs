@@ -315,6 +315,32 @@ sqlParams.FundName = ""testvalue"";
 sqlParams.AdminID = null;
 ", generateCode.ToString());
         }
+
+        [Test]
+        public void Should_Return_manage_List_value (){
+            var xml =
+                @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" >
+    <sqlParams>        
+        <param>
+            <xsl:value-of select=""'testvalue1'""/>
+        </param>
+        <param >
+            <xsl:value-of select=""'testvalue2'""/>
+        </param>
+    </sqlParams>  
+</pd:inputBindings>
+";
+            XElement doc = XElement.Parse(xml);
+
+            var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build (doc.Nodes()));
+
+            Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
+sqlParams.param = new List<string>();
+sqlParams.param.Add(""testvalue1"");
+sqlParams.param.Add(""testvalue2"");
+
+", generateCode.ToString());
+        }
 	}
 }
 
