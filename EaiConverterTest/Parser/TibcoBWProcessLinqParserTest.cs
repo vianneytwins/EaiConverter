@@ -49,6 +49,14 @@ namespace EaiConverter.Test.Parser
         }
 
         [Test]
+        public void Should_return_description ()
+        {
+            string xml = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""><pd:name>repertoire/myProcessName.process</pd:name><pd:label><pd:description>my description</pd:description></pd:label></pd:ProcessDefinition>";
+            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+            Assert.AreEqual ("my description", tibcoBWProcess.Description);
+        }
+
+        [Test]
         public void Should_return_Xsd_Import ()
         {
             string xml = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""><pd:name>repertoire/myProcessName.process</pd:name>

@@ -83,6 +83,7 @@
     <Compile Include="Utils\TestCodeGeneratorUtils.cs" />
     <Compile Include="Parser\Utils\XElementParserUtilsTest.cs" />
     <Compile Include="Builder\GroupActivityBuilderTest.cs" />
+    <Compile Include="Builder\TibcoXslUtilBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />

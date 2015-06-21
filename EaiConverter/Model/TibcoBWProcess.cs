@@ -30,6 +30,8 @@ namespace EaiConverter.Model
 		public string ProcessName { get; private set;}
 		public string FullProcessName { get; private set;}
 
+        public string Description { get; set;}
+
         public Activity StartActivity { get; set;}
 
         public Activity StarterActivity
