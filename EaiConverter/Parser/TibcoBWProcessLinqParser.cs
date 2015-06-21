@@ -12,9 +12,11 @@ namespace EaiConverter.Parser
 	{
 		
         XsdParser xsdParser;
+        ActivityParserFactory activityParserFactory;
 
         public TibcoBWProcessLinqParser(){
             this.xsdParser = new XsdParser ();
+            this.activityParserFactory = new ActivityParserFactory();
         }
         public TibcoBWProcess Parse (string filePath)
 		{
@@ -32,6 +34,8 @@ namespace EaiConverter.Parser
             tibcoBwProcess.XsdImports = this.ParseXsdImports (allFileElement);
 
             tibcoBwProcess.StartActivity = this.ParseStartOrEndActivity (allFileElement, tibcoBwProcess.InputAndOutputNameSpace,  ActivityType.startType);
+
+            tibcoBwProcess.StarterActivity = this.ParseStarterActivity (allFileElement);
 
             tibcoBwProcess.EndActivity = this.ParseStartOrEndActivity (allFileElement, tibcoBwProcess.InputAndOutputNameSpace, ActivityType.endType);
 
@@ -106,6 +110,18 @@ namespace EaiConverter.Parser
 			return activity;
 		}
 
+        public Activity ParseStarterActivity(XElement allFileElement)
+        {
+            var element = allFileElement.Element (XmlnsConstant.tibcoProcessNameSpace + "starter");
+
+            if (element ==null)
+            {
+                return null;
+            }
+            var activity = this.ParseActivity(element);
+            return activity;
+        }
+
         public List<ProcessVariable> ParseProcessVariables(XElement allFileElement)
         {
             var xElement = allFileElement.Element (XmlnsConstant.tibcoProcessNameSpace + "processVariables");
@@ -162,17 +178,9 @@ namespace EaiConverter.Parser
             IEnumerable<XElement> activityElements = from element in allFileElement.Elements (XmlnsConstant.tibcoProcessNameSpace + "activity")
                 select element;
             var activities = new List<Activity> ();
-            var activityParserFactory = new ActivityParserFactory();
 
             foreach (XElement element in activityElements) {
-                var activityType = element.Element (XmlnsConstant.tibcoProcessNameSpace + "type").Value;
-                Activity activity;
-                var activityParser = activityParserFactory.GetParser(activityType);
-                if (activityParser != null ) {
-                    activity = activityParser.Parse (element);
-                } else {
-                    activity = new Activity (element.Attribute ("name").Value, ActivityType.NotHandleYet);
-                } 
+                var activity = this.ParseActivity(element);
                 activities.Add (activity);
             }
             return activities;
@@ -214,6 +222,22 @@ namespace EaiConverter.Parser
 
             return activities;
          }
+
+        Activity ParseActivity(XElement element)
+        {
+            var activityType = element.Element(XmlnsConstant.tibcoProcessNameSpace + "type").Value;
+            Activity activity;
+            var activityParser = this.activityParserFactory.GetParser(activityType);
+            if (activityParser != null)
+            {
+                activity = activityParser.Parse(element);
+            }
+            else
+            {
+                activity = new Activity(element.Attribute("name").Value, ActivityType.NotHandleYet);
+            }
+            return activity;
+        }
 	}
 }
 

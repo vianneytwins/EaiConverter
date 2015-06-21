@@ -16,10 +16,11 @@ namespace EaiConverter.Model
 		{
 		} 
 
-		public string Name { get; set;}
-        public ActivityType Type { get; set;}
+		public string Name {get; set;}
 
-		public List<ClassParameter> Parameters { get; set;}
+        public ActivityType Type {get; set;}
+
+		public List<ClassParameter> Parameters {get; set;}
 
 		public IEnumerable<XNode> ObjectXNodes {
 			get;

@@ -30,7 +30,14 @@ namespace EaiConverter.Model
 		public string ProcessName { get; private set;}
 		public string FullProcessName { get; private set;}
 
-		public Activity StartActivity { get; set;}
+        public Activity StartActivity { get; set;}
+
+        public Activity StarterActivity
+        {
+            get;
+            set;
+        }
+
 		public Activity EndActivity { get; set;}
 
 		public List<Activity> Activities { get; set;}
@@ -50,7 +57,8 @@ namespace EaiConverter.Model
 			}
 		}
 		public string InputAndOutputNameSpace {
-			get {
+			get
+            {
 				return NameSpace + ".InputOutputModel";
 			}
 
