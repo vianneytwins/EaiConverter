@@ -36,6 +36,8 @@ namespace EaiConverter.Builder
 			tibcoBwProcessClassModel.IsClass = true;
 			tibcoBwProcessClassModel.TypeAttributes = TypeAttributes.Public;
 
+            tibcoBwProcessClassModel.Comments.Add(new CodeCommentStatement (tibcoBwProcessToGenerate.Description));
+                
 			// 3 les membres privee : les activité injecte
 			tibcoBwProcessClassModel.Members.AddRange( this.GeneratePrivateFields (tibcoBwProcessToGenerate));
 
