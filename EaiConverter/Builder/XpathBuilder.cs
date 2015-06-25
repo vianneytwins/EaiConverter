@@ -12,10 +12,17 @@ namespace EaiConverter.Builder
             expression = expression.Replace('/','.');
 
             //TODO swith format and date
-            expression = expression.Replace("tib:parse-dateTime(","TibcoXslHelper.DateTime(");
-            expression = expression.Replace("tib:parse-date(","TibcoXslHelper.DateTime(");
+            expression = expression.Replace("tib:parse-dateTime(","TibcoXslHelper.ParseDateTime(");
+            expression = expression.Replace("tib:parse-date(","TibcoXslHelper.ParseDateTime(");
+            expression = expression.Replace("tib:parse-time(","TibcoXslHelper.ParseDateTime(");
 
-            expression = expression.Replace("number(","TibcoXslHelper.Number(");
+
+            //tib:format-dateTime(<<format>>, <<dateTime>>)
+            expression = expression.Replace("tib:format-dateTime(","TibcoXslHelper.FormatDateTime(");
+            expression = expression.Replace("tib:format-date(","TibcoXslHelper.FormatDateTime(");
+            expression = expression.Replace("tib:format-time(","TibcoXslHelper.FormatDateTime(");
+
+            expression = expression.Replace("number(","TibcoXslHelper.ParseNumber(");
             expression = expression.Replace("tib:round-fraction(","Math.Round(");
 
             // concat in xsl is used like that concat(' add this', variable1, '  to that', variable2) and must be replace by something similar
@@ -29,7 +36,7 @@ namespace EaiConverter.Builder
             expression = expression.Replace("exists(","TibcoXslHelper.Exist(");
 
             // exemple of translate : translate (myvaraible/value, '&#xA;', '')
-            expression = expression.Replace("translate(","TibcoXslHelper.Exist(");
+            expression = expression.Replace("translate(","TibcoXslHelper.Translate(");
 
             // exemple of current-dateTime()
             expression = expression.Replace("current-dateTime()","DateTime.Now");
@@ -48,17 +55,27 @@ namespace EaiConverter.Builder
 
 
             // usage tib:compare-date( : tib:compare-date(date1, date2) , return 0 if equals
-            expression = expression.Replace("tib:compare-date(","TibcoXslHelper.TranslateTimezone(");
+            expression = expression.Replace("tib:compare-date(","TibcoXslHelper.CompareDate(");
 
             // usage upper-case : upper-case (mystring)
             expression = expression.Replace("upper-case(","TibcoXslHelper.UpperCase(");
+
+            expression = expression.Replace("lower-case(","TibcoXslHelper.LowerCase(");
+
+            // tib:getCurrentProcessName(<processID>): Fetches the process name associated with the specified <processID>
+            expression = expression.Replace("tib:getCurrentProcessName(","TibcoXslHelper.GetCurrentProcessName(");
+
+            //tib:getCurrentActivityName(<processID>): Fetches the activity name associated with the specified <processID>
+            expression = expression.Replace("tib:getCurrentActivityName(","TibcoXslHelper.GetCurrentActivityName(");
+
+            //tib:getHostName()
+            expression = expression.Replace("tib:getHostName(","TibcoXslHelper.GetHostName(");
 
             expression = expression.Replace("&quot;",@"""");
             expression = expression.Replace(" div "," / ");
             expression = expression.Replace(" or "," || ");
             expression = expression.Replace(" and "," && ");
 
-            //TODO tib:trim(, , tib:translate-timezone(, 
             return expression;
         }
 

@@ -43,7 +43,6 @@ namespace EaiConverter.Test.Builder
         }
 
         [Test]
-        [Ignore]
         public void Should_Return_1_Variable_assignement_with_double_Type (){
             var xml =
                 @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
@@ -57,13 +56,12 @@ namespace EaiConverter.Test.Builder
             var codeStatement = xslBuilder.Build (doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual (@"double FundName = double.Parse(""testvalue"");
+            Assert.AreEqual (@"double FundName = TibcoXslHelper.ParseNumber(""testvalue"");
 
 ", generateCode);
         }
 
         [Test]
-        [Ignore]
         public void Should_Return_1_Variable_assignement_with_DateTime_Type (){
             var xml =
                 @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
@@ -77,7 +75,7 @@ namespace EaiConverter.Test.Builder
             var codeStatement = xslBuilder.Build (doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual (@"DateTime FundName = DateTime.ParseExact($Mystuff, ""MMM dd yyyy"", null);
+            Assert.AreEqual (@"DateTime FundName = TibcoXslHelper.ParseDateTime(""MMM dd yyyy"", Mystuff);
 ", generateCode);
 
         }

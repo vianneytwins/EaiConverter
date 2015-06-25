@@ -117,6 +117,7 @@
     <Compile Include="Model\GroupActivity.cs" />
     <Compile Include="Builder\GroupActivityBuilder.cs" />
     <Compile Include="Builder\TibcoXslUtilBuilder.cs" />
+    <Compile Include="ressources\TibcoXslUtil.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
