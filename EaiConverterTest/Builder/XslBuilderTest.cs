@@ -75,8 +75,7 @@ namespace EaiConverter.Test.Builder
             var codeStatement = xslBuilder.Build (doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual (@"DateTime FundName = TibcoXslHelper.ParseDateTime(""MMM dd yyyy"", Mystuff);
-", generateCode);
+            Assert.AreEqual ("DateTime FundName = TibcoXslHelper.ParseDateTime(\"MMM dd yyyy\", Mystuff);\n\n", generateCode);
 
         }
 
