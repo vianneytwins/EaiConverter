@@ -25,6 +25,12 @@ namespace EaiConverter.Parser
                 return new NullActivityParser ();
             } else if (activityType == ActivityType.javaActivityType.ToString() ){
                 return new JavaActivityParser ();
+            } else if (activityType == ActivityType.setSharedVariableActivityType.ToString() ){
+                return new SetSharedVariableActivityParser ();
+            } else if (activityType == ActivityType.rdvPubActivityType.ToString() ){
+                return new RdvPublishActivityParser ();
+            } else if (activityType == ActivityType.rdvEventSourceActivityType.ToString() ){
+                return new RdvEventSourceActivityParser ();
             } else {
                 return null;
             } 

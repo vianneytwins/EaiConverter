@@ -118,6 +118,12 @@
     <Compile Include="Builder\GroupActivityBuilder.cs" />
     <Compile Include="Builder\TibcoXslUtilBuilder.cs" />
     <Compile Include="ressources\TibcoXslUtil.cs" />
+    <Compile Include="Parser\SetSharedVariableActivityParser.cs" />
+    <Compile Include="Model\SetSharedVariableActivity.cs" />
+    <Compile Include="Parser\RdvPublishActivityParser.cs" />
+    <Compile Include="Model\RdvPublishActivity.cs" />
+    <Compile Include="Parser\RdvEventSourceActivityParser.cs" />
+    <Compile Include="Model\RdvEventSourceActivity.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
