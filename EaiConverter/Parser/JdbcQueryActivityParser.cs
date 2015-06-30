@@ -26,9 +26,13 @@ namespace EaiConverter.Parser
             if (jdbcQueryActivity.Type == ActivityType.jdbcCallActivityType) {
 				jdbcQueryActivity.QueryStatement = XElementParserUtils.GetStringValue (configElement.Element ("ProcedureName"));
 				// TODO : faut il enlever le ;1 à la fin ? je dirai que oui, à moins que cela donne la position du return dans la liste en dessous..bizarre
-				jdbcQueryActivity.QueryStatement = jdbcQueryActivity.QueryStatement.Remove (jdbcQueryActivity.QueryStatement.LastIndexOf (';'), 2);
+                if (jdbcQueryActivity.QueryStatement.Contains(";"))
+                {
+                    jdbcQueryActivity.QueryStatement =
+                        jdbcQueryActivity.QueryStatement.Remove(jdbcQueryActivity.QueryStatement.LastIndexOf(';'), 2);
+                }
 
-				var preparedParamDataTypeElement = configElement.Element ("parameterTypes");
+                var preparedParamDataTypeElement = configElement.Element ("parameterTypes");
 				jdbcQueryActivity.QueryStatementParameters = new Dictionary <string, string> ();
 
 				var parameterElements = preparedParamDataTypeElement.Elements ("parameter");
