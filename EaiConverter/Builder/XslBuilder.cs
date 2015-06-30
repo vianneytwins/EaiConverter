@@ -8,25 +8,30 @@ using System.Linq;
 
 namespace EaiConverter.Builder
 {
+    using System.Text.RegularExpressions;
+
     public class XslBuilder
     {
 
         private IXpathBuilder xpathBuilder;
         //xsi:nil="true"
 
-        public XslBuilder (IXpathBuilder xpathBuilder){
+        public XslBuilder(IXpathBuilder xpathBuilder)
+        {
             this.xpathBuilder = xpathBuilder;
         }
 
-        public CodeStatementCollection Build (IEnumerable<XNode> inputNodes){
+        public CodeStatementCollection Build(IEnumerable<XNode> inputNodes)
+        {
             var codeInStringList = this.Build(inputNodes, null);
-            var codeSnippet = new CodeSnippetStatement (codeInStringList.ToString());
+            var codeSnippet = new CodeSnippetStatement(codeInStringList.ToString());
             var codeStatements = new CodeStatementCollection();
             codeStatements.Add(codeSnippet);
             return codeStatements;
         }
 
-        private StringBuilder Build (IEnumerable<XNode> inputNodes, string parent){
+        private StringBuilder Build(IEnumerable<XNode> inputNodes, string parent)
+        {
 
             var codeStatements = new StringBuilder();
             if (inputNodes == null)
@@ -35,12 +40,13 @@ namespace EaiConverter.Builder
             }
             bool isAlistElement = false;
 
-            var listElements = new Dictionary<string,bool>();
+            var listElements = new Dictionary<string, bool>();
 
-            foreach(var inputNode in inputNodes)
+            foreach (var inputNode in inputNodes)
             {
-                var element = (XElement) inputNode;
-                if (element.Name.NamespaceName != XmlnsConstant.xslNameSpace) {
+                var element = (XElement)inputNode;
+                if (!Regex.IsMatch(element.Name.NamespaceName, XmlnsConstant.xslNameSpace))
+                {
                     string returnType = this.DefineReturnType(element);
                     string variableReference = this.DefineVariableReference(element, parent);
                     isAlistElement = this.IsAListElement(element, inputNodes);
@@ -53,14 +59,14 @@ namespace EaiConverter.Builder
                         {
                             if (string.IsNullOrEmpty(parent))
                             {
-                                codeStatements.Append("List<"+returnType + "> ");
+                                codeStatements.Append("List<" + returnType + "> ");
                             }
 
-                            codeStatements.Append(variableReference + " = new List<" +returnType + ">();\n") ;
+                            codeStatements.Append(variableReference + " = new List<" + returnType + ">();\n");
                             listElements.Add(element.Name.ToString(), true);
                         }
                         //recursive call to get the value
-                        codeStatements.Append(variableReference + ".Add(" +this.Build(element.Nodes(),parent) + ");\n") ;
+                        codeStatements.Append(variableReference + ".Add(" + this.Build(element.Nodes(), parent) + ");\n");
                     }
                     else if (returnType == null)
                     {
@@ -75,12 +81,12 @@ namespace EaiConverter.Builder
                     {
                         if (string.IsNullOrEmpty(parent))
                         {
-                            codeStatements.Append(returnType+" ");
+                            codeStatements.Append(returnType + " ");
                         }
                         codeStatements.Append(variableReference + " = ");
 
                         //recursive call to get the value
-                        codeStatements.Append(this.Build(element.Nodes(),parent)+";\n");
+                        codeStatements.Append(this.Build(element.Nodes(), parent) + ";\n");
                     }
                     else
                     {
@@ -90,7 +96,7 @@ namespace EaiConverter.Builder
                             codeStatements.Append(returnType + " ");
                         }
 
-                        codeStatements.Append(variableReference + " = new " +returnType + "();\n") ;
+                        codeStatements.Append(variableReference + " = new " + returnType + "();\n");
 
 
                         if (string.IsNullOrEmpty(parent))
@@ -99,33 +105,35 @@ namespace EaiConverter.Builder
                         }
                         else
                         {
-                            codeStatements.Append(this.Build(element.Nodes(), parent +"."+ element.Name.ToString()));
+                            codeStatements.Append(this.Build(element.Nodes(), parent + "." + element.Name.ToString()));
                         }
 
                     }
 
-                } else {
-                    if (element.Name.LocalName =="value-of")
+                }
+                else
+                {
+                    if (element.Name.LocalName == "value-of")
                     {
-                        codeStatements.Append( this.ReturnValue(element));
+                        codeStatements.Append(this.ReturnValue(element));
                     }
-                    else if (element.Name.LocalName =="if")
+                    else if (element.Name.LocalName == "if")
                     {
                         codeStatements.Append(this.ManageConditionTag(element, parent, true));
                     }
-                    else if (element.Name.LocalName =="choose")
+                    else if (element.Name.LocalName == "choose")
                     {
                         codeStatements.Append(this.Build(element.Nodes(), parent));
                     }
-                    else if (element.Name.LocalName =="when")
+                    else if (element.Name.LocalName == "when")
                     {
                         codeStatements.Append(this.ManageConditionTag(element, parent, true));
                     }
-                    else if (element.Name.LocalName =="otherwise")
+                    else if (element.Name.LocalName == "otherwise")
                     {
                         codeStatements.Append(this.ManageConditionTag(element, parent, false));
                     }
-                    else if (element.Name.LocalName =="for-each")
+                    else if (element.Name.LocalName == "for-each")
                     {
                         codeStatements.Append(this.ManageIterationTag(element, parent));
                     }
@@ -153,7 +161,7 @@ namespace EaiConverter.Builder
         StringBuilder ManageConditionTag(XElement element, string parent, bool isIfCondition)
         {
             var codeStatements = new StringBuilder();
-            var test = isIfCondition ? "if (" + this.ReturnCondition(element) + "){\n" : "else{\n"; 
+            var test = isIfCondition ? "if (" + this.ReturnCondition(element) + "){\n" : "else{\n";
             codeStatements.Append(test);
             codeStatements.Append(this.Build(element.Nodes(), parent));
             codeStatements.Append("}\n");
@@ -165,7 +173,7 @@ namespace EaiConverter.Builder
             return this.xpathBuilder.Build(element.Attribute("select").Value);
         }
 
-        public string ReturnCondition (XElement element)
+        public string ReturnCondition(XElement element)
         {
             return this.xpathBuilder.Build(element.Attribute("test").Value);
         }
@@ -190,7 +198,7 @@ namespace EaiConverter.Builder
 
         public string DefineReturnType(XElement inputedElement)
         {
-            if (inputedElement.Attribute (XmlnsConstant.xsiNameSpace + "nil")!= null && inputedElement.Attribute (XmlnsConstant.xsiNameSpace + "nil").Value == "true")
+            if (inputedElement.Attribute(XmlnsConstant.xsiNameSpace + "nil") != null && inputedElement.Attribute(XmlnsConstant.xsiNameSpace + "nil").Value == "true")
             {
                 return null;
             }
@@ -215,15 +223,15 @@ namespace EaiConverter.Builder
             {
                 return elementTypes[0];
             }
-            return parent+ "." + elementTypes[0];
+            return parent + "." + elementTypes[0];
         }
 
         public bool IsAListElement(XElement inputElement, IEnumerable<XNode> inputNodes)
         {
             int count = (from a in inputNodes
-                    where ((XElement)a).Name == inputElement.Name
-                select a).Count();
-            
+                         where ((XElement)a).Name == inputElement.Name
+                         select a).Count();
+
             if (count > 1)
             {
                 return true;
@@ -235,20 +243,23 @@ namespace EaiConverter.Builder
         {
             foreach (XElement item in inputedElement)
             {
-                if (item.Name.NamespaceName != XmlnsConstant.xslNameSpace)
+                if (!Regex.IsMatch(item.Name.NamespaceName, XmlnsConstant.xslNameSpace))
                 {
                     elementTypes.Add(item.Name.ToString());
                 }
-                else if (item.Name.LocalName =="value-of")
+                else if (item.Name.LocalName == "value-of")
                 {
                     if (item.Attribute("select").Value.Contains("tib:parse-date"))
                     {
                         elementTypes.Add("DateTime");
 
-                    } else if (item.Attribute("select").Value.StartsWith("number(")){
+                    }
+                    else if (item.Attribute("select").Value.StartsWith("number("))
+                    {
                         elementTypes.Add("double");
                     }
-                    else{
+                    else
+                    {
                         elementTypes.Add("string");
                     }
                 }
@@ -261,6 +272,6 @@ namespace EaiConverter.Builder
             }
         }
 
-}
+    }
 }
 

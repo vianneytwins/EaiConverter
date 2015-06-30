@@ -8,6 +8,8 @@ using EaiConverter.Model;
 
 namespace EaiConverter.Parser
 {
+    using System.Text.RegularExpressions;
+
     public class XslParser
     {
          public List<ClassParameter> Build (IEnumerable<XNode> inputNodes){
@@ -20,7 +22,8 @@ namespace EaiConverter.Parser
             foreach(var inputNode in inputNodes)
             {
                 var element = (XElement) inputNode;
-                if (element.Name.NamespaceName != XmlnsConstant.xslNameSpace) {
+                if (!Regex.IsMatch(element.Name.NamespaceName, XmlnsConstant.xslNameSpace))
+                {
                     string returnType = this.DefineReturnType(element);
                     if (this.IsBasicReturnType(returnType))
                     {
@@ -95,7 +98,7 @@ namespace EaiConverter.Parser
         {
             foreach (XElement item in inputedElement)
             {
-                if (item.Name.NamespaceName != XmlnsConstant.xslNameSpace)
+                if (!Regex.IsMatch(item.Name.NamespaceName, XmlnsConstant.xslNameSpace))
                 {
                     elementTypes.Add(item.Name.ToString());
                 }
