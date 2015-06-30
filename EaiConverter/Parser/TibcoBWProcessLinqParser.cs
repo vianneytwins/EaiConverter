@@ -2,7 +2,7 @@
 using System.Xml.Linq;
 using System.Linq;
 using System.Collections.Generic;
-using Microsoft.CSharp;
+
 using EaiConverter.Model;
 using EaiConverter.Parser.Utils;
 

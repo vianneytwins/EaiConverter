@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using EaiConverter.Model;
 using EaiConverter.Parser;
 using System.Xml.Linq;

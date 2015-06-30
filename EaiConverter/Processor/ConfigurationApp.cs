@@ -1,8 +1,4 @@
 using System;
-using System.Xml;
-using System.IO;
-using System.CodeDom.Compiler;
-using System.CodeDom;
 using System.Collections.Generic;
 
 namespace EaiConverter.Processor

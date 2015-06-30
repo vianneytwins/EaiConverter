@@ -1,5 +1,4 @@
-﻿using System;
-using EaiConverter.Model;
+﻿using EaiConverter.Model;
 using System.CodeDom;
 using EaiConverter.CodeGenerator.Utils;
 
@@ -39,7 +38,6 @@ namespace EaiConverter.Builder
             invocationCodeCollection.Add(codeInvocation);
             return invocationCodeCollection;
         }
-
     }
 }
 

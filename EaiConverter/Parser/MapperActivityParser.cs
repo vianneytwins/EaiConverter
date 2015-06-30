@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Xml.Linq;
 using EaiConverter.Model;
 using EaiConverter.Parser.Utils;
-using EaiConverter.Builder;
 
 namespace EaiConverter.Parser
 {

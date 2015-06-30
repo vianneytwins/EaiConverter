@@ -1,11 +1,5 @@
-using System;
-using System.Xml;
-using System.IO;
-using System.CodeDom.Compiler;
 using System.CodeDom;
 using EaiConverter.CodeGenerator;
-using EaiConverter.Processor;
-using EaiConverter.Parser;
 using EaiConverter.Builder;
 
 namespace EaiConverter.Processor

@@ -1,5 +1,4 @@
-﻿using System;
-using System.CodeDom;
+﻿using System.CodeDom;
 using EaiConverter.Builder.Utils;
 using System.Reflection;
 
@@ -43,10 +42,8 @@ namespace EaiConverter.Builder
             //xmlParserHelperService.Members.Add(this.GenerateFromXmlMethod());
 
             return xmlParserHelperService;
-
         }
-
-
+        
         public CodeMemberMethod GenerateFromXmlMethod()
         {
             CodeMemberMethod fromXmlMethod = new CodeMemberMethod();

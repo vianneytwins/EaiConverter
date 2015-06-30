@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace EaiConverter.Builder
+﻿namespace EaiConverter.Builder
 {
     public class XpathBuilder : IXpathBuilder
     {
@@ -78,7 +76,6 @@ namespace EaiConverter.Builder
 
             return expression;
         }
-
     }
 }
 

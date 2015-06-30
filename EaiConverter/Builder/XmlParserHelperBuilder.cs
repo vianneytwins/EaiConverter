@@ -1,8 +1,4 @@
-﻿using System;
-
-//Need to add them both to import
-using System.IO;
-using System.Xml.Serialization;
+﻿//Need to add them both to import
 using System.CodeDom;
 using EaiConverter.Builder.Utils;
 using System.Reflection;
@@ -51,7 +47,6 @@ namespace EaiConverter.Builder
             xmlParserHelperService.Members.Add(this.GenerateFromXmlMethod());
 
             return xmlParserHelperService;
-
         }
 
 

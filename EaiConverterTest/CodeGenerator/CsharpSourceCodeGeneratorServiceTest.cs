@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using EaiConverter.CodeGenerator;
 using System.CodeDom;
 using System.IO;

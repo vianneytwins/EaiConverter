@@ -1,8 +1,4 @@
-﻿using System;
-using System.Xml.Linq;
-using System.Collections.Generic;
-
-namespace EaiConverter.Model
+﻿namespace EaiConverter.Model
 {
     public class MapperActivity : Activity
     {
