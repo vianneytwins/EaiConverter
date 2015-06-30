@@ -45,6 +45,9 @@ namespace EaiConverter
 				return;
 			}
 
+#if DEBUG
+		    Console.ReadLine();
+#endif
 		}
 
 		static void DisplayErrorMessage ()

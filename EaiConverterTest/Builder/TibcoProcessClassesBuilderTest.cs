@@ -217,6 +217,19 @@ namespace EaiConverter.Test.Builder
             // Assert
             Assert.AreEqual(expected,import);
         }
+
+        [Test]
+        public void Should_Convert_XsdImport_in_Code_namespace_to_import_when_no_slash()
+        {
+            // Arrange
+            var expected = ".Process.DAI.PNO.Common";
+
+            // Act
+            var import = TibcoProcessClassesBuilder.ConvertXsdImportToNameSpace(".Process.DAI.PNO.Common");
+
+            // Assert
+            Assert.AreEqual(expected, import);
+        }
 	}
 }
 

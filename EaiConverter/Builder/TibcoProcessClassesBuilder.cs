@@ -115,10 +115,15 @@ namespace EaiConverter.Builder
 
         public static string ConvertXsdImportToNameSpace(string schemaLocation)
         {
-            string filePath = schemaLocation.Substring(0, schemaLocation.LastIndexOf("/"));
-            filePath = filePath.Remove(0, 1);
-            filePath = filePath.Remove(0, filePath.IndexOf("/")+1);
-            return filePath.Replace("/",".");
+            if (schemaLocation.Contains("/"))
+            {
+                string filePath = schemaLocation.Substring(0, schemaLocation.LastIndexOf("/"));
+                filePath = filePath.Remove(0, 1);
+                filePath = filePath.Remove(0, filePath.IndexOf("/") + 1);
+                return filePath.Replace("/", ".");
+            }
+
+            return schemaLocation;
         }
 
 		public CodeMemberField[] GeneratePrivateFields (TibcoBWProcess tibcoBwProcessToGenerate)

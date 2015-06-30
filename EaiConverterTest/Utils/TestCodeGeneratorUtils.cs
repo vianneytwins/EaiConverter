@@ -6,11 +6,15 @@ using System.IO;
 
 namespace EaiConverter.Test.Utils
 {
+    using System.Collections.Generic;
+
+    using Microsoft.CSharp;
+
     public class TestCodeGeneratorUtils
     {
         public static string GenerateCode (CodeStatementCollection codeStatementCollection)
         {
-            var classGenerator = CodeDomProvider.CreateProvider ("CSharp");
+            CSharpCodeProvider classGenerator = (CSharpCodeProvider)CodeDomProvider.CreateProvider("CSharp");
             var options = new CodeGeneratorOptions ();
             options.BracingStyle = "C";
             string classesInString;

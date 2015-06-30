@@ -30,7 +30,8 @@ namespace EaiConverter.Model
 
     public enum GroupType {
         inputLoop,
-        simpleGroup
+        simpleGroup,
+        repeat
     }
 }
 
