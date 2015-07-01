@@ -41,6 +41,20 @@ namespace EaiConverter.Test.Utils
             }
             return classesInString.RemoveWindowsReturnLineChar();
         }
+
+        public static string GenerateCode (CodeNamespace classToGenerate)
+        {
+            var classGenerator = CodeDomProvider.CreateProvider ("CSharp");
+            var options = new CodeGeneratorOptions ();
+            options.BracingStyle = "C";
+            string classesInString;
+            using (StringWriter writer = new StringWriter ()) {
+                classGenerator.GenerateCodeFromNamespace(classToGenerate, writer, options);
+
+                classesInString = writer.GetStringBuilder ().ToString ();
+            }
+            return classesInString.RemoveWindowsReturnLineChar();
+        }
     }
 }
 

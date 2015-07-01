@@ -8,6 +8,7 @@ namespace EaiConverter.Test.Builder
     [TestFixture]
     public class XsdBuilderTest
     {
+        [Ignore]
         [Test]
         public void Should_Generate_Group_Account_Class()
         {
