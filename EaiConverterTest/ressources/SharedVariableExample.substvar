@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<repository xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.tibco.com/xmlns/repo/types/2002">
+	<globalVariables>
+		<globalVariable>
+			<name>Name test 1</name>
+			<value>value test 1</value>
+			<type>String</type>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<modTime>13304412311412</modTime>
+		</globalVariable>
+		<globalVariable>
+			<name>Name test 2</name>
+			<value>value test 2</value>
+			<type>String</type>
+			<deploymentSettable>true</deploymentSettable>
+			<serviceSettable>false</serviceSettable>
+			<modTime>13304412311411</modTime>
+		</globalVariable>
+	</globalVariables>
+</repository>
+

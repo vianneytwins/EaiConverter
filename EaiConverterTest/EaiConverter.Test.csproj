@@ -84,6 +84,9 @@
     <Compile Include="Parser\Utils\XElementParserUtilsTest.cs" />
     <Compile Include="Builder\GroupActivityBuilderTest.cs" />
     <Compile Include="Builder\TibcoXslUtilBuilderTest.cs" />
+    <Compile Include="Builder\XsdBuilderTest.cs" />
+    <Compile Include="ressources\GroupVariables.cs" />
+    <Compile Include="ressources\GroupVariables2.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />
@@ -91,6 +94,8 @@
     <None Include="ressources\xsdtest.xsd" />
     <None Include="ressources\xsdtest2.xsd" />
     <None Include="packages.config" />
+    <None Include="ressources\GlobalVariables.xsd" />
+    <None Include="ressources\SharedVariableExample.substvar" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Parser\Utils\" />

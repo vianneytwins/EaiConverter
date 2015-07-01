@@ -22,6 +22,7 @@
         public static readonly ActivityType writeToLogActivityType = new ActivityType("com.tibco.pe.core.WriteToLogActivity");
         public static readonly ActivityType generateErrorActivity = new ActivityType("com.tibco.pe.core.GenerateErrorActivity");
         public static readonly ActivityType setSharedVariableActivityType = new ActivityType("com.tibco.pe.core.SetSharedVariableActivity");
+        public static readonly ActivityType getSharedVariableActivityType = new ActivityType("com.tibco.pe.core.GetSharedVariableActivity");
         public static readonly ActivityType groupActivityType = new ActivityType("com.tibco.pe.core.LoopGroup");
 
         public static readonly ActivityType javaActivityType = new ActivityType("com.tibco.plugin.java.JavaActivity");

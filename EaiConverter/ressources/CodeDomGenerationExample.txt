@@ -1,0 +1,121 @@
+
+string fund = "test";
+
+devient
+
+CodeVariableDeclarationStatement _decl1 = new CodeVariableDeclarationStatement();
+CodePrimitiveExpression _value1 = new CodePrimitiveExpression();
+_value1.Value = "test";
+_decl1.InitExpression = _value1;
+_decl1.Name = "fund";
+CodeTypeReference _System_String_type2 = new CodeTypeReference("System.String");
+_decl1.Type = _System_String_type2;
+__ctor_ctor1.Statements.Add(_decl1);
+
+
+-----------------------
+
+double fund = double.Parse("32");
+
+devient
+
+CodeVariableDeclarationStatement _decl1 = new CodeVariableDeclarationStatement();
+CodeMethodInvokeExpression _invoke1 = new CodeMethodInvokeExpression();
+CodePrimitiveExpression _value1 = new CodePrimitiveExpression();
+_value1.Value = "32";
+_invoke1.Parameters.Add(_value1);
+
+CodeMethodReferenceExpression _Parse_method1 = new CodeMethodReferenceExpression();
+_Parse_method1.MethodName = "Parse";
+CodeTypeReferenceExpression _ref1 = new CodeTypeReferenceExpression();
+CodeTypeReference _System_Double_type1 = new CodeTypeReference("System.Double");
+_ref1.Type = _System_Double_type1;
+_Parse_method1.TargetObject = _ref1;
+_invoke1.Method = _Parse_method1;
+_decl1.InitExpression = _invoke1;
+_decl1.Name = "fund";
+CodeTypeReference _System_Double_type2 = new CodeTypeReference("System.Double");
+_decl1.Type = _System_Double_type2;
+__ctor_ctor1.Statements.Add(_decl1);
+
+
+------------------------------
+
+DateTime fundDate = DateTime.ParseExact("JUN 06 2014", "MMM dd yyyy", null);
+
+devient
+
+CodeVariableDeclarationStatement _decl1 = new CodeVariableDeclarationStatement();
+CodeMethodInvokeExpression _invoke1 = new CodeMethodInvokeExpression();
+CodePrimitiveExpression _value1 = new CodePrimitiveExpression();
+_value1.Value = "JUN 06 2014";
+_invoke1.Parameters.Add(_value1);
+
+CodePrimitiveExpression _value2 = new CodePrimitiveExpression();
+_value2.Value = "MMM dd yyyy";
+_invoke1.Parameters.Add(_value2);
+
+CodePrimitiveExpression _value3 = new CodePrimitiveExpression();
+_value3.Value = null;
+_invoke1.Parameters.Add(_value3);
+
+CodeMethodReferenceExpression _ParseExact_method1 = new CodeMethodReferenceExpression();
+_ParseExact_method1.MethodName = "ParseExact";
+CodeVariableReferenceExpression _arg1 = new CodeVariableReferenceExpression();
+_arg1.VariableName = "DateTime";
+_ParseExact_method1.TargetObject = _arg1;
+_invoke1.Method = _ParseExact_method1;
+_decl1.InitExpression = _invoke1;
+_decl1.Name = "fundDate";
+CodeTypeReference _DateTime_type1 = new CodeTypeReference("DateTime");
+_decl1.Type = _DateTime_type1;
+__ctor_ctor1.Statements.Add(_decl1);
+
+
+----------------------
+
+sqlParams sqlParams = new sqlParams();
+sqlParams.FundName = "testvalue";
+sqlParams.AdminID = "EVL";
+
+deveint
+
+
+CodeVariableDeclarationStatement _decl1 = new CodeVariableDeclarationStatement();
+CodeObjectCreateExpression _new1 = new CodeObjectCreateExpression();
+CodeTypeReference _sqlParams_type1 = new CodeTypeReference("sqlParams");
+_new1.CreateType = _sqlParams_type1;
+_decl1.InitExpression = _new1;
+_decl1.Name = "sqlParams";
+CodeTypeReference _sqlParams_type2 = new CodeTypeReference("sqlParams");
+_decl1.Type = _sqlParams_type2;
+__ctor_ctor1.Statements.Add(_decl1);
+
+CodeAssignStatement _assign1 = new CodeAssignStatement();
+CodePropertyReferenceExpression _prop1 = new CodePropertyReferenceExpression();
+_prop1.PropertyName = "FundName";
+CodeVariableReferenceExpression _arg1 = new CodeVariableReferenceExpression();
+_arg1.VariableName = "sqlParams";
+_prop1.TargetObject = _arg1;
+_assign1.Left = _prop1;
+CodePrimitiveExpression _value1 = new CodePrimitiveExpression();
+_value1.Value = "testvalue";
+_assign1.Right = _value1;
+__ctor_ctor1.Statements.Add(_assign1);
+
+CodeAssignStatement _assign2 = new CodeAssignStatement();
+CodePropertyReferenceExpression _prop2 = new CodePropertyReferenceExpression();
+_prop2.PropertyName = "AdminID";
+CodeVariableReferenceExpression _arg2 = new CodeVariableReferenceExpression();
+_arg2.VariableName = "sqlParams";
+_prop2.TargetObject = _arg2;
+_assign2.Left = _prop2;
+CodePrimitiveExpression _value2 = new CodePrimitiveExpression();
+_value2.Value = "EVL";
+_assign2.Right = _value2;
+__ctor_ctor1.Statements.Add(_assign2);
+
+
+
+
+
