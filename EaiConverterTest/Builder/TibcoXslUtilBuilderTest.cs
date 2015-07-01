@@ -1,5 +1,4 @@
-﻿using System;
-using EaiConverter.Builder;
+﻿using EaiConverter.Builder;
 using NUnit.Framework;
 
 namespace EaiConverter.Test.Builder

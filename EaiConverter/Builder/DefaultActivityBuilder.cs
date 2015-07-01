@@ -1,6 +1,5 @@
-using System;
 using EaiConverter.Model;
-using EaiConverter.Builder.Utils;
+
 using System.CodeDom;
 using EaiConverter.CodeGenerator.Utils;
 using System.Collections.Generic;
@@ -8,8 +7,8 @@ using System.Collections.Generic;
 namespace EaiConverter.Builder
 {
     public class DefaultActivityBuilder : IActivityBuilder
-	{
-        public DefaultActivityBuilder(XslBuilder xslbuilder){    }
+    {
+        public DefaultActivityBuilder(XslBuilder xslbuilder) { }
 
         #region IActivityBuilder implementation
         public ActivityCodeDom Build(Activity activity)
@@ -21,27 +20,27 @@ namespace EaiConverter.Builder
         }
         #endregion
 
-        public CodeStatementCollection DefaultInvocationMethod (Activity activity)
+        public CodeStatementCollection DefaultInvocationMethod(Activity activity)
         {
-            var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(activity.Name));
-            var methodInvocation = new CodeMethodInvokeExpression (activityServiceReference, "Execute", new CodeExpression[] {});
+            var activityServiceReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToVariableName(activity.Name));
+            var methodInvocation = new CodeMethodInvokeExpression(activityServiceReference, "Execute", new CodeExpression[] { });
             var invocationCodeCollection = new CodeStatementCollection();
             invocationCodeCollection.AddRange(LogActivity(activity));
             invocationCodeCollection.Add(methodInvocation);
             return invocationCodeCollection;
         }
 
-        public static CodeStatementCollection LogActivity (Activity activity)
+        public static CodeStatementCollection LogActivity(Activity activity)
         {
-            var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName("logger"));
-            var methodInvocation = new CodeMethodInvokeExpression (
+            var activityServiceReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToVariableName("logger"));
+            var methodInvocation = new CodeMethodInvokeExpression(
                 activityServiceReference,
                 "Info",
                 new CodeExpression[]
                 {
                     new CodePrimitiveExpression("Start Activity: " + activity.Name + " of type: " + activity.Type)
                 });
-           
+
             var logCallStatements = new CodeStatementCollection();
             logCallStatements.Add(methodInvocation);
             return logCallStatements;
@@ -49,7 +48,7 @@ namespace EaiConverter.Builder
 
         public static CodeExpression[] GenerateParameters(List<string> existingParamaters, Activity activity)
         {
-            var parameterLists = new List<CodeExpression> {};
+            var parameterLists = new List<CodeExpression> { };
             //Add existing Parameter
             if (existingParamaters != null)
             {
@@ -75,7 +74,6 @@ namespace EaiConverter.Builder
         {
             return GenerateParameters(null, activity);
         }
-	}
-
+    }
 }
 

@@ -1,5 +1,4 @@
-﻿using System;
-using EaiConverter.Model;
+﻿using EaiConverter.Model;
 
 namespace EaiConverter.Builder
 {

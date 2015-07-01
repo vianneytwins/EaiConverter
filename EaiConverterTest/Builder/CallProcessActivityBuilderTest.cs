@@ -1,8 +1,6 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using EaiConverter.Model;
 using System.Xml.Linq;
-using EaiConverter;
 using System.Collections.Generic;
 using EaiConverter.Builder;
 using EaiConverter.Test.Utils;

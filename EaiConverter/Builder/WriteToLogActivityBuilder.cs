@@ -1,6 +1,5 @@
-using System;
 using EaiConverter.Model;
-using EaiConverter.Builder.Utils;
+
 using System.CodeDom;
 using EaiConverter.CodeGenerator.Utils;
 using System.Collections.Generic;
@@ -8,10 +7,10 @@ using System.Collections.Generic;
 namespace EaiConverter.Builder
 {
     public class WriteToLogActivityBuilder : IActivityBuilder
-	{
+    {
         XslBuilder xslBuilder;
 
-        public WriteToLogActivityBuilder (XslBuilder xslBuilder)
+        public WriteToLogActivityBuilder(XslBuilder xslBuilder)
         {
             this.xslBuilder = xslBuilder;
         }
@@ -26,7 +25,7 @@ namespace EaiConverter.Builder
         }
         #endregion
 
-        public CodeStatementCollection GenerateCodeInvocation (WriteToLogActivity activity)
+        public CodeStatementCollection GenerateCodeInvocation(WriteToLogActivity activity)
         {
             var invocationCodeCollection = new CodeStatementCollection();
 
@@ -40,7 +39,7 @@ namespace EaiConverter.Builder
 
             return invocationCodeCollection;
         }
-   
+
         private CodeMethodInvokeExpression GenerateLoggerCodeInvocation(WriteToLogActivity activity)
         {
             var parameters = DefaultActivityBuilder.GenerateParameters(new List<string> {
@@ -57,13 +56,12 @@ namespace EaiConverter.Builder
             stringObject.VariableName = "String";
             formatMethod.TargetObject = stringObject;
             stringFormatCall.Method = formatMethod;
-     
+
 
             var loggerReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToVariableName("logger"));
             var methodInvocation = new CodeMethodInvokeExpression(loggerReference, activity.Role, stringFormatCall);
             return methodInvocation;
         }
-	}
-
+    }
 }
 

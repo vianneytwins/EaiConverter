@@ -1,5 +1,4 @@
-﻿using System;
-using EaiConverter.Model;
+﻿using EaiConverter.Model;
 using System.CodeDom;
 using EaiConverter.Builder.Utils;
 using EaiConverter.CodeGenerator.Utils;
@@ -75,7 +74,6 @@ namespace EaiConverter.Builder
             javaClass.Comments.Add(new CodeCommentStatement(activity.FullSource));
 
             return javaClass;
-
         }
 
         public CodeMemberMethod GenerateInvokeMethod ()

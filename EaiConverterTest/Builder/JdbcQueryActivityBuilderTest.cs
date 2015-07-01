@@ -1,13 +1,11 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using EaiConverter.Model;
 using EaiConverter.Builder;
 using System.Collections.Generic;
 using System.CodeDom;
-using EaiConverter.Builder.Utils;
+
 using EaiConverter.Test.Utils;
 using System.Xml.Linq;
-using EaiConverter.Parser;
 
 namespace EaiConverter.Test.Builder
 {

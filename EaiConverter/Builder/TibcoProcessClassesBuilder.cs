@@ -1,89 +1,90 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.CodeDom;
 using System.Reflection;
-using System.CodeDom.Compiler;
-using System.IO;
+
 using EaiConverter.CodeGenerator.Utils;
 using EaiConverter.Model;
 using EaiConverter.Builder.Utils;
-using EaiConverter.Processor;
 
 namespace EaiConverter.Builder
 {
-	public class TibcoProcessClassesBuilder
-	{
+    public class TibcoProcessClassesBuilder
+    {
         CoreProcessBuilder coreProcessBuilder;
 
-        Dictionary<string,CodeStatementCollection> activityNameToServiceNameDictionnary = new Dictionary<string, CodeStatementCollection> ();
+        Dictionary<string, CodeStatementCollection> activityNameToServiceNameDictionnary = new Dictionary<string, CodeStatementCollection>();
 
-        public TibcoProcessClassesBuilder (){
+        public TibcoProcessClassesBuilder()
+        {
             this.coreProcessBuilder = new CoreProcessBuilder();
         }
 
         XsdBuilder xsdClassGenerator = new XsdBuilder();
 
-		public CodeCompileUnit Build (TibcoBWProcess tibcoBwProcessToGenerate){
+        public CodeCompileUnit Build(TibcoBWProcess tibcoBwProcessToGenerate)
+        {
 
-			var targetUnit = new CodeCompileUnit();
+            var targetUnit = new CodeCompileUnit();
 
-			//create the namespace
-			CodeNamespace processNamespace = new CodeNamespace(tibcoBwProcessToGenerate.ShortNameSpace);
+            //create the namespace
+            CodeNamespace processNamespace = new CodeNamespace(tibcoBwProcessToGenerate.ShortNameSpace);
 
-			processNamespace.Imports.AddRange (this.GenerateImport (tibcoBwProcessToGenerate));
+            processNamespace.Imports.AddRange(this.GenerateImport(tibcoBwProcessToGenerate));
 
-			var tibcoBwProcessClassModel = new CodeTypeDeclaration (tibcoBwProcessToGenerate.ProcessName);
-			tibcoBwProcessClassModel.IsClass = true;
-			tibcoBwProcessClassModel.TypeAttributes = TypeAttributes.Public;
+            var tibcoBwProcessClassModel = new CodeTypeDeclaration(tibcoBwProcessToGenerate.ProcessName);
+            tibcoBwProcessClassModel.IsClass = true;
+            tibcoBwProcessClassModel.TypeAttributes = TypeAttributes.Public;
 
-            tibcoBwProcessClassModel.Comments.Add(new CodeCommentStatement (tibcoBwProcessToGenerate.Description));
-                
-			// 3 les membres privee : les activité injecte
-			tibcoBwProcessClassModel.Members.AddRange( this.GeneratePrivateFields (tibcoBwProcessToGenerate));
+            tibcoBwProcessClassModel.Comments.Add(new CodeCommentStatement(tibcoBwProcessToGenerate.Description));
 
-			// 4 le ctor avec injection des activités + logger
-			tibcoBwProcessClassModel.Members.AddRange( this.GenerateConstructors (tibcoBwProcessToGenerate, tibcoBwProcessClassModel));
+            // 3 les membres privee : les activité injecte
+            tibcoBwProcessClassModel.Members.AddRange(this.GeneratePrivateFields(tibcoBwProcessToGenerate));
+
+            // 4 le ctor avec injection des activités + logger
+            tibcoBwProcessClassModel.Members.AddRange(this.GenerateConstructors(tibcoBwProcessToGenerate, tibcoBwProcessClassModel));
 
 
-			processNamespace.Types.Add (tibcoBwProcessClassModel);
+            processNamespace.Types.Add(tibcoBwProcessClassModel);
 
-			targetUnit.Namespaces.Add (processNamespace);
+            targetUnit.Namespaces.Add(processNamespace);
 
-			//7 Mappe les classes des activity
-            targetUnit.Namespaces.AddRange (this.GenerateActivityClasses (tibcoBwProcessToGenerate.Activities));
+            //7 Mappe les classes des activity
+            targetUnit.Namespaces.AddRange(this.GenerateActivityClasses(tibcoBwProcessToGenerate.Activities));
 
-			if (tibcoBwProcessToGenerate.EndActivity!= null && tibcoBwProcessToGenerate.EndActivity.ObjectXNodes != null) {
-				targetUnit.Namespaces.Add (this.xsdClassGenerator.Build (tibcoBwProcessToGenerate.EndActivity.ObjectXNodes, tibcoBwProcessToGenerate.InputAndOutputNameSpace));
-			}
-			if (tibcoBwProcessToGenerate.StartActivity!= null && tibcoBwProcessToGenerate.StartActivity.ObjectXNodes != null) {
-				targetUnit.Namespaces.Add (this.xsdClassGenerator.Build (tibcoBwProcessToGenerate.StartActivity.ObjectXNodes, tibcoBwProcessToGenerate.InputAndOutputNameSpace));
-			}
+            if (tibcoBwProcessToGenerate.EndActivity != null && tibcoBwProcessToGenerate.EndActivity.ObjectXNodes != null)
+            {
+                targetUnit.Namespaces.Add(this.xsdClassGenerator.Build(tibcoBwProcessToGenerate.EndActivity.ObjectXNodes, tibcoBwProcessToGenerate.InputAndOutputNameSpace));
+            }
+            if (tibcoBwProcessToGenerate.StartActivity != null && tibcoBwProcessToGenerate.StartActivity.ObjectXNodes != null)
+            {
+                targetUnit.Namespaces.Add(this.xsdClassGenerator.Build(tibcoBwProcessToGenerate.StartActivity.ObjectXNodes, tibcoBwProcessToGenerate.InputAndOutputNameSpace));
+            }
             targetUnit.Namespaces.AddRange(this.GenerateProcessVariablesNamespaces(tibcoBwProcessToGenerate));
             //7 la methode start avec input starttype et return du endtype
-            tibcoBwProcessClassModel.Members.AddRange( this.GenerateMethod (tibcoBwProcessToGenerate));
+            tibcoBwProcessClassModel.Members.AddRange(this.GenerateMethod(tibcoBwProcessToGenerate));
 
-			return targetUnit;
-		}
+            return targetUnit;
+        }
 
-		/// <summary>
-		/// Generates the import.
-		/// </summary>
-		/// <returns>The import.</returns>
-		/// <param name="tibcoBwProcessToGenerate">Tibco bw process to generate.</param>
-		public CodeNamespaceImport[] GenerateImport (TibcoBWProcess tibcoBwProcessToGenerate)
-		{
+        /// <summary>
+        /// Generates the import.
+        /// </summary>
+        /// <returns>The import.</returns>
+        /// <param name="tibcoBwProcessToGenerate">Tibco bw process to generate.</param>
+        public CodeNamespaceImport[] GenerateImport(TibcoBWProcess tibcoBwProcessToGenerate)
+        {
             var imports = new List<CodeNamespaceImport> {
-				new CodeNamespaceImport ("System"),
-				new CodeNamespaceImport (TargetAppNameSpaceService.domainContractNamespaceName),
-				new CodeNamespaceImport (tibcoBwProcessToGenerate.InputAndOutputNameSpace),
-				new CodeNamespaceImport (TargetAppNameSpaceService.loggerNameSpace)
-			};
+                new CodeNamespaceImport ("System"),
+                new CodeNamespaceImport (TargetAppNameSpaceService.domainContractNamespaceName),
+                new CodeNamespaceImport (tibcoBwProcessToGenerate.InputAndOutputNameSpace),
+                new CodeNamespaceImport (TargetAppNameSpaceService.loggerNameSpace)
+            };
 
             if (tibcoBwProcessToGenerate.XsdImports != null)
             {
                 foreach (var xsdImport in tibcoBwProcessToGenerate.XsdImports)
                 {
-                    imports.Add(new CodeNamespaceImport (ConvertXsdImportToNameSpace(xsdImport.SchemaLocation)));
+                    imports.Add(new CodeNamespaceImport(ConvertXsdImportToNameSpace(xsdImport.SchemaLocation)));
                 }
             }
 
@@ -91,7 +92,7 @@ namespace EaiConverter.Builder
 
             imports.AddRange(import4Activities);
             return imports.ToArray();
-		}
+        }
 
         public List<CodeNamespaceImport> GenerateImport4Activities(List<Activity> activities)
         {
@@ -126,22 +127,23 @@ namespace EaiConverter.Builder
             return schemaLocation;
         }
 
-		public CodeMemberField[] GeneratePrivateFields (TibcoBWProcess tibcoBwProcessToGenerate)
-		{
-			var fields = new List<CodeMemberField> ();
+        public CodeMemberField[] GeneratePrivateFields(TibcoBWProcess tibcoBwProcessToGenerate)
+        {
+            var fields = new List<CodeMemberField>();
 
-			fields.Add (new CodeMemberField {
-				Type = new CodeTypeReference("ILogger"),
-				Name= "logger",
-				Attributes = MemberAttributes.Private 
-			});
+            fields.Add(new CodeMemberField
+            {
+                Type = new CodeTypeReference("ILogger"),
+                Name = "logger",
+                Attributes = MemberAttributes.Private
+            });
 
-            fields.AddRange (this.GenerateFieldForProcessVariables(tibcoBwProcessToGenerate));
+            fields.AddRange(this.GenerateFieldForProcessVariables(tibcoBwProcessToGenerate));
 
-            fields.AddRange (this.GenerateFieldsForActivityServices(tibcoBwProcessToGenerate.Activities));
+            fields.AddRange(this.GenerateFieldsForActivityServices(tibcoBwProcessToGenerate.Activities));
 
-			return fields.ToArray();
-		}
+            return fields.ToArray();
+        }
 
         private List<CodeMemberField> GenerateFieldForProcessVariables(TibcoBWProcess tibcoBwProcessToGenerate)
         {
@@ -150,7 +152,8 @@ namespace EaiConverter.Builder
             {
                 foreach (var variable in tibcoBwProcessToGenerate.ProcessVariables)
                 {
-                    fields.Add(new CodeMemberField {
+                    fields.Add(new CodeMemberField
+                    {
                         Type = new CodeTypeReference(tibcoBwProcessToGenerate.NameSpace + "." + variable.Parameter.Type),
                         Name = VariableHelper.ToVariableName(variable.Parameter.Name),
                         Attributes = MemberAttributes.Private
@@ -168,7 +171,8 @@ namespace EaiConverter.Builder
             {
                 if (activity.Type == ActivityType.xmlParseActivityType && !IsXmlParserServiceAllReadyAdded)
                 {
-                    fields.Add(new CodeMemberField {
+                    fields.Add(new CodeMemberField
+                    {
                         Type = new CodeTypeReference(XmlParserHelperBuilder.IXmlParserHelperServiceName),
                         Name = VariableHelper.ToVariableName(VariableHelper.ToClassName(XmlParserHelperBuilder.XmlParserHelperServiceName)),
                         Attributes = MemberAttributes.Private
@@ -182,7 +186,8 @@ namespace EaiConverter.Builder
                 else if (activity.Type == ActivityType.callProcessActivityType)
                 {
                     var callProcessActivity = (CallProcessActivity)activity;
-                    fields.Add(new CodeMemberField {
+                    fields.Add(new CodeMemberField
+                    {
                         Type = new CodeTypeReference(VariableHelper.ToClassName(callProcessActivity.ProcessName)),
                         Name = VariableHelper.ToVariableName(VariableHelper.ToClassName(callProcessActivity.ProcessName)),
                         Attributes = MemberAttributes.Private
@@ -195,7 +200,8 @@ namespace EaiConverter.Builder
                 }
                 else
                 {
-                    fields.Add(new CodeMemberField {
+                    fields.Add(new CodeMemberField
+                    {
                         Type = new CodeTypeReference("I" + VariableHelper.ToClassName(activity.Name + "Service")),
                         Name = VariableHelper.ToVariableName(VariableHelper.ToClassName(activity.Name + "Service")),
                         Attributes = MemberAttributes.Private
@@ -205,27 +211,28 @@ namespace EaiConverter.Builder
             return fields;
         }
 
-		public CodeConstructor[] GenerateConstructors (TibcoBWProcess tibcoBwProcessToGenerate, CodeTypeDeclaration classModel)
-		{
+        public CodeConstructor[] GenerateConstructors(TibcoBWProcess tibcoBwProcessToGenerate, CodeTypeDeclaration classModel)
+        {
 
-			var constructor = new CodeConstructor();
-			constructor.Attributes = MemberAttributes.Public;
-			foreach (CodeMemberField field in classModel.Members) {
-                if (this.IsNotAProcessVariable(field.Name, tibcoBwProcessToGenerate.ProcessVariables)) {
+            var constructor = new CodeConstructor();
+            constructor.Attributes = MemberAttributes.Public;
+            foreach (CodeMemberField field in classModel.Members)
+            {
+                if (this.IsNotAProcessVariable(field.Name, tibcoBwProcessToGenerate.ProcessVariables))
+                {
                     constructor.Parameters.Add(new CodeParameterDeclarationExpression(
                         field.Type, field.Name));
-                        
+
                     var parameterReference = new CodeFieldReferenceExpression(
                         new CodeThisReferenceExpression(), field.Name);
-                    
+
                     constructor.Statements.Add(new CodeAssignStatement(parameterReference,
                         new CodeArgumentReferenceExpression(field.Name)));
                 }
+            }
 
-			}
-
-			return new List<CodeConstructor> { constructor }.ToArray();
-		}
+            return new List<CodeConstructor> { constructor }.ToArray();
+        }
 
         bool IsNotAProcessVariable(string fieldName, List<ProcessVariable> processVariables)
         {
@@ -242,28 +249,29 @@ namespace EaiConverter.Builder
             return true;
         }
 
-		public CodeMemberMethod[] GenerateMethod (TibcoBWProcess tibcoBwProcessToGenerate)
-		{
-			return new List<CodeMemberMethod> {GenerateStartMethod (tibcoBwProcessToGenerate)}.ToArray();
-		}
-            
-		public CodeMemberMethod GenerateStartMethod (TibcoBWProcess tibcoBwProcessToGenerate)
-		{
-			var startMethod = new CodeMemberMethod ();
-            if (tibcoBwProcessToGenerate.StartActivity == null){
+        public CodeMemberMethod[] GenerateMethod(TibcoBWProcess tibcoBwProcessToGenerate)
+        {
+            return new List<CodeMemberMethod> { GenerateStartMethod(tibcoBwProcessToGenerate) }.ToArray();
+        }
+
+        public CodeMemberMethod GenerateStartMethod(TibcoBWProcess tibcoBwProcessToGenerate)
+        {
+            var startMethod = new CodeMemberMethod();
+            if (tibcoBwProcessToGenerate.StartActivity == null)
+            {
                 return startMethod;
             }
 
             startMethod.Attributes = MemberAttributes.Public | MemberAttributes.Final;
             startMethod.Name = tibcoBwProcessToGenerate.StartActivity.Name;
-            startMethod.ReturnType = this.GenerateStartMethodReturnType (tibcoBwProcessToGenerate); 
-           
+            startMethod.ReturnType = this.GenerateStartMethodReturnType(tibcoBwProcessToGenerate);
+
             this.GenerateStartMethodInputParameters(tibcoBwProcessToGenerate, startMethod);
-                
+
             this.GenerateStartMethodBody(tibcoBwProcessToGenerate, startMethod);
 
-			return startMethod;
-		}
+            return startMethod;
+        }
 
         private void GenerateStartMethodInputParameters(TibcoBWProcess tibcoBwProcessToGenerate, CodeMemberMethod startMethod)
         {
@@ -271,7 +279,8 @@ namespace EaiConverter.Builder
             {
                 foreach (var parameter in tibcoBwProcessToGenerate.StartActivity.Parameters)
                 {
-                    startMethod.Parameters.Add(new CodeParameterDeclarationExpression {
+                    startMethod.Parameters.Add(new CodeParameterDeclarationExpression
+                    {
                         Name = parameter.Name,
                         Type = new CodeTypeReference(parameter.Type)
                     });
@@ -311,21 +320,22 @@ namespace EaiConverter.Builder
         }
 
         // Todo : To rename and refavtor because not SRP
-        public CodeNamespaceCollection GenerateActivityClasses (List<Activity> activities)
-		{
+        public CodeNamespaceCollection GenerateActivityClasses(List<Activity> activities)
+        {
             var activityBuilderFactory = new ActivityBuilderFactory();
-			var activityClasses = new CodeNamespaceCollection ();
-            foreach (var activity in activities) {
+            var activityClasses = new CodeNamespaceCollection();
+            foreach (var activity in activities)
+            {
                 //TODO : faut il mieux 2 method ou 1 objet avec les 2
                 var activityBuilder = activityBuilderFactory.Get(activity.Type);
 
                 var activityCodeDom = activityBuilder.Build(activity);
 
                 activityClasses.AddRange(activityCodeDom.ClassesToGenerate);
-                this.activityNameToServiceNameDictionnary.Add( activity.Name, activityCodeDom.InvocationCode);
-			}
-			return activityClasses;
-		}
+                this.activityNameToServiceNameDictionnary.Add(activity.Name, activityCodeDom.InvocationCode);
+            }
+            return activityClasses;
+        }
 
         CodeNamespaceCollection GenerateProcessVariablesNamespaces(TibcoBWProcess tibcoBwProcessToGenerate)
         {
@@ -342,25 +352,25 @@ namespace EaiConverter.Builder
             }
             return processVariableNameNamespaces;
         }
-       
+
         bool IsBasicType(string type)
         {
-            switch (type.ToLower()) {
-                case "string" :
+            switch (type.ToLower())
+            {
+                case "string":
                     return true;
-                case "int" :
+                case "int":
                     return true;
-                case "datetime" :
+                case "datetime":
                     return true;
-                case "bool" :
+                case "bool":
                     return true;
-                case "double" :
+                case "double":
                     return true;
                 default:
-                    return false; 
+                    return false;
             }
-
         }
-	}
+    }
 }
 

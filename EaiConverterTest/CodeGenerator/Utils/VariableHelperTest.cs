@@ -1,6 +1,5 @@
-﻿using System;
-using NUnit.Framework;
-using EaiConverter.CodeGenerator;
+﻿using NUnit.Framework;
+
 using EaiConverter.CodeGenerator.Utils;
 
 namespace EaiConverter.Test.CodeGenerator.Utils

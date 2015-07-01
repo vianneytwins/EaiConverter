@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace EaiConverter.Parser
+﻿namespace EaiConverter.Parser
 {
     public interface IActivityParserFactory
     {

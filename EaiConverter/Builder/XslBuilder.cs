@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Xml.Linq;
 using System.Text;
 using System.CodeDom;
@@ -107,9 +106,7 @@ namespace EaiConverter.Builder
                         {
                             codeStatements.Append(this.Build(element.Nodes(), parent + "." + element.Name.ToString()));
                         }
-
                     }
-
                 }
                 else
                 {
@@ -138,10 +135,9 @@ namespace EaiConverter.Builder
                         codeStatements.Append(this.ManageIterationTag(element, parent));
                     }
                 }
-
             }
-            return codeStatements;
 
+            return codeStatements;
         }
 
         StringBuilder ManageIterationTag(XElement element, string parent)
@@ -193,7 +189,6 @@ namespace EaiConverter.Builder
                 default:
                     return false;
             }
-
         }
 
         public string DefineReturnType(XElement inputedElement)
@@ -202,6 +197,7 @@ namespace EaiConverter.Builder
             {
                 return null;
             }
+
             var elementTypes = new List<string>();
             var nodes = new List<XNode>();
             nodes.Add(inputedElement);
@@ -210,6 +206,7 @@ namespace EaiConverter.Builder
             {
                 return elementTypes[1];
             }
+
             return elementTypes[0];
         }
 
@@ -252,7 +249,6 @@ namespace EaiConverter.Builder
                     if (item.Attribute("select").Value.Contains("tib:parse-date"))
                     {
                         elementTypes.Add("DateTime");
-
                     }
                     else if (item.Attribute("select").Value.StartsWith("number("))
                     {
@@ -268,10 +264,8 @@ namespace EaiConverter.Builder
                 {
                     this.RetrieveAllTypeInTheElement(item.Nodes(), elementTypes);
                 }
-
             }
         }
-
     }
 }
 

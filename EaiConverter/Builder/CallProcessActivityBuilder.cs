@@ -1,16 +1,16 @@
-using System;
 using EaiConverter.Model;
-using EaiConverter.Builder.Utils;
+
 using System.CodeDom;
 using EaiConverter.CodeGenerator.Utils;
 
 namespace EaiConverter.Builder
 {
     public class CallProcessActivityBuilder : IActivityBuilder
-	{
+    {
         XslBuilder xslBuilder;
 
-        public CallProcessActivityBuilder(XslBuilder xslBuilder){
+        public CallProcessActivityBuilder(XslBuilder xslBuilder)
+        {
             this.xslBuilder = xslBuilder;
         }
 
@@ -26,7 +26,7 @@ namespace EaiConverter.Builder
         }
         #endregion
 
-        public CodeStatementCollection GenerateCodeInvocation (CallProcessActivity callProcessActivity)
+        public CodeStatementCollection GenerateCodeInvocation(CallProcessActivity callProcessActivity)
         {
             var invocationCodeCollection = new CodeStatementCollection();
             // Add the Log
@@ -35,21 +35,18 @@ namespace EaiConverter.Builder
             invocationCodeCollection.AddRange(this.xslBuilder.Build(callProcessActivity.InputBindings));
 
             // Add the invocation
-            var processToCallReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(callProcessActivity.TibcoProcessToCall.ProcessName));
+            var processToCallReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToVariableName(callProcessActivity.TibcoProcessToCall.ProcessName));
 
             var parameters = DefaultActivityBuilder.GenerateParameters(callProcessActivity);
 
             // TODO : WARNING not sure the start method ProcessName is indeed START
-            var methodInvocation = new CodeMethodInvokeExpression (processToCallReference, "Start", parameters);
- 
-            var code = new CodeVariableDeclarationStatement ("var", VariableHelper.ToVariableName(callProcessActivity.Name), methodInvocation);
+            var methodInvocation = new CodeMethodInvokeExpression(processToCallReference, "Start", parameters);
+
+            var code = new CodeVariableDeclarationStatement("var", VariableHelper.ToVariableName(callProcessActivity.Name), methodInvocation);
 
             invocationCodeCollection.Add(code);
 
             return invocationCodeCollection;
         }
-           
-	}
-
+    }
 }
-

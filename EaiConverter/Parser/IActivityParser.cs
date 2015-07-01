@@ -1,5 +1,4 @@
-﻿using System;
-using EaiConverter.Model;
+﻿using EaiConverter.Model;
 using System.Xml.Linq;
 
 namespace EaiConverter.Parser

@@ -1,17 +1,16 @@
-using System;
 using EaiConverter.Model;
-using EaiConverter.Builder.Utils;
+
 using System.CodeDom;
-using EaiConverter.CodeGenerator.Utils;
 using System.Collections.Generic;
 
 namespace EaiConverter.Builder
 {
     public class GenerateErrorActivityBuilder : IActivityBuilder
-	{
+    {
         XslBuilder xslBuilder;
 
-        public GenerateErrorActivityBuilder (XslBuilder xslBuilder){
+        public GenerateErrorActivityBuilder(XslBuilder xslBuilder)
+        {
             this.xslBuilder = xslBuilder;
         }
 
@@ -27,7 +26,7 @@ namespace EaiConverter.Builder
         }
         #endregion
 
-        public CodeStatementCollection GenerateCodeInvocation (GenerateErrorActivity activity)
+        public CodeStatementCollection GenerateCodeInvocation(GenerateErrorActivity activity)
         {
             var invocationCodeCollection = new CodeStatementCollection();
 
@@ -41,7 +40,7 @@ namespace EaiConverter.Builder
 
             return invocationCodeCollection;
         }
-   
+
         private CodeThrowExceptionStatement GenerateExceptionStatement(GenerateErrorActivity activity)
         {
             var parameters = DefaultActivityBuilder.GenerateParameters(new List<string> {
@@ -61,7 +60,6 @@ namespace EaiConverter.Builder
             CodeThrowExceptionStatement throwException = new CodeThrowExceptionStatement(new CodeObjectCreateExpression(new CodeTypeReference(typeof(System.Exception)), stringFormatCall));
             return throwException;
         }
-	}
-
+    }
 }
 

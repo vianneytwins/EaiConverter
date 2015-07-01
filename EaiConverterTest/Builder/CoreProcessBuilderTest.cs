@@ -1,11 +1,8 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System.Collections.Generic;
-using EaiConverter;
-using System.Text;
+
 using EaiConverter.Builder;
-using System.IO;
-using System.CodeDom.Compiler;
+
 using System.CodeDom;
 using EaiConverter.Model;
 using EaiConverter.Test.Utils;

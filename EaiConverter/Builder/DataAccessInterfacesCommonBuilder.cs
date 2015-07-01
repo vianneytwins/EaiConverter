@@ -1,6 +1,5 @@
-﻿using System;
-using System.CodeDom;
-using System.Runtime.InteropServices;
+﻿using System.CodeDom;
+
 using EaiConverter.Builder.Utils;
 
 namespace EaiConverter.Builder

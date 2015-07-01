@@ -1,13 +1,9 @@
-﻿using System;
-using System.CodeDom;
+﻿using System.CodeDom;
 using System.CodeDom.Compiler;
-using EaiConverter.Test.Utils;
 using System.IO;
 
 namespace EaiConverter.Test.Utils
 {
-    using System.Collections.Generic;
-
     using Microsoft.CSharp;
 
     public class TestCodeGeneratorUtils

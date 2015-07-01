@@ -1,9 +1,7 @@
-﻿using System;
-using NUnit.Framework;
-using EaiConverter;
+﻿using NUnit.Framework;
+
 using EaiConverter.Parser;
 using System.Xml.Linq;
-using System.Text;
 using System.Collections.Generic;
 
 namespace EaiConverter.Test.Parser

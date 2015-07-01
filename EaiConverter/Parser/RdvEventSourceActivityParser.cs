@@ -1,4 +1,3 @@
-using System;
 using EaiConverter.Model;
 using EaiConverter.Parser.Utils;
 

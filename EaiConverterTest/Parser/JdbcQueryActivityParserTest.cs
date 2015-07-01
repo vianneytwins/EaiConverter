@@ -1,7 +1,6 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using System.Xml.Linq;
-using System.Collections.Generic;
+
 using EaiConverter.Parser;
 using EaiConverter.Model;
 
