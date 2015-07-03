@@ -124,6 +124,8 @@
     <Compile Include="Model\RdvEventSourceActivity.cs" />
     <Compile Include="Parser\SharedVariableActivityParser.cs" />
     <Compile Include="Model\SharedVariableActivity.cs" />
+    <Compile Include="Parser\GlobalVariableParser.cs" />
+    <Compile Include="Model\GlobalVariable.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

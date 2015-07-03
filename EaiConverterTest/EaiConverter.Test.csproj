@@ -87,6 +87,7 @@
     <Compile Include="Builder\XsdBuilderTest.cs" />
     <Compile Include="ressources\GroupVariables.cs" />
     <Compile Include="ressources\GroupVariables2.cs" />
+    <Compile Include="Parser\GlobalVariableParserTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />
