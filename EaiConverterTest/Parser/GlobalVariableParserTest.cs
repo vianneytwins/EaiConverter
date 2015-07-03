@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using System.Xml.Linq;
 using EaiConverter.Parser;
+using EaiConverter.Model;
 
 namespace EaiConverter.Test.Parser
 {
@@ -46,6 +47,27 @@ namespace EaiConverter.Test.Parser
             var globalVariables  = parser.Parse(doc);
             Assert.AreEqual(2,globalVariables.Count);
 
+        }
+
+        [Test]
+        public void Should_Parse_name()
+        {
+            var globalVariables  = parser.Parse(doc);
+            Assert.AreEqual("Name test 1",globalVariables[0].Name);
+        }
+
+        [Test]
+        public void Should_Parse_Value()
+        {
+            var globalVariables  = parser.Parse(doc);
+            Assert.AreEqual("value test 1",globalVariables[0].Value);
+        }
+
+        [Test]
+        public void Should_Parse_type()
+        {
+            var globalVariables  = parser.Parse(doc);
+            Assert.AreEqual(GlobalVariableType.String, globalVariables[0].Type);
         }
     }
 }

@@ -18,14 +18,19 @@ namespace EaiConverter.Model
             set;
         }
 
-        public string Type
+        public GlobalVariableType Type
         {
             get;
             set;
         }
-
+            
 	}
 
+    public enum GlobalVariableType
+    {
+        String,
+        Integer
+    }
 
 }
 

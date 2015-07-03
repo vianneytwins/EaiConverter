@@ -27,7 +27,7 @@ namespace EaiConverter.Parser
                     {
                         Name = element.Element(XmlnsConstant.globalVariableNameSpace + "name").Value,
                         Value = element.Element(XmlnsConstant.globalVariableNameSpace + "value").Value,
-                        Type = element.Element(XmlnsConstant.globalVariableNameSpace + "type").Value
+                        Type = (GlobalVariableType) Enum.Parse(typeof(GlobalVariableType),element.Element(XmlnsConstant.globalVariableNameSpace + "type").Value)
                     };
                 globalVariables.Add(globalVariable);
             }
