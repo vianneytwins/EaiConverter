@@ -126,6 +126,9 @@
     <Compile Include="Model\SharedVariableActivity.cs" />
     <Compile Include="Parser\GlobalVariableParser.cs" />
     <Compile Include="Model\GlobalVariable.cs" />
+    <Compile Include="Model\GlobalVariablesRepository.cs" />
+    <Compile Include="Builder\GlobalVariableBuilder.cs" />
+    <Compile Include="Builder\Utils\CodeDomUtils.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

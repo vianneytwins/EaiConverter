@@ -69,6 +69,18 @@ namespace EaiConverter.Test.Parser
             var globalVariables  = parser.Parse(doc);
             Assert.AreEqual(GlobalVariableType.String, globalVariables[0].Type);
         }
+
+        [Test]
+        public void Should_Retrieve_PackageName_from_path()
+        {
+            Assert.AreEqual("myProject.Config", parser.ParsePackageName("myProject/Config/MarketConfig/default.substvar"));
+        }
+
+        [Test]
+        public void Should_Retrieve_Filename_from_path()
+        {
+            Assert.AreEqual("MarketConfig", parser.ParseFileName("myProject/Config/MarketConfig/default.substvar"));
+        }
     }
 }
 

@@ -9,6 +9,37 @@ namespace EaiConverter.Parser
 {
 	public class GlobalVariableParser
 	{
+        const string Defaultsubstvar = "default.substvar";
+
+        public GlobalVariablesRepository Parse(string fileName)
+        {
+            var globalVariablesRepository = new GlobalVariablesRepository();
+            globalVariablesRepository.Name = this.ParseFileName(fileName);
+            globalVariablesRepository.Package = this.ParsePackageName(fileName);
+
+            return globalVariablesRepository;
+        }
+
+        public string ParsePackageName(string fileName)
+        {
+            var path = fileName.Replace(Defaultsubstvar,String.Empty);
+            path = path.Remove(path.Length - 1, 1);
+            path = path.Replace("/", ".");
+            path = path.Replace("\\", ".");
+            path = path.Remove(path.LastIndexOf("."));
+            return path;
+        }
+
+        public string ParseFileName(string fileName)
+        {
+            var path = fileName.Replace(Defaultsubstvar,String.Empty);
+            path = path.Remove(path.Length - 1, 1);
+            path = path.Replace("/", ".");
+            path = path.Replace("\\", ".");
+            path = path.Remove(0, path.LastIndexOf(".") + 1);
+            return path;
+        }
+
         public List<GlobalVariable> Parse(XElement allFileElement)
         {
             //var repoElement = allFileElement.Element(XmlnsConstant.globalVariableNameSpace + "repository");
@@ -34,6 +65,7 @@ namespace EaiConverter.Parser
             return globalVariables;
 
         }
+            
 	}
 
 }

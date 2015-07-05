@@ -88,6 +88,7 @@
     <Compile Include="ressources\GroupVariables.cs" />
     <Compile Include="ressources\GroupVariables2.cs" />
     <Compile Include="Parser\GlobalVariableParserTest.cs" />
+    <Compile Include="Builder\GlobalVariableBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />

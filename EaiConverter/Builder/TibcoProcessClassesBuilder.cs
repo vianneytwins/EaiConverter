@@ -41,7 +41,7 @@ namespace EaiConverter.Builder
             tibcoBwProcessClassModel.Members.AddRange(this.GeneratePrivateFields(tibcoBwProcessToGenerate));
 
             // 4 le ctor avec injection des activités + logger
-            tibcoBwProcessClassModel.Members.AddRange(this.GenerateConstructors(tibcoBwProcessToGenerate, tibcoBwProcessClassModel));
+            tibcoBwProcessClassModel.Members.Add(this.GenerateConstructor(tibcoBwProcessToGenerate, tibcoBwProcessClassModel));
 
 
             processNamespace.Types.Add(tibcoBwProcessClassModel);
@@ -211,7 +211,7 @@ namespace EaiConverter.Builder
             return fields;
         }
 
-        public CodeConstructor[] GenerateConstructors(TibcoBWProcess tibcoBwProcessToGenerate, CodeTypeDeclaration classModel)
+        public CodeConstructor GenerateConstructor(TibcoBWProcess tibcoBwProcessToGenerate, CodeTypeDeclaration classModel)
         {
 
             var constructor = new CodeConstructor();
@@ -231,7 +231,7 @@ namespace EaiConverter.Builder
                 }
             }
 
-            return new List<CodeConstructor> { constructor }.ToArray();
+            return constructor;
         }
 
         bool IsNotAProcessVariable(string fieldName, List<ProcessVariable> processVariables)
