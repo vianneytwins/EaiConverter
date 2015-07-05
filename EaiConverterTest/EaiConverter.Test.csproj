@@ -85,8 +85,6 @@
     <Compile Include="Builder\GroupActivityBuilderTest.cs" />
     <Compile Include="Builder\TibcoXslUtilBuilderTest.cs" />
     <Compile Include="Builder\XsdBuilderTest.cs" />
-    <Compile Include="ressources\GroupVariables.cs" />
-    <Compile Include="ressources\GroupVariables2.cs" />
     <Compile Include="Parser\GlobalVariableParserTest.cs" />
     <Compile Include="Builder\GlobalVariableBuilderTest.cs" />
   </ItemGroup>
@@ -96,8 +94,6 @@
     <None Include="ressources\xsdtest.xsd" />
     <None Include="ressources\xsdtest2.xsd" />
     <None Include="packages.config" />
-    <None Include="ressources\GlobalVariables.xsd" />
-    <None Include="ressources\SharedVariableExample.substvar" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Parser\Utils\" />
