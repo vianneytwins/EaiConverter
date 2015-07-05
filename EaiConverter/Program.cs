@@ -12,6 +12,7 @@ namespace EaiConverter
 			ITibcoBWDirectoryProcessorService tibcoFileReaderService;
 			IFileProcessorService tibcoFileProcessorService;
             IFileProcessorService xsdFileProcessorService;
+            IFileProcessorService globalVariableProcessor;
 			ISourceCodeGeneratorService sourceCodeGeneratorService;
 
 			if (args.Length > 1){
@@ -24,13 +25,15 @@ namespace EaiConverter
 					sourceCodeGeneratorService = new CsharpSimulationSourceCodeGeneratorService ();
 					tibcoFileProcessorService = new TibcoFileProcessorService (sourceCodeGeneratorService);
                     xsdFileProcessorService = new XsdFileProcessorService (sourceCodeGeneratorService);
-                    tibcoFileReaderService = new TibcoBWDirectoryProcessorService (tibcoFileProcessorService, xsdFileProcessorService);
+                    globalVariableProcessor = new GlobalVariableProcessor(sourceCodeGeneratorService);
+                    tibcoFileReaderService = new TibcoBWDirectoryProcessorService (tibcoFileProcessorService, xsdFileProcessorService, globalVariableProcessor);
 					tibcoFileReaderService.Process (sourceDirectory);
 				} else if (mode == "G_Csharp") {
 					sourceCodeGeneratorService = new CsharpSourceCodeGeneratorService ();
 					tibcoFileProcessorService = new TibcoFileProcessorService (sourceCodeGeneratorService);
                     xsdFileProcessorService = new XsdFileProcessorService (sourceCodeGeneratorService);
-                    tibcoFileReaderService = new TibcoBWDirectoryProcessorService (tibcoFileProcessorService, xsdFileProcessorService);
+                    globalVariableProcessor = new GlobalVariableProcessor(sourceCodeGeneratorService);
+                    tibcoFileReaderService = new TibcoBWDirectoryProcessorService (tibcoFileProcessorService, xsdFileProcessorService, globalVariableProcessor);
 					tibcoFileReaderService.Process (sourceDirectory);
 				} else {
                     Console.WriteLine ("Program is going to exit - sorry only MODE S_Csharp and G_Csharp is managed for the moment");
@@ -41,10 +44,8 @@ namespace EaiConverter
 				DisplayErrorMessage ();
 				return;
 			}
-
-#if DEBUG
+                
 		    Console.ReadLine();
-#endif
 		}
 
 		static void DisplayErrorMessage ()
@@ -55,6 +56,8 @@ namespace EaiConverter
 			Console.WriteLine ("A - for Analysis");
 			Console.WriteLine ("S_Csharp - for Simulation in C_Sharp");
 			Console.WriteLine ("G_Csharp - for Generation of the target source file in C_Sharp");
+
+            Console.ReadLine();
 		}
 	}
 }

@@ -129,6 +129,7 @@
     <Compile Include="Model\GlobalVariablesRepository.cs" />
     <Compile Include="Builder\GlobalVariableBuilder.cs" />
     <Compile Include="Builder\Utils\CodeDomUtils.cs" />
+    <Compile Include="Processor\GlobalVariableProcessor.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

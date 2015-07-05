@@ -7,10 +7,12 @@ namespace EaiConverter.Processor
 	{
 		IFileProcessorService tibcoFileProcessorService;
         IFileProcessorService xsdFileProcessorService;
+        IFileProcessorService globalVariableProcessor;
 
-        public TibcoBWDirectoryProcessorService (IFileProcessorService tibcoFileProcessorService, IFileProcessorService xsdFileProcessorService){
+        public TibcoBWDirectoryProcessorService (IFileProcessorService tibcoFileProcessorService, IFileProcessorService xsdFileProcessorService, IFileProcessorService globalVariableProcessor){
 			this.tibcoFileProcessorService = tibcoFileProcessorService;
             this.xsdFileProcessorService = xsdFileProcessorService;
+            this.globalVariableProcessor = globalVariableProcessor;
 		}
 
 		public void Process(string directory) { 
@@ -42,6 +44,11 @@ namespace EaiConverter.Processor
                 {
                     //file treatement
                     this.xsdFileProcessorService.Process (file);
+                }
+                if (file.EndsWith ("default.substvar"))
+                {
+                    //file treatement
+                    this.globalVariableProcessor.Process (file);
                 }
 			} 
 			foreach(string subDirectory in directories) 

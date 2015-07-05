@@ -44,7 +44,7 @@ namespace EaiConverter.Test.Parser
         [Test]
         public void Should_Return_2_Global_Variables()
         {
-            var globalVariables  = parser.Parse(doc);
+            var globalVariables  = parser.ParseVariable(doc);
             Assert.AreEqual(2,globalVariables.Count);
 
         }
@@ -52,21 +52,21 @@ namespace EaiConverter.Test.Parser
         [Test]
         public void Should_Parse_name()
         {
-            var globalVariables  = parser.Parse(doc);
+            var globalVariables  = parser.ParseVariable(doc);
             Assert.AreEqual("Name test 1",globalVariables[0].Name);
         }
 
         [Test]
         public void Should_Parse_Value()
         {
-            var globalVariables  = parser.Parse(doc);
+            var globalVariables  = parser.ParseVariable(doc);
             Assert.AreEqual("value test 1",globalVariables[0].Value);
         }
 
         [Test]
         public void Should_Parse_type()
         {
-            var globalVariables  = parser.Parse(doc);
+            var globalVariables  = parser.ParseVariable(doc);
             Assert.AreEqual(GlobalVariableType.String, globalVariables[0].Type);
         }
 

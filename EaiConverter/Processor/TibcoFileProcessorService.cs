@@ -14,7 +14,7 @@ namespace EaiConverter.Processor
 
 		public void Process (string fileName)
 		{
-			var tibcoBwProcess = new TibcoBWProcessLinqParser ().Parse (fileName);
+			var tibcoBwProcess = new TibcoBWProcessLinqParser().Parse (fileName);
 			var tibcoBWProcessBuilder = new TibcoProcessClassesBuilder ();
 			var targetUnit = tibcoBWProcessBuilder.Build (tibcoBwProcess);
 	

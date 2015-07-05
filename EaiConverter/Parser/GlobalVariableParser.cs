@@ -11,11 +11,14 @@ namespace EaiConverter.Parser
 	{
         const string Defaultsubstvar = "default.substvar";
 
-        public GlobalVariablesRepository Parse(string fileName)
+        public GlobalVariablesRepository ParseVariable(string filePath)
         {
             var globalVariablesRepository = new GlobalVariablesRepository();
-            globalVariablesRepository.Name = this.ParseFileName(fileName);
-            globalVariablesRepository.Package = this.ParsePackageName(fileName);
+            globalVariablesRepository.Name = this.ParseFileName(filePath);
+            globalVariablesRepository.Package = this.ParsePackageName(filePath);
+
+            XElement allFileElement = XElement.Load(filePath);
+            globalVariablesRepository.GlobalVariables =  this.ParseVariable (allFileElement);
 
             return globalVariablesRepository;
         }
@@ -40,7 +43,7 @@ namespace EaiConverter.Parser
             return path;
         }
 
-        public List<GlobalVariable> Parse(XElement allFileElement)
+        public List<GlobalVariable> ParseVariable(XElement allFileElement)
         {
             //var repoElement = allFileElement.Element(XmlnsConstant.globalVariableNameSpace + "repository");
             var globalVariablesElement = allFileElement.Element(XmlnsConstant.globalVariableNameSpace + "globalVariables");
