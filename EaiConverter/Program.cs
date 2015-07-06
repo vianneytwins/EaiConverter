@@ -5,8 +5,10 @@ using EaiConverter.Processor;
 
 namespace EaiConverter
 {
-	class MainClass
+	public class MainClass
 	{
+        public const string ProjectDirectory = "ProjectDirectory";
+
 		public static void Main (string[] args)
 		{
 			ITibcoBWDirectoryProcessorService tibcoFileReaderService;
@@ -27,6 +29,7 @@ namespace EaiConverter
                     xsdFileProcessorService = new XsdFileProcessorService (sourceCodeGeneratorService);
                     globalVariableProcessor = new GlobalVariableProcessor(sourceCodeGeneratorService);
                     tibcoFileReaderService = new TibcoBWDirectoryProcessorService (tibcoFileProcessorService, xsdFileProcessorService, globalVariableProcessor);
+                    ConfigurationApp.SaveProperty(ProjectDirectory, sourceDirectory);
 					tibcoFileReaderService.Process (sourceDirectory);
 				} else if (mode == "G_Csharp") {
 					sourceCodeGeneratorService = new CsharpSourceCodeGeneratorService ();
@@ -34,6 +37,7 @@ namespace EaiConverter
                     xsdFileProcessorService = new XsdFileProcessorService (sourceCodeGeneratorService);
                     globalVariableProcessor = new GlobalVariableProcessor(sourceCodeGeneratorService);
                     tibcoFileReaderService = new TibcoBWDirectoryProcessorService (tibcoFileProcessorService, xsdFileProcessorService, globalVariableProcessor);
+                    ConfigurationApp.SaveProperty(ProjectDirectory, sourceDirectory);
 					tibcoFileReaderService.Process (sourceDirectory);
 				} else {
                     Console.WriteLine ("Program is going to exit - sorry only MODE S_Csharp and G_Csharp is managed for the moment");

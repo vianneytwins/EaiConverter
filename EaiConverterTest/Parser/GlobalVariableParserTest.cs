@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System.Xml.Linq;
 using EaiConverter.Parser;
 using EaiConverter.Model;
+using EaiConverter.Processor;
 
 namespace EaiConverter.Test.Parser
 {
@@ -39,6 +40,7 @@ namespace EaiConverter.Test.Parser
     </globalVariables>
 </repository>";
             doc = XElement.Parse(xml);
+            ConfigurationApp.SaveProperty(MainClass.ProjectDirectory,"c:/myProject");
         }
 
         [Test]
@@ -73,13 +75,30 @@ namespace EaiConverter.Test.Parser
         [Test]
         public void Should_Retrieve_PackageName_from_path()
         {
-            Assert.AreEqual("myProject.Config", parser.ParsePackageName("myProject/Config/MarketConfig/default.substvar"));
+            Assert.AreEqual("", parser.ParsePackageName("c:/myProject/defaultVars/MarketConfig/defaultVars.substvar"));
+        }
+
+        [Test]
+        public void Should_Retrieve_PackageName_from_path_when_start_directory_is_setup()
+        {
+            Assert.AreEqual("DAI", parser.ParsePackageName("c:/myProject/defaultVars/DAI/MarketConfig/defaultVars.substvar"));
         }
 
         [Test]
         public void Should_Retrieve_Filename_from_path()
         {
-            Assert.AreEqual("MarketConfig", parser.ParseFileName("myProject/Config/MarketConfig/default.substvar"));
+            Assert.AreEqual("MarketConfig", parser.ParseFileName("c:/myProject/defaultVars/Config/MarketConfig/defaultVars.substvar"));
+        }
+
+        [Test]
+        public void Should_Retrieve_Filename_from_path_When_file_is_at_root()
+        {
+            Assert.AreEqual("defaultVars", parser.ParseFileName("c:/myProject/defaultVars/defaultVars.substvar"));
+        }
+        [Test]
+        public void Should_Retrieve_Package_from_path_When_file_is_at_root()
+        {
+            Assert.AreEqual("", parser.ParsePackageName("c:/myProject/defaultVars/defaultVars.substvar"));
         }
     }
 }

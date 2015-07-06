@@ -4,17 +4,20 @@ using System.Linq;
 using System.Collections.Generic;
 using EaiConverter.Model;
 using EaiConverter.Parser.Utils;
+using EaiConverter.Processor;
 
 namespace EaiConverter.Parser
 {
 	public class GlobalVariableParser
 	{
-        const string Defaultsubstvar = "default.substvar";
+        public const string Defaultsubstvar = "defaultVars.substvar";
+        public const string DefaultsubstvarDirectory = "/defaultVars";
 
         public GlobalVariablesRepository ParseVariable(string filePath)
         {
             var globalVariablesRepository = new GlobalVariablesRepository();
             globalVariablesRepository.Name = this.ParseFileName(filePath);
+
             globalVariablesRepository.Package = this.ParsePackageName(filePath);
 
             XElement allFileElement = XElement.Load(filePath);
@@ -25,11 +28,29 @@ namespace EaiConverter.Parser
 
         public string ParsePackageName(string fileName)
         {
+            var initialProjectPath = ConfigurationApp.GetProperty(MainClass.ProjectDirectory) + DefaultsubstvarDirectory;
+
             var path = fileName.Replace(Defaultsubstvar,String.Empty);
             path = path.Remove(path.Length - 1, 1);
             path = path.Replace("/", ".");
             path = path.Replace("\\", ".");
-            path = path.Remove(path.LastIndexOf("."));
+            if (initialProjectPath != null)
+            {
+                initialProjectPath = initialProjectPath.Replace("/", ".");
+                initialProjectPath = initialProjectPath.Replace("\\", ".");
+                path = path.Replace(initialProjectPath, string.Empty);
+            }
+
+            if (path.LastIndexOf(".") != -1)
+            {
+                path = path.Remove(path.LastIndexOf("."));
+            }
+
+            if (path.StartsWith("."))
+            {
+                path = path.Remove(0, 1);
+            }
+
             return path;
         }
 

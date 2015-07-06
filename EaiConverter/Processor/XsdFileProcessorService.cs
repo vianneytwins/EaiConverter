@@ -14,7 +14,7 @@ namespace EaiConverter.Processor
 
         public void Process (string fileName)
         {
-            var xsdNameSpacetoGenerate = new XsdBuilder ().Build (fileName);
+            var xsdNameSpacetoGenerate = new XsdBuilder().Build(fileName);
 
             var targetUnit = new CodeCompileUnit();
             targetUnit.Namespaces.Add(xsdNameSpacetoGenerate);
