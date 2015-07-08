@@ -208,10 +208,14 @@ namespace EaiConverter.Parser
 
                 if (activity.GroupType == GroupType.inputLoop)
                 {
-                    activity.Over = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace +"over"));
-                    activity.IterationElementSlot = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace +"iterationElementSlot"));
-                    activity.IndexSlot = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace +"indexSlot"));
-                    activity.AccumulateOutput= XElementParserUtils.GetBoolValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace +"accumulateOutput"));
+                    activity.Over = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace + "over"));
+                    activity.IterationElementSlot = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace + "iterationElementSlot"));
+                    activity.IndexSlot = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace + "indexSlot"));
+                }
+                else if (activity.GroupType == GroupType.repeat)
+                {
+                    activity.IndexSlot = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace + "indexSlot"));
+                    activity.RepeatCondition = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace + "repeatCondition"));
                 }
 
                 if (element.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings") != null)

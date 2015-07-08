@@ -14,13 +14,17 @@ namespace EaiConverter.Model
 
         public GroupType GroupType { get; set;}
 
+        public string RepeatCondition
+        {
+            get;
+            set;
+        }
+
         public string Over { get; set;}
 
         public string IterationElementSlot { get; set;}
 
         public string IndexSlot { get; set;}
-
-        public bool? AccumulateOutput { get; set;}
 
         public List<Activity> Activities { get; set;}
 
@@ -30,7 +34,8 @@ namespace EaiConverter.Model
     public enum GroupType {
         inputLoop,
         simpleGroup,
-        repeat
+        repeat,
+        criticalSection
     }
 }
 

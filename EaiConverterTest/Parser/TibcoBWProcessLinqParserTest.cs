@@ -178,7 +178,6 @@ namespace EaiConverter.Test.Parser
             Assert.AreEqual ("myCollection", ((GroupActivity)tibcoBWProcess.Activities[0]).Over);
             Assert.AreEqual ("current", ((GroupActivity)tibcoBWProcess.Activities[0]).IterationElementSlot);
             Assert.AreEqual ("index", ((GroupActivity)tibcoBWProcess.Activities[0]).IndexSlot);
-            Assert.AreEqual (false, ((GroupActivity)tibcoBWProcess.Activities[0]).AccumulateOutput);
         }
 
         [Test]

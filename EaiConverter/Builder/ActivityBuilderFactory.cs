@@ -46,8 +46,11 @@
             {
                 return new GenerateErrorActivityBuilder(xslBuilder);
             }
-            
-            if (activityType == ActivityType.groupActivityType)
+            if (activityType == ActivityType.sleepActivity)
+            {
+                return new SleepActivityBuilder(xslBuilder);
+            }
+            if (activityType == ActivityType.loopGroupActivityType || activityType == ActivityType.criticalSectionGroupActivityType)
             {
                 return new GroupActivityBuilder(xslBuilder);
             }

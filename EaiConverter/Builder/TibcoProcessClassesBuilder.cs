@@ -106,7 +106,7 @@ namespace EaiConverter.Builder
                     import4Activities.Add(new CodeNamespaceImport(ConvertXsdImportToNameSpace(callProcessActivity.TibcoProcessToCall.InputAndOutputNameSpace)));
                 }
                 else
-                    if (activity.Type == ActivityType.groupActivityType)
+                    if (activity.Type == ActivityType.loopGroupActivityType)
                     {
                         import4Activities.AddRange(this.GenerateImport4Activities(((GroupActivity)activity).Activities));
                     }
@@ -193,7 +193,7 @@ namespace EaiConverter.Builder
                         Attributes = MemberAttributes.Private
                     });
                 }
-                else if (activity.Type == ActivityType.groupActivityType)
+                else if (activity.Type == ActivityType.loopGroupActivityType)
                 {
                     var groupActivity = (GroupActivity)activity;
                     fields.AddRange(this.GenerateFieldsForActivityServices(groupActivity.Activities));

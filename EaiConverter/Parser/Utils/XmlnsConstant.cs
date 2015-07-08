@@ -11,7 +11,7 @@ namespace EaiConverter.Parser.Utils
         public static XNamespace writeToLogActivityNameSpace = "http://www.tibco.com/pe/WriteToLogActivitySchema";
         public static XNamespace generateErrorActivityNameSpace = "http://www.tibco.com/pe/GenerateErrorActivitySchema";
         public static XNamespace globalVariableNameSpace = "http://www.tibco.com/xmlns/repo/types/2002";
-
+        public static XNamespace sleeptibcoActivityNameSpace = "www.tibco.com/plugin/Sleep";
     }
 }
 

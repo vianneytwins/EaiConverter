@@ -16,7 +16,7 @@ namespace EaiConverter.Test.Parser
         {
             activityParser = new NullActivityParser ();
             var xml =
-                @"<pd:activity name=""java call activity"" xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
+                @"<pd:activity name=""null activity"" xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
 <pd:type>com.tibco.plugin.timer.NullActivity</pd:type>
 
 </pd:activity>";

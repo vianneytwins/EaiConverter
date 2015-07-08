@@ -130,6 +130,9 @@
     <Compile Include="Builder\GlobalVariableBuilder.cs" />
     <Compile Include="Builder\Utils\CodeDomUtils.cs" />
     <Compile Include="Processor\GlobalVariableProcessor.cs" />
+    <Compile Include="Parser\SleepActivityParser.cs" />
+    <Compile Include="Builder\SleepActivityBuilder.cs" />
+    <Compile Include="Model\SleepActivity.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -30,6 +30,8 @@ namespace EaiConverter.Parser
                 return new RdvPublishActivityParser ();
             } else if (activityType == ActivityType.rdvEventSourceActivityType.ToString() ){
                 return new RdvEventSourceActivityParser ();
+            } else if (activityType == ActivityType.sleepActivity.ToString() ){
+                return new SleepActivityParser ();
             } else {
                 return null;
             } 

@@ -87,6 +87,8 @@
     <Compile Include="Builder\XsdBuilderTest.cs" />
     <Compile Include="Parser\GlobalVariableParserTest.cs" />
     <Compile Include="Builder\GlobalVariableBuilderTest.cs" />
+    <Compile Include="Parser\SleepActivityParserTest.cs" />
+    <Compile Include="Builder\SleepActivityBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />
