@@ -89,7 +89,9 @@ for (
         public void Should_Generate_invocation_method_For_criticalSection()
         {
             var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.pe.core.CriticalSectionGroup"");
+lock (myActivityNameLock){
 this.logger.Info(""Start Activity: myNullActivity of type: com.tibco.plugin.timer.NullActivity"");
+}
 ";
             this.activity.Type = ActivityType.criticalSectionGroupActivityType;
             this.activity.GroupType = GroupType.criticalSection;

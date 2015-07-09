@@ -2,6 +2,7 @@ using EaiConverter.Model;
 
 using System.CodeDom;
 using System.Collections.Generic;
+using EaiConverter.CodeGenerator.Utils;
 
 namespace EaiConverter.Builder
 {
@@ -50,13 +51,15 @@ namespace EaiConverter.Builder
 
             if (groupActivity.GroupType == GroupType.inputLoop)
             {
-                var forLoop = this.GenerateForLoop(groupActivity);
-                invocationCodeCollection.Add(forLoop);
+                invocationCodeCollection.Add(this.GenerateForLoop(groupActivity));
             }
             else if (groupActivity.GroupType == GroupType.repeat)
             {
-                var repeatLoop = this.GenerateForRepeat(groupActivity);
-                invocationCodeCollection.Add(repeatLoop);
+                invocationCodeCollection.Add(this.GenerateForRepeat(groupActivity));
+            }
+            else if (groupActivity.GroupType == GroupType.criticalSection)
+            {
+                invocationCodeCollection.AddRange(this.GenerateForCriticalSection(groupActivity));
             }
             else
             {
@@ -104,6 +107,17 @@ namespace EaiConverter.Builder
                 new CodeSnippetStatement(string.Empty),
                 coreOfTheLoop);
             return whileLoop;
+        }
+
+        private CodeStatementCollection  GenerateForCriticalSection(GroupActivity groupActivity)
+        {
+            // TODO ADD the myLock object as a field in the process
+            var invocationCodeCollection = new CodeStatementCollection();
+            invocationCodeCollection.Add(new CodeSnippetStatement("lock (" + VariableHelper.ToVariableName(groupActivity.Name) +"Lock){"));
+            invocationCodeCollection.AddRange(this.GenerateCoreGroupMethod(groupActivity));
+            invocationCodeCollection.Add(new CodeSnippetStatement("}"));
+
+            return invocationCodeCollection;
         }
 
         private CodeStatementCollection GenerateCoreGroupMethod(GroupActivity groupActivity)

@@ -198,6 +198,20 @@ namespace EaiConverter.Builder
                     var groupActivity = (GroupActivity)activity;
                     fields.AddRange(this.GenerateFieldsForActivityServices(groupActivity.Activities));
                 }
+                else if (activity.Type == ActivityType.criticalSectionGroupActivityType)
+                {
+                    var groupActivity = (GroupActivity)activity;
+                    fields.AddRange(this.GenerateFieldsForActivityServices(groupActivity.Activities));
+                    // Lock for the synchronise section
+                    //TODO change it because it will be inject in the construtor !!
+                    fields.Add(new CodeMemberField
+                        {
+                            Type = new CodeTypeReference("System.Object"),
+                            Name = VariableHelper.ToVariableName(VariableHelper.ToVariableName(groupActivity.Name+"Lock")),
+                            Attributes = MemberAttributes.Private,
+                            InitExpression = new CodeSnippetExpression("new System.Object()")
+                        });
+                }
                 else
                 {
                     fields.Add(new CodeMemberField
