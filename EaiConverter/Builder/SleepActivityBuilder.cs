@@ -30,9 +30,9 @@ namespace EaiConverter.Builder
             invocationCodeCollection.AddRange(this.xslBuilder.Build(activity.InputBindings));
 
             // Add the invocation new Timer (timerValue)
-            //var code = new CodeVariableDeclarationStatement (variableReturnType, variableName, parameter);
+            var code = new CodeSnippetStatement ("new Timer("+ activity.Parameters[0].Name+");");
 
-            //invocationCodeCollection.Add(code);
+            invocationCodeCollection.Add(code);
 
             return invocationCodeCollection;
         }

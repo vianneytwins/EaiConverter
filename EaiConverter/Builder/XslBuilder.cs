@@ -4,6 +4,7 @@ using System.Text;
 using System.CodeDom;
 using EaiConverter.Parser.Utils;
 using System.Linq;
+using System;
 
 namespace EaiConverter.Builder
 {
@@ -114,6 +115,10 @@ namespace EaiConverter.Builder
                     {
                         codeStatements.Append(this.ReturnValue(element));
                     }
+                    else if (element.Name.LocalName == "copy-of")
+                    {
+                        codeStatements.Append(this.ReturnValue(element));
+                    }
                     else if (element.Name.LocalName == "if")
                     {
                         codeStatements.Append(this.ManageConditionTag(element, parent, true));
@@ -182,6 +187,8 @@ namespace EaiConverter.Builder
                     return true;
                 case "double":
                     return true;
+                case "int":
+                    return true;
                 case "bool":
                     return true;
                 case "DateTime":
@@ -238,6 +245,7 @@ namespace EaiConverter.Builder
 
         private void RetrieveAllTypeInTheElement(IEnumerable<XNode> inputedElement, List<string> elementTypes)
         {
+            int number = 0;
             foreach (XElement item in inputedElement)
             {
                 if (!Regex.IsMatch(item.Name.NamespaceName, XmlnsConstant.xslNameSpace))
@@ -254,6 +262,10 @@ namespace EaiConverter.Builder
                     {
                         elementTypes.Add("double");
                     }
+                    else if(Int32.TryParse(item.Attribute("select").Value,out number))
+                    {
+                        elementTypes.Add("int");
+                    }    
                     else
                     {
                         elementTypes.Add("string");

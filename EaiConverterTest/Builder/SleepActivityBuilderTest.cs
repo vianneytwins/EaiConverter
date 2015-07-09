@@ -35,13 +35,14 @@ namespace EaiConverterTest.Builder
             };
         }
 
-        [Ignore]
+
         [Test]
         public void Should_Generate_invocation_method()
         {
             var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.plugin.timer.SleepActivity"");
 int IntervalInMillisec = 3000;
-new Timer (IntervalInMillisec);
+
+new Timer(IntervalInMillisec);
 ";
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateCodeInvocation(this.activity));
             Assert.AreEqual(expected,generatedCode);
