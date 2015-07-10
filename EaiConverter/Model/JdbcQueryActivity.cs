@@ -30,6 +30,8 @@ namespace EaiConverter.Model
 		/// <value>The query statement parameters.</value>
 		public Dictionary <string,string> QueryStatementParameters  {get; set;}
 	
+        public List <ClassParameter> QueryOutputStatementParameters  {get; set;}
+        /*
 		public string QueryOutputCachedSchemaColumns {
 			get;
 			set;
@@ -43,8 +45,8 @@ namespace EaiConverter.Model
 		public string QueryOutputCachedSchemaStatus {
 			get;
 			set;
-		}
-	}
+		}*/
+    }
 
 }
 

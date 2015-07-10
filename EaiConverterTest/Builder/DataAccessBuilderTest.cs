@@ -68,15 +68,17 @@ db.Query(
 		}
 
 		[Test]
-		public void Should_Return_string_body_Statement_Of_executeQuery_Method_When_return_type_is_Void_with_No_Param(){
+		public void Should_Return_string_body_Statement_Of_executeQuery_Method_When_return_type_is_NotVoid_with_No_Param(){
 			var expected = @"using (IDataAccess db = this.dataAccessFactory.CreateAccess())
 {
-return db.Query <System.Int>(
-  sqlQueryStatement).FirstOrDefault();
+return db.Query <TestJbdcQueryActivityResultSet>(
+  sqlQueryStatement).ToList();
 }
 
 ";
-			this.jdbcQueryActivity.QueryOutputCachedSchemaDataTypes = 4;
+            this.jdbcQueryActivity.QueryOutputStatementParameters = new List<ClassParameter> {
+                new ClassParameter {Name = "MyProp1", Type = "string"}
+            };
 
 			var executeQueryMethod = this.builder.GenerateExecuteQueryMethod (this.jdbcQueryActivity);
 

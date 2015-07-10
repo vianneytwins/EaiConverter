@@ -11,7 +11,7 @@ namespace EaiConverter.Builder
     {
 
         readonly JdbcQueryBuilderUtils jdbcQueryBuilderUtils;
-
+        const string voidString = "System.Void";
         const string DataAccessVariableName = "dataAccess";
 
         public const string ExecuteSqlQueryMethodName = "ExecuteQuery";
@@ -101,7 +101,14 @@ namespace EaiConverter.Builder
 
                 method.Name = ExecuteSqlQueryMethodName;
 
-                method.ReturnType = this.jdbcQueryBuilderUtils.ConvertSQLTypeToObjectType(jdbcQueryActivity.QueryOutputCachedSchemaDataTypes.ToString());
+                if (jdbcQueryActivity.QueryOutputStatementParameters != null)
+                {
+                    method.ReturnType = new CodeTypeReference (VariableHelper.ToClassName(jdbcQueryActivity.Name)+"ResultSet");
+                }
+                else
+                {
+                    method.ReturnType = new CodeTypeReference(voidString);
+                }
 
                 method.Parameters.AddRange(this.jdbcQueryBuilderUtils.ConvertQueryStatementParameter(jdbcQueryActivity.QueryStatementParameters));
 

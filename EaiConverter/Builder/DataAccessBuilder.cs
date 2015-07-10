@@ -119,7 +119,15 @@ namespace EaiConverter.Builder
 
             method.Name = DataAccessServiceBuilder.ExecuteSqlQueryMethodName;
 
-            method.ReturnType = this.jdbcQueryBuilderUtils.ConvertSQLTypeToObjectType(jdbcQueryActivity.QueryOutputCachedSchemaDataTypes.ToString());
+            if (jdbcQueryActivity.QueryOutputStatementParameters != null)
+            {
+                method.ReturnType = new CodeTypeReference (VariableHelper.ToClassName(jdbcQueryActivity.Name)+"ResultSet");
+            }
+            else
+            {
+                method.ReturnType = new CodeTypeReference(voidString);
+            }
+
 
             method.Parameters.AddRange(this.jdbcQueryBuilderUtils.ConvertQueryStatementParameter(jdbcQueryActivity.QueryStatementParameters));
 

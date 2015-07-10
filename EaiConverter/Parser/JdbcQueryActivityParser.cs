@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Xml.Linq;
+using System.Linq;
 using EaiConverter.Model;
 using EaiConverter.Parser.Utils;
 
@@ -23,8 +24,7 @@ namespace EaiConverter.Parser
 			jdbcQueryActivity.JdbcSharedConfig = XElementParserUtils.GetStringValue(configElement.Element("jdbcSharedConfig"));
             if (jdbcQueryActivity.Type == ActivityType.jdbcCallActivityType) {
 				jdbcQueryActivity.QueryStatement = XElementParserUtils.GetStringValue (configElement.Element ("ProcedureName"));
-				// TODO : faut il enlever le ;1 à la fin ? je dirai que oui, à moins que cela donne la position du return dans la liste en dessous..bizarre
-                if (jdbcQueryActivity.QueryStatement.Contains(";"))
+				if (jdbcQueryActivity.QueryStatement.Contains(";"))
                 {
                     jdbcQueryActivity.QueryStatement =
                         jdbcQueryActivity.QueryStatement.Remove(jdbcQueryActivity.QueryStatement.LastIndexOf(';'), 2);
@@ -57,11 +57,11 @@ namespace EaiConverter.Parser
 					);
 				}
 			}
-                
-			jdbcQueryActivity.QueryOutputCachedSchemaColumns = XElementParserUtils.GetStringValue(configElement.Element("QueryOutputCachedSchemaColumns"));
-			jdbcQueryActivity.QueryOutputCachedSchemaDataTypes = XElementParserUtils.GetIntValue(configElement.Element("QueryOutputCachedSchemaDataTypes"));
-			jdbcQueryActivity.QueryOutputCachedSchemaStatus = XElementParserUtils.GetStringValue(configElement.Element("QueryOutputCachedSchemaStatus"));
 
+            jdbcQueryActivity.QueryOutputStatementParameters = this.GetOutputParameters(configElement);
+			//jdbcQueryActivity.QueryOutputCachedSchemaColumns = XElementParserUtils.GetStringValue(configElement.Element("QueryOutputCachedSchemaColumns"));
+			//jdbcQueryActivity.QueryOutputCachedSchemaDataTypes = XElementParserUtils.GetIntValue(configElement.Element("QueryOutputCachedSchemaDataTypes"));
+			
             if (inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings") != null && inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("jdbcQueryActivityInput") != null)
             {
                 jdbcQueryActivity.InputBindings = inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("jdbcQueryActivityInput").Nodes();
@@ -70,6 +70,24 @@ namespace EaiConverter.Parser
 
 			return jdbcQueryActivity;
 		}
+
+        List<ClassParameter> GetOutputParameters(XElement configElement)
+        {
+
+            IEnumerable<XElement> transitionElements = from element in configElement.Elements ("QueryOutputCachedSchemaColumns")
+                select element;
+            IEnumerable<XElement> typeElements = from element in configElement.Elements ("QueryOutputCachedSchemaDataTypes")
+                select element;
+            var transitions = new List<ClassParameter> ();
+            int i = 0;
+            var typesList = typeElements.ToList();
+            foreach (XElement element in transitionElements) {
+                transitions.Add (new ClassParameter{ Name = element.Value, Type = ((XElement)typesList[i]).Value});
+                i++;
+            }
+
+            return transitions;
+        }
 	}
 
 }

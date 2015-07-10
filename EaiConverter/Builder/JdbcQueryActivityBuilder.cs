@@ -88,7 +88,7 @@ namespace EaiConverter.Builder
             var parameters = DefaultActivityBuilder.GenerateParameters(jdbcQueryActivity);
 
 
-            if (jdbcQueryActivity.QueryOutputCachedSchemaColumns != null)
+            if (jdbcQueryActivity.QueryOutputStatementParameters != null || jdbcQueryActivity.QueryOutputStatementParameters.Count != 0)
             {
                 var codeInvocation = new CodeVariableDeclarationStatement("var", VariableHelper.ToVariableName(jdbcQueryActivity.Name), new CodeMethodInvokeExpression(activityServiceReference, DataAccessServiceBuilder.ExecuteSqlQueryMethodName, parameters));
                 invocationCodeCollection.Add(codeInvocation);

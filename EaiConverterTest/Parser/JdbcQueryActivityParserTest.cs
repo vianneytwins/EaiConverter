@@ -115,21 +115,14 @@ namespace EaiConverter.Test.Parser
 		public void Should_Return_QueryOutputCachedSchemaColumns_is_CRNCY(){
             JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity) jdbcQueryActivityParser.Parse (doc);
 
-			Assert.AreEqual ("CRNCY", jdbcQueryActivity.QueryOutputCachedSchemaColumns);
+            Assert.AreEqual ("CRNCY", jdbcQueryActivity.QueryOutputStatementParameters[0].Name);
 		}
 
 		[Test]
 		public void Should_Return_QueryOutputCachedSchemaDataTypes_is_12(){
             JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity) jdbcQueryActivityParser.Parse (doc);
 
-			Assert.AreEqual (12, jdbcQueryActivity.QueryOutputCachedSchemaDataTypes);
-		}
-
-		[Test]
-		public void Should_Return_QueryOutputCachedSchemaStatus_is_OptionalElement(){
-            JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity) jdbcQueryActivityParser.Parse (doc);
-
-			Assert.AreEqual ("OptionalElement", jdbcQueryActivity.QueryOutputCachedSchemaStatus);
+            Assert.AreEqual ("12", jdbcQueryActivity.QueryOutputStatementParameters[0].Type);
 		}
 
 		[Test]
