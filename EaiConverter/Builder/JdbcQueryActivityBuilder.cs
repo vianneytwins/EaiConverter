@@ -12,14 +12,16 @@ namespace EaiConverter.Builder
         DataAccessBuilder dataAccessBuilder;
         DataAccessServiceBuilder dataAccessServiceBuilder;
         DataAccessInterfacesCommonBuilder dataAccessCommonBuilder;
+        ResultSetBuilder resultSetBuilder;
         XslBuilder xslBuilder;
 
-        public JdbcQueryActivityBuilder(DataAccessBuilder dataAccessBuilder, DataAccessServiceBuilder dataAccessServiceBuilder, DataAccessInterfacesCommonBuilder dataAccessCommonBuilder, XslBuilder xslBuilder)
+        public JdbcQueryActivityBuilder(DataAccessBuilder dataAccessBuilder, DataAccessServiceBuilder dataAccessServiceBuilder, DataAccessInterfacesCommonBuilder dataAccessCommonBuilder, XslBuilder xslBuilder, ResultSetBuilder resultSetBuilder)
         {
             this.dataAccessBuilder = dataAccessBuilder;
             this.dataAccessServiceBuilder = dataAccessServiceBuilder;
             this.dataAccessCommonBuilder = dataAccessCommonBuilder;
             this.xslBuilder = xslBuilder;
+            this.resultSetBuilder = resultSetBuilder;
         }
 
         public ActivityCodeDom Build(Activity activity)
@@ -27,17 +29,24 @@ namespace EaiConverter.Builder
             JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity)activity;
 
             var result = new ActivityCodeDom();
+            result.ClassesToGenerate = new CodeNamespaceCollection();
             string jdbcServiceName;
             if (this.HasThisSqlRequestAlreadyGenerateAService(jdbcQueryActivity.QueryStatement))
             {
-                result.ClassesToGenerate = new CodeNamespaceCollection();
                 jdbcServiceName = this.GetExistingJdbcServiceName(jdbcQueryActivity.QueryStatement);
             }
             else
             {
+                if (jdbcQueryActivity.QueryOutputStatementParameters != null && jdbcQueryActivity.QueryOutputStatementParameters.Count != 0)
+                {
+                    result.ClassesToGenerate.Add(this.resultSetBuilder.Build(jdbcQueryActivity)); 
+                }
                 var dataAccessNameSpace = this.dataAccessBuilder.Build(jdbcQueryActivity);
                 var dataAccessInterfaceNameSpace = InterfaceExtractorFromClass.Extract(dataAccessNameSpace.Types[0], TargetAppNameSpaceService.dataAccessNamespace);
                 dataAccessNameSpace.Types[0].BaseTypes.Add(new CodeTypeReference(dataAccessInterfaceNameSpace.Types[0].Name));
+
+
+
 
                 var serviceNameSpace = this.dataAccessServiceBuilder.Build(jdbcQueryActivity);
                 var serviceInterfaceNameSpace = InterfaceExtractorFromClass.Extract(serviceNameSpace.Types[0], TargetAppNameSpaceService.domainContractNamespaceName);
@@ -49,14 +58,13 @@ namespace EaiConverter.Builder
                 var dataBaseAttributeNamespace = new DatabaseAttributeBuilder().Build(GetDataCustomAttributeName(dataAccessNameSpace));
 
 
-                result.ClassesToGenerate = new CodeNamespaceCollection {
-    				dataAccessNameSpace,
-    				dataAccessInterfaceNameSpace,
-    				serviceNameSpace,
-    				serviceInterfaceNameSpace,
-    				dataCommonNamespace,
-    				dataBaseAttributeNamespace}
-                    ;
+                result.ClassesToGenerate.Add(dataAccessNameSpace);
+                result.ClassesToGenerate.Add(dataAccessInterfaceNameSpace);
+                result.ClassesToGenerate.Add(serviceNameSpace);
+                result.ClassesToGenerate.Add(serviceInterfaceNameSpace);
+                result.ClassesToGenerate.Add(dataCommonNamespace);
+                result.ClassesToGenerate.Add(dataBaseAttributeNamespace);
+                    
 
                 jdbcServiceName = serviceNameSpace.Types[0].Name;
             }
@@ -88,9 +96,9 @@ namespace EaiConverter.Builder
             var parameters = DefaultActivityBuilder.GenerateParameters(jdbcQueryActivity);
 
 
-            if (jdbcQueryActivity.QueryOutputStatementParameters != null || jdbcQueryActivity.QueryOutputStatementParameters.Count != 0)
+            if (jdbcQueryActivity.QueryOutputStatementParameters != null)
             {
-                var codeInvocation = new CodeVariableDeclarationStatement("var", VariableHelper.ToVariableName(jdbcQueryActivity.Name), new CodeMethodInvokeExpression(activityServiceReference, DataAccessServiceBuilder.ExecuteSqlQueryMethodName, parameters));
+                var codeInvocation = new CodeVariableDeclarationStatement(new CodeTypeReference (VariableHelper.ToClassName(jdbcQueryActivity.Name)+"ResultSet"), VariableHelper.ToVariableName(jdbcQueryActivity.Name)+"ResultSet", new CodeMethodInvokeExpression(activityServiceReference, DataAccessServiceBuilder.ExecuteSqlQueryMethodName, parameters));
                 invocationCodeCollection.Add(codeInvocation);
             }
             else

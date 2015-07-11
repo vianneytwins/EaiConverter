@@ -33,7 +33,8 @@ namespace EaiConverter.Test.Builder
                 new DataAccessBuilder (jdbcQueryBuilderUtils),
                 new DataAccessServiceBuilder (jdbcQueryBuilderUtils),
                 new DataAccessInterfacesCommonBuilder(),
-                new XslBuilder(new XpathBuilder())
+                new XslBuilder(new XpathBuilder()),
+                new ResultSetBuilder()
             );
 
 		}
@@ -94,9 +95,9 @@ namespace EaiConverter.Test.Builder
 
         [Test]
         public void Should_Return_void_Invocation_Code_When_Activity_has_return_type_And_No_Input(){
-            //this.jdbcQueryActivity.QueryOutputCachedSchemaColumns = "";
+            this.jdbcQueryActivity.QueryOutputStatementParameters = new List<ClassParameter> {new ClassParameter{Name ="param1", Type = "System.String"}};
             CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateCodeInvocation ("MyService", this.jdbcQueryActivity);
-            Assert.AreEqual ("this.logger.Info(\"Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity\");\n\nvar currency = this.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
+            Assert.AreEqual ("this.logger.Info(\"Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity\");\n\nCurrencyResultSet currencyResultSet = this.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
         }
 
         [Test]

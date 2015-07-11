@@ -7,7 +7,7 @@
         {
             var jdbcQueryBuilderUtils = new JdbcQueryBuilderUtils();
             var xslBuilder = new XslBuilder(new XpathBuilder());
-            var jdbcQueryActivityBuilder = new JdbcQueryActivityBuilder(new DataAccessBuilder(jdbcQueryBuilderUtils), new DataAccessServiceBuilder(jdbcQueryBuilderUtils), new DataAccessInterfacesCommonBuilder(), xslBuilder);
+            var jdbcQueryActivityBuilder = new JdbcQueryActivityBuilder(new DataAccessBuilder(jdbcQueryBuilderUtils), new DataAccessServiceBuilder(jdbcQueryBuilderUtils), new DataAccessInterfacesCommonBuilder(), xslBuilder, new ResultSetBuilder());
             if (activityType == ActivityType.jdbcQueryActivityType || activityType == ActivityType.jdbcCallActivityType || activityType == ActivityType.jdbcUpdateActivityType)
             {
                 return jdbcQueryActivityBuilder;

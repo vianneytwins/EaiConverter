@@ -36,8 +36,6 @@ namespace EaiConverter.Builder
 
             dataAccessToGenerate.Name = VariableHelper.ToClassName(jdbcQueryActivity.Name) + "DataAccess";
 
-
-            //dataAccessToGenerate.Imports = this.GenerateImport (jdbcQueryActivity);
             dataAccessToGenerate.Members.AddRange(this.GenererateFields(jdbcQueryActivity));
             dataAccessToGenerate.Members.AddRange(this.GenererateContructors(jdbcQueryActivity, dataAccessToGenerate));
             dataAccessToGenerate.Members.AddRange(this.GenererateMethods(jdbcQueryActivity));
@@ -172,7 +170,7 @@ namespace EaiConverter.Builder
             tabulation.Decrement();
             if (method.ReturnType.BaseType != voidString)
             {
-                sb.AppendLine(string.Format("{0}).FirstOrDefault();", tabulation));
+                sb.AppendLine(string.Format("{0}).ToList();", tabulation));
             }
             else
             {
