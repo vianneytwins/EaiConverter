@@ -9,17 +9,11 @@ namespace EaiConverter.Builder
 {
     public class DataAccessServiceBuilder
     {
-
-        readonly JdbcQueryBuilderUtils jdbcQueryBuilderUtils;
         const string voidString = "System.Void";
         const string DataAccessVariableName = "dataAccess";
 
         public const string ExecuteSqlQueryMethodName = "ExecuteQuery";
 
-        public DataAccessServiceBuilder(JdbcQueryBuilderUtils jdbcQueryBuilderUtils)
-        {
-            this.jdbcQueryBuilderUtils = jdbcQueryBuilderUtils;
-        }
 
         public CodeNamespace Build(JdbcQueryActivity jdbcQueryActivity)
         {
@@ -110,7 +104,7 @@ namespace EaiConverter.Builder
                     method.ReturnType = new CodeTypeReference(voidString);
                 }
 
-                method.Parameters.AddRange(this.jdbcQueryBuilderUtils.ConvertQueryStatementParameter(jdbcQueryActivity.QueryStatementParameters));
+                method.Parameters.AddRange(JdbcQueryBuilderUtils.ConvertQueryStatementParameter(jdbcQueryActivity.QueryStatementParameters));
 
                 method.Statements.Add(this.GenerateExecuteQueryBody(method));
 

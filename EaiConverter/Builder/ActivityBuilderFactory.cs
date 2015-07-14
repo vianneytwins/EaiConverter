@@ -5,9 +5,8 @@
     {
         public IActivityBuilder Get(ActivityType activityType)
         {
-            var jdbcQueryBuilderUtils = new JdbcQueryBuilderUtils();
             var xslBuilder = new XslBuilder(new XpathBuilder());
-            var jdbcQueryActivityBuilder = new JdbcQueryActivityBuilder(new DataAccessBuilder(jdbcQueryBuilderUtils), new DataAccessServiceBuilder(jdbcQueryBuilderUtils), new DataAccessInterfacesCommonBuilder(), xslBuilder, new ResultSetBuilder());
+            var jdbcQueryActivityBuilder = new JdbcQueryActivityBuilder(new DataAccessBuilder(), new DataAccessServiceBuilder(), new DataAccessInterfacesCommonBuilder(), xslBuilder, new ResultSetBuilder());
             if (activityType == ActivityType.jdbcQueryActivityType || activityType == ActivityType.jdbcCallActivityType || activityType == ActivityType.jdbcUpdateActivityType)
             {
                 return jdbcQueryActivityBuilder;

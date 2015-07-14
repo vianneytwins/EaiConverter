@@ -42,7 +42,7 @@ namespace EaiConverter.Builder
             var fields = new List<CodeMemberProperty>();
             foreach(var element in jdbcQueryActivity.QueryOutputStatementParameters)
             {
-                fields.Add(CodeDomUtils.GenerateProperty(element.Name, element.Type));
+                fields.Add(CodeDomUtils.GenerateProperty(element.Name, JdbcQueryBuilderUtils.ConvertSQLTypeToTypeInString(element.Type)));
             }
             return fields.ToArray();
         }

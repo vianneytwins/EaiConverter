@@ -18,13 +18,6 @@ namespace EaiConverter.Builder
 
         const string voidString = "System.Void";
 
-        readonly JdbcQueryBuilderUtils jdbcQueryBuilderUtils;
-
-        public DataAccessBuilder(JdbcQueryBuilderUtils jdbcQueryBuilderUtils)
-        {
-            this.jdbcQueryBuilderUtils = jdbcQueryBuilderUtils;
-        }
-
         public CodeNamespace Build(JdbcQueryActivity jdbcQueryActivity)
         {
             var dataAccessNameSpace = new CodeNamespace(TargetAppNameSpaceService.dataAccessNamespace);
@@ -94,7 +87,7 @@ namespace EaiConverter.Builder
                             // TODO verifier que ca marche
                             CustomAttributes = new CodeAttributeDeclarationCollection {
                                 new CodeAttributeDeclaration (
-                                    this.jdbcQueryBuilderUtils.ConvertJDBCConnectionName (jdbcQueryActivity.JdbcSharedConfig)
+                                    JdbcQueryBuilderUtils.ConvertJDBCConnectionName (jdbcQueryActivity.JdbcSharedConfig)
                                 )
                             }
                         });
@@ -127,7 +120,7 @@ namespace EaiConverter.Builder
             }
 
 
-            method.Parameters.AddRange(this.jdbcQueryBuilderUtils.ConvertQueryStatementParameter(jdbcQueryActivity.QueryStatementParameters));
+            method.Parameters.AddRange(JdbcQueryBuilderUtils.ConvertQueryStatementParameter(jdbcQueryActivity.QueryStatementParameters));
 
             method.Statements.Add(this.GenerateExecuteQueryBody(jdbcQueryActivity, method));
 

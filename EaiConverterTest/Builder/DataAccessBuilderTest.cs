@@ -15,7 +15,7 @@ namespace EaiConverter.Test.Builder
 
 		[SetUp]
 		public void SetUp(){
-			this.builder = new DataAccessBuilder (new JdbcQueryBuilderUtils());
+			this.builder = new DataAccessBuilder ();
             this.jdbcQueryActivity = new JdbcQueryActivity {
                 Type = ActivityType.jdbcCallActivityType,
 				Name = "TestJbdcQueryActivity",

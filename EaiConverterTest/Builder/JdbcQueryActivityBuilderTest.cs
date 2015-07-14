@@ -28,10 +28,9 @@ namespace EaiConverter.Test.Builder
 				}
 			};
 			jdbcQueryActivity.JdbcSharedConfig = string.Empty;
-			var jdbcQueryBuilderUtils = new JdbcQueryBuilderUtils ();
 			jdbcQueryActivityBuilder = new JdbcQueryActivityBuilder (
-                new DataAccessBuilder (jdbcQueryBuilderUtils),
-                new DataAccessServiceBuilder (jdbcQueryBuilderUtils),
+                new DataAccessBuilder (),
+                new DataAccessServiceBuilder (),
                 new DataAccessInterfacesCommonBuilder(),
                 new XslBuilder(new XpathBuilder()),
                 new ResultSetBuilder()
@@ -115,7 +114,7 @@ namespace EaiConverter.Test.Builder
 
             this.jdbcQueryActivity.InputBindings = doc.Nodes();
             jdbcQueryActivity.Parameters = new List<ClassParameter> {
-                new ClassParameter{ Name = "IdBbUnique", Type = "String" }
+                new ClassParameter{ Name = "IdBbUnique", Type = "string" }
             };
 
             CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateCodeInvocation ("MyService", this.jdbcQueryActivity);
