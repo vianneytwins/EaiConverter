@@ -1,13 +1,13 @@
 ﻿using System.CodeDom;
 
 using EaiConverter.Builder.Utils;
+using EaiConverter.Utils;
 
 namespace EaiConverter.Builder
 {
 	public class DataAccessInterfacesCommonBuilder
 	{
 
-		const string voidString = "System.Void";
 
 		public CodeNamespace Build () {
 			var namespaceResult = new CodeNamespace (TargetAppNameSpaceService.dataAccessCommonNamespace);
@@ -48,9 +48,9 @@ namespace EaiConverter.Builder
 
 		public CodeParameterDeclarationExpressionCollection GenerateMethodsParameters ()
 		{
-			var sqlQuery = new CodeParameterDeclarationExpression ("System.String", "query");
+            var sqlQuery = new CodeParameterDeclarationExpression (CSharpTypeConstant.SystemString, "query");
 			var sqlQueryParameter = new CodeParameterDeclarationExpression () {
-				Type = new CodeTypeReference ("System.Object"),
+                Type = new CodeTypeReference (CSharpTypeConstant.SystemObject),
 				Name = "paramater = null",
 			// TODO : find a way to do it properly
 			//				CustomAttributes = new CodeAttributeDeclarationCollection {
@@ -67,7 +67,7 @@ namespace EaiConverter.Builder
 		{
 			var methodeQueryVoid = new CodeMemberMethod {
 				Name = "Query",
-				ReturnType = new CodeTypeReference (voidString)
+                ReturnType = new CodeTypeReference (CSharpTypeConstant.SystemVoid)
 			};
 			methodeQueryVoid.Parameters.AddRange (parameters);
 			return methodeQueryVoid;

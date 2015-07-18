@@ -4,12 +4,13 @@ using System.Collections.Generic;
 using EaiConverter.CodeGenerator.Utils;
 using EaiConverter.Builder.Utils;
 using EaiConverter.Model;
+using EaiConverter.Utils;
 
 namespace EaiConverter.Builder
 {
     public class DataAccessServiceBuilder
     {
-        const string voidString = "System.Void";
+        
         const string DataAccessVariableName = "dataAccess";
 
         public const string ExecuteSqlQueryMethodName = "ExecuteQuery";
@@ -101,7 +102,7 @@ namespace EaiConverter.Builder
                 }
                 else
                 {
-                    method.ReturnType = new CodeTypeReference(voidString);
+                    method.ReturnType = new CodeTypeReference(CSharpTypeConstant.SystemVoid);
                 }
 
                 method.Parameters.AddRange(JdbcQueryBuilderUtils.ConvertQueryStatementParameter(jdbcQueryActivity.QueryStatementParameters));
@@ -125,7 +126,7 @@ namespace EaiConverter.Builder
 
             var invocationExpression = new CodeMethodInvokeExpression(dataAccessReference, ExecuteSqlQueryMethodName, methodArgumentReferences);
 
-            if (method.ReturnType.BaseType != "System.Void")
+            if (method.ReturnType.BaseType != CSharpTypeConstant.SystemVoid)
             {
                 return new CodeMethodReturnStatement(invocationExpression);
             }

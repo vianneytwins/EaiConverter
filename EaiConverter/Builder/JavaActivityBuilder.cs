@@ -5,6 +5,7 @@ using EaiConverter.CodeGenerator.Utils;
 using System.Reflection;
 using System.Collections.Generic;
 using EaiConverter.Processor;
+using EaiConverter.Utils;
 
 namespace EaiConverter.Builder
 {
@@ -13,6 +14,8 @@ namespace EaiConverter.Builder
         XslBuilder xslBuilder;
 
         const string InvokeMethodName = "Invoke";
+
+        const string IJavaActivityService = "IJavaActivityService";
 
         public JavaActivityBuilder(XslBuilder xslBuilder)
         {
@@ -48,7 +51,7 @@ namespace EaiConverter.Builder
             {
                 //TODO : Refactor because it's a bit dirty
                 var javaServiceInterfaceNameSpace = InterfaceExtractorFromClass.Extract(javaClass, TargetAppNameSpaceService.javaToolsNameSpace);
-                javaServiceInterfaceNameSpace.Types[0].Name = "IJavaActivtyService";
+                javaServiceInterfaceNameSpace.Types[0].Name = IJavaActivityService;
                 codeNameSpaces.Add(javaServiceInterfaceNameSpace);
                 ConfigurationApp.SaveProperty("IsJavaInterfaceAlreadyGenerated", "true");
             }
@@ -69,7 +72,7 @@ namespace EaiConverter.Builder
             var javaClass = new CodeTypeDeclaration(activity.FileName);
             javaClass.IsClass = true;
             javaClass.TypeAttributes = TypeAttributes.Public;
-            javaClass.BaseTypes.Add(new CodeTypeReference("IJavaActivtyService"));
+            javaClass.BaseTypes.Add(new CodeTypeReference(IJavaActivityService));
 
             javaClass.Comments.Add(new CodeCommentStatement(activity.FullSource));
 
@@ -84,7 +87,7 @@ namespace EaiConverter.Builder
 
                 method.Name = InvokeMethodName;
 
-                method.ReturnType = new CodeTypeReference ("System.Void");
+                method.ReturnType = new CodeTypeReference (CSharpTypeConstant.SystemVoid);
                 return method;
             }
         }
@@ -111,7 +114,7 @@ namespace EaiConverter.Builder
             //add input to java class
             invocationCodeCollection.AddRange(this.GenerateInputCallOnJavaClass(javaActivity, javaClassReference));
 
-            // add call ti invoke methode
+            // add call to invoke methode
             invocationCodeCollection.Add(this.GenerateInvokeCallOnJavaClass(javaClassReference));
 
             // instanciate the result class

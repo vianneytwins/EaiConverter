@@ -134,6 +134,7 @@
     <Compile Include="Builder\SleepActivityBuilder.cs" />
     <Compile Include="Model\SleepActivity.cs" />
     <Compile Include="Builder\ResultSetBuilder.cs" />
+    <Compile Include="Builder\Utils\CSharpTypeConstant.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -5,6 +5,7 @@ using System.Text;
 using EaiConverter.CodeGenerator.Utils;
 using EaiConverter.Builder.Utils;
 using EaiConverter.Model;
+using EaiConverter.Utils;
 
 namespace EaiConverter.Builder
 {
@@ -16,7 +17,6 @@ namespace EaiConverter.Builder
 
         const string SqlQueryStatement = "sqlQueryStatement";
 
-        const string voidString = "System.Void";
 
         public CodeNamespace Build(JdbcQueryActivity jdbcQueryActivity)
         {
@@ -116,7 +116,7 @@ namespace EaiConverter.Builder
             }
             else
             {
-                method.ReturnType = new CodeTypeReference(voidString);
+                method.ReturnType = new CodeTypeReference(CSharpTypeConstant.SystemVoid);
             }
 
 
@@ -133,7 +133,7 @@ namespace EaiConverter.Builder
             var sb = new StringBuilder();
             sb.Append(bodyMethodStart);
             var tabulation = new Tab();
-            if (method.ReturnType.BaseType == voidString)
+            if (method.ReturnType.BaseType == CSharpTypeConstant.SystemVoid)
             {
                 sb.AppendLine(string.Format("{0}(", dbQuery));
             }
@@ -161,7 +161,7 @@ namespace EaiConverter.Builder
             }
             //ferme le dbQuery
             tabulation.Decrement();
-            if (method.ReturnType.BaseType != voidString)
+            if (method.ReturnType.BaseType != CSharpTypeConstant.SystemVoid)
             {
                 sb.AppendLine(string.Format("{0}).ToList();", tabulation));
             }

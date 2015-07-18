@@ -1,13 +1,14 @@
 ﻿using System.CodeDom;
 using System.Collections.Generic;
 using EaiConverter.CodeGenerator.Utils;
+using EaiConverter.Utils;
 
 namespace EaiConverter.Builder
 {
     public static class JdbcQueryBuilderUtils
     {
 
-        const string voidString = "System.Void";
+     
 
         private static Dictionary<string, string> sqlMapping = new Dictionary<string, string> {
             {"VARCHAR","System.String"},
@@ -54,7 +55,7 @@ namespace EaiConverter.Builder
             }
             else
             {
-                return voidString;
+                return CSharpTypeConstant.SystemVoid;
             }
         }
 

@@ -5,6 +5,7 @@ using System.Reflection;
 using EaiConverter.CodeGenerator.Utils;
 using EaiConverter.Model;
 using EaiConverter.Builder.Utils;
+using EaiConverter.Utils;
 
 namespace EaiConverter.Builder
 {
@@ -307,7 +308,7 @@ namespace EaiConverter.Builder
             string returnType;
             if (tibcoBwProcessToGenerate.EndActivity == null || tibcoBwProcessToGenerate.EndActivity.Parameters == null)
             {
-                returnType = "System.Void";
+                returnType = CSharpTypeConstant.SystemVoid;
             }
             else
             {
@@ -322,7 +323,7 @@ namespace EaiConverter.Builder
             {
                 startMethod.Statements.AddRange(this.coreProcessBuilder.GenerateStartCodeStatement(tibcoBwProcessToGenerate.Transitions, tibcoBwProcessToGenerate.StartActivity.Name, null, this.activityNameToServiceNameDictionnary));
                 // TODO VC : integrate the following section in in CoreProcessBuilder
-                if (startMethod.ReturnType.BaseType != "System.Void")
+                if (startMethod.ReturnType.BaseType != CSharpTypeConstant.SystemVoid)
                 {
                     var returnName = VariableHelper.ToVariableName(tibcoBwProcessToGenerate.EndActivity.Parameters[0].Name);
                     var objectCreate = new CodeObjectCreateExpression(startMethod.ReturnType);

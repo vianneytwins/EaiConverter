@@ -1,11 +1,12 @@
 ﻿using System.CodeDom;
 using EaiConverter.Builder.Utils;
+using EaiConverter.Utils;
 
 namespace EaiConverter.Builder
 {
 	public class LoggerInterfaceBuilder
 	{
-		const string voidString = "System.Void";
+
 
 		public CodeNamespace Build () {
 			var namespaceResult = new CodeNamespace (TargetAppNameSpaceService.loggerNameSpace);
@@ -19,7 +20,7 @@ namespace EaiConverter.Builder
 			var parameters = new CodeParameterDeclarationExpressionCollection ();
 			parameters.Add (message);
 
-			var voidReturnType = new CodeTypeReference (voidString);
+            var voidReturnType = new CodeTypeReference (CSharpTypeConstant.SystemVoid);
 
 			var debugMethod = new CodeMemberMethod { Name = "Debug", ReturnType = voidReturnType };
 			debugMethod.Parameters.AddRange (parameters);
