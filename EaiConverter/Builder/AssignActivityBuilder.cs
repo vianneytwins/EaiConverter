@@ -17,7 +17,7 @@ namespace EaiConverter.Builder
         {
             var result = new ActivityCodeDom();
 
-            result.ClassesToGenerate = new CodeNamespaceCollection();
+            result.ClassesToGenerate = this.GenerateClassesToGenerate(activity);
             result.InvocationCode = this.GenerateInvocationCode (activity);
 
             return result;
@@ -25,7 +25,7 @@ namespace EaiConverter.Builder
 
         public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity)
         {
-            throw new System.NotImplementedException();
+            return new CodeNamespaceCollection();
         }
      
 
