@@ -69,6 +69,10 @@
             //tib:getHostName()
             expression = expression.Replace("tib:getHostName(","TibcoXslHelper.GetHostName(");
 
+            //for JbdcQueryActivity
+            expression = expression.Replace(".resultSet.Record[",".ResultSet[");
+            expression = expression.Replace(".resultSet.Record.nb",".ResultSet.Count()");
+
             expression = expression.Replace("&quot;",@"""");
             expression = expression.Replace(" div "," / ");
             expression = expression.Replace(" or "," || ");
