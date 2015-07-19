@@ -81,7 +81,7 @@ myJavaFileName.Invoke();
 My.Package.Name.MyActivityName myActivityName = new My.Package.Name.MyActivityName();
 myActivityName.lastDate = myJavaFileName.getlastDate();
 ";
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateCodeInvocation(this.activity));
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateInvocationCode(this.activity));
             Assert.AreEqual(expected,generatedCode);
         }
     }

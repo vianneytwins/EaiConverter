@@ -51,7 +51,7 @@ string messageCode = ""EVL"";
 
 throw new System.Exception(String.Format(""Message : {0}\nMessage code : {1} "", message, messageCode));
 ";
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateCodeInvocation(this.activity));
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateInvocationCode(this.activity));
             Assert.AreEqual(expected,generatedCode);
         }
     }

@@ -18,25 +18,52 @@ namespace EaiConverter.Builder
         public ActivityCodeDom Build(Activity activity)
         {
             var activityCodeDom = new ActivityCodeDom();
-            activityCodeDom.ClassesToGenerate = new CodeNamespaceCollection();
+            activityCodeDom.ClassesToGenerate = this.GenerateClassesToGenerate(activity);
 
-            var errorActivity = (GenerateErrorActivity)activity;
-            activityCodeDom.InvocationCode = this.GenerateCodeInvocation(errorActivity);
+
+            activityCodeDom.InvocationCode = this.GenerateInvocationCode(activity);
             return activityCodeDom;
         }
         #endregion
 
-        public CodeStatementCollection GenerateCodeInvocation(GenerateErrorActivity activity)
+        public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity)
         {
+            return new CodeNamespaceCollection();
+        }
+
+
+        public CodeNamespaceImportCollection GenerateImports(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public List<CodeMemberField> GenerateFields(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public CodeStatementCollection GenerateInvocationCode(Activity activity)
+        {
+            var errorActivity = (GenerateErrorActivity)activity;
             var invocationCodeCollection = new CodeStatementCollection();
 
             // add log
-            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(activity));
+            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(errorActivity));
             //add the input
             invocationCodeCollection.AddRange(this.xslBuilder.Build(activity.InputBindings));
 
             // Add the exception Call
-            invocationCodeCollection.Add(this.GenerateExceptionStatement(activity));
+            invocationCodeCollection.Add(this.GenerateExceptionStatement(errorActivity));
 
             return invocationCodeCollection;
         }

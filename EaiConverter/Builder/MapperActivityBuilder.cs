@@ -15,19 +15,40 @@ namespace EaiConverter.Builder
 
         public ActivityCodeDom Build (Activity activity)
         {
-            MapperActivity mapperActivity = (MapperActivity) activity;
+            
 
             var result = new ActivityCodeDom();
 
-            result.ClassesToGenerate = new CodeNamespaceCollection();
-            result.InvocationCode = this.GenerateCodeInvocation (mapperActivity);
+            result.ClassesToGenerate = this.GenerateClassesToGenerate(activity);
+            result.InvocationCode = this.GenerateInvocationCode (activity);
 
             return result;
         }
 
-
-        public CodeStatementCollection GenerateCodeInvocation ( MapperActivity mapperActivity)
+        public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity)
         {
+            return new CodeNamespaceCollection();
+        }
+        public CodeNamespaceImportCollection GenerateImports(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+        public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+        public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+        public System.Collections.Generic.List<CodeMemberField> GenerateFields(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public CodeStatementCollection GenerateInvocationCode (Activity activity)
+        {
+            MapperActivity mapperActivity = (MapperActivity) activity;
             var invocationCodeCollection = new CodeStatementCollection();
             // Add the Log
             invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(mapperActivity));

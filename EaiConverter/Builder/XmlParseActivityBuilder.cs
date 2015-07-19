@@ -18,8 +18,6 @@ namespace EaiConverter.Builder
 
         public ActivityCodeDom Build (Activity activity)
         {
-            var mapperActivity = (XmlParseActivity) activity;
-
             var result = new ActivityCodeDom();
 
             if (ConfigurationApp.GetProperty("IsXmlParserHelperAlreadyGenerated") != "true")
@@ -31,14 +29,41 @@ namespace EaiConverter.Builder
             {
                 result.ClassesToGenerate = new CodeNamespaceCollection();
             }
-            result.InvocationCode = this.GenerateCodeInvocation (mapperActivity);
+            result.InvocationCode = this.GenerateInvocationCode (activity);
 
             return result;
         }
 
-
-        public CodeStatementCollection GenerateCodeInvocation ( XmlParseActivity xmlParseActivity)
+        public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity)
         {
+            var result = new CodeNamespaceCollection();
+            if (ConfigurationApp.GetProperty("IsXmlParserHelperAlreadyGenerated") != "true")
+            {
+                result.AddRange(this.xmlParserHelperBuilder.Build());
+                ConfigurationApp.SaveProperty("IsXmlParserHelperAlreadyGenerated", "true");
+            }
+            return result;
+        }
+        public CodeNamespaceImportCollection GenerateImports(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+        public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+        public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+        public System.Collections.Generic.List<CodeMemberField> GenerateFields(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public CodeStatementCollection GenerateInvocationCode(Activity activity)
+        {
+            var xmlParseActivity = (XmlParseActivity) activity;
             var invocationCodeCollection = new CodeStatementCollection();
             // Add log at the beginning
             invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(xmlParseActivity));

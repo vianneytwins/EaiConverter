@@ -14,13 +14,38 @@ namespace EaiConverter.Builder
         public ActivityCodeDom Build(Activity activity)
         {
             var activityCodeDom = new ActivityCodeDom();
-            activityCodeDom.ClassesToGenerate = new CodeNamespaceCollection();
-            activityCodeDom.InvocationCode = this.DefaultInvocationMethod(activity);
+            activityCodeDom.ClassesToGenerate = this.GenerateClassesToGenerate(activity); 
+            activityCodeDom.InvocationCode = this.GenerateInvocationCode(activity);
             return activityCodeDom;
         }
         #endregion
 
-        public CodeStatementCollection DefaultInvocationMethod(Activity activity)
+        public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity)
+        {
+            return new CodeNamespaceCollection();
+        }
+
+        public CodeNamespaceImportCollection GenerateImports(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public List<CodeMemberField> GenerateFields(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public CodeStatementCollection GenerateInvocationCode(Activity activity)
         {
             var activityServiceReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToVariableName(activity.Name));
             var methodInvocation = new CodeMethodInvokeExpression(activityServiceReference, "Execute", new CodeExpression[] { });

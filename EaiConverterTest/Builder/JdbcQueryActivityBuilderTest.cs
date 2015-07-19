@@ -88,14 +88,16 @@ namespace EaiConverter.Test.Builder
 
         [Test]
         public void Should_Return_void_Invocation_Code_When_Activity_has_no_return_type_And_No_Input(){
-            CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateCodeInvocation ("MyService", this.jdbcQueryActivity);
+            this.jdbcQueryActivityBuilder.serviceToInvoke = "MyService";
+            CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateInvocationCode (this.jdbcQueryActivity);
             Assert.AreEqual ("this.logger.Info(\"Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity\");\n\nthis.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
         }
 
         [Test]
         public void Should_Return_void_Invocation_Code_When_Activity_has_return_type_And_No_Input(){
+            this.jdbcQueryActivityBuilder.serviceToInvoke = "MyService";
             this.jdbcQueryActivity.QueryOutputStatementParameters = new List<ClassParameter> {new ClassParameter{Name ="param1", Type = "System.String"}};
-            CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateCodeInvocation ("MyService", this.jdbcQueryActivity);
+            CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateInvocationCode ( this.jdbcQueryActivity);
             Assert.AreEqual ("this.logger.Info(\"Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity\");\n\nCurrencyResultSet currencyResultSet = this.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
         }
 
@@ -116,8 +118,9 @@ namespace EaiConverter.Test.Builder
             jdbcQueryActivity.Parameters = new List<ClassParameter> {
                 new ClassParameter{ Name = "IdBbUnique", Type = "string" }
             };
+            this.jdbcQueryActivityBuilder.serviceToInvoke = "MyService";
 
-            CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateCodeInvocation ("MyService", this.jdbcQueryActivity);
+            CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateInvocationCode (this.jdbcQueryActivity);
             Assert.AreEqual (
                 @"this.logger.Info(""Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity"");
 string IdBbUnique = ""test"";

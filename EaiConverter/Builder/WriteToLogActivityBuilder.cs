@@ -19,23 +19,50 @@ namespace EaiConverter.Builder
         public ActivityCodeDom Build(Activity activity)
         {
             var activityCodeDom = new ActivityCodeDom();
-            activityCodeDom.ClassesToGenerate = new CodeNamespaceCollection();
-            activityCodeDom.InvocationCode = this.GenerateCodeInvocation((WriteToLogActivity)activity);
+            activityCodeDom.ClassesToGenerate = this.GenerateClassesToGenerate(activity);
+            activityCodeDom.InvocationCode = this.GenerateInvocationCode(activity);
             return activityCodeDom;
         }
         #endregion
 
-        public CodeStatementCollection GenerateCodeInvocation(WriteToLogActivity activity)
+        public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity)
         {
+            return new CodeNamespaceCollection();
+        }
+
+
+        public CodeNamespaceImportCollection GenerateImports(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public List<CodeMemberField> GenerateFields(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public CodeStatementCollection GenerateInvocationCode(Activity activity)
+        {
+            var write2LogActivity = (WriteToLogActivity)activity;
             var invocationCodeCollection = new CodeStatementCollection();
 
             // add log
-            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(activity));
+            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(write2LogActivity));
             //add the input
-            invocationCodeCollection.AddRange(this.xslBuilder.Build(activity.InputBindings));
+            invocationCodeCollection.AddRange(this.xslBuilder.Build(write2LogActivity.InputBindings));
 
             //Add the logger call
-            invocationCodeCollection.Add(this.GenerateLoggerCodeInvocation(activity));
+            invocationCodeCollection.Add(this.GenerateLoggerCodeInvocation(write2LogActivity));
 
             return invocationCodeCollection;
         }

@@ -15,6 +15,8 @@ namespace EaiConverter.Builder
         ResultSetBuilder resultSetBuilder;
         XslBuilder xslBuilder;
 
+        public string serviceToInvoke { get; set;}
+
         public JdbcQueryActivityBuilder(DataAccessBuilder dataAccessBuilder, DataAccessServiceBuilder dataAccessServiceBuilder, DataAccessInterfacesCommonBuilder dataAccessCommonBuilder, XslBuilder xslBuilder, ResultSetBuilder resultSetBuilder)
         {
             this.dataAccessBuilder = dataAccessBuilder;
@@ -29,17 +31,34 @@ namespace EaiConverter.Builder
             JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity)activity;
 
             var result = new ActivityCodeDom();
-            result.ClassesToGenerate = new CodeNamespaceCollection();
-            string jdbcServiceName;
+
+            result.ClassesToGenerate = this.GenerateClassesToGenerate(activity);
+            result.InvocationCode = this.GenerateInvocationCode( jdbcQueryActivity);
+
+            return result;
+        }
+
+
+        string GetDataCustomAttributeName(CodeNamespace dataAccessNameSpace)
+        {
+            return ((CodeMemberMethod)dataAccessNameSpace.Types[0].Members[2]).Parameters[0].CustomAttributes[0].Name;
+        }
+
+        public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity)
+        {
+            JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity)activity;
+
+            var result = new CodeNamespaceCollection();
+
             if (this.HasThisSqlRequestAlreadyGenerateAService(jdbcQueryActivity.QueryStatement))
             {
-                jdbcServiceName = this.GetExistingJdbcServiceName(jdbcQueryActivity.QueryStatement);
+                this.serviceToInvoke = this.GetExistingJdbcServiceName(jdbcQueryActivity.QueryStatement);
             }
             else
             {
                 if (jdbcQueryActivity.QueryOutputStatementParameters != null && jdbcQueryActivity.QueryOutputStatementParameters.Count != 0)
                 {
-                    result.ClassesToGenerate.Add(this.resultSetBuilder.Build(jdbcQueryActivity)); 
+                    result.Add(this.resultSetBuilder.Build(jdbcQueryActivity)); 
                 }
                 var dataAccessNameSpace = this.dataAccessBuilder.Build(jdbcQueryActivity);
                 var dataAccessInterfaceNameSpace = InterfaceExtractorFromClass.Extract(dataAccessNameSpace.Types[0], TargetAppNameSpaceService.dataAccessNamespace);
@@ -58,31 +77,22 @@ namespace EaiConverter.Builder
                 var dataBaseAttributeNamespace = new DatabaseAttributeBuilder().Build(GetDataCustomAttributeName(dataAccessNameSpace));
 
 
-                result.ClassesToGenerate.Add(dataAccessNameSpace);
-                result.ClassesToGenerate.Add(dataAccessInterfaceNameSpace);
-                result.ClassesToGenerate.Add(serviceNameSpace);
-                result.ClassesToGenerate.Add(serviceInterfaceNameSpace);
-                result.ClassesToGenerate.Add(dataCommonNamespace);
-                result.ClassesToGenerate.Add(dataBaseAttributeNamespace);
-                    
+                result.Add(dataAccessNameSpace);
+                result.Add(dataAccessInterfaceNameSpace);
+                result.Add(serviceNameSpace);
+                result.Add(serviceInterfaceNameSpace);
+                result.Add(dataCommonNamespace);
+                result.Add(dataBaseAttributeNamespace);
 
-                jdbcServiceName = serviceNameSpace.Types[0].Name;
+                this.serviceToInvoke = serviceNameSpace.Types[0].Name;
             }
-
-            result.InvocationCode = this.GenerateCodeInvocation(jdbcServiceName, jdbcQueryActivity);
 
             return result;
         }
 
-
-        string GetDataCustomAttributeName(CodeNamespace dataAccessNameSpace)
+        public CodeStatementCollection GenerateInvocationCode(Activity activity)
         {
-            return ((CodeMemberMethod)dataAccessNameSpace.Types[0].Members[2]).Parameters[0].CustomAttributes[0].Name;
-        }
-
-
-        public CodeStatementCollection GenerateCodeInvocation(string serviceToInvoke, JdbcQueryActivity jdbcQueryActivity)
-        {
+            JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity)activity;
 
             var invocationCodeCollection = new CodeStatementCollection();
             // Add the log
@@ -110,6 +120,22 @@ namespace EaiConverter.Builder
             return invocationCodeCollection;
         }
 
+        public CodeNamespaceImportCollection GenerateImports(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+        public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+        public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+        public System.Collections.Generic.List<CodeMemberField> GenerateFields(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
 
         /// <summary>
         /// Determines whether this sql request has already generate A service for the specified queryStatement.

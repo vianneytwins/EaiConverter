@@ -24,25 +24,26 @@ namespace EaiConverter.Builder
 
         public ActivityCodeDom Build(Activity activity)
         {
-            JavaActivity javaActivity = (JavaActivity) activity;
+            
 
             var result = new ActivityCodeDom();
 
-            result.ClassesToGenerate = new CodeNamespaceCollection();
-            result.InvocationCode = this.GenerateCodeInvocation (javaActivity);
+            result.ClassesToGenerate = this.GenerateClassesToGenerate(activity);
+            result.InvocationCode = this.GenerateInvocationCode (activity);
 
             return result;
         }
 
-        public CodeNamespaceCollection Build(JavaActivity activity){
-            var javaNamespace = new CodeNamespace(activity.PackageName);
+        public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity){
+            JavaActivity javaActivity = (JavaActivity) activity;
+
+            var javaNamespace = new CodeNamespace(javaActivity.PackageName);
 
             // Generate the Service
             javaNamespace.Imports.AddRange(this.GenerateImports());
-            var javaClass = this.GenerateClass(activity);
+            var javaClass = this.GenerateClass(javaActivity);
             javaClass.Members.Add(this.GenerateInvokeMethod());
             javaNamespace.Types.Add(javaClass);
-
 
             var codeNameSpaces =  new CodeNamespaceCollection {javaNamespace};
 
@@ -57,6 +58,27 @@ namespace EaiConverter.Builder
             }
 
             return codeNameSpaces;
+        }
+
+
+        public CodeNamespaceImportCollection GenerateImports(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public List<CodeMemberField> GenerateFields(Activity activity)
+        {
+            throw new System.NotImplementedException();
         }
 
         public CodeNamespaceImport[] GenerateImports()
@@ -92,8 +114,10 @@ namespace EaiConverter.Builder
             }
         }
 
-        public CodeStatementCollection GenerateCodeInvocation(JavaActivity javaActivity)
+        public CodeStatementCollection GenerateInvocationCode(Activity activity)
         {
+            JavaActivity javaActivity = (JavaActivity) activity;
+
             var invocationCodeCollection = new CodeStatementCollection();
             invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(javaActivity));
 

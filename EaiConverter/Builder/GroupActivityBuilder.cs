@@ -21,13 +21,34 @@ namespace EaiConverter.Builder
         public ActivityCodeDom Build(Activity activity)
         {
             var activityCodeDom = new ActivityCodeDom();
-            activityCodeDom.ClassesToGenerate = this.GenerateActivityClasses(((GroupActivity)activity).Activities);
-            activityCodeDom.InvocationCode = this.InvocationMethod(activity);
+            activityCodeDom.ClassesToGenerate = this.GenerateClassesToGenerate(activity);
+            activityCodeDom.InvocationCode = this.GenerateInvocationCode(activity);
             return activityCodeDom;
         }
-
-        public CodeNamespaceCollection GenerateActivityClasses(List<Activity> activities)
+            
+        public CodeNamespaceImportCollection GenerateImports(Activity activity)
         {
+            throw new System.NotImplementedException();
+        }
+
+        public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public List<CodeMemberField> GenerateFields(Activity activity)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public CodeNamespaceCollection GenerateClassesToGenerate(Activity groupActivity)
+        {
+            List<Activity> activities = ((GroupActivity)groupActivity).Activities;
             var activityBuilderFactory = new ActivityBuilderFactory();
             var activityClasses = new CodeNamespaceCollection();
             foreach (var activity in activities)
@@ -42,7 +63,7 @@ namespace EaiConverter.Builder
             return activityClasses;
         }
 
-        private CodeStatementCollection InvocationMethod(Activity activity)
+        public CodeStatementCollection GenerateInvocationCode(Activity activity)
         {
             var invocationCodeCollection = new CodeStatementCollection();
             invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(activity));

@@ -44,7 +44,7 @@ string xmlString = ""TestString"";
 
 var myCallProcessActivity = this.processToCall.Start(xmlString);
 ";
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateCodeInvocation(this.activity));
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateInvocationCode(this.activity));
             Assert.AreEqual(expected,generatedCode);
         }
     }

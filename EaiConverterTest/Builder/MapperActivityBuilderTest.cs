@@ -46,7 +46,7 @@ EquityRecord.xmlString = ""TestString"";
 
 EquityRecord myActivityName = EquityRecord;
 ";
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateCodeInvocation(this.activity));
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateInvocationCode(this.activity));
             Assert.AreEqual(expected,generatedCode);
         }
     }
