@@ -4,10 +4,20 @@ namespace EaiConverter.Parser
 
     using EaiConverter.Model;
     using EaiConverter.Parser.Utils;
+	using EaiConverter.Builder.Utils;
+	using EaiConverter.CodeGenerator.Utils;
+
 
     public class XmlParseActivityParser : IActivityParser
-    {
-        public Activity Parse(XElement inputElement)
+    {      
+		private readonly XsdParser xsdParser;
+
+		public XmlParseActivityParser(XsdParser xsdParser)
+		{
+			this.xsdParser = xsdParser;
+		}
+
+		public Activity Parse(XElement inputElement)
         {
             var xmlParseActivity = new XmlParseActivity();
             xmlParseActivity.Name = inputElement.Attribute("name").Value;

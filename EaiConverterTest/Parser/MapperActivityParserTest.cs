@@ -10,11 +10,13 @@ namespace EaiConverter.Test.Parser
     {
         MapperActivityParser mapperActivityParser;
         XElement doc;
+		XsdParser xsdParser;
 
         [SetUp]
         public void SetUp ()
         {
-            mapperActivityParser = new MapperActivityParser ();
+			this.xsdParser = new XsdParser ();
+			mapperActivityParser = new MapperActivityParser (xsdParser);
             var xml =
                 @"<pd:activity name=""Mappe Equity"" xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
 <pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
@@ -50,6 +52,34 @@ namespace EaiConverter.Test.Parser
 
             Assert.AreEqual ("pfx2:NTMMessage", mapperActivity.XsdReference);
         }
+
+		[Test]
+		public void Should_Return_ObjectXNodes_in_Element_config(){
+			var xml =
+				@"<pd:activity name=""Mappe Equity"" xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+<pd:type>com.tibco.plugin.mapper.MapperActivity</pd:type>
+<config>
+<element>
+ <xsd:element name=""adminID"" type=""xsd:string"" />
+</element>
+</config>
+<pd:inputBindings>
+    <sqlParams>
+        <FundName>
+            <xsl:value-of select=""testvalue""/>
+        </FundName>
+        <AdminID>
+            <xsl:value-of select=""EVL""/>
+        </AdminID>
+    </sqlParams>
+</pd:inputBindings>
+</pd:activity>";
+			var docz = XElement.Parse(xml);
+
+			MapperActivity mapperActivity = (MapperActivity) mapperActivityParser.Parse (docz);
+
+			Assert.IsTrue( mapperActivity.ObjectXNodes != null);
+		}
     
     }
 }

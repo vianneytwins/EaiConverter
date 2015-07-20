@@ -1,12 +1,42 @@
-﻿namespace EaiConverter.Builder
+﻿using EaiConverter.Parser;
+
+namespace EaiConverter.Builder
 {
     using EaiConverter.Model;
     public class ActivityBuilderFactory
     {
-        public IActivityBuilder Get(ActivityType activityType)
+		private readonly XpathBuilder xpathBuilder;
+
+		private readonly XslBuilder xslBuilder;
+
+		private readonly DataAccessBuilder dataAccessBuilder;
+
+		private readonly DataAccessServiceBuilder dataAccessServiceBuilder;
+
+		private readonly DataAccessInterfacesCommonBuilder dataAccessInterfacesCommonBuilder;
+
+		private readonly ResultSetBuilder resultSetBuilder;
+
+		private readonly XmlParserHelperBuilder xmlParserHelperBuilder;
+		private readonly XsdBuilder xsdBuilder;
+		private readonly XsdParser xsdParser;
+        
+		public ActivityBuilderFactory()
+		{
+			this.xpathBuilder = new XpathBuilder ();
+			this.xslBuilder = new XslBuilder(this.xpathBuilder);
+			this.dataAccessBuilder = new DataAccessBuilder ();
+			this.dataAccessServiceBuilder = new DataAccessServiceBuilder ();
+			this.dataAccessInterfacesCommonBuilder = new DataAccessInterfacesCommonBuilder ();
+			this.resultSetBuilder = new ResultSetBuilder ();
+			this.xmlParserHelperBuilder = new XmlParserHelperBuilder ();
+			this.xsdBuilder =  new XsdBuilder();
+			this.xsdParser = new XsdParser();
+		}
+
+		public IActivityBuilder Get(ActivityType activityType)
         {
-            var xslBuilder = new XslBuilder(new XpathBuilder());
-            var jdbcQueryActivityBuilder = new JdbcQueryActivityBuilder(new DataAccessBuilder(), new DataAccessServiceBuilder(), new DataAccessInterfacesCommonBuilder(), xslBuilder, new ResultSetBuilder());
+			var jdbcQueryActivityBuilder = new JdbcQueryActivityBuilder (this.dataAccessBuilder, this.dataAccessServiceBuilder, this.dataAccessInterfacesCommonBuilder, this.xslBuilder, this.resultSetBuilder);
             if (activityType == ActivityType.jdbcQueryActivityType || activityType == ActivityType.jdbcCallActivityType || activityType == ActivityType.jdbcUpdateActivityType)
             {
                 return jdbcQueryActivityBuilder;
@@ -18,12 +48,12 @@
             
             if (activityType == ActivityType.xmlParseActivityType)
             {
-                return new XmlParseActivityBuilder(xslBuilder, new XmlParserHelperBuilder());
+				return new XmlParseActivityBuilder (xslBuilder, xmlParserHelperBuilder, this.xsdBuilder, this.xsdParser);
             }
             
             if (activityType == ActivityType.mapperActivityType)
             {
-                return new MapperActivityBuilder(xslBuilder);
+				return new MapperActivityBuilder(this.xslBuilder, this.xsdBuilder, this.xsdParser);
             }
             
             if (activityType == ActivityType.nullActivityType)
