@@ -1,12 +1,12 @@
-using System.CodeDom;
-
-using EaiConverter.Model;
-using EaiConverter.Builder.Utils;
-using EaiConverter.CodeGenerator.Utils;
-using EaiConverter.Processor;
-
 namespace EaiConverter.Builder
 {
+    using System.CodeDom;
+
+    using EaiConverter.Builder.Utils;
+    using EaiConverter.CodeGenerator.Utils;
+    using EaiConverter.Model;
+    using EaiConverter.Processor;
+
     public class JdbcQueryActivityBuilder : IActivityBuilder
     {
         DataAccessBuilder dataAccessBuilder;

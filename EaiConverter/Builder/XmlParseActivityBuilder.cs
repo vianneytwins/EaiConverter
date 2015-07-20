@@ -1,35 +1,31 @@
-﻿using EaiConverter.Model;
-using System.CodeDom;
-using EaiConverter.CodeGenerator.Utils;
-using EaiConverter.Processor;
-
-namespace EaiConverter.Builder
+﻿namespace EaiConverter.Builder
 {
+    using System.CodeDom;
+
+    using EaiConverter.Builder.Utils;
+    using EaiConverter.CodeGenerator.Utils;
+    using EaiConverter.Model;
+    using EaiConverter.Processor;
+
     public class XmlParseActivityBuilder : IActivityBuilder
     { 
-        XslBuilder xslBuilder;
-        XmlParserHelperBuilder xmlParserHelperBuilder;
+        private readonly XslBuilder xslBuilder;
+        private readonly XmlParserHelperBuilder xmlParserHelperBuilder;
+        private readonly XsdBuilder xsdClassGenerator;
 
         public XmlParseActivityBuilder(XslBuilder xslBuilder, XmlParserHelperBuilder xmlParserHelperBuilder)
         {
             this.xslBuilder = xslBuilder;
             this.xmlParserHelperBuilder = xmlParserHelperBuilder;
+            this.xsdClassGenerator = new XsdBuilder();
         }
 
         public ActivityCodeDom Build (Activity activity)
         {
             var result = new ActivityCodeDom();
 
-            if (ConfigurationApp.GetProperty("IsXmlParserHelperAlreadyGenerated") != "true")
-            {
-                result.ClassesToGenerate = this.xmlParserHelperBuilder.Build();
-                ConfigurationApp.SaveProperty("IsXmlParserHelperAlreadyGenerated", "true");
-            }
-            else
-            {
-                result.ClassesToGenerate = new CodeNamespaceCollection();
-            }
-            result.InvocationCode = this.GenerateInvocationCode (activity);
+            result.ClassesToGenerate = this.GenerateClassesToGenerate(activity);
+            result.InvocationCode = this.GenerateInvocationCode(activity);
 
             return result;
         }
@@ -42,6 +38,12 @@ namespace EaiConverter.Builder
                 result.AddRange(this.xmlParserHelperBuilder.Build());
                 ConfigurationApp.SaveProperty("IsXmlParserHelperAlreadyGenerated", "true");
             }
+
+            if (activity.ObjectXNodes != null)
+            {
+                result.Add(this.xsdClassGenerator.Build(activity.ObjectXNodes, TargetAppNameSpaceService.domainContractNamespaceName));
+            }
+
             return result;
         }
         public CodeNamespaceImportCollection GenerateImports(Activity activity)
@@ -65,18 +67,21 @@ namespace EaiConverter.Builder
         {
             var xmlParseActivity = (XmlParseActivity) activity;
             var invocationCodeCollection = new CodeStatementCollection();
+
             // Add log at the beginning
             invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(xmlParseActivity));
+
             // Add the input bindings
             invocationCodeCollection.AddRange(this.xslBuilder.Build(xmlParseActivity.InputBindings));
 
             // Add the invocation itself
-           // var variableToAssignReference = new CodeVariableReferenceExpression (VariableHelper.ToVariableName(xmlParseActivity.Name));
+            // TODO : need to put it in the parser to get the real ReturnType !!
+            var variableReturnType = TargetAppNameSpaceService.domainContractNamespaceName + ".TargetObjectModel";
+            if (xmlParseActivity.XsdReference != null)
+            {
+                variableReturnType = xmlParseActivity.XsdReference.Split(':')[1];
+            }
 
-            //var variableToAssignReference = new CodeVariableReferenceExpression (VariableHelper.ToVariableName(xmlParseActivity.Name));
-            //var codeInvocation = new CodeAssignStatement (variableToAssignReference, new CodeVariableReferenceExpression(VariableHelper.ToVariableName(xmlParseActivity.Name)));
-
-            var variableReturnType = xmlParseActivity.XsdReference.Split(':')[1];
             var variableName = VariableHelper.ToVariableName(xmlParseActivity.Name);
 
             var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(XmlParserHelperBuilder.XmlParserHelperServiceName));

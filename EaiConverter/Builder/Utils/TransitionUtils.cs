@@ -38,7 +38,8 @@ namespace EaiConverter.Builder.Utils
             // boucle sur chaque truc et reboucle sur les 2 (n) resultats pour voir si on truc en commun si oui return
             if (activityNames.Count != 2)
             {
-                throw new NotImplementedException();
+                // throw new NotImplementedException();
+                Console.WriteLine("############### ERROR Process with more than 2 branches ########");
             }
             List<string> allNextActivitiesPath1 = GetAllNextActivities(activityNames[0], transitions);
             List<string> allNextActivitiesPath2 = GetAllNextActivities(activityNames[1], transitions);

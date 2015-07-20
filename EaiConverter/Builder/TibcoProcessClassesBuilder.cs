@@ -1,17 +1,17 @@
-﻿using System.Collections.Generic;
-using System.CodeDom;
-using System.Reflection;
-
-using EaiConverter.CodeGenerator.Utils;
-using EaiConverter.Model;
-using EaiConverter.Builder.Utils;
-using EaiConverter.Utils;
-
-namespace EaiConverter.Builder
+﻿namespace EaiConverter.Builder
 {
+    using System.CodeDom;
+    using System.Collections.Generic;
+    using System.Reflection;
+
+    using EaiConverter.Builder.Utils;
+    using EaiConverter.CodeGenerator.Utils;
+    using EaiConverter.Model;
+    using EaiConverter.Utils;
+
     public class TibcoProcessClassesBuilder
     {
-        CoreProcessBuilder coreProcessBuilder;
+        private readonly CoreProcessBuilder coreProcessBuilder;
 
         public TibcoProcessClassesBuilder()
         {
@@ -55,11 +55,14 @@ namespace EaiConverter.Builder
             {
                 targetUnit.Namespaces.Add(this.xsdClassGenerator.Build(tibcoBwProcessToGenerate.EndActivity.ObjectXNodes, tibcoBwProcessToGenerate.InputAndOutputNameSpace));
             }
+
             if (tibcoBwProcessToGenerate.StartActivity != null && tibcoBwProcessToGenerate.StartActivity.ObjectXNodes != null)
             {
                 targetUnit.Namespaces.Add(this.xsdClassGenerator.Build(tibcoBwProcessToGenerate.StartActivity.ObjectXNodes, tibcoBwProcessToGenerate.InputAndOutputNameSpace));
             }
+
             targetUnit.Namespaces.AddRange(this.GenerateProcessVariablesNamespaces(tibcoBwProcessToGenerate));
+
             //7 la methode start avec input starttype et return du endtype
             tibcoBwProcessClassModel.Members.AddRange(this.GenerateMethod(tibcoBwProcessToGenerate, activityNameToServiceNameDictionnary));
 
@@ -342,7 +345,7 @@ namespace EaiConverter.Builder
                 //TODO : faut il mieux 2 method ou 1 objet avec les 2
                 var activityBuilder = activityBuilderFactory.Get(activity.Type);
 
-                var activityCodeDom = activityBuilder.Build(activity);
+                // var activityCodeDom = activityBuilder.Build(activity);
 
                 targetUnit.Namespaces.AddRange(activityBuilder.GenerateClassesToGenerate(activity));
                 activityNameToServiceNameDictionnary.Add(activity.Name, activityBuilder.GenerateInvocationCode(activity));

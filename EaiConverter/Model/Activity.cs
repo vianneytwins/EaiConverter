@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Xml.Linq;
-
-namespace EaiConverter.Model
+﻿namespace EaiConverter.Model
 {
-	public class Activity
+    using System.Collections.Generic;
+    using System.Xml.Linq;
+
+    public class Activity
 	{
-	public Activity (string name, ActivityType type) {
+    	public Activity (string name, ActivityType type) {
 			this.Name = name;
 			this.Type = type;
 		}

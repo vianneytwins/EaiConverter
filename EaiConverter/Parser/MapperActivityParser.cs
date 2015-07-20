@@ -1,29 +1,42 @@
-using System.Xml.Linq;
-using EaiConverter.Model;
-using EaiConverter.Parser.Utils;
-
 namespace EaiConverter.Parser
 {
+    using System.Xml.Linq;
+
+    using EaiConverter.Model;
+    using EaiConverter.Parser.Utils;
 
     public class MapperActivityParser : IActivityParser
-	{
-        public Activity Parse (XElement inputElement)
-		{
-            var mapperActivity = new MapperActivity ();
+    {
+        public Activity Parse(XElement inputElement)
+        {
+            var mapperActivity = new MapperActivity();
 
-            mapperActivity.Name = inputElement.Attribute ("name").Value;
-            mapperActivity.Type = (ActivityType) inputElement.Element (XmlnsConstant.tibcoProcessNameSpace + "type").Value;
-			var configElement = inputElement.Element ("config");
+            mapperActivity.Name = inputElement.Attribute("name").Value;
+            var xElement = inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "type");
+            if (xElement != null)
+            {
+                mapperActivity.Type = (ActivityType) xElement.Value;
+            }
 
-            mapperActivity.XsdReference = configElement.Element("element").Attribute("ref").Value;
-			
+            var configElement = inputElement.Element("config");
+
+            // If the ref is not null the Xsd has been define somewhere else other wise it's define in line
+            if (configElement.Element("element").Attribute("ref") != null)
+            {
+                mapperActivity.XsdReference = configElement.Element("element").Attribute("ref").Value;
+            }
+            else
+            {
+                mapperActivity.ObjectXNodes = configElement.Element("element").Nodes();
+            }
+
             mapperActivity.InputBindings = inputElement.Element (XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Nodes();
 
             mapperActivity.Parameters = new XslParser().Build(mapperActivity.InputBindings);
 
             return mapperActivity;
-		}
-	}
+        }
+    }
 
 }
 

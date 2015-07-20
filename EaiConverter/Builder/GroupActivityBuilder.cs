@@ -1,16 +1,16 @@
-using EaiConverter.Model;
-
-using System.CodeDom;
-using System.Collections.Generic;
-using EaiConverter.CodeGenerator.Utils;
-
 namespace EaiConverter.Builder
 {
+    using System.CodeDom;
+    using System.Collections.Generic;
+
+    using EaiConverter.CodeGenerator.Utils;
+    using EaiConverter.Model;
+
     public class GroupActivityBuilder : IActivityBuilder
     {
-        XslBuilder xslBuilder;
-        CoreProcessBuilder coreProcessBuilder;
-        Dictionary<string, CodeStatementCollection> activityNameToServiceNameDictionnary = new Dictionary<string, CodeStatementCollection>();
+        private XslBuilder xslBuilder;
+        private readonly CoreProcessBuilder coreProcessBuilder;
+        private Dictionary<string, CodeStatementCollection> activityNameToServiceNameDictionnary = new Dictionary<string, CodeStatementCollection>();
 
         public GroupActivityBuilder(XslBuilder xslBuilder)
         {
@@ -20,9 +20,12 @@ namespace EaiConverter.Builder
 
         public ActivityCodeDom Build(Activity activity)
         {
-            var activityCodeDom = new ActivityCodeDom();
-            activityCodeDom.ClassesToGenerate = this.GenerateClassesToGenerate(activity);
-            activityCodeDom.InvocationCode = this.GenerateInvocationCode(activity);
+            this.activityNameToServiceNameDictionnary = new Dictionary<string, CodeStatementCollection>();
+            var activityCodeDom = new ActivityCodeDom
+                                      {
+                                          ClassesToGenerate = this.GenerateClassesToGenerate(activity),
+                                          InvocationCode = this.GenerateInvocationCode(activity)
+                                      };
             return activityCodeDom;
         }
             
@@ -48,7 +51,8 @@ namespace EaiConverter.Builder
 
         public CodeNamespaceCollection GenerateClassesToGenerate(Activity groupActivity)
         {
-            List<Activity> activities = ((GroupActivity)groupActivity).Activities;
+            this.activityNameToServiceNameDictionnary = new Dictionary<string, CodeStatementCollection>();
+            var activities = ((GroupActivity)groupActivity).Activities;
             var activityBuilderFactory = new ActivityBuilderFactory();
             var activityClasses = new CodeNamespaceCollection();
             foreach (var activity in activities)
@@ -96,15 +100,16 @@ namespace EaiConverter.Builder
 
             // put the current element in the declare variable
             // TODO convert the $Variable in variable like in Xpath 
-            CodeVariableDeclarationStatement iterationElementSlotDeclaration = new CodeVariableDeclarationStatement("var", groupActivity.IterationElementSlot, new CodeVariableReferenceExpression(groupActivity.Over + "[" + groupActivity.IndexSlot + "]"));
+            var iterationElementSlotDeclaration = new CodeVariableDeclarationStatement("var", groupActivity.IterationElementSlot, new CodeVariableReferenceExpression(groupActivity.Over + "[" + groupActivity.IndexSlot + "]"));
             coreGroupMethodStatement.Add(iterationElementSlotDeclaration);
-            // get the core loop code
+
+            // Get the core loop code
             coreGroupMethodStatement.AddRange(this.GenerateCoreGroupMethod(groupActivity));
             var coreOfTheLoop = new CodeStatement[coreGroupMethodStatement.Count];
             coreGroupMethodStatement.CopyTo(coreOfTheLoop, 0);
 
             // put it then in the loop
-            CodeIterationStatement forLoop = new CodeIterationStatement(
+            var forLoop = new CodeIterationStatement(
                 new CodeVariableDeclarationStatement(typeof(int), groupActivity.IndexSlot, new CodePrimitiveExpression(0)),
                 new CodeBinaryOperatorExpression(new CodeVariableReferenceExpression(groupActivity.IndexSlot), CodeBinaryOperatorType.LessThan, new CodeVariableReferenceExpression(groupActivity.Over + ".Lenght")),
                 new CodeAssignStatement(new CodeVariableReferenceExpression(groupActivity.IndexSlot), new CodeBinaryOperatorExpression(new CodeVariableReferenceExpression(groupActivity.IndexSlot), CodeBinaryOperatorType.Add, new CodePrimitiveExpression(1))),
@@ -122,7 +127,7 @@ namespace EaiConverter.Builder
             coreGroupMethodStatement.CopyTo(coreOfTheLoop, 0);
 
             // put it then in the while loop : code dome don't allow while, so we will trick it with a for(;expression;)
-            CodeIterationStatement whileLoop = new CodeIterationStatement(
+            var whileLoop = new CodeIterationStatement(
                 new CodeSnippetStatement(string.Empty),
                 new CodeSnippetExpression(groupActivity.RepeatCondition),
                 new CodeSnippetStatement(string.Empty),
@@ -134,7 +139,8 @@ namespace EaiConverter.Builder
         {
             // TODO ADD the myLock object as a field in the process
             var invocationCodeCollection = new CodeStatementCollection();
-            invocationCodeCollection.Add(new CodeSnippetStatement("lock (" + VariableHelper.ToVariableName(groupActivity.Name) +"Lock){"));
+            invocationCodeCollection.Add(
+                new CodeSnippetStatement("lock (" + VariableHelper.ToVariableName(groupActivity.Name) + "Lock){"));
             invocationCodeCollection.AddRange(this.GenerateCoreGroupMethod(groupActivity));
             invocationCodeCollection.Add(new CodeSnippetStatement("}"));
 
