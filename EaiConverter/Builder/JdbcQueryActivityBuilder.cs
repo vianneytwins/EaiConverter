@@ -64,9 +64,6 @@ namespace EaiConverter.Builder
                 var dataAccessInterfaceNameSpace = InterfaceExtractorFromClass.Extract(dataAccessNameSpace.Types[0], TargetAppNameSpaceService.dataAccessNamespace);
                 dataAccessNameSpace.Types[0].BaseTypes.Add(new CodeTypeReference(dataAccessInterfaceNameSpace.Types[0].Name));
 
-
-
-
                 var serviceNameSpace = this.dataAccessServiceBuilder.Build(jdbcQueryActivity);
                 var serviceInterfaceNameSpace = InterfaceExtractorFromClass.Extract(serviceNameSpace.Types[0], TargetAppNameSpaceService.domainContractNamespaceName);
                 serviceNameSpace.Types[0].BaseTypes.Add(new CodeTypeReference(serviceInterfaceNameSpace.Types[0].Name));
@@ -106,7 +103,7 @@ namespace EaiConverter.Builder
             var parameters = DefaultActivityBuilder.GenerateParameters(jdbcQueryActivity);
 
 
-            if (jdbcQueryActivity.QueryOutputStatementParameters != null)
+			if (jdbcQueryActivity.QueryOutputStatementParameters != null && jdbcQueryActivity.QueryOutputStatementParameters.Count > 0)
             {
                 var codeInvocation = new CodeVariableDeclarationStatement(new CodeTypeReference (VariableHelper.ToClassName(jdbcQueryActivity.Name)+"ResultSet"), VariableHelper.ToVariableName(jdbcQueryActivity.Name)+"ResultSet", new CodeMethodInvokeExpression(activityServiceReference, DataAccessServiceBuilder.ExecuteSqlQueryMethodName, parameters));
                 invocationCodeCollection.Add(codeInvocation);

@@ -110,7 +110,7 @@ namespace EaiConverter.Builder
 
             method.Name = DataAccessServiceBuilder.ExecuteSqlQueryMethodName;
 
-            if (jdbcQueryActivity.QueryOutputStatementParameters != null)
+			if (jdbcQueryActivity.QueryOutputStatementParameters != null && jdbcQueryActivity.QueryOutputStatementParameters.Count > 0)
             {
                 method.ReturnType = new CodeTypeReference (VariableHelper.ToClassName(jdbcQueryActivity.Name)+"ResultSet");
             }
