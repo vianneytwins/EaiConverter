@@ -1,13 +1,11 @@
-﻿using System.IO;
-using System.Collections.Generic;
-using System.Xml.Serialization;
-using System.Xml.Schema;
-using System.CodeDom;
-using System.Xml.Linq;
-
-
-namespace EaiConverter.Builder
+﻿namespace EaiConverter.Builder
 {
+    using System.CodeDom;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Xml.Linq;
+    using System.Xml.Schema;
+    using System.Xml.Serialization;
 
     public class XsdBuilder
     {
@@ -19,22 +17,22 @@ namespace EaiConverter.Builder
 
         public CodeNamespace Build(IEnumerable<XNode> inputNodes, string nameSpace)
         {
-            MemoryStream stream = new MemoryStream();
+            var stream = new MemoryStream();
 
             XNamespace xsdPrefix = httpwwwworgXMLSchema;
             var rootElement = new XElement(xsdPrefix + schema, new XAttribute(XNamespace.Xmlns + xsd, xsdPrefix), inputNodes);
 
             rootElement.Save(stream);
-            var xsdCodeNamespace = GeneratedClassFromStream(stream, nameSpace);
+            var xsdCodeNamespace = this.GeneratedClassFromStream(stream, nameSpace);
 
             return xsdCodeNamespace;
         }
 
         public CodeNamespace Build(string fileName)
         {
-            FileStream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+            var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
 
-            var xsdCodeNamespace = GeneratedClassFromStream(stream, TibcoProcessClassesBuilder.ConvertXsdImportToNameSpace(fileName));
+            var xsdCodeNamespace = this.GeneratedClassFromStream(stream, TibcoProcessClassesBuilder.ConvertXsdImportToNameSpace(fileName));
 
             return xsdCodeNamespace;
         }

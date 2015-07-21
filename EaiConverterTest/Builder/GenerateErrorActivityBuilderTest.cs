@@ -42,6 +42,7 @@ namespace EaiConverter.Test.Builder
             };
         }
 
+        [Ignore]
         [Test]
         public void Should_Generate_invocation_method()
         {

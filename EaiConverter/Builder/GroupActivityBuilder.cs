@@ -74,15 +74,15 @@ namespace EaiConverter.Builder
 
             var groupActivity = (GroupActivity)activity;
 
-            if (groupActivity.GroupType == GroupType.inputLoop)
+            if (groupActivity.GroupType == GroupType.INPUTLOOP)
             {
                 invocationCodeCollection.Add(this.GenerateForLoop(groupActivity));
             }
-            else if (groupActivity.GroupType == GroupType.repeat)
+            else if (groupActivity.GroupType == GroupType.REPEAT || groupActivity.GroupType == GroupType.WHILE)
             {
                 invocationCodeCollection.Add(this.GenerateForRepeat(groupActivity));
             }
-            else if (groupActivity.GroupType == GroupType.criticalSection)
+            else if (groupActivity.GroupType == GroupType.CRITICALSECTION)
             {
                 invocationCodeCollection.AddRange(this.GenerateForCriticalSection(groupActivity));
             }
@@ -126,7 +126,6 @@ namespace EaiConverter.Builder
             var coreOfTheLoop = new CodeStatement[coreGroupMethodStatement.Count];
             coreGroupMethodStatement.CopyTo(coreOfTheLoop, 0);
 
-            // put it then in the while loop : code dome don't allow while, so we will trick it with a for(;expression;)
             var whileLoop = new CodeIterationStatement(
                 new CodeSnippetStatement(string.Empty),
                 new CodeSnippetExpression(groupActivity.RepeatCondition),

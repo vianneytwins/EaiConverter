@@ -129,7 +129,9 @@ namespace EaiConverter.Parser
         public List<ProcessVariable> ParseProcessVariables(XElement allFileElement)
         {
             var xElement = allFileElement.Element (XmlnsConstant.tibcoProcessNameSpace + "processVariables");
-            if (xElement == null) {
+
+            if (xElement == null)
+            {
                 return null;
             }
 
@@ -138,15 +140,22 @@ namespace EaiConverter.Parser
             {
                 var variableParameters = this.xsdParser.Parse (variable.Nodes ());
 
-                var processVariable = new ProcessVariable{
-                    Parameter = new ClassParameter{
-                        Name = variable.Name.LocalName,
-                        Type = variableParameters[0].Type
-                    },
-                    ObjectXNodes = variable.Nodes()
-                };
-                processVariables.Add(processVariable);
+                if (variableParameters.Count > 0)
+                {
+                    var processVariable = new ProcessVariable
+                                              {
+                                                  Parameter =
+                                                      new ClassParameter
+                                                          {
+                                                              Name = variable.Name.LocalName,
+                                                              Type = variableParameters[0].Type
+                                                          },
+                                                  ObjectXNodes = variable.Nodes()
+                                              };
+                    processVariables.Add(processVariable);
+                }
             }
+
             return processVariables;
         }
 
@@ -198,24 +207,32 @@ namespace EaiConverter.Parser
 
             foreach (XElement element in groupElements)
             {
-                GroupActivity activity = new GroupActivity();
-                activity.Name = element.Attribute ("name").Value;
-                activity.Type = (ActivityType) element.Element (XmlnsConstant.tibcoProcessNameSpace + "type").Value;
-                var configElement = element.Element ("config");
+                var activity = new GroupActivity
+                                   {
+                                       Name = element.Attribute("name").Value,
+                                       Type = (ActivityType)element.Element(XmlnsConstant.tibcoProcessNameSpace + "type").Value
+                                   };
+                var configElement = element.Element("config");
 
-                var groupTypeString = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace +"groupType"));
-                activity.GroupType = (GroupType) Enum.Parse(typeof(GroupType), groupTypeString);
+                var groupTypeString =
+                    XElementParserUtils.GetStringValue(
+                        configElement.Element(XmlnsConstant.tibcoProcessNameSpace + "groupType"));
+                activity.GroupType = (GroupType)Enum.Parse(typeof(GroupType), groupTypeString.ToUpper());
 
-                if (activity.GroupType == GroupType.inputLoop)
+                if (activity.GroupType == GroupType.INPUTLOOP)
                 {
                     activity.Over = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace + "over"));
                     activity.IterationElementSlot = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace + "iterationElementSlot"));
                     activity.IndexSlot = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace + "indexSlot"));
                 }
-                else if (activity.GroupType == GroupType.repeat)
+                else if (activity.GroupType == GroupType.REPEAT)
                 {
                     activity.IndexSlot = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace + "indexSlot"));
                     activity.RepeatCondition = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace + "repeatCondition"));
+                }
+                else if (activity.GroupType == GroupType.WHILE)
+                {
+                    activity.RepeatCondition = XElementParserUtils.GetStringValue(configElement.Element(XmlnsConstant.tibcoProcessNameSpace + "whileCondition"));
                 }
 
                 if (element.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings") != null)
@@ -231,7 +248,7 @@ namespace EaiConverter.Parser
             return activities;
          }
 
-        Activity ParseActivity(XElement element)
+        private Activity ParseActivity(XElement element)
         {
             var activityType = element.Element(XmlnsConstant.tibcoProcessNameSpace + "type").Value;
             Activity activity;

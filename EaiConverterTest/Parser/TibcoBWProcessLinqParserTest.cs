@@ -174,10 +174,10 @@ namespace EaiConverter.Test.Parser
         public void Should_return_group_config()
         {
             var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xmlWithGroup));
-            Assert.AreEqual ("inputLoop", ((GroupActivity)tibcoBWProcess.Activities[0]).GroupType.ToString());
-            Assert.AreEqual ("myCollection", ((GroupActivity)tibcoBWProcess.Activities[0]).Over);
-            Assert.AreEqual ("current", ((GroupActivity)tibcoBWProcess.Activities[0]).IterationElementSlot);
-            Assert.AreEqual ("index", ((GroupActivity)tibcoBWProcess.Activities[0]).IndexSlot);
+            Assert.AreEqual("INPUTLOOP", ((GroupActivity)tibcoBWProcess.Activities[0]).GroupType.ToString());
+            Assert.AreEqual("myCollection", ((GroupActivity)tibcoBWProcess.Activities[0]).Over);
+            Assert.AreEqual("current", ((GroupActivity)tibcoBWProcess.Activities[0]).IterationElementSlot);
+            Assert.AreEqual("index", ((GroupActivity)tibcoBWProcess.Activities[0]).IndexSlot);
         }
 
         [Test]
@@ -190,7 +190,7 @@ namespace EaiConverter.Test.Parser
                         <pd:type>NotHandleYet</pd:type>
                     </pd:starter>
                 </pd:ProcessDefinition>";
-            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+            var tibcoBWProcess = this.tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
             Assert.AreEqual ("NotHandleYet", tibcoBWProcess.StarterActivity.Type.ToString());
         }
 	}

@@ -2,6 +2,7 @@
 
 namespace EaiConverter.Builder
 {
+    using System;
     using System.CodeDom;
 
     using EaiConverter.Builder.Utils;
@@ -43,9 +44,17 @@ namespace EaiConverter.Builder
                 ConfigurationApp.SaveProperty("IsXmlParserHelperAlreadyGenerated", "true");
             }
 
-            if (activity.ObjectXNodes != null)
+            try
             {
-				result.Add(this.xsdBuilder.Build(activity.ObjectXNodes, this.TargetNamespace(activity)));
+                if (activity.ObjectXNodes != null)
+                {
+                    result.Add(this.xsdBuilder.Build(activity.ObjectXNodes, this.TargetNamespace(activity)));
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("############### ERROR####### unable to generate class from XSD file inside XMLParseActivity :" + activity.Name);
+                Console.WriteLine(e);
             }
 
             return result;
@@ -82,12 +91,16 @@ namespace EaiConverter.Builder
             // TODO : need to put it in the parser to get the real ReturnType !!
 			var variableReturnType = string.Empty;
 			if (xmlParseActivity.XsdReference != null) {
-				variableReturnType = xmlParseActivity.XsdReference.Split (':') [1];
+				variableReturnType = xmlParseActivity.XsdReference.Split(':')[1];
 			}
 			else
 			{
 				// TODO : make a utils method in the parser to simplify this
-				variableReturnType = (this.xsdParser.Parse (xmlParseActivity.ObjectXNodes, this.TargetNamespace (activity)))[0].Type;
+                if (this.xsdParser.Parse(xmlParseActivity.ObjectXNodes, this.TargetNamespace(activity)).Count > 0)
+			    {
+			        variableReturnType =
+			            (this.xsdParser.Parse(xmlParseActivity.ObjectXNodes, this.TargetNamespace(activity)))[0].Type;
+			    }
 			}
 
             var variableName = VariableHelper.ToVariableName(xmlParseActivity.Name);
@@ -103,9 +116,9 @@ namespace EaiConverter.Builder
                     parameters[i] = new CodeSnippetExpression(xmlParseActivity.Parameters[i].Name);
                 }
             }
-            var codeInvocation = new CodeMethodInvokeExpression (activityServiceReference, XmlParserHelperBuilder.FromXmlMethodName, parameters);
+            var codeInvocation = new CodeMethodInvokeExpression(activityServiceReference, XmlParserHelperBuilder.FromXmlMethodName, parameters);
 
-            var code = new CodeVariableDeclarationStatement (variableReturnType, variableName, codeInvocation);
+            var code = new CodeVariableDeclarationStatement(variableReturnType, variableName, codeInvocation);
 
             invocationCodeCollection.Add(code);
             return invocationCodeCollection;

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace EaiConverter.Model
+﻿namespace EaiConverter.Model
 {
-	public class TibcoBWProcess
-	{
+    using System.Collections.Generic;
+
+    public class TibcoBWProcess
+    {
 		public TibcoBWProcess (string fullProcessName)
 		{
 			this.FullProcessName = fullProcessName;
@@ -14,7 +14,7 @@ namespace EaiConverter.Model
             }
             else
             {
-                this.ShortNameSpace = (fullProcessName.Substring (0, indexOfLastSlash)).Replace("/",".");
+                this.ShortNameSpace = (fullProcessName.Substring (0, indexOfLastSlash)).Replace("/", ".").Replace("(", "_").Replace(")", "_");
             }
 
 
@@ -23,7 +23,7 @@ namespace EaiConverter.Model
                 indexOfLastDot = fullProcessName.Length;
             }
 			var nameLenght = indexOfLastDot - indexOfLastSlash -1;
-			this.ProcessName = fullProcessName.Substring (indexOfLastSlash+1, nameLenght).Replace("-", string.Empty).Replace(".",string.Empty);
+            this.ProcessName = fullProcessName.Substring(indexOfLastSlash + 1, nameLenght).Replace("-", string.Empty).Replace(".", string.Empty).Replace("(", "_").Replace(")", "_");
 		}
 
 		public string ProcessName { get; private set;}

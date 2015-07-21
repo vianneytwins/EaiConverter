@@ -32,10 +32,11 @@ namespace EaiConverter.Model
     }
 
     public enum GroupType {
-        inputLoop,
-        simpleGroup,
-        repeat,
-        criticalSection
+        INPUTLOOP,
+        SIMPLEGROUP,
+        REPEAT,
+        CRITICALSECTION,
+        WHILE
     }
 }
 

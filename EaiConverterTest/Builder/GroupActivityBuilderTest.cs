@@ -42,7 +42,7 @@ namespace EaiConverter.Test.Builder
             var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.pe.core.LoopGroup"");
 this.logger.Info(""Start Activity: myNullActivity of type: com.tibco.plugin.timer.NullActivity"");
 ";
-            this.activity.GroupType = GroupType.simpleGroup;
+            this.activity.GroupType = GroupType.SIMPLEGROUP;
 
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(groupActivityBuilder.Build(this.activity).InvocationCode);
             Assert.AreEqual(expected,generatedCode);
@@ -58,7 +58,7 @@ for (int index = 0; (index < $Paramsets.elements.Lenght); index = (index + 1))
     this.logger.Info(""Start Activity: myNullActivity of type: com.tibco.plugin.timer.NullActivity"");
 }
 ";
-            this.activity.GroupType = GroupType.inputLoop;
+            this.activity.GroupType = GroupType.INPUTLOOP;
             this.activity.Over = "$Paramsets.elements";
             this.activity.IndexSlot = "index";
             this.activity.IterationElementSlot = "current";
@@ -78,7 +78,7 @@ for (
     this.logger.Info(""Start Activity: myNullActivity of type: com.tibco.plugin.timer.NullActivity"");
 }
 ";
-            this.activity.GroupType = GroupType.repeat;
+            this.activity.GroupType = GroupType.REPEAT;
             this.activity.RepeatCondition = "true";
 
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(groupActivityBuilder.Build(this.activity).InvocationCode);
@@ -94,7 +94,7 @@ this.logger.Info(""Start Activity: myNullActivity of type: com.tibco.plugin.time
 }
 ";
             this.activity.Type = ActivityType.criticalSectionGroupActivityType;
-            this.activity.GroupType = GroupType.criticalSection;
+            this.activity.GroupType = GroupType.CRITICALSECTION;
 
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(groupActivityBuilder.Build(this.activity).InvocationCode);
             Assert.AreEqual(expected,generatedCode);

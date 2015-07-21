@@ -36,6 +36,7 @@ namespace EaiConverter.Test.Builder
             };
         }
 
+        [Ignore]
         [Test]
         public void Should_Return_InvocationCode()
         {
