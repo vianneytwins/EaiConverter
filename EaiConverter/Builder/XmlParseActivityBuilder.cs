@@ -25,16 +25,6 @@ namespace EaiConverter.Builder
 			this.xsdParser = xsdParser;
         }
 
-        public ActivityCodeDom Build (Activity activity)
-        {
-            var result = new ActivityCodeDom();
-
-            result.ClassesToGenerate = this.GenerateClassesToGenerate(activity);
-            result.InvocationCode = this.GenerateInvocationCode(activity);
-
-            return result;
-        }
-
         public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity)
         {
             var result = new CodeNamespaceCollection();

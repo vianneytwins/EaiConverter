@@ -13,14 +13,6 @@ namespace EaiConverter.Builder
             this.xslBuilder = xslBuilder;
         }
 
-        public ActivityCodeDom Build(Activity activity)
-        {
-            var activityCodeDom = new ActivityCodeDom();
-            activityCodeDom.ClassesToGenerate = this.GenerateClassesToGenerate(activity);
-            activityCodeDom.InvocationCode = this.GenerateInvocationCode(activity);
-            return activityCodeDom;
-        }
-
         public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity)
         {
             return new CodeNamespaceCollection();

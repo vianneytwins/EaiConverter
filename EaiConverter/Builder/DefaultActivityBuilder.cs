@@ -10,16 +10,6 @@ namespace EaiConverter.Builder
     {
         public DefaultActivityBuilder(XslBuilder xslbuilder) { }
 
-        #region IActivityBuilder implementation
-        public ActivityCodeDom Build(Activity activity)
-        {
-            var activityCodeDom = new ActivityCodeDom();
-            activityCodeDom.ClassesToGenerate = this.GenerateClassesToGenerate(activity); 
-            activityCodeDom.InvocationCode = this.GenerateInvocationCode(activity);
-            return activityCodeDom;
-        }
-        #endregion
-
         public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity)
         {
             return new CodeNamespaceCollection();
