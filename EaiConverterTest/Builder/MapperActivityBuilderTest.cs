@@ -4,19 +4,20 @@ using EaiConverter.Model;
 using EaiConverter.Test.Utils;
 using System.Xml.Linq;
 using System.Collections.Generic;
+using EaiConverter.Parser;
 
 namespace EaiConverter.Test.Builder
 {
     [TestFixture]
     public class MapperActivityBuilderTest
     {
-        MapperActivityBuilder xmlParseActivityBuilder;
+		MapperActivityBuilder mapperActivityBuilder;
         MapperActivity activity;
 
         [SetUp]
         public void SetUp()
         {
-            this.xmlParseActivityBuilder = new MapperActivityBuilder(new XslBuilder(new XpathBuilder()));
+			this.mapperActivityBuilder = new MapperActivityBuilder(new XslBuilder(new XpathBuilder()), new XsdBuilder(), new XsdParser());
             this.activity = new MapperActivity( "My Activity Name",ActivityType.mapperActivityType);
             this.activity.XsdReference = "pf4:EquityRecord";
             var xml =
@@ -38,7 +39,7 @@ namespace EaiConverter.Test.Builder
         }
 
         [Test]
-        public void Should_Generate_invocation_method()
+        public void Should_Generate_invocation_method_When_XsdReference_is_present()
         {
             var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.plugin.mapper.MapperActivity"");
 EquityRecord EquityRecord = new EquityRecord();
@@ -46,9 +47,40 @@ EquityRecord.xmlString = ""TestString"";
 
 EquityRecord myActivityName = EquityRecord;
 ";
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateInvocationCode(this.activity));
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(mapperActivityBuilder.GenerateInvocationCode(this.activity));
             Assert.AreEqual(expected,generatedCode);
         }
+
+		[Test]
+		public void Should_Generate_invocation_method_When_XsdReference_is_not_present()
+		{
+			this.activity.XsdReference = null;
+			var xsdElement = "<element xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n<xsd:element name=\"EquityRecord\" ><xsd:complexType><xsd:sequence><xsd:element name=\"adminID\" type=\"xsd:string\" /></xsd:sequence></xsd:complexType></xsd:element>\n</element>";
+			XElement doc = XElement.Parse(xsdElement);
+			this.activity.ObjectXNodes =doc.Nodes();
+
+			var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.plugin.mapper.MapperActivity"");
+EquityRecord EquityRecord = new EquityRecord();
+EquityRecord.xmlString = ""TestString"";
+
+MyApp.Mydomain.Service.Contract.MyActivityName.EquityRecord myActivityName = EquityRecord;
+";
+			var generatedCode = TestCodeGeneratorUtils.GenerateCode(mapperActivityBuilder.GenerateInvocationCode(this.activity));
+			Assert.AreEqual(expected,generatedCode);
+		}
+
+		[Test]
+		public void Should_Generate_Classes_method_When_XsdReference_is_not_present()
+		{
+			this.activity.XsdReference = null;
+			var xsdElement = "<element xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n<xsd:element name=\"EquityRecord\" ><xsd:complexType><xsd:sequence><xsd:element name=\"adminID\" type=\"xsd:string\" /></xsd:sequence></xsd:complexType></xsd:element>\n</element>";
+			XElement doc = XElement.Parse(xsdElement);
+			this.activity.ObjectXNodes =doc.Nodes();
+
+			var generatedClasses = mapperActivityBuilder.GenerateClassesToGenerate (this.activity);
+			Assert.AreEqual(1,generatedClasses.Count);
+			Assert.AreEqual("EquityRecord",generatedClasses[0].Types[0].Name);
+		}
     }
 }
 

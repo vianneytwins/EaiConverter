@@ -128,6 +128,16 @@ string IdBbUnique = ""test"";
 this.myService.ExecuteQuery(IdBbUnique);
 ", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
         }
+
+		[Test]
+		public void Should_Return_One_Method_With_no_inputParameter(){
+			this.jdbcQueryActivity.Type = ActivityType.jdbcCallActivityType;
+			this.jdbcQueryActivity.QueryStatementParameters = new Dictionary <string, string> ();
+			this.jdbcQueryActivityBuilder.serviceToInvoke = "MyService";
+			CodeNamespaceCollection classToGenerate = jdbcQueryActivityBuilder.Build (jdbcQueryActivity).ClassesToGenerate;
+			Assert.AreEqual (0, ((CodeMemberMethod)(classToGenerate [0].Types[0].Members[3])).Parameters.Count);
+		}
+
 	}
 }
 

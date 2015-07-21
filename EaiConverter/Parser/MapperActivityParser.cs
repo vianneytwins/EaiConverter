@@ -1,3 +1,6 @@
+using EaiConverter.Builder.Utils;
+using EaiConverter.CodeGenerator.Utils;
+
 namespace EaiConverter.Parser
 {
     using System.Xml.Linq;
@@ -7,6 +10,14 @@ namespace EaiConverter.Parser
 
     public class MapperActivityParser : IActivityParser
     {
+
+		private readonly XsdParser xsdParser;
+
+		public MapperActivityParser(XsdParser xsdParser)
+		{
+			this.xsdParser = xsdParser;
+		}
+
         public Activity Parse(XElement inputElement)
         {
             var mapperActivity = new MapperActivity();
@@ -20,7 +31,7 @@ namespace EaiConverter.Parser
 
             var configElement = inputElement.Element("config");
 
-            // If the ref is not null the Xsd has been define somewhere else other wise it's define in line
+            // If the ref is not null the Xsd has been define somewhere else otherwise it's define in line
             if (configElement.Element("element").Attribute("ref") != null)
             {
                 mapperActivity.XsdReference = configElement.Element("element").Attribute("ref").Value;
@@ -28,7 +39,7 @@ namespace EaiConverter.Parser
             else
             {
                 mapperActivity.ObjectXNodes = configElement.Element("element").Nodes();
-            }
+		    }
 
             mapperActivity.InputBindings = inputElement.Element (XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Nodes();
 

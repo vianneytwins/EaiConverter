@@ -1,4 +1,6 @@
-﻿namespace EaiConverter.Model
+﻿using System.Collections.Generic;
+
+namespace EaiConverter.Model
 {
     public class MapperActivity : Activity
     {

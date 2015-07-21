@@ -1,4 +1,6 @@
-﻿namespace EaiConverter.Builder
+﻿using EaiConverter.Parser;
+
+namespace EaiConverter.Builder
 {
     using System.CodeDom;
 
@@ -11,13 +13,15 @@
     { 
         private readonly XslBuilder xslBuilder;
         private readonly XmlParserHelperBuilder xmlParserHelperBuilder;
-        private readonly XsdBuilder xsdClassGenerator;
+		private readonly XsdBuilder xsdBuilder;
+		private readonly XsdParser xsdParser;
 
-        public XmlParseActivityBuilder(XslBuilder xslBuilder, XmlParserHelperBuilder xmlParserHelperBuilder)
+		public XmlParseActivityBuilder(XslBuilder xslBuilder, XmlParserHelperBuilder xmlParserHelperBuilder, XsdBuilder xsdBuilder, XsdParser xsdParser)
         {
             this.xslBuilder = xslBuilder;
             this.xmlParserHelperBuilder = xmlParserHelperBuilder;
-            this.xsdClassGenerator = new XsdBuilder();
+			this.xsdBuilder = xsdBuilder;
+			this.xsdParser = xsdParser;
         }
 
         public ActivityCodeDom Build (Activity activity)
@@ -41,7 +45,7 @@
 
             if (activity.ObjectXNodes != null)
             {
-                result.Add(this.xsdClassGenerator.Build(activity.ObjectXNodes, TargetAppNameSpaceService.domainContractNamespaceName));
+				result.Add(this.xsdBuilder.Build(activity.ObjectXNodes, this.TargetNamespace(activity)));
             }
 
             return result;
@@ -76,11 +80,15 @@
 
             // Add the invocation itself
             // TODO : need to put it in the parser to get the real ReturnType !!
-            var variableReturnType = TargetAppNameSpaceService.domainContractNamespaceName + ".TargetObjectModel";
-            if (xmlParseActivity.XsdReference != null)
-            {
-                variableReturnType = xmlParseActivity.XsdReference.Split(':')[1];
-            }
+			var variableReturnType = string.Empty;
+			if (xmlParseActivity.XsdReference != null) {
+				variableReturnType = xmlParseActivity.XsdReference.Split (':') [1];
+			}
+			else
+			{
+				// TODO : make a utils method in the parser to simplify this
+				variableReturnType = (this.xsdParser.Parse (xmlParseActivity.ObjectXNodes, this.TargetNamespace (activity)))[0].Type;
+			}
 
             var variableName = VariableHelper.ToVariableName(xmlParseActivity.Name);
 
@@ -102,6 +110,11 @@
             invocationCodeCollection.Add(code);
             return invocationCodeCollection;
         }
+
+		private string TargetNamespace (Activity activity)
+		{
+			return TargetAppNameSpaceService.domainContractNamespaceName + "." + VariableHelper.ToClassName(activity.Name); 
+		}
     }
 }
 

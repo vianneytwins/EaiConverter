@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace EaiConverter.Model
 {
 
@@ -12,7 +14,6 @@ namespace EaiConverter.Model
 		}
             
         public string XsdReference {get; set;}
-
 	}
 
 }

@@ -4,18 +4,25 @@ namespace EaiConverter.Parser
 {
     public class ActivityParserFactory : IActivityParserFactory
     {
-        public IActivityParser GetParser(string activityType){
+		private readonly XsdParser xsdParser;
 
-            if (activityType == ActivityType.jdbcQueryActivityType.ToString() || activityType == ActivityType.jdbcUpdateActivityType.ToString()  || activityType == ActivityType.jdbcCallActivityType.ToString()  ) {
+		public ActivityParserFactory()
+		{
+			this.xsdParser = new XsdParser ();
+		}
+
+        public IActivityParser GetParser(string activityType){
+			
+			if (activityType == ActivityType.jdbcQueryActivityType.ToString() || activityType == ActivityType.jdbcUpdateActivityType.ToString()  || activityType == ActivityType.jdbcCallActivityType.ToString()  ) {
                 return new JdbcQueryActivityParser ();
             } else if (activityType == ActivityType.callProcessActivityType.ToString() ){
                 return new CallProcessActivityParser ();
             } else if (activityType == ActivityType.xmlParseActivityType.ToString() ){
-                return new XmlParseActivityParser ();
+				return new XmlParseActivityParser (this.xsdParser);
             } else if (activityType == ActivityType.assignActivityType.ToString() ){
                 return new AssignActivityParser ();
             } else if (activityType == ActivityType.mapperActivityType.ToString() ){
-                return new MapperActivityParser ();
+				return new MapperActivityParser (this.xsdParser);
             } else if (activityType == ActivityType.writeToLogActivityType.ToString() ){
                 return new WriteToLogActivityParser ();
             } else if (activityType == ActivityType.generateErrorActivity.ToString() ){

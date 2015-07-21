@@ -10,11 +10,13 @@ namespace EaiConverter.Test.Parser
     {
         XmlParseActivityParser xmlParseActivityParser;
         XElement doc;
+		XsdParser xsdParser;
 
         [SetUp]
         public void SetUp ()
         {
-            xmlParseActivityParser = new XmlParseActivityParser ();
+			this.xsdParser = new XsdParser ();
+			xmlParseActivityParser = new XmlParseActivityParser (xsdParser);
             var xml =
                 @"<pd:activity name=""Parse Equity"" xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
 <pd:type>com.tibco.plugin.xml.XMLParseActivity</pd:type>
@@ -46,6 +48,29 @@ namespace EaiConverter.Test.Parser
             Assert.AreEqual ("pfx4:EquityRecord", xmlParseActivity.XsdReference);
         }
     
+		[Test]
+		public void Should_Return_ObjectXNodes_in_Term_config(){
+			var xml =
+				@"<pd:activity name=""Parse Equity"" xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+<pd:type>com.tibco.plugin.xml.XMLParseActivity</pd:type>
+<config>
+    <inputStyle>text</inputStyle>
+    <term>
+<xsd:element name=""group"" ><xsd:complexType><xsd:sequence><xsd:element name=""adminID"" type=""xsd:string"" /></xsd:sequence></xsd:complexType></xsd:element>
+</term>
+</config>
+<pd:inputBindings>
+    <sqlParams>
+        <xsl:value-of select=""testvalue""/>
+    </sqlParams>
+</pd:inputBindings>
+</pd:activity>";
+			var docz = XElement.Parse(xml);
+
+			XmlParseActivity xmlParseActivity = (XmlParseActivity) xmlParseActivityParser.Parse (docz);
+
+			Assert.IsTrue (xmlParseActivity.ObjectXNodes != null);
+	}
 
         [Test]
         public void Should_Return_One_Parameter_Named_SqlParam(){
