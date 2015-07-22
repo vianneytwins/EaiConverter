@@ -26,17 +26,6 @@ namespace EaiConverter.Builder
             this.resultSetBuilder = resultSetBuilder;
         }
 
-        public ActivityCodeDom Build(Activity activity)
-        {
-            JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity)activity;
-
-            var result = new ActivityCodeDom();
-
-            result.ClassesToGenerate = this.GenerateClassesToGenerate(activity);
-            result.InvocationCode = this.GenerateInvocationCode( jdbcQueryActivity);
-
-            return result;
-        }
 
 
         string GetDataCustomAttributeName(CodeNamespace dataAccessNameSpace)

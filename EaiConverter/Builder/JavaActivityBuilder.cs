@@ -22,17 +22,6 @@ namespace EaiConverter.Builder
             this.xslBuilder = xslBuilder;
         }
 
-        public ActivityCodeDom Build(Activity activity)
-        {
-            
-
-            var result = new ActivityCodeDom();
-
-            result.ClassesToGenerate = this.GenerateClassesToGenerate(activity);
-            result.InvocationCode = this.GenerateInvocationCode (activity);
-
-            return result;
-        }
 
         public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity){
             JavaActivity javaActivity = (JavaActivity) activity;

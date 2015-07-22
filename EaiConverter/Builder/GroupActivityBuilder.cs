@@ -17,17 +17,6 @@ namespace EaiConverter.Builder
             this.xslBuilder = xslBuilder;
             this.coreProcessBuilder = new CoreProcessBuilder();
         }
-
-        public ActivityCodeDom Build(Activity activity)
-        {
-            this.activityNameToServiceNameDictionnary = new Dictionary<string, CodeStatementCollection>();
-            var activityCodeDom = new ActivityCodeDom
-                                      {
-                                          ClassesToGenerate = this.GenerateClassesToGenerate(activity),
-                                          InvocationCode = this.GenerateInvocationCode(activity)
-                                      };
-            return activityCodeDom;
-        }
             
         public CodeNamespaceImportCollection GenerateImports(Activity activity)
         {
@@ -59,10 +48,8 @@ namespace EaiConverter.Builder
             {
                 var activityBuilder = activityBuilderFactory.Get(activity.Type);
 
-                var activityCodeDom = activityBuilder.Build(activity);
-
-                activityClasses.AddRange(activityCodeDom.ClassesToGenerate);
-                this.activityNameToServiceNameDictionnary.Add(activity.Name, activityCodeDom.InvocationCode);
+				activityClasses.AddRange(activityBuilder.GenerateClassesToGenerate(activity));
+				this.activityNameToServiceNameDictionnary.Add(activity.Name, activityBuilder.GenerateInvocationCode(activity));
             }
             return activityClasses;
         }

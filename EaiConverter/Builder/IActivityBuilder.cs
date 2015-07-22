@@ -6,8 +6,6 @@ namespace EaiConverter.Builder
 {
     public interface IActivityBuilder
     {
-        ActivityCodeDom Build (Activity activity);
-
         CodeNamespaceCollection GenerateClassesToGenerate (Activity activity);
 
         CodeStatementCollection GenerateInvocationCode (Activity activity);

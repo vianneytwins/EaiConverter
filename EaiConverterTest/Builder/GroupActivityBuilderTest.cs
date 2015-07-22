@@ -43,8 +43,8 @@ namespace EaiConverter.Test.Builder
 this.logger.Info(""Start Activity: myNullActivity of type: com.tibco.plugin.timer.NullActivity"");
 ";
             this.activity.GroupType = GroupType.SIMPLEGROUP;
-
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(groupActivityBuilder.Build(this.activity).InvocationCode);
+			groupActivityBuilder.GenerateClassesToGenerate (this.activity);
+			var generatedCode = TestCodeGeneratorUtils.GenerateCode(groupActivityBuilder.GenerateInvocationCode(this.activity));
             Assert.AreEqual(expected,generatedCode);
         }
 
@@ -62,8 +62,8 @@ for (int index = 0; (index < $Paramsets.elements.Lenght); index = (index + 1))
             this.activity.Over = "$Paramsets.elements";
             this.activity.IndexSlot = "index";
             this.activity.IterationElementSlot = "current";
-
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(groupActivityBuilder.Build(this.activity).InvocationCode);
+			groupActivityBuilder.GenerateClassesToGenerate (this.activity);
+			var generatedCode = TestCodeGeneratorUtils.GenerateCode(groupActivityBuilder.GenerateInvocationCode(this.activity));
             Assert.AreEqual(expected,generatedCode);
         }
 
@@ -80,8 +80,8 @@ for (
 ";
             this.activity.GroupType = GroupType.REPEAT;
             this.activity.RepeatCondition = "true";
-
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(groupActivityBuilder.Build(this.activity).InvocationCode);
+			groupActivityBuilder.GenerateClassesToGenerate (this.activity);
+			var generatedCode = TestCodeGeneratorUtils.GenerateCode(groupActivityBuilder.GenerateInvocationCode(this.activity));
             Assert.AreEqual(expected,generatedCode);
         }
 
@@ -95,8 +95,8 @@ this.logger.Info(""Start Activity: myNullActivity of type: com.tibco.plugin.time
 ";
             this.activity.Type = ActivityType.criticalSectionGroupActivityType;
             this.activity.GroupType = GroupType.CRITICALSECTION;
-
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(groupActivityBuilder.Build(this.activity).InvocationCode);
+			groupActivityBuilder.GenerateClassesToGenerate (this.activity);
+			var generatedCode = TestCodeGeneratorUtils.GenerateCode(groupActivityBuilder.GenerateInvocationCode(this.activity));
             Assert.AreEqual(expected,generatedCode);
         }
     }
