@@ -1,30 +1,21 @@
-﻿using System.Collections.Generic;
-using System.CodeDom;
-using EaiConverter.Model;
-using EaiConverter.Builder.Utils;
-
-namespace EaiConverter.Builder
+﻿namespace EaiConverter.Builder
 {
+    using System.CodeDom;
+    using System.Collections.Generic;
+
+    using EaiConverter.Builder.Utils;
+    using EaiConverter.Model;
+
     public class CoreProcessBuilder
     {
-        public CodeStatementCollection GetActivityInvocationCodeStatement(string activityName, Dictionary<string, CodeStatementCollection> activityToInvocation)
-        {
-            if (activityToInvocation.ContainsKey(activityName))
-            {
-                return activityToInvocation[activityName];
-            }
-            return null;
-        }
-
-
         /// <summary>
         /// Generates the code statement.
         /// </summary>
         /// <returns>The code statement.</returns>
-        /// <param name="transitions">Transitions. They must be sorted. For one FromActivity the otherWise conditionnal must be the last one</param>
-        /// <param name="activities">Activities.</param>
+        /// <param name="processTransitions">list of the transition in the process</param>
         /// <param name="activityName">Activity name.</param>
         /// <param name="exitBeforeActivityName">Exit before activity name.</param>
+        /// <param name="activityToServiceMapping">invocation code for each activity</param>
         public CodeStatementCollection GenerateStartCodeStatement(List<Transition> processTransitions, string activityName, string exitBeforeActivityName, Dictionary<string, CodeStatementCollection> activityToServiceMapping)
         {
             processTransitions.Sort();
@@ -45,12 +36,12 @@ namespace EaiConverter.Builder
             else if (startPointOfTryCatch != null)
             {
                 // Defines a try statement that calls the ThrowApplicationException method.
-                CodeTryCatchFinallyStatement try1 = new CodeTryCatchFinallyStatement();
+                var try1 = new CodeTryCatchFinallyStatement();
                 try1.TryStatements.AddRange(invocationCode);
                 codeStatementCollection.Add(try1);
 
                 // Defines a catch clause for any remaining unhandled exception types.
-                CodeCatchClause catch1 = new CodeCatchClause("ex");
+                var catch1 = new CodeCatchClause("ex");
                 catch1.Statements.AddRange(this.GenerateStartCodeStatement(processTransitions, startPointOfTryCatch, null, activityToServiceMapping));
                 try1.CatchClauses.Add(catch1);
             }
@@ -77,12 +68,11 @@ namespace EaiConverter.Builder
                 // TODO c'est moche car cela marche que pour 1 seul If... S'il y en a plus il faut rajouter des ConditionsStatements sans else
                 string nextCommonActivity = TransitionUtils.GetNextCommonActivity(nextActivities, processTransitions);
 
-                CodeStatement[] trueCodeStatements = new CodeStatement[] { };
-                CodeStatement[] falseCodeStatements = new CodeStatement[] { };
+                var trueCodeStatements = new CodeStatement[] { };
+                var falseCodeStatements = new CodeStatement[] { };
                 CodeExpression condition = new CodeVariableReferenceExpression();
                 foreach (var transition in tranz)
                 {
-                    //var conditionType = transition.ConditionType;
                     var nextActivity = transition.ToActivity;
                     if (ConditionType.xpath == transition.ConditionType)
                     {
@@ -98,12 +88,24 @@ namespace EaiConverter.Builder
                         statementCollection.CopyTo(falseCodeStatements, 0);
                     }
                 }
+
                 codeStatementCollection.Add(new CodeConditionStatement(condition, trueCodeStatements, falseCodeStatements));
+                
                 //Call nextCommonActivtyCodeStatementGeneration
                 codeStatementCollection.AddRange(this.GenerateStartCodeStatement(processTransitions, nextCommonActivity, null, activityToServiceMapping));
             }
 
             return codeStatementCollection;
+        }
+
+        private CodeStatementCollection GetActivityInvocationCodeStatement(string activityName, Dictionary<string, CodeStatementCollection> activityToInvocation)
+        {
+            if (activityToInvocation.ContainsKey(activityName))
+            {
+                return activityToInvocation[activityName];
+            }
+
+            return null;
         }
     }
 }

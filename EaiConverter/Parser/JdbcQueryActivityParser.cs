@@ -1,11 +1,11 @@
-using System.Collections.Generic;
-using System.Xml.Linq;
-using System.Linq;
-using EaiConverter.Model;
-using EaiConverter.Parser.Utils;
-
 namespace EaiConverter.Parser
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Xml.Linq;
+
+    using EaiConverter.Model;
+    using EaiConverter.Parser.Utils;
 
     public class JdbcQueryActivityParser : IActivityParser
 	{
@@ -43,19 +43,25 @@ namespace EaiConverter.Parser
 						XElementParserUtils.GetStringValue(parameterElement.Element ("typeName"))
 					);
 				}
-			} else {
+			}
+            else
+            {
 				jdbcQueryActivity.QueryStatement = XElementParserUtils.GetStringValue (configElement.Element ("statement"));
 
-				var preparedParamDataTypeElement = configElement.Element ("Prepared_Param_DataType");
-				jdbcQueryActivity.QueryStatementParameters = new Dictionary <string, string> ();
+				var preparedParamDataTypeElement = configElement.Element("Prepared_Param_DataType");
+				jdbcQueryActivity.QueryStatementParameters = new Dictionary<string, string>();
 
-				var parameterElements = preparedParamDataTypeElement.Elements ("parameter");
-				foreach (var parameterElement in parameterElements) {
-					jdbcQueryActivity.QueryStatementParameters.Add(
-						XElementParserUtils.GetStringValue(parameterElement.Element ("parameterName")),
-						XElementParserUtils.GetStringValue(parameterElement.Element ("dataType"))
-					);
-				}
+			    if (preparedParamDataTypeElement != null)
+			    {
+			        var parameterElements = preparedParamDataTypeElement.Elements("parameter");
+			        foreach (var parameterElement in parameterElements)
+                    {
+			            jdbcQueryActivity.QueryStatementParameters.Add(
+			                XElementParserUtils.GetStringValue(parameterElement.Element ("parameterName")),
+			                XElementParserUtils.GetStringValue(parameterElement.Element ("dataType"))
+			                );
+			        }
+			    }
 			}
 
             jdbcQueryActivity.QueryOutputStatementParameters = this.GetOutputParameters(configElement);

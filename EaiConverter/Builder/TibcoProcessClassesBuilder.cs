@@ -378,12 +378,24 @@
             {
                 foreach (var item in tibcoBwProcessToGenerate.ProcessVariables)
                 {
-                    if (!IsBasicType(item.Parameter.Type))
+                    try
                     {
-                        processVariableNameNamespaces.Add(this.xsdClassGenerator.Build(item.ObjectXNodes, tibcoBwProcessToGenerate.NameSpace));
+                        if (!IsBasicType(item.Parameter.Type))
+                        {
+                            processVariableNameNamespaces.Add(
+                                this.xsdClassGenerator.Build(item.ObjectXNodes, tibcoBwProcessToGenerate.NameSpace));
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(
+                            "############### ERROR####### unable to generate Process Variable object class for this process:"
+                            + tibcoBwProcessToGenerate.ProcessName);
+                        Console.WriteLine(e);
                     }
                 }
             }
+
             return processVariableNameNamespaces;
         }
 

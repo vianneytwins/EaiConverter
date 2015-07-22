@@ -32,7 +32,6 @@ namespace EaiConverter.Builder
 
         private StringBuilder Build(IEnumerable<XNode> inputNodes, string parent)
         {
-
             var codeStatements = new StringBuilder();
             if (inputNodes == null)
             {
@@ -145,12 +144,12 @@ namespace EaiConverter.Builder
             return codeStatements;
         }
 
-        StringBuilder ManageIterationTag(XElement element, string parent)
+        public StringBuilder ManageIterationTag(XElement element, string parent)
         {
             var codeStatements = new StringBuilder();
-            string returnType = this.DefineReturnType(element);
-            string variableReference = this.DefineVariableReference((XElement)element.FirstNode, null);
-            string variableListReference = this.DefineVariableReference((XElement)element.FirstNode, parent) + "s";
+            var returnType = this.DefineReturnType(element);
+            var variableReference = this.DefineVariableReference((XElement)element.FirstNode, null);
+            var variableListReference = this.DefineVariableReference((XElement)element.FirstNode, parent) + "s";
             codeStatements.Append(variableListReference + " = new List<" + returnType + ">();\n");
             codeStatements.Append("foreach (var item in " + this.ReturnValue(element) + "){\n");
             codeStatements.Append(this.Build(element.Nodes(), null));
@@ -159,7 +158,7 @@ namespace EaiConverter.Builder
             return codeStatements;
         }
 
-        StringBuilder ManageConditionTag(XElement element, string parent, bool isIfCondition)
+        public StringBuilder ManageConditionTag(XElement element, string parent, bool isIfCondition)
         {
             var codeStatements = new StringBuilder();
             var test = isIfCondition ? "if (" + this.ReturnCondition(element) + "){\n" : "else{\n";
@@ -206,10 +205,9 @@ namespace EaiConverter.Builder
             }
 
             var elementTypes = new List<string>();
-            var nodes = new List<XNode>();
-            nodes.Add(inputedElement);
+            var nodes = new List<XNode> { inputedElement };
             this.RetrieveAllTypeInTheElement(nodes, elementTypes);
-            if (IsBasicReturnType(elementTypes[1]))
+            if (elementTypes.Count > 1 && IsBasicReturnType(elementTypes[1]))
             {
                 return elementTypes[1];
             }
@@ -220,8 +218,7 @@ namespace EaiConverter.Builder
         public string DefineVariableReference(XElement inputedElement, string parent)
         {
             var elementTypes = new List<string>();
-            var nodes = new List<XNode>();
-            nodes.Add(inputedElement);
+            var nodes = new List<XNode> { inputedElement };
             this.RetrieveAllTypeInTheElement(nodes, elementTypes);
             if (parent == null)
             {

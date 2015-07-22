@@ -85,7 +85,7 @@ namespace EaiConverter.Parser
             var nodes = new List<XNode>();
             nodes.Add(inputedElement);
             this.RetrieveAllTypeInTheElement(nodes, elementTypes);
-            if (IsBasicReturnType(elementTypes[1]))
+            if (elementTypes.Count > 1 && IsBasicReturnType(elementTypes[1]))
             {
                 return elementTypes[1];
             }
