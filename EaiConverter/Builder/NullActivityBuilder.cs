@@ -1,6 +1,7 @@
 using EaiConverter.Model;
 
 using System.CodeDom;
+using System.Collections.Generic;
 
 namespace EaiConverter.Builder
 {
@@ -14,10 +15,10 @@ namespace EaiConverter.Builder
         }
             
 
-        public CodeNamespaceImportCollection GenerateImports(Activity activity)
-        {
-            throw new System.NotImplementedException();
-        }
+		public List<CodeNamespaceImport> GenerateImports(Activity activity)
+		{
+			return new List<CodeNamespaceImport>();
+		}
 
         public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
         {

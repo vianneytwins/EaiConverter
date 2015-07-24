@@ -2,6 +2,8 @@ using EaiConverter.Model;
 
 using System.CodeDom;
 using EaiConverter.CodeGenerator.Utils;
+using System.Collections.Generic;
+using EaiConverter.Builder.Utils;
 
 namespace EaiConverter.Builder
 {
@@ -21,9 +23,14 @@ namespace EaiConverter.Builder
         }
 
 
-        public CodeNamespaceImportCollection GenerateImports(Activity activity)
+		public List<CodeNamespaceImport> GenerateImports(Activity activity)
         {
-            throw new System.NotImplementedException();
+			var import4Activities = new List<CodeNamespaceImport>();
+			var callProcessActivity = (CallProcessActivity)activity;
+			import4Activities.Add(new CodeNamespaceImport(TargetAppNameSpaceService.ConvertXsdImportToNameSpace(callProcessActivity.TibcoProcessToCall.ShortNameSpace)));
+			import4Activities.Add(new CodeNamespaceImport(TargetAppNameSpaceService.ConvertXsdImportToNameSpace(callProcessActivity.TibcoProcessToCall.InputAndOutputNameSpace)));
+
+			return import4Activities;
         }
 
         public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)

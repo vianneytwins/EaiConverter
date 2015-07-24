@@ -52,7 +52,14 @@
             targetUnit.Namespaces.Add(processNamespace);
 
             //7 Mappe les classes des activity
-            this.GenerateActivityClasses(tibcoBwProcessToGenerate.Activities, activityNameToServiceNameDictionnary, targetUnit);
+			var activityBuilderFactory = new ActivityBuilderFactory();
+			foreach (var activity in tibcoBwProcessToGenerate.Activities)
+			{
+				var activityBuilder = activityBuilderFactory.Get(activity.Type);
+				targetUnit.Namespaces.AddRange(activityBuilder.GenerateClassesToGenerate(activity));
+				activityNameToServiceNameDictionnary.Add(activity.Name, activityBuilder.GenerateInvocationCode(activity));
+				processNamespace.Imports.AddRange(activityBuilder.GenerateImports(activity).ToArray());
+			}
 
             if (tibcoBwProcessToGenerate.EndActivity != null && tibcoBwProcessToGenerate.EndActivity.ObjectXNodes != null)
             {
@@ -107,7 +114,7 @@
             {
                 foreach (var xsdImport in tibcoBwProcessToGenerate.XsdImports)
                 {
-                    imports.Add(new CodeNamespaceImport(ConvertXsdImportToNameSpace(xsdImport.SchemaLocation)));
+					imports.Add(new CodeNamespaceImport(TargetAppNameSpaceService.ConvertXsdImportToNameSpace(xsdImport.SchemaLocation)));
                 }
             }
 
@@ -125,8 +132,8 @@
                 if (activity.Type == ActivityType.callProcessActivityType)
                 {
                     var callProcessActivity = (CallProcessActivity)activity;
-                    import4Activities.Add(new CodeNamespaceImport(ConvertXsdImportToNameSpace(callProcessActivity.TibcoProcessToCall.ShortNameSpace)));
-                    import4Activities.Add(new CodeNamespaceImport(ConvertXsdImportToNameSpace(callProcessActivity.TibcoProcessToCall.InputAndOutputNameSpace)));
+					import4Activities.Add(new CodeNamespaceImport(TargetAppNameSpaceService.ConvertXsdImportToNameSpace(callProcessActivity.TibcoProcessToCall.ShortNameSpace)));
+					import4Activities.Add(new CodeNamespaceImport(TargetAppNameSpaceService.ConvertXsdImportToNameSpace(callProcessActivity.TibcoProcessToCall.InputAndOutputNameSpace)));
                 }
                 else if (activity.Type == ActivityType.loopGroupActivityType || activity.Type == ActivityType.criticalSectionGroupActivityType)
                 {
@@ -136,18 +143,7 @@
             return import4Activities;
         }
 
-        public static string ConvertXsdImportToNameSpace(string schemaLocation)
-        {
-            if (schemaLocation.Contains("/"))
-            {
-                string filePath = schemaLocation.Substring(0, schemaLocation.LastIndexOf("/"));
-                filePath = filePath.Remove(0, 1);
-                filePath = filePath.Remove(0, filePath.IndexOf("/") + 1);
-                return filePath.Replace("/", ".");
-            }
 
-            return schemaLocation;
-        }
 
         public CodeMemberField[] GeneratePrivateFields(TibcoBWProcess tibcoBwProcessToGenerate)
         {
@@ -359,17 +355,7 @@
             }
         }
 
-        // Todo : To rename and refactor because not SRP
-        public void GenerateActivityClasses(List<Activity> activities, Dictionary<string, CodeStatementCollection> activityNameToServiceNameDictionnary, CodeCompileUnit targetUnit)
-        {
-            var activityBuilderFactory = new ActivityBuilderFactory();
-            foreach (var activity in activities)
-            {
-                var activityBuilder = activityBuilderFactory.Get(activity.Type);
-                targetUnit.Namespaces.AddRange(activityBuilder.GenerateClassesToGenerate(activity));
-                activityNameToServiceNameDictionnary.Add(activity.Name, activityBuilder.GenerateInvocationCode(activity));
-            }
-        }
+ 
 
         private CodeNamespaceCollection GenerateProcessVariablesNamespaces(TibcoBWProcess tibcoBwProcessToGenerate)
         {

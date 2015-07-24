@@ -10,7 +10,7 @@ namespace EaiConverter.Builder
 
         CodeStatementCollection GenerateInvocationCode (Activity activity);
 
-        CodeNamespaceImportCollection GenerateImports (Activity activity);
+        List<CodeNamespaceImport> GenerateImports (Activity activity);
 
         CodeParameterDeclarationExpressionCollection GenerateConstructorParameter (Activity activity);
 

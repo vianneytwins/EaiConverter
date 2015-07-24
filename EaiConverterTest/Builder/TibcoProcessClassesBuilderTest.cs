@@ -8,6 +8,7 @@ using System.CodeDom;
 using EaiConverter.Model;
 using EaiConverter.Test.Utils;
 using System.Xml.Linq;
+using EaiConverter.Builder.Utils;
 
 namespace EaiConverter.Test.Builder
 {
@@ -210,7 +211,7 @@ namespace EaiConverter.Test.Builder
             var expected = "DAI.PNO.XSD";
 
             // Act
-            var import = TibcoProcessClassesBuilder.ConvertXsdImportToNameSpace ("/XmlSchemas/DAI/PNO/XSD/RM3D.xsd");
+            var import = TargetAppNameSpaceService.ConvertXsdImportToNameSpace ("/XmlSchemas/DAI/PNO/XSD/RM3D.xsd");
 
             // Assert
             Assert.AreEqual(expected,import);
@@ -223,7 +224,7 @@ namespace EaiConverter.Test.Builder
             var expected = ".Process.DAI.PNO.Common";
 
             // Act
-            var import = TibcoProcessClassesBuilder.ConvertXsdImportToNameSpace(".Process.DAI.PNO.Common");
+			var import = TargetAppNameSpaceService.ConvertXsdImportToNameSpace(".Process.DAI.PNO.Common");
 
             // Assert
             Assert.AreEqual(expected, import);

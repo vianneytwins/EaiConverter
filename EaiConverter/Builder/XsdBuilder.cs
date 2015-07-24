@@ -1,4 +1,6 @@
-﻿namespace EaiConverter.Builder
+﻿using EaiConverter.Builder.Utils;
+
+namespace EaiConverter.Builder
 {
     using System.CodeDom;
     using System.Collections.Generic;
@@ -32,7 +34,7 @@
         {
             var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
 
-            var xsdCodeNamespace = this.GeneratedClassFromStream(stream, TibcoProcessClassesBuilder.ConvertXsdImportToNameSpace(fileName));
+			var xsdCodeNamespace = this.GeneratedClassFromStream(stream, TargetAppNameSpaceService.ConvertXsdImportToNameSpace(fileName));
 
             return xsdCodeNamespace;
         }

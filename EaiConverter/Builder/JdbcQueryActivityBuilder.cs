@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace EaiConverter.Builder
 {
     using System.CodeDom;
@@ -106,10 +108,11 @@ namespace EaiConverter.Builder
             return invocationCodeCollection;
         }
 
-        public CodeNamespaceImportCollection GenerateImports(Activity activity)
+		public List<CodeNamespaceImport> GenerateImports(Activity activity)
         {
-            throw new System.NotImplementedException();
+			return new List<CodeNamespaceImport>();
         }
+
         public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
         {
             throw new System.NotImplementedException();

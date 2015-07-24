@@ -50,10 +50,10 @@ namespace EaiConverter.Builder
         }
 
 
-        public CodeNamespaceImportCollection GenerateImports(Activity activity)
-        {
-            throw new System.NotImplementedException();
-        }
+		public List<CodeNamespaceImport> GenerateImports(Activity activity)
+		{
+			return new List<CodeNamespaceImport>{new CodeNamespaceImport(TargetAppNameSpaceService.javaToolsNameSpace)};
+		}
 
         public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
         {

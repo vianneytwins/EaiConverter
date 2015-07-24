@@ -20,11 +20,10 @@ namespace EaiConverter.Builder
             return new CodeNamespaceCollection();
         }
 
-
-        public CodeNamespaceImportCollection GenerateImports(Activity activity)
-        {
-            throw new System.NotImplementedException();
-        }
+		public List<CodeNamespaceImport> GenerateImports(Activity activity)
+		{
+			return new List<CodeNamespaceImport>();
+		}
 
         public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
         {

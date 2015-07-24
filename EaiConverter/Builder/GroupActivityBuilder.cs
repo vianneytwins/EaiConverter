@@ -18,9 +18,17 @@ namespace EaiConverter.Builder
             this.coreProcessBuilder = new CoreProcessBuilder();
         }
             
-        public CodeNamespaceImportCollection GenerateImports(Activity activity)
+		public List<CodeNamespaceImport> GenerateImports(Activity groupActivity)
         {
-            throw new System.NotImplementedException();
+			var import4Activities = new List<CodeNamespaceImport>();
+			var activityBuilderFactory = new ActivityBuilderFactory();
+			foreach (var activity in ((GroupActivity)groupActivity).Activities)
+			{
+				var activityBuilder = activityBuilderFactory.Get(activity.Type);
+				import4Activities.AddRange(activityBuilder.GenerateImports(activity));
+			}
+
+			return import4Activities;
         }
 
         public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)

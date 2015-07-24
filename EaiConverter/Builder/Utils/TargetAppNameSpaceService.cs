@@ -10,6 +10,19 @@
         public const string xmlToolsNameSpace = "MyApp.Tools.Xml";
         public const string domainContractNamespaceName = "MyApp.Mydomain.Service.Contract";
         public const string javaToolsNameSpace = "MyApp.Tools.Java";
+
+		public static string ConvertXsdImportToNameSpace(string schemaLocation)
+		{
+			if (schemaLocation.Contains("/"))
+			{
+				string filePath = schemaLocation.Substring(0, schemaLocation.LastIndexOf("/"));
+				filePath = filePath.Remove(0, 1);
+				filePath = filePath.Remove(0, filePath.IndexOf("/") + 1);
+				return filePath.Replace("/", ".");
+			}
+
+			return schemaLocation;
+		}
     }
 }
 
