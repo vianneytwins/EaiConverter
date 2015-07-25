@@ -39,20 +39,20 @@ namespace EaiConverter.Builder
 			return new List<CodeNamespaceImport>();
 		}
 
-        public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
-        {
-            throw new System.NotImplementedException();
-        }
+		public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
+		{
+			return new CodeParameterDeclarationExpressionCollection();
+		}
 
-        public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
-        {
-            throw new System.NotImplementedException();
-        }
+		public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
+		{
+			return new CodeStatementCollection();
+		}
 
-        public System.Collections.Generic.List<CodeMemberField> GenerateFields(Activity activity)
-        {
-            throw new System.NotImplementedException();
-        }
+		public List<CodeMemberField> GenerateFields(Activity activity)
+		{
+			return new List<CodeMemberField>();
+		}
 
         public CodeStatementCollection GenerateInvocationCode(Activity activity)
         {

@@ -3,6 +3,7 @@ using EaiConverter.Model;
 using System.CodeDom;
 using EaiConverter.CodeGenerator.Utils;
 using System.Collections.Generic;
+using EaiConverter.Builder.Utils;
 
 namespace EaiConverter.Builder
 {
@@ -17,23 +18,48 @@ namespace EaiConverter.Builder
 
 		public List<CodeNamespaceImport> GenerateImports(Activity activity)
 		{
-			return new List<CodeNamespaceImport>();
+			return new List<CodeNamespaceImport>
+			{
+				new CodeNamespaceImport (TargetAppNameSpaceService.domainContractNamespaceName)
+			};
 		}
 
-        public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
-        {
-            throw new System.NotImplementedException();
-        }
+		public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
+		{
+			var parameters = new CodeParameterDeclarationExpressionCollection
+			{
+				new CodeParameterDeclarationExpression(GetServiceFieldType(activity), GetServiceFieldName(activity))
+			};
 
-        public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
-        {
-            throw new System.NotImplementedException();
-        }
+			return parameters;
+		}
 
-        public List<CodeMemberField> GenerateFields(Activity activity)
-        {
-            throw new System.NotImplementedException();
-        }
+		public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
+		{
+			var parameterReference = new CodeFieldReferenceExpression(
+				new CodeThisReferenceExpression(), GetServiceFieldName(activity));
+
+			var statements = new CodeStatementCollection
+			{
+				new CodeAssignStatement(parameterReference, new CodeArgumentReferenceExpression(GetServiceFieldName(activity)))
+			};
+
+			return statements;
+		}
+
+		public System.Collections.Generic.List<CodeMemberField> GenerateFields(Activity activity)
+		{
+			var fields = new List<CodeMemberField>
+			{new CodeMemberField
+				{
+					Type = GetServiceFieldType(activity),
+					Name = GetServiceFieldName(activity),
+					Attributes = MemberAttributes.Private
+				}
+			};
+
+			return fields;
+		}
 
         public CodeStatementCollection GenerateInvocationCode(Activity activity)
         {
@@ -89,6 +115,16 @@ namespace EaiConverter.Builder
         {
             return GenerateParameters(null, activity);
         }
+
+		private static CodeTypeReference GetServiceFieldType (Activity activity)
+		{
+			return new CodeTypeReference("I" + VariableHelper.ToClassName(activity.Name + "Service"));
+		}
+
+		private static string GetServiceFieldName(Activity activity)
+		{
+			return VariableHelper.ToVariableName(VariableHelper.ToClassName(activity.Name + "Service"));
+		}
     }
 }
 

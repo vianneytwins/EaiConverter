@@ -58,15 +58,39 @@ namespace EaiConverter.Builder
 
         public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
         {
-            throw new System.NotImplementedException();
+			var parameters = new CodeParameterDeclarationExpressionCollection
+			{
+				new CodeParameterDeclarationExpression(GetServiceFieldType(), GetServiceFieldName())
+			};
+
+			return parameters;
         }
+
         public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
         {
-            throw new System.NotImplementedException();
+			var parameterReference = new CodeFieldReferenceExpression(
+				new CodeThisReferenceExpression(), GetServiceFieldName());
+
+			var statements = new CodeStatementCollection
+			{
+				new CodeAssignStatement(parameterReference, new CodeArgumentReferenceExpression(GetServiceFieldName()))
+			};
+
+			return statements;
         }
+
         public System.Collections.Generic.List<CodeMemberField> GenerateFields(Activity activity)
         {
-            throw new System.NotImplementedException();
+			var fields = new List<CodeMemberField>
+			{new CodeMemberField
+				{
+					Type = GetServiceFieldType(),
+					Name = GetServiceFieldName(),
+					Attributes = MemberAttributes.Private
+				}
+			};
+
+			return fields;
         }
 
         public CodeStatementCollection GenerateInvocationCode(Activity activity)
@@ -116,6 +140,16 @@ namespace EaiConverter.Builder
             invocationCodeCollection.Add(code);
             return invocationCodeCollection;
         }
+
+		private static CodeTypeReference GetServiceFieldType ()
+		{
+			return new CodeTypeReference (XmlParserHelperBuilder.IXmlParserHelperServiceName);
+		}
+
+		private static string GetServiceFieldName()
+		{
+			return VariableHelper.ToVariableName (VariableHelper.ToClassName (XmlParserHelperBuilder.XmlParserHelperServiceName));
+		}
 
 		private string TargetNamespace (Activity activity)
 		{

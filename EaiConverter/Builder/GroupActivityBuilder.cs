@@ -11,17 +11,19 @@ namespace EaiConverter.Builder
         private XslBuilder xslBuilder;
         private readonly CoreProcessBuilder coreProcessBuilder;
         private Dictionary<string, CodeStatementCollection> activityNameToServiceNameDictionnary = new Dictionary<string, CodeStatementCollection>();
+		private readonly ActivityBuilderFactory activityBuilderFactory;
 
         public GroupActivityBuilder(XslBuilder xslBuilder)
         {
             this.xslBuilder = xslBuilder;
             this.coreProcessBuilder = new CoreProcessBuilder();
+			this.activityBuilderFactory = new ActivityBuilderFactory();
         }
             
 		public List<CodeNamespaceImport> GenerateImports(Activity groupActivity)
         {
 			var import4Activities = new List<CodeNamespaceImport>();
-			var activityBuilderFactory = new ActivityBuilderFactory();
+
 			foreach (var activity in ((GroupActivity)groupActivity).Activities)
 			{
 				var activityBuilder = activityBuilderFactory.Get(activity.Type);
@@ -31,19 +33,55 @@ namespace EaiConverter.Builder
 			return import4Activities;
         }
 
-        public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
+		public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity groupActivity)
         {
-            throw new System.NotImplementedException();
+			var parameters = new CodeParameterDeclarationExpressionCollection ();
+			foreach (var activity in ((GroupActivity)groupActivity).Activities)
+			{
+				var activityBuilder = activityBuilderFactory.Get(activity.Type);
+				parameters.AddRange(activityBuilder.GenerateConstructorParameter(activity));
+			}
+
+			return parameters;
+
         }
 
-        public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
+		public CodeStatementCollection GenerateConstructorCodeStatement(Activity groupActivity)
         {
-            throw new System.NotImplementedException();
+			var statements = new CodeStatementCollection ();
+			foreach (var activity in ((GroupActivity)groupActivity).Activities)
+			{
+				var activityBuilder = activityBuilderFactory.Get(activity.Type);
+				statements.AddRange(activityBuilder.GenerateConstructorCodeStatement(activity));
+			}
+
+			return statements;
+
         }
 
-        public List<CodeMemberField> GenerateFields(Activity activity)
+		public List<CodeMemberField> GenerateFields(Activity groupActivity)
         {
-            throw new System.NotImplementedException();
+			var fields = new List<CodeMemberField> ();
+
+			foreach (var activity in ((GroupActivity)groupActivity).Activities)
+			{
+				var activityBuilder = activityBuilderFactory.Get(activity.Type);
+				fields.AddRange(activityBuilder.GenerateFields(activity));
+			}
+
+			if (groupActivity.Type == ActivityType.criticalSectionGroupActivityType)
+			{
+				// Lock for the synchronise section
+				fields.Add(new CodeMemberField
+					{
+						Type = new CodeTypeReference("System.Object"),
+						Name = VariableHelper.ToVariableName(VariableHelper.ToVariableName(groupActivity.Name + "Lock")),
+						Attributes = MemberAttributes.Private,
+						InitExpression = new CodeSnippetExpression("new System.Object()")
+					});
+			}
+
+			return fields;
         }
 
         public CodeNamespaceCollection GenerateClassesToGenerate(Activity groupActivity)

@@ -35,17 +35,41 @@ namespace EaiConverter.Builder
 
         public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
         {
-            throw new System.NotImplementedException();
+			var callProcessActivity = (CallProcessActivity)activity;
+			var parameters = new CodeParameterDeclarationExpressionCollection
+			{
+				new CodeParameterDeclarationExpression(GetServiceFieldType(callProcessActivity), GetServiceFieldName(callProcessActivity))
+			};
+
+			return parameters;
         }
 
         public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
         {
-            throw new System.NotImplementedException();
+			var callProcessActivity = (CallProcessActivity)activity;
+			var parameterReference = new CodeFieldReferenceExpression(
+				new CodeThisReferenceExpression(), GetServiceFieldName(callProcessActivity));
+
+			var statements = new CodeStatementCollection
+			{
+				new CodeAssignStatement(parameterReference, new CodeArgumentReferenceExpression(GetServiceFieldName(callProcessActivity)))
+			};
+
+			return statements;
         }
 
         public System.Collections.Generic.List<CodeMemberField> GenerateFields(Activity activity)
         {
-            throw new System.NotImplementedException();
+			var callProcessActivity = (CallProcessActivity)activity;
+			return new List<CodeMemberField>
+			{
+				new CodeMemberField
+				{
+					Type = GetServiceFieldType(callProcessActivity),
+					Name = GetServiceFieldName(callProcessActivity),
+					Attributes = MemberAttributes.Private
+				}
+			};
         }
 
         public CodeStatementCollection GenerateInvocationCode(Activity activity)
@@ -71,5 +95,20 @@ namespace EaiConverter.Builder
 
             return invocationCodeCollection;
         }
+
+		private static CodeTypeReference GetServiceFieldType (CallProcessActivity callProcessActivity)
+		{
+			return new CodeTypeReference(VariableHelper.ToClassName(callProcessActivity.ProcessName));
+		}
+
+		private static string GetServiceFieldName(CallProcessActivity callProcessActivity)
+		{
+			return VariableHelper.ToVariableName(VariableHelper.ToClassName(callProcessActivity.ProcessName));
+		}
+
+		private string TargetNamespace (Activity activity)
+		{
+			return TargetAppNameSpaceService.domainContractNamespaceName + "." + VariableHelper.ToClassName(activity.Name); 
+		}
     }
 }

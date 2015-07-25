@@ -13,10 +13,12 @@
     public class TibcoProcessClassesBuilder
     {
         private readonly CoreProcessBuilder coreProcessBuilder;
+		private readonly ActivityBuilderFactory activityBuilderFactory;
 
         public TibcoProcessClassesBuilder()
         {
             this.coreProcessBuilder = new CoreProcessBuilder();
+			this.activityBuilderFactory = new ActivityBuilderFactory();
         }
 
         XsdBuilder xsdClassGenerator = new XsdBuilder();
@@ -44,7 +46,7 @@
             tibcoBwProcessClassModel.Members.AddRange(this.GeneratePrivateFields(tibcoBwProcessToGenerate));
 
             // 4 le ctor avec injection des activités + logger
-            tibcoBwProcessClassModel.Members.Add(this.GenerateConstructor(tibcoBwProcessToGenerate, tibcoBwProcessClassModel));
+            tibcoBwProcessClassModel.Members.Add(this.GenerateConstructor(tibcoBwProcessToGenerate));
 
 
             processNamespace.Types.Add(tibcoBwProcessClassModel);
@@ -52,13 +54,14 @@
             targetUnit.Namespaces.Add(processNamespace);
 
             //7 Mappe les classes des activity
-			var activityBuilderFactory = new ActivityBuilderFactory();
+
 			foreach (var activity in tibcoBwProcessToGenerate.Activities)
 			{
 				var activityBuilder = activityBuilderFactory.Get(activity.Type);
 				targetUnit.Namespaces.AddRange(activityBuilder.GenerateClassesToGenerate(activity));
 				activityNameToServiceNameDictionnary.Add(activity.Name, activityBuilder.GenerateInvocationCode(activity));
 				processNamespace.Imports.AddRange(activityBuilder.GenerateImports(activity).ToArray());
+				tibcoBwProcessClassModel.Members.AddRange (activityBuilder.GenerateFields (activity).ToArray());
 			}
 
             if (tibcoBwProcessToGenerate.EndActivity != null && tibcoBwProcessToGenerate.EndActivity.ObjectXNodes != null)
@@ -105,8 +108,7 @@
             var imports = new List<CodeNamespaceImport>
             {
                 new CodeNamespaceImport ("System"),
-                new CodeNamespaceImport (TargetAppNameSpaceService.domainContractNamespaceName),
-                new CodeNamespaceImport (tibcoBwProcessToGenerate.InputAndOutputNameSpace),
+				new CodeNamespaceImport (tibcoBwProcessToGenerate.InputAndOutputNameSpace),
                 new CodeNamespaceImport (TargetAppNameSpaceService.loggerNameSpace)
             };
 
@@ -118,32 +120,8 @@
                 }
             }
 
-            var import4Activities = this.GenerateImport4Activities(tibcoBwProcessToGenerate.Activities);
-
-            imports.AddRange(import4Activities);
             return imports.ToArray();
         }
-
-        public List<CodeNamespaceImport> GenerateImport4Activities(List<Activity> activities)
-        {
-            var import4Activities = new List<CodeNamespaceImport>();
-            foreach (var activity in activities)
-            {
-                if (activity.Type == ActivityType.callProcessActivityType)
-                {
-                    var callProcessActivity = (CallProcessActivity)activity;
-					import4Activities.Add(new CodeNamespaceImport(TargetAppNameSpaceService.ConvertXsdImportToNameSpace(callProcessActivity.TibcoProcessToCall.ShortNameSpace)));
-					import4Activities.Add(new CodeNamespaceImport(TargetAppNameSpaceService.ConvertXsdImportToNameSpace(callProcessActivity.TibcoProcessToCall.InputAndOutputNameSpace)));
-                }
-                else if (activity.Type == ActivityType.loopGroupActivityType || activity.Type == ActivityType.criticalSectionGroupActivityType)
-                {
-                    import4Activities.AddRange(this.GenerateImport4Activities(((GroupActivity)activity).Activities));
-                }
-            }
-            return import4Activities;
-        }
-
-
 
         public CodeMemberField[] GeneratePrivateFields(TibcoBWProcess tibcoBwProcessToGenerate)
         {
@@ -158,8 +136,6 @@
                              };
 
             fields.AddRange(this.GenerateFieldForProcessVariables(tibcoBwProcessToGenerate));
-
-            fields.AddRange(this.GenerateFieldsForActivityServices(tibcoBwProcessToGenerate.Activities));
 
             return fields.ToArray();
         }
@@ -183,107 +159,31 @@
             return fields;
         }
 
-        private List<CodeMemberField> GenerateFieldsForActivityServices(List<Activity> activities)
-        {
-            var fields = new List<CodeMemberField>();
-            bool isXmlParserServiceAllReadyAdded = false;
-            foreach (Activity activity in activities)
-            {
-                if (activity.Type == ActivityType.xmlParseActivityType && !isXmlParserServiceAllReadyAdded)
-                {
-                    fields.Add(new CodeMemberField
-                    {
-                        Type = new CodeTypeReference(XmlParserHelperBuilder.IXmlParserHelperServiceName),
-                        Name = VariableHelper.ToVariableName(VariableHelper.ToClassName(XmlParserHelperBuilder.XmlParserHelperServiceName)),
-                        Attributes = MemberAttributes.Private
-                    });
-                    isXmlParserServiceAllReadyAdded = true;
-                }
-                else if (activity.Type == ActivityType.assignActivityType || activity.Type == ActivityType.mapperActivityType || activity.Type == ActivityType.generateErrorActivity || activity.Type == ActivityType.writeToLogActivityType)
-                {
-                    // Do nothing for those type
-                }
-                else if (activity.Type == ActivityType.callProcessActivityType)
-                {
-                    var callProcessActivity = (CallProcessActivity)activity;
-                    fields.Add(new CodeMemberField
-                    {
-                        Type = new CodeTypeReference(VariableHelper.ToClassName(callProcessActivity.ProcessName)),
-                        Name = VariableHelper.ToVariableName(VariableHelper.ToClassName(callProcessActivity.ProcessName)),
-                        Attributes = MemberAttributes.Private
-                    });
-                }
-                else if (activity.Type == ActivityType.loopGroupActivityType)
-                {
-                    var groupActivity = (GroupActivity)activity;
-                    fields.AddRange(this.GenerateFieldsForActivityServices(groupActivity.Activities));
-                }
-                else if (activity.Type == ActivityType.criticalSectionGroupActivityType)
-                {
-                    var groupActivity = (GroupActivity)activity;
-                    fields.AddRange(this.GenerateFieldsForActivityServices(groupActivity.Activities));
-
-                    // Lock for the synchronise section
-                    fields.Add(new CodeMemberField
-                        {
-                            Type = new CodeTypeReference("System.Object"),
-                            Name = VariableHelper.ToVariableName(VariableHelper.ToVariableName(groupActivity.Name + "Lock")),
-                            Attributes = MemberAttributes.Private,
-                            InitExpression = new CodeSnippetExpression("new System.Object()")
-                        });
-                }
-                else
-                {
-                    fields.Add(new CodeMemberField
-                    {
-                        Type = new CodeTypeReference("I" + VariableHelper.ToClassName(activity.Name + "Service")),
-                        Name = VariableHelper.ToVariableName(VariableHelper.ToClassName(activity.Name + "Service")),
-                        Attributes = MemberAttributes.Private
-                    });
-                }
-            }
-
-            return fields;
-        }
-
-        public CodeConstructor GenerateConstructor(TibcoBWProcess tibcoBwProcessToGenerate, CodeTypeDeclaration classModel)
+        public CodeConstructor GenerateConstructor(TibcoBWProcess tibcoBwProcessToGenerate)
         {
 
             var constructor = new CodeConstructor();
             constructor.Attributes = MemberAttributes.Public;
-            foreach (CodeMemberField field in classModel.Members)
+
+			constructor.Parameters.Add(new CodeParameterDeclarationExpression(new CodeTypeReference("ILogger"), "logger"));
+
+			constructor.Statements.Add(
+				new CodeAssignStatement(new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), "logger"),
+				new CodeArgumentReferenceExpression("logger"))
+			);
+
+			foreach (Activity activity in tibcoBwProcessToGenerate.Activities)
             {
-                if (this.IsNotAProcessVariable(field.Name, tibcoBwProcessToGenerate.ProcessVariables))
-                {
-                    constructor.Parameters.Add(new CodeParameterDeclarationExpression(
-                        field.Type, field.Name));
+				var builder = this.activityBuilderFactory.Get (activity.Type);
 
-                    var parameterReference = new CodeFieldReferenceExpression(
-                        new CodeThisReferenceExpression(), field.Name);
-
-                    constructor.Statements.Add(new CodeAssignStatement(parameterReference,
-                        new CodeArgumentReferenceExpression(field.Name)));
-                }
+				constructor.Parameters.AddRange(builder.GenerateConstructorParameter(activity));
+				constructor.Statements.AddRange(builder.GenerateConstructorCodeStatement(activity));
+            
             }
 
             return constructor;
         }
 
-        private bool IsNotAProcessVariable(string fieldName, List<ProcessVariable> processVariables)
-        {
-            if (processVariables != null)
-            {
-                foreach (var processVariable in processVariables)
-                {
-                    if (processVariable.Parameter.Name == fieldName)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        }
 
         public CodeMemberMethod[] GenerateMethod(TibcoBWProcess tibcoBwProcessToGenerate, Dictionary<string, CodeStatementCollection> activityNameToServiceNameDictionnary)
         {
@@ -354,9 +254,7 @@
                 }
             }
         }
-
- 
-
+			
         private CodeNamespaceCollection GenerateProcessVariablesNamespaces(TibcoBWProcess tibcoBwProcessToGenerate)
         {
             var processVariableNameNamespaces = new CodeNamespaceCollection();

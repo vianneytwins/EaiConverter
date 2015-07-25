@@ -110,21 +110,48 @@ namespace EaiConverter.Builder
 
 		public List<CodeNamespaceImport> GenerateImports(Activity activity)
         {
-			return new List<CodeNamespaceImport>();
+			return new List<CodeNamespaceImport>
+			{
+				new CodeNamespaceImport (TargetAppNameSpaceService.domainContractNamespaceName)
+			};
         }
 
         public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
         {
-            throw new System.NotImplementedException();
+			var parameters = new CodeParameterDeclarationExpressionCollection
+			{
+				new CodeParameterDeclarationExpression(GetServiceFieldType(activity), GetServiceFieldName(activity))
+			};
+
+			return parameters;
         }
-        public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
-        {
-            throw new System.NotImplementedException();
-        }
-        public System.Collections.Generic.List<CodeMemberField> GenerateFields(Activity activity)
-        {
-            throw new System.NotImplementedException();
-        }
+
+		public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
+		{
+			var parameterReference = new CodeFieldReferenceExpression(
+				new CodeThisReferenceExpression(), GetServiceFieldName(activity));
+
+			var statements = new CodeStatementCollection
+			{
+				new CodeAssignStatement(parameterReference, new CodeArgumentReferenceExpression(GetServiceFieldName(activity)))
+			};
+
+			return statements;
+		}
+
+		public System.Collections.Generic.List<CodeMemberField> GenerateFields(Activity activity)
+		{
+			var fields = new List<CodeMemberField>
+			{new CodeMemberField
+				{
+					Type = GetServiceFieldType(activity),
+					Name = GetServiceFieldName(activity),
+					Attributes = MemberAttributes.Private
+				}
+			};
+
+			return fields;
+		}
 
         /// <summary>
         /// Determines whether this sql request has already generate A service for the specified queryStatement.
@@ -141,6 +168,16 @@ namespace EaiConverter.Builder
         {
             return SqlRequestToActivityMapper.GetJdbcServiceName(queryStatement);
         }
+
+		private static CodeTypeReference GetServiceFieldType (Activity activity)
+		{
+			return new CodeTypeReference("I" + VariableHelper.ToClassName(activity.Name + "Service"));
+		}
+
+		private static string GetServiceFieldName(Activity activity)
+		{
+			return VariableHelper.ToVariableName(VariableHelper.ToClassName(activity.Name + "Service"));
+		}
     }
 }
 
