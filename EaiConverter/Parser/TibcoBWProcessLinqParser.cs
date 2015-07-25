@@ -118,7 +118,7 @@ namespace EaiConverter.Parser
         {
             var element = allFileElement.Element (XmlnsConstant.tibcoProcessNameSpace + "starter");
 
-            if (element ==null)
+            if (element == null)
             {
                 return null;
             }

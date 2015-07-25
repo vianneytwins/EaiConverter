@@ -16,6 +16,18 @@ namespace EaiConverter.Utils
 
             return property;
         }
+
+		public static CodeMemberProperty GeneratePropertyWithoutSetter(string name, string type)
+		{
+			CodeMemberProperty property = new CodeMemberProperty();
+			property.Attributes = MemberAttributes.Public;
+			property.Name = name;
+			property.HasGet = true;
+			property.HasSet = false;
+			property.Type = new CodeTypeReference(type);
+
+			return property;
+		}
     }
 }
 

@@ -23,7 +23,7 @@ namespace EaiConverter.Model
             set;
         }
 
-        public string XsdString
+        public string XsdStringReference
         {
             get;
             set;

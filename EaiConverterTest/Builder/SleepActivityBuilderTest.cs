@@ -6,7 +6,7 @@ using System.Xml.Linq;
 using System.Collections.Generic;
 using EaiConverter.Test.Utils;
 
-namespace EaiConverterTest.Builder
+namespace EaiConverter.Test.Builder
 {
     [TestFixture]
     public class SleepActivityBuilderTest

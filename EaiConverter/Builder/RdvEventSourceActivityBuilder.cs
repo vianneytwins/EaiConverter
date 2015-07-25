@@ -1,0 +1,143 @@
+using System;
+using System.Collections.Generic;
+using System.CodeDom;
+using EaiConverter.Builder.Utils;
+using EaiConverter.Processor;
+using System.Reflection;
+using EaiConverter.Utils;
+
+namespace EaiConverter.Builder
+{
+	public class RdvEventSourceActivityBuilder : IActivityBuilder
+	{
+		public const string interfaceSubscriberName = "ISubscriber";
+
+		private const string subscriber = "subscriber";
+
+		public CodeNamespaceCollection GenerateClassesToGenerate (EaiConverter.Model.Activity activity)
+		{
+			var namespaces = new CodeNamespaceCollection ();
+			if (ConfigurationApp.GetProperty("IsSubscriberInterfaceAlreadyGenerated") != "true")
+			{
+				namespaces.Add(this.GenerateSubscriberInterface());
+				namespaces.Add(this.GenerateResponseReceivedEventHandler());
+				ConfigurationApp.SaveProperty("IsSubscriberInterfaceAlreadyGenerated", "true");
+			}
+
+			if (ConfigurationApp.GetProperty("IsTibcoSubscriberImplemAlreadyGenerated") != "true")
+			{
+				namespaces.Add (this.GenerateTibcoSubscriberImplementation ());
+				ConfigurationApp.SaveProperty("IsTibcoSubscriberImplemAlreadyGenerated", "true");
+			}
+
+			return namespaces;
+		}
+
+		public CodeNamespace GenerateSubscriberInterface ()
+		{
+			var subscriberInterfaceNamespace = new CodeNamespace ();
+			subscriberInterfaceNamespace.Name = TargetAppNameSpaceService.tibcoRdvToolsNameSpace;
+			subscriberInterfaceNamespace.Imports.Add (new CodeNamespaceImport("System"));
+
+			var subscriberInterfaceClass = new CodeTypeDeclaration(interfaceSubscriberName);
+			subscriberInterfaceClass.IsInterface = true;
+
+			CodeMemberEvent event1 = new CodeMemberEvent();
+			// Sets a name for the event.
+			event1.Name = "ResponseReceived";
+			// Sets the type of event.
+			event1.Type = new CodeTypeReference("ResponseReceivedEventHandler");
+
+			subscriberInterfaceClass.Members.Add (event1);
+			subscriberInterfaceClass.Members.Add (CodeDomUtils.GeneratePropertyWithoutSetter ("WaitingTimeLimit",CSharpTypeConstant.SystemInt32));
+			subscriberInterfaceClass.Members.Add (CodeDomUtils.GeneratePropertyWithoutSetter ("IsStarted",CSharpTypeConstant.SystemBoolean));
+
+			subscriberInterfaceClass.Members.Add(new CodeMemberMethod {
+				Name = "Start",
+				ReturnType = new CodeTypeReference(CSharpTypeConstant.SystemVoid)
+			});
+			subscriberInterfaceClass.Members.Add(new CodeMemberMethod {
+				Name = "Stop",
+				ReturnType = new CodeTypeReference(CSharpTypeConstant.SystemVoid)
+			});
+
+			subscriberInterfaceNamespace.Types.Add (subscriberInterfaceClass);
+			return subscriberInterfaceNamespace;
+		}
+
+		CodeNamespace GenerateResponseReceivedEventHandler ()
+		{
+			return new CodeNamespace ();
+		}
+
+		CodeNamespace GenerateTibcoSubscriberImplementation ()
+		{
+			return new CodeNamespace ();
+		}
+
+		public System.CodeDom.CodeStatementCollection GenerateInvocationCode (EaiConverter.Model.Activity activity)
+		{
+			throw new NotImplementedException ();
+		}
+
+		public List<System.CodeDom.CodeNamespaceImport> GenerateImports (EaiConverter.Model.Activity activity)
+		{
+			return new List<CodeNamespaceImport>
+			{
+				new CodeNamespaceImport(TargetAppNameSpaceService.tibcoRdvToolsNameSpace),
+				new CodeNamespaceImport("System.Threading")
+			};
+		}
+
+		public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter (EaiConverter.Model.Activity activity)
+		{
+			var parameters = new CodeParameterDeclarationExpressionCollection
+			{
+				new CodeParameterDeclarationExpression(GetServiceFieldType(), GetServiceFieldName())
+			};
+
+			return parameters;
+		}
+
+		public CodeStatementCollection GenerateConstructorCodeStatement (EaiConverter.Model.Activity activity)
+		{
+			var parameterReference = new CodeFieldReferenceExpression(
+				new CodeThisReferenceExpression(), GetServiceFieldName());
+
+			var statements = new CodeStatementCollection
+			{
+				new CodeAssignStatement(parameterReference, new CodeArgumentReferenceExpression(GetServiceFieldName())),
+				new CodeSnippetStatement ("this."+ GetServiceFieldName() + ".ResponseReceived += this.OnEvent;")
+
+			};
+
+			return statements;
+		}
+
+		public List<System.CodeDom.CodeMemberField> GenerateFields (EaiConverter.Model.Activity activity)
+		{
+			var fields = new List<CodeMemberField>
+			{new CodeMemberField
+				{
+					Type = GetServiceFieldType(),
+					Name = GetServiceFieldName(),
+					Attributes = MemberAttributes.Private
+				}
+			};
+
+			return fields;
+		}
+
+		CodeTypeReference GetServiceFieldType ()
+		{
+			return new CodeTypeReference (interfaceSubscriberName);
+		}
+
+		string GetServiceFieldName ()
+		{
+			return subscriber;
+		}
+	}
+
+}
+

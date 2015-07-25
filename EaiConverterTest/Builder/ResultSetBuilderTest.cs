@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 
-namespace EaiConverterTest.Builder
+namespace EaiConverter.Test.Builder
 {
     [TestFixture]
     public class ResultSetBuilderTest

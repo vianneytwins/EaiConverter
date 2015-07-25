@@ -92,6 +92,7 @@
     <Compile Include="Parser\SleepActivityParserTest.cs" />
     <Compile Include="Builder\SleepActivityBuilderTest.cs" />
     <Compile Include="Builder\ResultSetBuilderTest.cs" />
+    <Compile Include="Builder\RdvEventSourceActivityBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />

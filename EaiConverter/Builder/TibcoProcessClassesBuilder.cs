@@ -64,6 +64,15 @@
 				tibcoBwProcessClassModel.Members.AddRange (activityBuilder.GenerateFields (activity).ToArray());
 			}
 
+			if (tibcoBwProcessToGenerate.StarterActivity != null)
+			{
+				var activityBuilder = activityBuilderFactory.Get (tibcoBwProcessToGenerate.StarterActivity.Type);
+				targetUnit.Namespaces.AddRange (activityBuilder.GenerateClassesToGenerate (tibcoBwProcessToGenerate.StarterActivity));
+				processNamespace.Imports.AddRange (activityBuilder.GenerateImports (tibcoBwProcessToGenerate.StarterActivity).ToArray ());
+				tibcoBwProcessClassModel.Members.AddRange (activityBuilder.GenerateFields (tibcoBwProcessToGenerate.StarterActivity).ToArray ());
+			}
+			//Same for the starter
+
             if (tibcoBwProcessToGenerate.EndActivity != null && tibcoBwProcessToGenerate.EndActivity.ObjectXNodes != null)
             {
                 try
@@ -181,19 +190,34 @@
             
             }
 
+			if (tibcoBwProcessToGenerate.StarterActivity != null)
+			{
+				var builder = this.activityBuilderFactory.Get (tibcoBwProcessToGenerate.StarterActivity.Type);
+
+				constructor.Parameters.AddRange(builder.GenerateConstructorParameter(tibcoBwProcessToGenerate.StarterActivity));
+				constructor.Statements.AddRange(builder.GenerateConstructorCodeStatement(tibcoBwProcessToGenerate.StarterActivity));
+			}
+
             return constructor;
         }
 
 
         public CodeMemberMethod[] GenerateMethod(TibcoBWProcess tibcoBwProcessToGenerate, Dictionary<string, CodeStatementCollection> activityNameToServiceNameDictionnary)
         {
-            return new List<CodeMemberMethod> { GenerateStartMethod(tibcoBwProcessToGenerate, activityNameToServiceNameDictionnary) }.ToArray();
+			var methods = new List<CodeMemberMethod> ();
+			methods.Add(this.GenerateStartMethod (tibcoBwProcessToGenerate, activityNameToServiceNameDictionnary));
+
+			if (tibcoBwProcessToGenerate.StarterActivity != null) {
+				this.GenerateOnEventMethod (tibcoBwProcessToGenerate, activityNameToServiceNameDictionnary);
+			}
+
+            return methods.ToArray();
         }
 
         public CodeMemberMethod GenerateStartMethod(TibcoBWProcess tibcoBwProcessToGenerate, Dictionary<string, CodeStatementCollection> activityNameToServiceNameDictionnary)
         {
             var startMethod = new CodeMemberMethod();
-            if (tibcoBwProcessToGenerate.StartActivity == null)
+			if (tibcoBwProcessToGenerate.StartActivity == null && tibcoBwProcessToGenerate.StarterActivity == null)
             {
                 return startMethod;
             }
@@ -202,26 +226,36 @@
             startMethod.Name = tibcoBwProcessToGenerate.StartActivity.Name;
             startMethod.ReturnType = this.GenerateStartMethodReturnType(tibcoBwProcessToGenerate);
 
-            this.GenerateStartMethodInputParameters(tibcoBwProcessToGenerate, startMethod);
+			startMethod.Parameters.AddRange(this.GenerateStartMethodInputParameters(tibcoBwProcessToGenerate));
 
-            this.GenerateStartMethodBody(tibcoBwProcessToGenerate, startMethod, activityNameToServiceNameDictionnary);
+			if (tibcoBwProcessToGenerate.StartActivity != null)
+			{
+				startMethod.Statements.AddRange(this.GenerateMainMethodBody (tibcoBwProcessToGenerate,startMethod.ReturnType, activityNameToServiceNameDictionnary));
+			}
+			else if (tibcoBwProcessToGenerate.StarterActivity != null)
+			{
+				startMethod.Statements.AddRange(this.GenerateStarterMethodBody());
+			}
 
             return startMethod;
         }
 
-        public void GenerateStartMethodInputParameters(TibcoBWProcess tibcoBwProcessToGenerate, CodeMemberMethod startMethod)
+		public CodeParameterDeclarationExpressionCollection GenerateStartMethodInputParameters(TibcoBWProcess tibcoBwProcessToGenerate)
         {
-            if (tibcoBwProcessToGenerate.StartActivity.Parameters != null)
+			var parameters = new CodeParameterDeclarationExpressionCollection ();
+			if (tibcoBwProcessToGenerate.StartActivity.Parameters != null)
             {
                 foreach (var parameter in tibcoBwProcessToGenerate.StartActivity.Parameters)
                 {
-                    startMethod.Parameters.Add(new CodeParameterDeclarationExpression
+                    parameters.Add(new CodeParameterDeclarationExpression
                     {
                         Name = parameter.Name,
                         Type = new CodeTypeReference(parameter.Type)
                     });
                 }
             }
+
+			return parameters;
         }
 
         public CodeTypeReference GenerateStartMethodReturnType(TibcoBWProcess tibcoBwProcessToGenerate)
@@ -238,22 +272,59 @@
             return new CodeTypeReference(returnType);
         }
 
-        public void GenerateStartMethodBody(TibcoBWProcess tibcoBwProcessToGenerate, CodeMemberMethod startMethod, Dictionary<string, CodeStatementCollection> activityNameToServiceNameDictionnary)
+		public CodeMemberMethod GenerateOnEventMethod (TibcoBWProcess tibcoBwProcessToGenerate, Dictionary<string, CodeStatementCollection> activityNameToServiceNameDictionnary)
+		{
+			var onEventMethod = new CodeMemberMethod();
+			if (tibcoBwProcessToGenerate.StarterActivity == null)
+			{
+				return onEventMethod;
+			}
+
+			onEventMethod.Attributes = MemberAttributes.Public | MemberAttributes.Final;
+			onEventMethod.Name = "OnEvent";
+			onEventMethod.ReturnType = new CodeTypeReference (CSharpTypeConstant.SystemVoid);
+
+			onEventMethod.Parameters.AddRange(this.GenerateOnEventMethodInputParameters(tibcoBwProcessToGenerate));
+
+			onEventMethod.Statements.AddRange(this.GenerateMainMethodBody (tibcoBwProcessToGenerate, onEventMethod.ReturnType, activityNameToServiceNameDictionnary));
+
+			return onEventMethod;
+		}
+
+		public CodeStatementCollection GenerateMainMethodBody(TibcoBWProcess tibcoBwProcessToGenerate, CodeTypeReference returnType, Dictionary<string, CodeStatementCollection> activityNameToServiceNameDictionnary)
         {
-            if (tibcoBwProcessToGenerate.Transitions != null)
+			var statements = new CodeStatementCollection ();
+			if (tibcoBwProcessToGenerate.Transitions != null)
             {
-                startMethod.Statements.AddRange(this.coreProcessBuilder.GenerateStartCodeStatement(tibcoBwProcessToGenerate.Transitions, tibcoBwProcessToGenerate.StartActivity.Name, null, activityNameToServiceNameDictionnary));
-                // TODO VC : integrate the following section in in CoreProcessBuilder
-                if (startMethod.ReturnType.BaseType != CSharpTypeConstant.SystemVoid)
+                statements.AddRange(this.coreProcessBuilder.GenerateStartCodeStatement(tibcoBwProcessToGenerate.Transitions, tibcoBwProcessToGenerate.StartActivity.Name, null, activityNameToServiceNameDictionnary));
+
+				if (returnType.BaseType != CSharpTypeConstant.SystemVoid)
                 {
                     var returnName = VariableHelper.ToVariableName(tibcoBwProcessToGenerate.EndActivity.Parameters[0].Name);
-                    var objectCreate = new CodeObjectCreateExpression(startMethod.ReturnType);
-                    startMethod.Statements.Add(new CodeVariableDeclarationStatement(startMethod.ReturnType, returnName, objectCreate));
+					var objectCreate = new CodeObjectCreateExpression(returnType);
+					statements.Add(new CodeVariableDeclarationStatement(returnType, returnName, objectCreate));
                     var returnStatement = new CodeMethodReturnStatement(new CodeVariableReferenceExpression(returnName));
-                    startMethod.Statements.Add(returnStatement);
+                    statements.Add(returnStatement);
                 }
             }
+			return statements;
         }
+
+		private CodeStatementCollection GenerateStarterMethodBody ()
+		{
+			var statements = new CodeStatementCollection ();
+			statements.Add (new CodeSnippetStatement("this.subscriber.Start()"));
+			return statements;
+		}
+
+		public CodeParameterDeclarationExpressionCollection GenerateOnEventMethodInputParameters(TibcoBWProcess tibcoBwProcessToGenerate)
+		{
+			var parameters = new CodeParameterDeclarationExpressionCollection ();
+			foreach (var parameter in tibcoBwProcessToGenerate.StarterActivity.Parameters) {
+				parameters.Add (new CodeParameterDeclarationExpression (new CodeTypeReference (parameter.Type), parameter.Name));
+			}
+			return parameters;
+		}
 			
         private CodeNamespaceCollection GenerateProcessVariablesNamespaces(TibcoBWProcess tibcoBwProcessToGenerate)
         {
