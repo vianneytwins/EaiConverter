@@ -41,53 +41,50 @@ namespace EaiConverter.Builder
             {
                 return jdbcQueryActivityBuilder;
             }
-            if (activityType == ActivityType.assignActivityType)
+            else if (activityType == ActivityType.assignActivityType)
             {
                 return new AssignActivityBuilder(xslBuilder);
             }
-            
-            if (activityType == ActivityType.xmlParseActivityType)
+			else if (activityType == ActivityType.xmlParseActivityType)
             {
 				return new XmlParseActivityBuilder (xslBuilder, xmlParserHelperBuilder, this.xsdBuilder, this.xsdParser);
-            }
-            
-            if (activityType == ActivityType.mapperActivityType)
+            }else if (activityType == ActivityType.mapperActivityType)
             {
 				return new MapperActivityBuilder(this.xslBuilder, this.xsdBuilder, this.xsdParser);
             }
-            
-            if (activityType == ActivityType.nullActivityType)
+			else if (activityType == ActivityType.nullActivityType)
             {
                 return new NullActivityBuilder(xslBuilder);
             }
-            
-            if (activityType == ActivityType.javaActivityType)
+			else if (activityType == ActivityType.javaActivityType)
             {
                 return new JavaActivityBuilder(xslBuilder);
             }
-            
-            if (activityType == ActivityType.writeToLogActivityType)
+			else if (activityType == ActivityType.writeToLogActivityType)
             {
                 return new WriteToLogActivityBuilder(xslBuilder);
             }
-            
-            if (activityType == ActivityType.generateErrorActivity)
+            else if (activityType == ActivityType.generateErrorActivity)
             {
                 return new GenerateErrorActivityBuilder(xslBuilder);
             }
-            if (activityType == ActivityType.sleepActivity)
+            else if (activityType == ActivityType.sleepActivity)
             {
                 return new SleepActivityBuilder(xslBuilder);
             }
-            if (activityType == ActivityType.loopGroupActivityType || activityType == ActivityType.criticalSectionGroupActivityType)
+            else if (activityType == ActivityType.loopGroupActivityType || activityType == ActivityType.criticalSectionGroupActivityType)
             {
                 return new GroupActivityBuilder(xslBuilder);
             }
-			if (activityType == ActivityType.rdvEventSourceActivityType)
+			else if (activityType == ActivityType.rdvEventSourceActivityType)
 			{
 				return new RdvEventSourceActivityBuilder();
 			}
-            
+			else if (activityType == ActivityType.rdvPubActivityType)
+			{
+				return new RdvPublishActivityBuilder (xslBuilder);
+			}
+
             return new DefaultActivityBuilder(xslBuilder);
         }
     }

@@ -36,7 +36,7 @@ namespace EaiConverter.Builder
 		public CodeNamespace GenerateSubscriberInterface ()
 		{
 			var subscriberInterfaceNamespace = new CodeNamespace ();
-			subscriberInterfaceNamespace.Name = TargetAppNameSpaceService.tibcoRdvToolsNameSpace;
+			subscriberInterfaceNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace;
 			subscriberInterfaceNamespace.Imports.Add (new CodeNamespaceImport("System"));
 
 			var subscriberInterfaceClass = new CodeTypeDeclaration(interfaceSubscriberName);
@@ -84,7 +84,7 @@ namespace EaiConverter.Builder
 		{
 			return new List<CodeNamespaceImport>
 			{
-				new CodeNamespaceImport(TargetAppNameSpaceService.tibcoRdvToolsNameSpace),
+				new CodeNamespaceImport(TargetAppNameSpaceService.EventSourcingNameSpace),
 				new CodeNamespaceImport("System.Threading")
 			};
 		}

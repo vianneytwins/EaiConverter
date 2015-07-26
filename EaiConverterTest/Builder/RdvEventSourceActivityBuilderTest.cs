@@ -64,7 +64,7 @@ this.subscriber.ResponseReceived += this.OnEvent;
 		}
 
 		[Test]
-		public void Should_return_2_Classes_To_Generate_if_they_are_not_already_generated ()
+		public void Should_return_3_Classes_To_Generate_if_they_are_not_already_generated ()
 		{
 			ConfigurationApp.SaveProperty("IsSubscriberInterfaceAlreadyGenerated", "false");
 			ConfigurationApp.SaveProperty("IsTibcoSubscriberImplemAlreadyGenerated", "false");
@@ -86,7 +86,7 @@ this.subscriber.ResponseReceived += this.OnEvent;
 		[Test]
 		public void Should_generate_SubscriberInterface ()
 		{
-			var expected = @"namespace MyApp.Tools.TibcoRdv
+			var expected = @"namespace MyApp.Tools.EventSourcing
 {
     using System;
     

@@ -37,6 +37,7 @@ namespace EaiConverter.Builder
             {
                 return codeStatements;
             }
+
             bool isAlistElement = false;
 
             var listElements = new Dictionary<string, bool>();

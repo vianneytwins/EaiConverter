@@ -8,7 +8,7 @@
         public const string dataAccessCommonNamespace = "MyApp.Mydomain.DataAccess.Common";
         public const string loggerNameSpace = "MyApp.Tools.Logging";
         public const string xmlToolsNameSpace = "MyApp.Tools.Xml";
-		public const string tibcoRdvToolsNameSpace = "MyApp.Tools.TibcoRdv";
+		public const string EventSourcingNameSpace = "MyApp.Tools.EventSourcing";
         public const string domainContractNamespaceName = "MyApp.Mydomain.Service.Contract";
         public const string javaToolsNameSpace = "MyApp.Tools.Java";
 
