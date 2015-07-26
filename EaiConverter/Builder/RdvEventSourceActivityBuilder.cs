@@ -76,9 +76,10 @@ namespace EaiConverter.Builder
 			subscriberRdvClassNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace;
 			subscriberRdvClassNamespace.Imports.Add (new CodeNamespaceImport("System"));
 
-			var subscriberRdvClass = new CodeTypeDeclaration(interfaceSubscriberName);
+			var subscriberRdvClass = new CodeTypeDeclaration("TibcoPublisher");
 			subscriberRdvClass.IsClass = true;
 			subscriberRdvClass.Attributes = MemberAttributes.Public;
+			subscriberRdvClass.BaseTypes.Add(subscriber);
 
 			CodeMemberEvent event1 = new CodeMemberEvent();
 			// Sets a name for the event.
