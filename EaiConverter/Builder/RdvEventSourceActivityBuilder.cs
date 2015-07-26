@@ -72,7 +72,37 @@ namespace EaiConverter.Builder
 
 		CodeNamespace GenerateTibcoSubscriberImplementation ()
 		{
-			return new CodeNamespace ();
+			var subscriberRdvClassNamespace = new CodeNamespace ();
+			subscriberRdvClassNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace;
+			subscriberRdvClassNamespace.Imports.Add (new CodeNamespaceImport("System"));
+
+			var subscriberRdvClass = new CodeTypeDeclaration(interfaceSubscriberName);
+			subscriberRdvClass.IsClass = true;
+			subscriberRdvClass.Attributes = MemberAttributes.Public;
+
+			CodeMemberEvent event1 = new CodeMemberEvent();
+			// Sets a name for the event.
+			event1.Name = "ResponseReceived";
+			// Sets the type of event.
+			event1.Type = new CodeTypeReference("ResponseReceivedEventHandler");
+
+			subscriberRdvClass.Members.Add (event1);
+			subscriberRdvClass.Members.Add (CodeDomUtils.GeneratePropertyWithoutSetter ("WaitingTimeLimit",CSharpTypeConstant.SystemInt32));
+			subscriberRdvClass.Members.Add (CodeDomUtils.GeneratePropertyWithoutSetter ("IsStarted",CSharpTypeConstant.SystemBoolean));
+
+			subscriberRdvClass.Members.Add(new CodeMemberMethod {
+				Name = "Start",
+				ReturnType = new CodeTypeReference(CSharpTypeConstant.SystemVoid),
+				Attributes = MemberAttributes.Public
+			});
+			subscriberRdvClass.Members.Add(new CodeMemberMethod {
+				Name = "Stop",
+				ReturnType = new CodeTypeReference(CSharpTypeConstant.SystemVoid),
+				Attributes = MemberAttributes.Public
+			});
+
+			subscriberRdvClassNamespace.Types.Add (subscriberRdvClass);
+			return subscriberRdvClassNamespace;
 		}
 
 		public System.CodeDom.CodeStatementCollection GenerateInvocationCode (EaiConverter.Model.Activity activity)
