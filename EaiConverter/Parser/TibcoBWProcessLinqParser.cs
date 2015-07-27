@@ -122,6 +122,7 @@ namespace EaiConverter.Parser
             {
                 return null;
             }
+
             var activity = this.ParseActivity(element);
             return activity;
         }

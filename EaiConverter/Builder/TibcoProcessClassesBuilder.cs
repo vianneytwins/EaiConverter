@@ -223,7 +223,15 @@
             }
 
             startMethod.Attributes = MemberAttributes.Public | MemberAttributes.Final;
-            startMethod.Name = tibcoBwProcessToGenerate.StartActivity.Name;
+            if (tibcoBwProcessToGenerate.StartActivity != null)
+            {
+                startMethod.Name = tibcoBwProcessToGenerate.StartActivity.Name;
+            }
+            else
+            {
+                startMethod.Name = "Start";
+            }
+
             startMethod.ReturnType = this.GenerateStartMethodReturnType(tibcoBwProcessToGenerate);
 
 			startMethod.Parameters.AddRange(this.GenerateStartMethodInputParameters(tibcoBwProcessToGenerate));
@@ -243,7 +251,7 @@
 		public CodeParameterDeclarationExpressionCollection GenerateStartMethodInputParameters(TibcoBWProcess tibcoBwProcessToGenerate)
         {
 			var parameters = new CodeParameterDeclarationExpressionCollection ();
-			if (tibcoBwProcessToGenerate.StartActivity.Parameters != null)
+            if (tibcoBwProcessToGenerate.StartActivity != null && tibcoBwProcessToGenerate.StartActivity.Parameters != null)
             {
                 foreach (var parameter in tibcoBwProcessToGenerate.StartActivity.Parameters)
                 {
@@ -296,7 +304,7 @@
 			var statements = new CodeStatementCollection ();
 			if (tibcoBwProcessToGenerate.Transitions != null)
             {
-                statements.AddRange(this.coreProcessBuilder.GenerateStartCodeStatement(tibcoBwProcessToGenerate.Transitions, tibcoBwProcessToGenerate.StartActivity.Name, null, activityNameToServiceNameDictionnary));
+                statements.AddRange(this.coreProcessBuilder.GenerateStartCodeStatement(tibcoBwProcessToGenerate.Transitions, "Start", null, activityNameToServiceNameDictionnary));
 
 				if (returnType.BaseType != CSharpTypeConstant.SystemVoid)
                 {
@@ -320,6 +328,11 @@
 		public CodeParameterDeclarationExpressionCollection GenerateOnEventMethodInputParameters(TibcoBWProcess tibcoBwProcessToGenerate)
 		{
 			var parameters = new CodeParameterDeclarationExpressionCollection ();
+            if (tibcoBwProcessToGenerate.StarterActivity.Parameters == null)
+            {
+                return parameters;
+            }
+
 			foreach (var parameter in tibcoBwProcessToGenerate.StarterActivity.Parameters) {
 				parameters.Add (new CodeParameterDeclarationExpression (new CodeTypeReference (parameter.Type), parameter.Name));
 			}

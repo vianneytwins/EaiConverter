@@ -50,39 +50,41 @@ namespace EaiConverter.Builder
         }
 
 
-		public List<CodeNamespaceImport> GenerateImports(Activity activity)
-		{
-			return new List<CodeNamespaceImport>{new CodeNamespaceImport(TargetAppNameSpaceService.javaToolsNameSpace)};
-		}
+        public List<CodeNamespaceImport> GenerateImports(Activity activity)
+        {
+            return new List<CodeNamespaceImport>
+            {
+                new CodeNamespaceImport(TargetAppNameSpaceService.javaToolsNameSpace)
+            };
+        }
 
         public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
         {
-            throw new System.NotImplementedException();
+            return new CodeParameterDeclarationExpressionCollection();
         }
 
         public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
         {
-            throw new System.NotImplementedException();
+            return new CodeStatementCollection();
         }
 
         public List<CodeMemberField> GenerateFields(Activity activity)
         {
-            throw new System.NotImplementedException();
+            return new List<CodeMemberField>();
         }
 
         public CodeNamespaceImport[] GenerateImports()
         {
-            return new CodeNamespaceImport[1] {
-                new CodeNamespaceImport ("System")
-            };
+            return new CodeNamespaceImport[1] { new CodeNamespaceImport("System") };
         }
-
 
         public CodeTypeDeclaration GenerateClass(JavaActivity activity)
         {
-            var javaClass = new CodeTypeDeclaration(activity.FileName);
-            javaClass.IsClass = true;
-            javaClass.TypeAttributes = TypeAttributes.Public;
+            var javaClass = new CodeTypeDeclaration(activity.FileName)
+                                {
+                                    IsClass = true,
+                                    TypeAttributes = TypeAttributes.Public
+                                };
             javaClass.BaseTypes.Add(new CodeTypeReference(IJavaActivityService));
 
             javaClass.Comments.Add(new CodeCommentStatement(activity.FullSource));
@@ -90,22 +92,23 @@ namespace EaiConverter.Builder
             return javaClass;
         }
 
-        public CodeMemberMethod GenerateInvokeMethod ()
+        public CodeMemberMethod GenerateInvokeMethod()
         {
             {
-                var method = new CodeMemberMethod ();
-                method.Attributes = MemberAttributes.Public | MemberAttributes.Final;
+                var method = new CodeMemberMethod
+                                 {
+                                     Attributes = MemberAttributes.Public | MemberAttributes.Final,
+                                     Name = InvokeMethodName,
+                                     ReturnType = new CodeTypeReference(CSharpTypeConstant.SystemVoid)
+                                 };
 
-                method.Name = InvokeMethodName;
-
-                method.ReturnType = new CodeTypeReference (CSharpTypeConstant.SystemVoid);
                 return method;
             }
         }
 
         public CodeStatementCollection GenerateInvocationCode(Activity activity)
         {
-            JavaActivity javaActivity = (JavaActivity) activity;
+            var javaActivity = (JavaActivity)activity;
 
             var invocationCodeCollection = new CodeStatementCollection();
             invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(javaActivity));
@@ -121,8 +124,7 @@ namespace EaiConverter.Builder
 
             invocationCodeCollection.Add(codeInvocation);
 
-            CodeVariableReferenceExpression javaClassReference = new CodeVariableReferenceExpression();
-            javaClassReference.VariableName = javaClassVariableName;
+            var javaClassReference = new CodeVariableReferenceExpression { VariableName = javaClassVariableName };
 
             //add input to java class
             invocationCodeCollection.AddRange(this.GenerateInputCallOnJavaClass(javaActivity, javaClassReference));
