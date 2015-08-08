@@ -94,9 +94,10 @@ namespace EaiConverter.Builder
 			return new CodeTypeReference(SubscriberBuilder.InterfaceSubscriberName);
 		}
 
+
 		private string GetServiceFieldName()
 		{
-            return SubscriberBuilder.Subscriber;
+            return "timerSubscriber";
 		}
 
 
@@ -106,7 +107,7 @@ namespace EaiConverter.Builder
             subscriberRdvClassNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace;
             subscriberRdvClassNamespace.Imports.Add(new CodeNamespaceImport("System"));
 
-            var subscriberRdvClass = new CodeTypeDeclaration("TimerPublisher");
+            var subscriberRdvClass = new CodeTypeDeclaration("TimerSubscriber");
             subscriberRdvClass.IsClass = true;
             subscriberRdvClass.Attributes = MemberAttributes.Public;
             subscriberRdvClass.BaseTypes.Add(SubscriberBuilder.Subscriber);
