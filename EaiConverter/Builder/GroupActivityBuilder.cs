@@ -1,5 +1,6 @@
 namespace EaiConverter.Builder
 {
+    using System;
     using System.CodeDom;
     using System.Collections.Generic;
 
@@ -183,7 +184,17 @@ namespace EaiConverter.Builder
         {
             var invocationCodeCollection = new CodeStatementCollection();
 
-            invocationCodeCollection.AddRange(this.coreProcessBuilder.GenerateStartCodeStatement(groupActivity.Transitions, "start", null, this.activityNameToServiceNameDictionnary));
+            try
+            {
+                invocationCodeCollection.AddRange(this.coreProcessBuilder.GenerateMainCodeStatement(groupActivity.Transitions, "start", null, this.activityNameToServiceNameDictionnary));
+            }
+            catch (Exception e)
+            {
+                invocationCodeCollection.Add(new CodeSnippetStatement("// TODO : Unable to Generate code for this Group"));
+                Console.WriteLine("################ Unable to Generate code for this Group :" + groupActivity.Name);
+                Console.WriteLine(e);
+            }
+
             return invocationCodeCollection;
         }
     }

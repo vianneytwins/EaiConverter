@@ -8,7 +8,7 @@ namespace EaiConverter.Processor
 
     public class XsdFileProcessorService : IFileProcessorService
     {
-        private ISourceCodeGeneratorService sourceCodeGeneratorService;
+        private readonly ISourceCodeGeneratorService sourceCodeGeneratorService;
 
         public XsdFileProcessorService(ISourceCodeGeneratorService sourceCodeGeneratorService)
         {

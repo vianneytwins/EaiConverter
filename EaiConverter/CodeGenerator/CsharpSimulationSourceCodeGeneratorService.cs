@@ -20,5 +20,10 @@ namespace EaiConverter.CodeGenerator
             }
             Console.WriteLine(classesInString);
         }
+
+        public void GenerateSolutionAndProjectFiles()
+        {
+            // Do nothing
+        }
     }
 }

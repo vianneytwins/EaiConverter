@@ -26,7 +26,7 @@ namespace EaiConverter.Parser
             var xElement = inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "type");
             if (xElement != null)
             {
-                mapperActivity.Type = (ActivityType) xElement.Value;
+                mapperActivity.Type = (ActivityType)xElement.Value;
             }
 
             var configElement = inputElement.Element("config");
@@ -39,7 +39,7 @@ namespace EaiConverter.Parser
             else
             {
                 mapperActivity.ObjectXNodes = configElement.Element("element").Nodes();
-		    }
+            }
 
             mapperActivity.InputBindings = inputElement.Element (XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Nodes();
 

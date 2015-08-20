@@ -1,31 +1,31 @@
-using System;
-
-using EaiConverter.CodeGenerator;
-using EaiConverter.Processor;
-using EaiConverter.Parser;
-using EaiConverter.Builder;
-using System.CodeDom;
-
 namespace EaiConverter
 {
+    using System.CodeDom;
+
+    using EaiConverter.Builder;
+    using EaiConverter.CodeGenerator;
+    using EaiConverter.Parser;
+    using EaiConverter.Processor;
+
     public class GlobalVariableProcessor : IFileProcessorService
-	{
+    {
         ISourceCodeGeneratorService sourceCodeGeneratorService;
 
-        public GlobalVariableProcessor (ISourceCodeGeneratorService sourceCodeGeneratorService){
+        public GlobalVariableProcessor(ISourceCodeGeneratorService sourceCodeGeneratorService)
+        {
             this.sourceCodeGeneratorService = sourceCodeGeneratorService;
         }
 
-        public void Process (string fileName)
+        public void Process(string fileName)
         {
             //TODO : manage the input directory name to have the relative path = package name
+
             var globalVariableProcess = new GlobalVariableParser().ParseVariable(fileName);
-            var globalVariableBuilder = new GlobalVariableBuilder ();
+            var globalVariableBuilder = new GlobalVariableBuilder();
             var targetUnit = new CodeCompileUnit();
-            targetUnit.Namespaces.Add(globalVariableBuilder.Build (globalVariableProcess));
+            targetUnit.Namespaces.Add(globalVariableBuilder.Build(globalVariableProcess));
 
-            this.sourceCodeGeneratorService.Generate (targetUnit);
+            this.sourceCodeGeneratorService.Generate(targetUnit);
         }
-	}
-
+    }
 }

@@ -26,17 +26,17 @@ namespace EaiConverter.Builder
 
         public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
         {
-            throw new System.NotImplementedException();
+            return new CodeParameterDeclarationExpressionCollection();
         }
 
         public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
         {
-            throw new System.NotImplementedException();
+            return new CodeStatementCollection();
         }
 
-        public System.Collections.Generic.List<CodeMemberField> GenerateFields(Activity activity)
+        public List<CodeMemberField> GenerateFields(Activity activity)
         {
-            throw new System.NotImplementedException();
+            return new List<CodeMemberField>();
         }
 
         public CodeStatementCollection GenerateInvocationCode(Activity activity)

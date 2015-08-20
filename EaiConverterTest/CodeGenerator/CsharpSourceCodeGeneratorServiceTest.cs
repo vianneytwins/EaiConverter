@@ -18,8 +18,9 @@ namespace EaiConverter.Test.CodeGenerator
 
         [TearDown]
         public void TearDown(){
-            if (Directory.Exists(CsharpSourceCodeGeneratorService.destinationPath)){
-                Directory.Delete(CsharpSourceCodeGeneratorService.destinationPath,true);
+            if (Directory.Exists(CsharpSourceCodeGeneratorService.SolutionDestinationPath))
+            {
+                Directory.Delete(CsharpSourceCodeGeneratorService.SolutionDestinationPath, true);
             }
         }
 
@@ -32,7 +33,7 @@ namespace EaiConverter.Test.CodeGenerator
             testNamespace.Types.Add(testClassToGenerate);
             targetUnit.Namespaces.Add(testNamespace);
             this.csharpSourceCodeGenetatorService.Generate(targetUnit);
-            Assert.IsTrue(File.Exists(CsharpSourceCodeGeneratorService.destinationPath + "/testnamespace/subnamespace" + "/TestClass.cs"));
+            Assert.IsTrue(File.Exists(CsharpSourceCodeGeneratorService.ProjectDestinationPath + "/testnamespace/subnamespace" + "/TestClass.cs"));
         }
 
 

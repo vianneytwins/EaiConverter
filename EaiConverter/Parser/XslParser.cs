@@ -1,24 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Xml.Linq;
-using System.Text;
-
-using EaiConverter.Parser.Utils;
-using EaiConverter.Model;
-
-namespace EaiConverter.Parser
+﻿namespace EaiConverter.Parser
 {
+    using System.Collections.Generic;
+    using System.Text;
     using System.Text.RegularExpressions;
+    using System.Xml.Linq;
+
+    using EaiConverter.Model;
+    using EaiConverter.Parser.Utils;
 
     public class XslParser
     {
-         public List<ClassParameter> Build (IEnumerable<XNode> inputNodes){
-
+         public List<ClassParameter> Build (IEnumerable<XNode> inputNodes)
+         {
             var paramaters = new List<ClassParameter>();
             if (inputNodes == null)
             {
                 return paramaters;
             }
-            foreach(var inputNode in inputNodes)
+
+            foreach (var inputNode in inputNodes)
             {
                 var element = (XElement) inputNode;
                 if (!Regex.IsMatch(element.Name.NamespaceName, XmlnsConstant.xslNameSpace))
@@ -32,11 +32,15 @@ namespace EaiConverter.Parser
                     {
                         paramaters.Add(new ClassParameter{Type=returnType,Name = element.Name.LocalName, ChildProperties=this.Build(element.Nodes())});
                     }
-                } else {
-                    if (element.Name.LocalName =="value-of"){
-                    } else if (element.Name.LocalName =="if"){
+                }
+                else
+                {
+                    if (element.Name.LocalName =="value-of")
+                    {
+                    }
+                    else if (element.Name.LocalName =="if")
+                    {
                         return this.Build(element.Nodes());
-              
                     }
                     else if (element.Name.LocalName =="choose")
                     {

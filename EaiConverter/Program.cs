@@ -9,7 +9,7 @@ namespace EaiConverter
 	{
         public const string ProjectDirectory = "ProjectDirectory";
 
-		public static void Main (string[] args)
+		public static void Main(string[] args)
 		{
 			ITibcoBWDirectoryProcessorService tibcoFileReaderService;
 			IFileProcessorService tibcoFileProcessorService;
@@ -25,20 +25,22 @@ namespace EaiConverter
 
 				if (mode == "S_Csharp") {
 					sourceCodeGeneratorService = new CsharpSimulationSourceCodeGeneratorService ();
-					tibcoFileProcessorService = new TibcoFileProcessorService (sourceCodeGeneratorService);
-                    xsdFileProcessorService = new XsdFileProcessorService (sourceCodeGeneratorService);
+					tibcoFileProcessorService = new TibcoFileProcessorService(sourceCodeGeneratorService);
+                    xsdFileProcessorService = new XsdFileProcessorService(sourceCodeGeneratorService);
                     globalVariableProcessor = new GlobalVariableProcessor(sourceCodeGeneratorService);
-                    tibcoFileReaderService = new TibcoBWDirectoryProcessorService (tibcoFileProcessorService, xsdFileProcessorService, globalVariableProcessor);
+                    tibcoFileReaderService = new TibcoBWDirectoryProcessorService(tibcoFileProcessorService, xsdFileProcessorService, globalVariableProcessor);
                     ConfigurationApp.SaveProperty(ProjectDirectory, sourceDirectory);
-					tibcoFileReaderService.Process (sourceDirectory);
+					tibcoFileReaderService.Process(sourceDirectory);
 				} else if (mode == "G_Csharp") {
-					sourceCodeGeneratorService = new CsharpSourceCodeGeneratorService ();
-					tibcoFileProcessorService = new TibcoFileProcessorService (sourceCodeGeneratorService);
-                    xsdFileProcessorService = new XsdFileProcessorService (sourceCodeGeneratorService);
+					sourceCodeGeneratorService = new CsharpSourceCodeGeneratorService();
+					tibcoFileProcessorService = new TibcoFileProcessorService(sourceCodeGeneratorService);
+                    xsdFileProcessorService = new XsdFileProcessorService(sourceCodeGeneratorService);
                     globalVariableProcessor = new GlobalVariableProcessor(sourceCodeGeneratorService);
-                    tibcoFileReaderService = new TibcoBWDirectoryProcessorService (tibcoFileProcessorService, xsdFileProcessorService, globalVariableProcessor);
+                    tibcoFileReaderService = new TibcoBWDirectoryProcessorService(tibcoFileProcessorService, xsdFileProcessorService, globalVariableProcessor);
                     ConfigurationApp.SaveProperty(ProjectDirectory, sourceDirectory);
-					tibcoFileReaderService.Process (sourceDirectory);
+
+				    sourceCodeGeneratorService.GenerateSolutionAndProjectFiles();
+					tibcoFileReaderService.Process(sourceDirectory);
 				} else {
                     Console.WriteLine ("Program is going to exit - sorry only MODE S_Csharp and G_Csharp is managed for the moment");
 				}

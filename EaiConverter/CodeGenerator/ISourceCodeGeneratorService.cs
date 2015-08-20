@@ -5,5 +5,7 @@ namespace EaiConverter.CodeGenerator
     public interface ISourceCodeGeneratorService
     {
         void Generate(CodeCompileUnit targetUnit);
+
+        void GenerateSolutionAndProjectFiles();
     }
 }

@@ -12,7 +12,9 @@ using EaiConverter.Builder.Utils;
 
 namespace EaiConverter.Test.Builder
 {
-	[TestFixture]
+    using EaiConverter.Processor;
+
+    [TestFixture]
 	public class TibcoProcessClassesBuilderTest
 	{
 	
@@ -206,7 +208,7 @@ namespace EaiConverter.Test.Builder
 		}
 
         [Test]
-        public void Should_Convert_XsdImport_in_Code_namespace_to_import(){
+        public void Should_Convert_Unix_XsdImport_in_Code_namespace_to_import(){
             // Arrange
             var expected = "DAI.PNO.XSD";
 
@@ -215,6 +217,21 @@ namespace EaiConverter.Test.Builder
 
             // Assert
             Assert.AreEqual(expected,import);
+        }
+
+        [Test]
+        public void Should_Convert_Windows_pathname_in_Code_namespace_to_import()
+        {
+            // Arrange
+            var expected = "DAI.PNO.XSD";
+
+            ConfigurationApp.SaveProperty(MainClass.ProjectDirectory, "c:\\test");
+
+            // Act
+            var import = TargetAppNameSpaceService.ConvertXsdImportToNameSpace("c:\\test\\XmlSchemas\\DAI\\PNO\\XSD\\RM3D.xsd");
+
+            // Assert
+            Assert.AreEqual(expected, import);
         }
 
         [Test]

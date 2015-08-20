@@ -269,6 +269,10 @@ namespace EaiConverter.Builder
                         elementTypes.Add("string");
                     }
                 }
+                else if (item.Name.LocalName == "variable")
+                {
+                    elementTypes.Add(item.Attribute("name").Value);
+                }
 
                 if (item.HasElements)
                 {

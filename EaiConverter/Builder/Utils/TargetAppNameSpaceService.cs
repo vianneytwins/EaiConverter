@@ -1,5 +1,7 @@
 ﻿namespace EaiConverter.Builder.Utils
 {
+    using EaiConverter.Processor;
+
     public class TargetAppNameSpaceService
     {
         public const string processNameSpace = "MyApp.Mydomain.Process";
@@ -14,7 +16,13 @@
 
 		public static string ConvertXsdImportToNameSpace(string schemaLocation)
 		{
-			if (schemaLocation.Contains("/"))
+		    var initialProjectPath = ConfigurationApp.GetProperty(MainClass.ProjectDirectory);
+            if (initialProjectPath != null && schemaLocation.StartsWith(initialProjectPath))
+		    {
+		        schemaLocation = schemaLocation.Replace(initialProjectPath, string.Empty);
+		    }
+
+		    if (schemaLocation.Contains("/"))
 			{
 				string filePath = schemaLocation.Substring(0, schemaLocation.LastIndexOf("/"));
 				filePath = filePath.Remove(0, 1);
@@ -22,8 +30,18 @@
 				return filePath.Replace("/", ".");
 			}
 
+            if (schemaLocation.Contains("\\"))
+            {
+                string filePath = schemaLocation.Substring(0, schemaLocation.LastIndexOf("\\"));
+                filePath = filePath.Remove(0, 1);
+                filePath = filePath.Remove(0, filePath.IndexOf("\\") + 1);
+                return filePath.Replace("\\", ".");
+            }
+
 			return schemaLocation;
 		}
+
+
     }
 }
 

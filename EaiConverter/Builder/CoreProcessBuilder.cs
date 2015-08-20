@@ -16,7 +16,7 @@
         /// <param name="activityName">Activity name.</param>
         /// <param name="exitBeforeActivityName">Exit before activity name.</param>
         /// <param name="activityToServiceMapping">invocation code for each activity</param>
-        public CodeStatementCollection GenerateStartCodeStatement(List<Transition> processTransitions, string activityName, string exitBeforeActivityName, Dictionary<string, CodeStatementCollection> activityToServiceMapping)
+        public CodeStatementCollection GenerateMainCodeStatement(List<Transition> processTransitions, string activityName, string exitBeforeActivityName, Dictionary<string, CodeStatementCollection> activityToServiceMapping)
         {
             processTransitions.Sort();
             var codeStatementCollection = new CodeStatementCollection();
@@ -42,7 +42,7 @@
 
                 // Defines a catch clause for any remaining unhandled exception types.
                 var catch1 = new CodeCatchClause("ex");
-                catch1.Statements.AddRange(this.GenerateStartCodeStatement(processTransitions, startPointOfTryCatch, null, activityToServiceMapping));
+                catch1.Statements.AddRange(this.GenerateMainCodeStatement(processTransitions, startPointOfTryCatch, null, activityToServiceMapping));
                 try1.CatchClauses.Add(catch1);
             }
 
@@ -54,7 +54,7 @@
             else if (tranz.Count == 1)
             {
                 string nextActivity = tranz[0].ToActivity;
-                codeStatementCollection.AddRange(this.GenerateStartCodeStatement(processTransitions, nextActivity, exitBeforeActivityName, activityToServiceMapping));
+                codeStatementCollection.AddRange(this.GenerateMainCodeStatement(processTransitions, nextActivity, exitBeforeActivityName, activityToServiceMapping));
             }
             else
             {
@@ -77,13 +77,13 @@
                     if (ConditionType.xpath == transition.ConditionType)
                     {
                         condition = new CodeVariableReferenceExpression(transition.ConditionPredicateName);
-                        var statementCollection = this.GenerateStartCodeStatement(processTransitions, nextActivity, nextCommonActivity, activityToServiceMapping);
+                        var statementCollection = this.GenerateMainCodeStatement(processTransitions, nextActivity, nextCommonActivity, activityToServiceMapping);
                         trueCodeStatements = new CodeStatement[statementCollection.Count];
                         statementCollection.CopyTo(trueCodeStatements, 0);
                     }
                     else if (ConditionType.otherwise == transition.ConditionType)
                     {
-                        var statementCollection = this.GenerateStartCodeStatement(processTransitions, nextActivity, nextCommonActivity, activityToServiceMapping);
+                        var statementCollection = this.GenerateMainCodeStatement(processTransitions, nextActivity, nextCommonActivity, activityToServiceMapping);
                         falseCodeStatements = new CodeStatement[statementCollection.Count];
                         statementCollection.CopyTo(falseCodeStatements, 0);
                     }
@@ -92,7 +92,7 @@
                 codeStatementCollection.Add(new CodeConditionStatement(condition, trueCodeStatements, falseCodeStatements));
                 
                 //Call nextCommonActivtyCodeStatementGeneration
-                codeStatementCollection.AddRange(this.GenerateStartCodeStatement(processTransitions, nextCommonActivity, null, activityToServiceMapping));
+                codeStatementCollection.AddRange(this.GenerateMainCodeStatement(processTransitions, nextCommonActivity, null, activityToServiceMapping));
             }
 
             return codeStatementCollection;

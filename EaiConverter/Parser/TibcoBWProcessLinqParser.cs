@@ -65,10 +65,11 @@ namespace EaiConverter.Parser
             var xsdImports = new List<XsdImport>();
             foreach (var element in xElement)
             {
+                
                 var xsdImport = new XsdImport
                     {
                         Namespace = element.Attribute("namespace").Value,
-                        SchemaLocation = element.Attribute("schemaLocation").Value
+                        SchemaLocation = element.Attribute("schemaLocation") != null ? element.Attribute("schemaLocation").Value : String.Empty
                     };
                 xsdImports.Add(xsdImport);
             }

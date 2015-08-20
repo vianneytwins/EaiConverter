@@ -1,13 +1,12 @@
-﻿using EaiConverter.Parser;
-using System.Collections.Generic;
-
-namespace EaiConverter.Builder
+﻿namespace EaiConverter.Builder
 {
     using System.CodeDom;
+    using System.Collections.Generic;
 
     using EaiConverter.Builder.Utils;
     using EaiConverter.CodeGenerator.Utils;
     using EaiConverter.Model;
+    using EaiConverter.Parser;
 
     public class MapperActivityBuilder : IActivityBuilder
     { 
@@ -28,7 +27,7 @@ namespace EaiConverter.Builder
             var result = new CodeNamespaceCollection();
             if (activity.ObjectXNodes != null)
             {
-				result.Add(this.xsdBuilder.Build(activity.ObjectXNodes, this.TargetNamespace(activity)));
+                result.Add(this.xsdBuilder.Build(activity.ObjectXNodes, this.TargetNamespace(activity)));
             }
 
             return result;
@@ -56,7 +55,7 @@ namespace EaiConverter.Builder
 
         public CodeStatementCollection GenerateInvocationCode(Activity activity)
         {
-            var mapperActivity = (MapperActivity) activity;
+            var mapperActivity = (MapperActivity)activity;
             var invocationCodeCollection = new CodeStatementCollection();
 
             // Add the Log
@@ -66,20 +65,23 @@ namespace EaiConverter.Builder
             invocationCodeCollection.AddRange(this.xslBuilder.Build(mapperActivity.InputBindings));
 
             // Add the invocation
-			// TODO : need to put it in the parser to get the real ReturnType !!
-			var variableReturnType = string.Empty;
-			if (mapperActivity.XsdReference != null) {
-				variableReturnType = mapperActivity.XsdReference.Split (':') [1];
-			}
-			else
-			{
-				// TODO : make a utils method in the parser to simplify this
-				variableReturnType = (this.xsdParser.Parse (mapperActivity.ObjectXNodes, this.TargetNamespace (activity)))[0].Type;
-			}
+            // TODO : need to put it in the parser to get the real ReturnType !!
+            string variableReturnType;
+            CodeVariableReferenceExpression parameter;
+
+            if (mapperActivity.XsdReference != null)
+            {
+                variableReturnType = this.GetReturnType(mapperActivity.XsdReference);
+                parameter = new CodeVariableReferenceExpression(variableReturnType);
+            }
+            else
+            {
+                // TODO : make a utils method in the parser to simplify this
+                variableReturnType = this.xsdParser.Parse(mapperActivity.ObjectXNodes, this.TargetNamespace(activity))[0].Type;
+                parameter = new CodeVariableReferenceExpression(mapperActivity.Parameters[0].Name);
+            }
 
             var variableName = VariableHelper.ToVariableName(mapperActivity.Name);
-
-            var parameter = new CodeVariableReferenceExpression(mapperActivity.Parameters[0].Name);
 
             var code = new CodeVariableDeclarationStatement(variableReturnType, variableName, parameter);
 
@@ -88,7 +90,17 @@ namespace EaiConverter.Builder
             return invocationCodeCollection;
         }
 
-		private string TargetNamespace (Activity activity)
+        private string GetReturnType(string xsdReference)
+        {
+            if (xsdReference.Contains(":"))
+            {
+                return xsdReference.Split(':')[1];
+            }
+
+            return xsdReference;
+        }
+
+        private string TargetNamespace (Activity activity)
 		{
 			return TargetAppNameSpaceService.domainContractNamespaceName + "." + VariableHelper.ToClassName(activity.Name); 
 		}

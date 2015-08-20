@@ -98,7 +98,7 @@ namespace EaiConverter.Test.Builder
             tibcoBWProcess.EndActivity = new Activity("End", ActivityType.endType);
             tibcoBWProcess.Transitions = this.simpleProcessTransitions;
 
-            var codeStatementCollection = this.builder.GenerateStartCodeStatement (tibcoBWProcess.Transitions, tibcoBWProcess.StartActivity.Name, null, activitiesToServiceMapping);
+            var codeStatementCollection = this.builder.GenerateMainCodeStatement (tibcoBWProcess.Transitions, tibcoBWProcess.StartActivity.Name, null, activitiesToServiceMapping);
 
             var classesInString = TestCodeGeneratorUtils.GenerateCode (codeStatementCollection);
 
@@ -121,7 +121,7 @@ catch (System.Exception ex)
             tibcoBWProcess.EndActivity = new Activity("End", ActivityType.endType);
             tibcoBWProcess.Transitions = this.errorProcessTransitions;
 
-            var codeStatementCollection = this.builder.GenerateStartCodeStatement (tibcoBWProcess.Transitions, tibcoBWProcess.StartActivity.Name, null, activitiesToServiceMapping);
+            var codeStatementCollection = this.builder.GenerateMainCodeStatement (tibcoBWProcess.Transitions, tibcoBWProcess.StartActivity.Name, null, activitiesToServiceMapping);
 
             var classesInString = TestCodeGeneratorUtils.GenerateCode (codeStatementCollection);
 
@@ -145,7 +145,7 @@ else
             tibcoBWProcess.EndActivity = new Activity("End", ActivityType.endType);
             tibcoBWProcess.Transitions = this.complexProcessTransitions;
 
-            var codeStatementCollection = this.builder.GenerateStartCodeStatement (tibcoBWProcess.Transitions, tibcoBWProcess.StartActivity.Name, null, activitiesToServiceMapping);
+            var codeStatementCollection = this.builder.GenerateMainCodeStatement (tibcoBWProcess.Transitions, tibcoBWProcess.StartActivity.Name, null, activitiesToServiceMapping);
 
             var classesInString = TestCodeGeneratorUtils.GenerateCode (codeStatementCollection);
 

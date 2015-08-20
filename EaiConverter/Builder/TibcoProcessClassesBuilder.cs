@@ -304,7 +304,7 @@
 			var statements = new CodeStatementCollection ();
 			if (tibcoBwProcessToGenerate.Transitions != null)
             {
-                statements.AddRange(this.coreProcessBuilder.GenerateStartCodeStatement(tibcoBwProcessToGenerate.Transitions, "Start", null, activityNameToServiceNameDictionnary));
+                statements.AddRange(this.coreProcessBuilder.GenerateMainCodeStatement(tibcoBwProcessToGenerate.Transitions, "Start", null, activityNameToServiceNameDictionnary));
 
 				if (returnType.BaseType != CSharpTypeConstant.SystemVoid)
                 {

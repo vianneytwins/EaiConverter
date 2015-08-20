@@ -54,7 +54,7 @@ namespace EaiConverter.Builder
             }
 			else if (activityType == ActivityType.nullActivityType)
             {
-                return new NullActivityBuilder(xslBuilder);
+                return new NullActivityBuilder();
             }
 			else if (activityType == ActivityType.javaActivityType)
             {
