@@ -38,6 +38,7 @@
                 new XslBuilder(new XpathBuilder()),
                 new ResultSetBuilder()
             );
+			SqlRequestToActivityMapper.Clear();
 
 		}
 

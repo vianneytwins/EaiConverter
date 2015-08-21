@@ -69,8 +69,10 @@ namespace EaiConverter.Builder
             }
             else
             {
-                jdbcQueryActivity.ClassName = this.GenerateClassName(jdbcQueryActivity);
+				jdbcQueryActivity.ClassName = this.GenerateClassName(jdbcQueryActivity);
                 this.ServiceToInvoke = jdbcQueryActivity.ClassName + "Service";
+
+				SqlRequestToActivityMapper.SaveSqlRequest(jdbcQueryActivity.QueryStatement, this.ServiceToInvoke);
 
                 if (jdbcQueryActivity.QueryOutputStatementParameters != null && jdbcQueryActivity.QueryOutputStatementParameters.Count != 0)
                 {

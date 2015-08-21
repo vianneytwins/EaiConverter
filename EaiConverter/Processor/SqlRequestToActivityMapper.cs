@@ -29,6 +29,10 @@ namespace EaiConverter.Processor
             return sqlToJbdcService.Count;
         }
 
+		public static void Clear(){
+			sqlToJbdcService.Clear();
+		}
+
         public static string GetJdbcServiceName (string sqlRequest)
         {
             string jdbcServiceName = String.Empty;
