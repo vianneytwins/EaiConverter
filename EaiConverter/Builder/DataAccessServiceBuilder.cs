@@ -1,13 +1,14 @@
-﻿using System.CodeDom;
-using System.Reflection;
-using System.Collections.Generic;
-using EaiConverter.CodeGenerator.Utils;
-using EaiConverter.Builder.Utils;
-using EaiConverter.Model;
-using EaiConverter.Utils;
-
-namespace EaiConverter.Builder
+﻿namespace EaiConverter.Builder
 {
+    using System.CodeDom;
+    using System.Collections.Generic;
+    using System.Reflection;
+
+    using EaiConverter.Builder.Utils;
+    using EaiConverter.CodeGenerator.Utils;
+    using EaiConverter.Model;
+    using EaiConverter.Utils;
+
     public class DataAccessServiceBuilder
     {
         
@@ -27,7 +28,7 @@ namespace EaiConverter.Builder
             serviceToGenerate.IsClass = true;
             serviceToGenerate.TypeAttributes = TypeAttributes.Public;
 
-            serviceToGenerate.Name = VariableHelper.ToClassName(jdbcQueryActivity.Name) + "Service";
+            serviceToGenerate.Name = VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "Service";
 
             //dataAccessToGenerate.Imports = this.GenerateImport (jdbcQueryActivity);
             serviceToGenerate.Members.AddRange(this.GenererateFields(jdbcQueryActivity));
@@ -55,7 +56,7 @@ namespace EaiConverter.Builder
             var fields = new List<CodeMemberField> {
                 new CodeMemberField {
                     Name = DataAccessVariableName,
-                    Type = new CodeTypeReference (VariableHelper.ToClassName (jdbcQueryActivity.Name) + "DataAccess"),
+                    Type = new CodeTypeReference (VariableHelper.ToClassName (jdbcQueryActivity.ClassName) + "DataAccess"),
                     Attributes = MemberAttributes.Private 
                 },
             };
@@ -98,7 +99,7 @@ namespace EaiConverter.Builder
 
                 if (jdbcQueryActivity.QueryOutputStatementParameters != null)
                 {
-                    method.ReturnType = new CodeTypeReference (VariableHelper.ToClassName(jdbcQueryActivity.Name)+"ResultSet");
+                    method.ReturnType = new CodeTypeReference(VariableHelper.ToClassName(jdbcQueryActivity.ClassName)+"ResultSet");
                 }
                 else
                 {

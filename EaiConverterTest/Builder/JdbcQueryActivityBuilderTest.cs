@@ -1,15 +1,17 @@
-﻿using NUnit.Framework;
-using EaiConverter.Model;
-using EaiConverter.Builder;
-using System.Collections.Generic;
-using System.CodeDom;
-
-using EaiConverter.Test.Utils;
-using System.Xml.Linq;
-
-namespace EaiConverter.Test.Builder
+﻿namespace EaiConverter.Test.Builder
 {
-	[TestFixture]
+    using System.CodeDom;
+    using System.Collections.Generic;
+    using System.Xml.Linq;
+
+    using EaiConverter.Builder;
+    using EaiConverter.Model;
+    using EaiConverter.Processor;
+    using EaiConverter.Test.Utils;
+
+    using NUnit.Framework;
+
+    [TestFixture]
 	public class JdbcQueryActivityBuilderTest
 	{
         JdbcQueryActivity jdbcQueryActivity;
@@ -21,6 +23,7 @@ namespace EaiConverter.Test.Builder
 		public void SetUp() {
             jdbcQueryActivity = new JdbcQueryActivity ("Currency" , ActivityType.jdbcQueryActivityType);
 			jdbcQueryActivity.QueryStatement = select;
+			jdbcQueryActivity.ClassName = jdbcQueryActivity.Name;
 			jdbcQueryActivity.QueryStatementParameters = new Dictionary<string, string> {
 				{
 					"IdBbUnique",
@@ -39,7 +42,9 @@ namespace EaiConverter.Test.Builder
 		}
 
 		[Test]
-		public void Should_Return_One_DataAccess_Classes_To_Generate_When_JdbcQueryActivity_is_Mapped(){
+		public void Should_Return_One_DataAccess_Classes_To_Generate_When_JdbcQueryActivity_is_Mapped()
+		{
+		    SqlRequestToActivityMapper.ClearActivityHasSet();
 			CodeNamespaceCollection classToGenerate = jdbcQueryActivityBuilder.GenerateClassesToGenerate (jdbcQueryActivity);
 			Assert.AreEqual ("CurrencyDataAccess", classToGenerate [0].Types[0].Name);
 		}
@@ -88,17 +93,24 @@ namespace EaiConverter.Test.Builder
 
         [Test]
         public void Should_Return_void_Invocation_Code_When_Activity_has_no_return_type_And_No_Input(){
-            this.jdbcQueryActivityBuilder.serviceToInvoke = "MyService";
+            this.jdbcQueryActivityBuilder.ServiceToInvoke = "MyService";
             CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateInvocationCode (this.jdbcQueryActivity);
             Assert.AreEqual ("this.logger.Info(\"Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity\");\n\nthis.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
         }
 
         [Test]
         public void Should_Return_void_Invocation_Code_When_Activity_has_return_type_And_No_Input(){
-            this.jdbcQueryActivityBuilder.serviceToInvoke = "MyService";
-            this.jdbcQueryActivity.QueryOutputStatementParameters = new List<ClassParameter> {new ClassParameter{Name ="param1", Type = "System.String"}};
-            CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateInvocationCode ( this.jdbcQueryActivity);
-            Assert.AreEqual ("this.logger.Info(\"Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity\");\n\nCurrencyResultSet currencyResultSet = this.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
+            this.jdbcQueryActivityBuilder.ServiceToInvoke = "MyService";
+            this.jdbcQueryActivity.QueryOutputStatementParameters = new List<ClassParameter>
+                                                                        {
+                                                                            new ClassParameter
+                                                                                {
+                                                                                    Name = "param1",
+                                                                                    Type = "System.String"
+                                                                                }
+                                                                        };
+            CodeStatementCollection invocationExpression = this.jdbcQueryActivityBuilder.GenerateInvocationCode(this.jdbcQueryActivity);
+            Assert.AreEqual("this.logger.Info(\"Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity\");\n\nCurrencyResultSet currencyResultSet = this.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
         }
 
         [Test]
@@ -118,7 +130,7 @@ namespace EaiConverter.Test.Builder
             jdbcQueryActivity.Parameters = new List<ClassParameter> {
                 new ClassParameter{ Name = "IdBbUnique", Type = "string" }
             };
-            this.jdbcQueryActivityBuilder.serviceToInvoke = "MyService";
+            this.jdbcQueryActivityBuilder.ServiceToInvoke = "MyService";
 
             CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateInvocationCode (this.jdbcQueryActivity);
             Assert.AreEqual (
@@ -133,7 +145,7 @@ this.myService.ExecuteQuery(IdBbUnique);
 		public void Should_Return_One_Method_With_no_inputParameter(){
 			this.jdbcQueryActivity.Type = ActivityType.jdbcCallActivityType;
 			this.jdbcQueryActivity.QueryStatementParameters = new Dictionary <string, string> ();
-			this.jdbcQueryActivityBuilder.serviceToInvoke = "MyService";
+			this.jdbcQueryActivityBuilder.ServiceToInvoke = "MyService";
 			CodeNamespaceCollection classToGenerate = jdbcQueryActivityBuilder.GenerateClassesToGenerate (jdbcQueryActivity);
 			Assert.AreEqual (0, ((CodeMemberMethod)(classToGenerate [0].Types[0].Members[3])).Parameters.Count);
 		}

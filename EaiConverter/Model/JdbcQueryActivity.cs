@@ -1,9 +1,8 @@
-using System.Collections.Generic;
-
 namespace EaiConverter.Model
 {
+    using System.Collections.Generic;
 
-	public class JdbcQueryActivity : Activity
+    public class JdbcQueryActivity : Activity
 	{
         public JdbcQueryActivity (string name, ActivityType type) : base (name, type)
 		{
@@ -30,7 +29,10 @@ namespace EaiConverter.Model
 		/// <value>The query statement parameters.</value>
 		public Dictionary <string,string> QueryStatementParameters  {get; set;}
 	
-        public List <ClassParameter> QueryOutputStatementParameters  {get; set;}
+        public List<ClassParameter> QueryOutputStatementParameters  {get; set;}
+
+        public string ClassName { get; set; }
+
         /*
 		public string QueryOutputCachedSchemaColumns {
 			get;

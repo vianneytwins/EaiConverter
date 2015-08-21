@@ -116,7 +116,7 @@
     <Compile Include="Model\GroupActivity.cs" />
     <Compile Include="Builder\GroupActivityBuilder.cs" />
     <Compile Include="Builder\TibcoXslUtilBuilder.cs" />
-    <Compile Include="ressources\TibcoXslUtil.cs" />
+    <Compile Include="ressources\TibcoXslHelper.cs" />
     <Compile Include="Parser\RdvPublishActivityParser.cs" />
     <Compile Include="Model\RdvPublishActivity.cs" />
     <Compile Include="Parser\RdvEventSourceActivityParser.cs" />
@@ -138,17 +138,7 @@
     <Compile Include="Builder\RdvPublishActivityBuilder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <Folder Include="ressources\" />
-    <Folder Include="Model\" />
-    <Folder Include="CodeGenerator\" />
-    <Folder Include="Parser\" />
-    <Folder Include="Parser\Utils\" />
-    <Folder Include="Processor\" />
-    <Folder Include="CodeGenerator\Utils\" />
-    <Folder Include="Builder\" />
-    <Folder Include="Builder\Utils\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="ressources\BasicSample.process" />
     <None Include="ressources\CodeDomGenerationExample.txt" />

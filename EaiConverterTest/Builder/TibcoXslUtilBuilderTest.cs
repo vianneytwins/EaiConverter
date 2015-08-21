@@ -1,11 +1,11 @@
-﻿using EaiConverter.Builder;
-using NUnit.Framework;
-
-namespace EaiConverter.Test.Builder
+﻿namespace EaiConverter.Test.Builder
 {
+    using EaiConverter.Builder;
+
+    using NUnit.Framework;
+
     public class TibcoXslUtilBuilderTest
     {
-
         TibcoXslUtilBuilder tibcoXslUtilBuilder;
 
         [SetUp]

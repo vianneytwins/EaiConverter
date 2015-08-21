@@ -21,9 +21,11 @@ namespace EaiConverter.Test.Builder
 				Name = "TestJbdcQueryActivity",
 				JdbcSharedConfig = "Panorama",
 				EmptyStringAsNull = false,
-				QueryStatement = "select 1 from toto where id= ?"
-
+				QueryStatement = "select 1 from toto where id= ?",
+                ClassName = "TestJbdcQueryActivity"
 			};
+
+
 		}
 
 		[Test]
@@ -64,7 +66,7 @@ db.Query(
 
             var classesInString = TestCodeGeneratorUtils.GenerateCode (executeQueryMethod);
 
-            Assert.AreEqual (expected,classesInString);
+            Assert.AreEqual (expected, classesInString);
 		}
 
 		[Test]

@@ -1,16 +1,15 @@
-using System.CodeDom;
-
-using EaiConverter.Model;
-using EaiConverter.Builder.Utils;
-using EaiConverter.CodeGenerator.Utils;
-using EaiConverter.Processor;
-using System.Reflection;
-using System.Collections.Generic;
-using EaiConverter.Utils;
-
 namespace EaiConverter.Builder
 {
-	public class ResultSetBuilder
+    using System.CodeDom;
+    using System.Collections.Generic;
+    using System.Reflection;
+
+    using EaiConverter.Builder.Utils;
+    using EaiConverter.CodeGenerator.Utils;
+    using EaiConverter.Model;
+    using EaiConverter.Utils;
+
+    public class ResultSetBuilder
 	{
         public CodeNamespace Build(JdbcQueryActivity jdbcQueryActivity)
         {
@@ -21,7 +20,7 @@ namespace EaiConverter.Builder
             resultSetClass.IsClass = true;
             resultSetClass.TypeAttributes = TypeAttributes.Public;
 
-            resultSetClass.Name = VariableHelper.ToClassName(jdbcQueryActivity.Name) + "ResultSet";
+            resultSetClass.Name = VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet";
 
             resultSetClass.Members.AddRange(this.GenererateProperties(jdbcQueryActivity));
 

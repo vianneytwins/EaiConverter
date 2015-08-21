@@ -1,7 +1,7 @@
-﻿using EaiConverter.Model;
-
-namespace EaiConverter.Parser
+﻿namespace EaiConverter.Parser
 {
+    using EaiConverter.Model;
+
     public class ActivityParserFactory : IActivityParserFactory
     {
 		private readonly XsdParser xsdParser;
@@ -13,7 +13,8 @@ namespace EaiConverter.Parser
 
         public IActivityParser GetParser(string activityType){
 			
-			if (activityType == ActivityType.jdbcQueryActivityType.ToString() || activityType == ActivityType.jdbcUpdateActivityType.ToString()  || activityType == ActivityType.jdbcCallActivityType.ToString()  ) {
+			if (activityType == ActivityType.jdbcQueryActivityType.ToString() || activityType == ActivityType.jdbcUpdateActivityType.ToString()  || activityType == ActivityType.jdbcCallActivityType.ToString())
+            {
                 return new JdbcQueryActivityParser ();
             } else if (activityType == ActivityType.callProcessActivityType.ToString() ){
                 return new CallProcessActivityParser ();

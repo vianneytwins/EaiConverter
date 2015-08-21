@@ -36,34 +36,42 @@ namespace EaiConverter.CodeGenerator
 
                     if (provider.FileExtension[0] == '.')
                     {
-                        sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + "/" + namespaceUnit.Types[0].Name + provider.FileExtension;
+                        sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + "\\" + namespaceUnit.Types[0].Name + provider.FileExtension;
                         relativeSourceFile = this.ConvertNamespaceToPath(namespaceName) + "\\" + namespaceUnit.Types[0].Name + provider.FileExtension;
                     }
                     else
                     {
-                        sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + "/" + namespaceUnit.Types[0].Name + "." + provider.FileExtension;
+                        sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + "\\" + namespaceUnit.Types[0].Name + "." + provider.FileExtension;
                         relativeSourceFile = this.ConvertNamespaceToPath(namespaceName) + "\\" + namespaceUnit.Types[0].Name + "." + provider.FileExtension;
                     }
 
-                    using (var sw = new StreamWriter(sourceFile, false))
+                    if (ConfigurationApp.GetProperty(sourceFile) != "true")
                     {
-                        var tw = new IndentedTextWriter(sw, "    ");
-                        provider.GenerateCodeFromNamespace(namespaceUnit, tw, options);
-                        tw.Close();
+                        ConfigurationApp.SaveProperty(sourceFile, "true");
+                        using (var sw = new StreamWriter(sourceFile, false))
+                        {
+                            var tw = new IndentedTextWriter(sw, "    ");
+                            provider.GenerateCodeFromNamespace(namespaceUnit, tw, options);
+                            tw.Close();
+                        }
+
+                        using (var file = new StreamWriter(ProjectDestinationPath + "\\GeneratedSolution.csproj", true))
+                        {
+                            file.WriteLine("    <Compile Include=\"" + relativeSourceFile + "\"/>");
+                        }
+
+                        Console.WriteLine(sourceFile + " has been generated");
+                    }
+                    else
+                    {
+                        Console.WriteLine("############## Warning" + sourceFile + " has already been generated");
                     }
 
-                    using (var file = new StreamWriter(ProjectDestinationPath + "\\GeneratedSolution.csproj", true))
-                    {
-                        file.WriteLine("    <Compile Include=\"" + relativeSourceFile + "\"/>");
-                    }
-
-                    Console.WriteLine(sourceFile + " has been generated");
                 }
                 else
                 {
                     Console.WriteLine("################### Warning" + namespaceName + " is empty");
                 }
-
             }
         }
 

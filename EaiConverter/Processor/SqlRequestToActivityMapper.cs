@@ -10,6 +10,10 @@ namespace EaiConverter.Processor
         /// </summary>
         static Dictionary<string,string> sqlToJbdcService = new Dictionary<string, string> ();
 
+        static HashSet<string> jbdcActivityNameAlreadyUsed = new HashSet<string>();
+
+        public static int Counter = 0;
+
         public static void SaveSqlRequest (string sqlRequest, string serviceClassName)
         {
             if (!sqlToJbdcService.ContainsKey (sqlRequest)){
@@ -30,6 +34,25 @@ namespace EaiConverter.Processor
             string jdbcServiceName = String.Empty;
             sqlToJbdcService.TryGetValue (sqlRequest, out jdbcServiceName);
             return jdbcServiceName;
+        }
+
+
+        public static void SetThisJdbcActivityNameHasUsed(string activityName)
+        {
+            if (!jbdcActivityNameAlreadyUsed.Contains(activityName))
+            {
+                jbdcActivityNameAlreadyUsed.Add(activityName);
+            }
+        }
+
+        public static bool IsThisJdbcActivityNameUsed(string activityName)
+        {
+            return jbdcActivityNameAlreadyUsed.Contains(activityName);
+        }
+
+        public static void ClearActivityHasSet()
+        {
+            jbdcActivityNameAlreadyUsed.Clear();
         }
     }
 

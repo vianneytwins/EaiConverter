@@ -1,14 +1,15 @@
-﻿using System.CodeDom;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
-using EaiConverter.CodeGenerator.Utils;
-using EaiConverter.Builder.Utils;
-using EaiConverter.Model;
-using EaiConverter.Utils;
-
-namespace EaiConverter.Builder
+﻿namespace EaiConverter.Builder
 {
+    using System.CodeDom;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using System.Text;
+
+    using EaiConverter.Builder.Utils;
+    using EaiConverter.CodeGenerator.Utils;
+    using EaiConverter.Model;
+    using EaiConverter.Utils;
+
     public class DataAccessBuilder
     {
         private const string bodyMethodStart = "using (IDataAccess db = this.dataAccessFactory.CreateAccess())\n{\n";
@@ -27,7 +28,7 @@ namespace EaiConverter.Builder
             dataAccessToGenerate.IsClass = true;
             dataAccessToGenerate.TypeAttributes = TypeAttributes.Public;
 
-            dataAccessToGenerate.Name = VariableHelper.ToClassName(jdbcQueryActivity.Name) + "DataAccess";
+            dataAccessToGenerate.Name = VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "DataAccess";
 
             dataAccessToGenerate.Members.AddRange(this.GenererateFields(jdbcQueryActivity));
             dataAccessToGenerate.Members.AddRange(this.GenererateContructors(jdbcQueryActivity, dataAccessToGenerate));
@@ -41,9 +42,9 @@ namespace EaiConverter.Builder
         public CodeNamespaceImport[] GenerateImport(JdbcQueryActivity jdbcQueryActivity)
         {
             return new CodeNamespaceImport[3] {
-                new CodeNamespaceImport ("System"),
-                new CodeNamespaceImport ("System.Linq"),
-                new CodeNamespaceImport (TargetAppNameSpaceService.dataAccessCommonNamespace)
+                new CodeNamespaceImport("System"),
+                new CodeNamespaceImport("System.Linq"),
+                new CodeNamespaceImport(TargetAppNameSpaceService.dataAccessCommonNamespace)
             };
         }
 
@@ -86,7 +87,7 @@ namespace EaiConverter.Builder
                             Name = field.Name,
                             // TODO verifier que ca marche
                             CustomAttributes = new CodeAttributeDeclarationCollection {
-                                new CodeAttributeDeclaration (
+                                new CodeAttributeDeclaration(
                                     JdbcQueryBuilderUtils.ConvertJDBCConnectionName (jdbcQueryActivity.JdbcSharedConfig)
                                 )
                             }
@@ -112,7 +113,7 @@ namespace EaiConverter.Builder
 
 			if (jdbcQueryActivity.QueryOutputStatementParameters != null && jdbcQueryActivity.QueryOutputStatementParameters.Count > 0)
             {
-                method.ReturnType = new CodeTypeReference (VariableHelper.ToClassName(jdbcQueryActivity.Name)+"ResultSet");
+                method.ReturnType = new CodeTypeReference (VariableHelper.ToClassName(jdbcQueryActivity.ClassName)+"ResultSet");
             }
             else
             {

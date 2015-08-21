@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace MyApp.Tools.Xml
+﻿namespace MyApp.Tools.Xml
 {
-    public class TibcoXslUtil
+    using System;
+    using System.Collections.Generic;
+
+    public class TibcoXslHelper
     {
         public static DateTime ParseDateTime(string format, string inputDate)
         {
