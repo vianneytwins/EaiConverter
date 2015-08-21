@@ -1,25 +1,30 @@
-﻿using System.CodeDom;
-using System.Collections.Generic;
-using EaiConverter.CodeGenerator.Utils;
-using EaiConverter.Utils;
-
-namespace EaiConverter.Builder
+﻿namespace EaiConverter.Builder
 {
+    using System.CodeDom;
+    using System.Collections.Generic;
+
+    using EaiConverter.CodeGenerator.Utils;
+    using EaiConverter.Utils;
+
     public static class JdbcQueryBuilderUtils
     {
-
-     
-
         private static Dictionary<string, string> sqlMapping = new Dictionary<string, string> {
-            {"VARCHAR","System.String"},
-            {"INT","System.Int"},
-            {"12","System.String"},
-            {"4", "System.Int"}
+            { "VARCHAR", CSharpTypeConstant.SystemString },
+            { "CHAR", CSharpTypeConstant.SystemString },
+            { "INT", CSharpTypeConstant.SystemInt32 },
+            { "12", CSharpTypeConstant.SystemString },
+            { "4", CSharpTypeConstant.SystemInt32 },
+            { "NUMBER", CSharpTypeConstant.SystemInt32 },
+            { "FLOAT", "System.Double" },
+            { "DATE", "System.DateTime" },
+            { "DATETIME", "System.DateTime" },
         };
+
         private static Dictionary<string, string> jdbcSharedConfigMapping = new Dictionary<string, string> {
-            {"/Configuration/DAI/PNO/JDBC/JDBCIntegration.sharedjdbc","IntegrationDatabase"},
-            {"/Configuration/DAI/PNO/JDBC/JDBCPanorama.sharedjdbc","PanoramaDatabase"},
-            {"/Configuration/DAI/PNO/JDBC/JDBCPanoramaMasterFiles.sharedjdbc","MasterFilesDatabase"}
+            { "/Configuration/DAI/PNO/JDBC/JDBCIntegration.sharedjdbc", "IntegrationDatabase" },
+            { "/Configuration/DAI/PNO/JDBC/JDBCPanorama.sharedjdbc", "PanoramaDatabase" },
+            { "/Configuration/DAI/PNO/JDBC/JDBCPanoramaMasterFiles.sharedjdbc", "MasterFilesDatabase" },
+            { "/Configuration/DAI/PNO/JDBC/JDBCLNS.sharedjdbc", "LnsDatabase" }
         };
 
         public static CodeParameterDeclarationExpressionCollection ConvertQueryStatementParameter(Dictionary<string, string> queryStatementParameters)
@@ -49,7 +54,7 @@ namespace EaiConverter.Builder
         {
             // TODO pour le moment on laisse comme ca car on veut lister tous les types et a mettre dans le dico et donc que cela plente
             string resultType;
-            if (sqlMapping.TryGetValue(type, out resultType))
+            if (sqlMapping.TryGetValue(type.ToUpper(), out resultType))
             {
                 return resultType;
             }

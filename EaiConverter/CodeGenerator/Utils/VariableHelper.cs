@@ -8,6 +8,7 @@ namespace EaiConverter.CodeGenerator.Utils
             {
                 return string.Empty;
             }
+
             var firstCharOfTheVariable = variableNameToFormat.Substring(0, 1);
             var endOfTheVariable = variableNameToFormat.Substring(1, variableNameToFormat.Length - 1);
             return (firstCharOfTheVariable.ToLowerInvariant() + endOfTheVariable).Replace(" ", string.Empty);
@@ -15,7 +16,10 @@ namespace EaiConverter.CodeGenerator.Utils
 
         public static string ToClassName(string name)
         {
-            return name.Substring(0, 1).ToUpper() + name.Substring(1, name.Length - 1).Replace(" ", string.Empty);
+            var className = name.Substring(0, 1).ToUpper() + name.Substring(1, name.Length - 1).Replace(" ", string.Empty);
+            className = className.Replace("-", "_");
+            className = className.Replace("&", "_");
+            return className;
         }
     }
 }

@@ -4,15 +4,15 @@
 
     public class TargetAppNameSpaceService
     {
-        public const string processNameSpace = "MyApp.Mydomain.Process";
-        public const string domainServiceNamespaceName = "MyApp.Mydomain.Service";
-        public const string dataAccessNamespace = "MyApp.Mydomain.DataAccess";
-        public const string dataAccessCommonNamespace = "MyApp.Mydomain.DataAccess.Common";
-        public const string loggerNameSpace = "MyApp.Tools.Logging";
-        public const string xmlToolsNameSpace = "MyApp.Tools.Xml";
-		public const string EventSourcingNameSpace = "MyApp.Tools.EventSourcing";
-        public const string domainContractNamespaceName = "MyApp.Mydomain.Service.Contract";
-        public const string javaToolsNameSpace = "MyApp.Tools.Java";
+        public const string myAppName = "MyApp";
+        public const string domainServiceNamespaceName = myAppName + ".Mydomain.Service";
+        public const string dataAccessNamespace = myAppName + ".Mydomain.DataAccess";
+        public const string dataAccessCommonNamespace = myAppName + ".Mydomain.DataAccess.Common";
+        public const string loggerNameSpace = myAppName + ".Tools.Logging";
+        public const string xmlToolsNameSpace = myAppName + ".Tools.Xml";
+        public const string EventSourcingNameSpace = myAppName + ".Tools.EventSourcing";
+        public const string domainContractNamespaceName = myAppName + ".Mydomain.Service.Contract";
+        public const string javaToolsNameSpace = myAppName + ".Tools.Java";
 
 		public static string ConvertXsdImportToNameSpace(string schemaLocation)
 		{

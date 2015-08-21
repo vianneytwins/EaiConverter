@@ -41,11 +41,20 @@
 
         public CodeNamespaceImport[] GenerateImport(JdbcQueryActivity jdbcQueryActivity)
         {
-            return new CodeNamespaceImport[3] {
+            var imports = new List<CodeNamespaceImport>
+            {
                 new CodeNamespaceImport("System"),
                 new CodeNamespaceImport("System.Linq"),
                 new CodeNamespaceImport(TargetAppNameSpaceService.dataAccessCommonNamespace)
             };
+
+            if (jdbcQueryActivity.QueryOutputStatementParameters != null)
+            {
+                imports.Add(new CodeNamespaceImport(TargetAppNameSpaceService.domainContractNamespaceName));
+                imports.Add(new CodeNamespaceImport("System.Collections.Generic"));
+            }
+
+            return imports.ToArray();
         }
 
         private CodeMemberField[] GenererateFields(JdbcQueryActivity jdbcQueryActivity)
@@ -113,7 +122,7 @@
 
 			if (jdbcQueryActivity.QueryOutputStatementParameters != null && jdbcQueryActivity.QueryOutputStatementParameters.Count > 0)
             {
-                method.ReturnType = new CodeTypeReference (VariableHelper.ToClassName(jdbcQueryActivity.ClassName)+"ResultSet");
+                method.ReturnType = new CodeTypeReference("List<" + VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet>");
             }
             else
             {
@@ -140,7 +149,7 @@
             }
             else
             {
-                sb.AppendLine(string.Format("return {0} <{1}>(", dbQuery, method.ReturnType.BaseType));
+                sb.AppendLine(string.Format("return {0} <{1}>(", dbQuery, VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet"));
             }
             tabulation.Increment();
             sb.Append(string.Format("{0}{1}", tabulation, SqlQueryStatement));

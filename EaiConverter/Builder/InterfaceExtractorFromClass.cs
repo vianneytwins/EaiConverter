@@ -1,22 +1,30 @@
-﻿using System.CodeDom;
-
-namespace EaiConverter.Builder
+﻿namespace EaiConverter.Builder
 {
-	public class InterfaceExtractorFromClass
-	{
-		public static CodeNamespace Extract (CodeTypeDeclaration classToTranformInInterface, string namespaceName){
-			var namespaceResult = new CodeNamespace (namespaceName);
-			namespaceResult.Imports.Add (new CodeNamespaceImport ("System"));
+    using System.CodeDom;
 
-			var interfaceToGenerate = new CodeTypeDeclaration ();
-			interfaceToGenerate.Name = "I" + classToTranformInInterface.Name;
-			interfaceToGenerate.IsInterface = true;
-			foreach (CodeTypeMember member in classToTranformInInterface.Members){
-				if (member is CodeMemberMethod) {
-					interfaceToGenerate.Members.Add (member);
+    public class InterfaceExtractorFromClass
+	{
+		public static CodeNamespace Extract(CodeTypeDeclaration classToTranformInInterface, string namespaceName)
+        {
+			var namespaceResult = new CodeNamespace(namespaceName);
+
+			namespaceResult.Imports.Add(new CodeNamespaceImport("System"));
+			namespaceResult.Imports.Add(new CodeNamespaceImport("System.Collections.Generic"));
+
+			var interfaceToGenerate = new CodeTypeDeclaration
+			                              {
+			                                  Name = "I" + classToTranformInInterface.Name,
+			                                  IsInterface = true
+			                              };
+		    foreach (CodeTypeMember member in classToTranformInInterface.Members)
+            {
+				if (member is CodeMemberMethod)
+                {
+					interfaceToGenerate.Members.Add(member);
 				}
 			}
-			namespaceResult.Types.Add (interfaceToGenerate);
+
+			namespaceResult.Types.Add(interfaceToGenerate);
 			return namespaceResult;
 		}
 	}

@@ -14,9 +14,9 @@ namespace EaiConverter.Builder
 
         CodeParameterDeclarationExpressionCollection GenerateConstructorParameter (Activity activity);
 
-        CodeStatementCollection GenerateConstructorCodeStatement (Activity activity);
+        CodeStatementCollection GenerateConstructorCodeStatement(Activity activity);
 
-        List<CodeMemberField> GenerateFields (Activity activity);
+        List<CodeMemberField> GenerateFields(Activity activity);
 
     }
 }

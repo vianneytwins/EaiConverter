@@ -14,6 +14,8 @@ namespace EaiConverter.CodeGenerator
 
         public const string ProjectDestinationPath = "./GeneratedSolution/GeneratedSolution";
 
+        private const string LineToReplace = "    <!-- insert file Generated here -->";
+
         public void Generate(CodeCompileUnit targetUnit)
         {
             CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
@@ -55,9 +57,18 @@ namespace EaiConverter.CodeGenerator
                             tw.Close();
                         }
 
-                        using (var file = new StreamWriter(ProjectDestinationPath + "\\GeneratedSolution.csproj", true))
+                       // using (var file = new StreamWriter(ProjectDestinationPath + "\\GeneratedSolution.csproj", true))
+                       // {
+                       //     file.WriteLine("    <Compile Include=\"" + relativeSourceFile + "\"/>\n");
+                       // }
+
+                        if (File.Exists(ProjectDestinationPath + "\\GeneratedSolution.csproj"))
                         {
-                            file.WriteLine("    <Compile Include=\"" + relativeSourceFile + "\"/>");
+                            string projectFile = File.ReadAllText(ProjectDestinationPath + "\\GeneratedSolution.csproj");
+                            projectFile = projectFile.Replace(
+                                LineToReplace,
+                                LineToReplace + "\n" + "    <Compile Include=\"" + relativeSourceFile + "\"/>");
+                            File.WriteAllText(ProjectDestinationPath + "\\GeneratedSolution.csproj", projectFile);
                         }
 
                         Console.WriteLine(sourceFile + " has been generated");
@@ -188,9 +199,8 @@ EndGlobal
     <Reference Include=""System.Xml"" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include=""Class1.cs"" />
-    <Compile Include=""New_directory\Class2.cs"" />
     <Compile Include=""Properties\AssemblyInfo.cs"" />
+    <!-- insert file Generated here -->
   </ItemGroup>
   <Import Project=""$(MSBuildToolsPath)\Microsoft.CSharp.targets"" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

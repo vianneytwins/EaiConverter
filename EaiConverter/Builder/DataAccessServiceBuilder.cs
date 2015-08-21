@@ -43,11 +43,19 @@
 
         public CodeNamespaceImport[] GenerateServiceImport(JdbcQueryActivity jdbcQueryActivity)
         {
-            return new CodeNamespaceImport[3] {
-                new CodeNamespaceImport ("System"),
-                new CodeNamespaceImport (TargetAppNameSpaceService.domainContractNamespaceName),
-                new CodeNamespaceImport (TargetAppNameSpaceService.dataAccessNamespace)
+            var imports = new List<CodeNamespaceImport>
+            {
+                new CodeNamespaceImport("System"),
+                new CodeNamespaceImport(TargetAppNameSpaceService.domainContractNamespaceName),
+                new CodeNamespaceImport(TargetAppNameSpaceService.dataAccessNamespace)
             };
+
+            if (jdbcQueryActivity.QueryOutputStatementParameters != null)
+            {
+                imports.Add(new CodeNamespaceImport("System.Collections.Generic"));
+            }
+
+            return imports.ToArray();
         }
 
 
@@ -97,9 +105,9 @@
 
                 method.Name = ExecuteSqlQueryMethodName;
 
-                if (jdbcQueryActivity.QueryOutputStatementParameters != null)
+                if (jdbcQueryActivity.QueryOutputStatementParameters != null && jdbcQueryActivity.QueryOutputStatementParameters.Count > 0)
                 {
-                    method.ReturnType = new CodeTypeReference(VariableHelper.ToClassName(jdbcQueryActivity.ClassName)+"ResultSet");
+                    method.ReturnType = new CodeTypeReference("List<" + VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet>");
                 }
                 else
                 {
@@ -109,7 +117,6 @@
                 method.Parameters.AddRange(JdbcQueryBuilderUtils.ConvertQueryStatementParameter(jdbcQueryActivity.QueryStatementParameters));
 
                 method.Statements.Add(this.GenerateExecuteQueryBody(method));
-
 
                 return method;
             }

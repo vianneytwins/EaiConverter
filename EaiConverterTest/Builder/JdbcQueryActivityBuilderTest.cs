@@ -110,7 +110,7 @@
                                                                                 }
                                                                         };
             CodeStatementCollection invocationExpression = this.jdbcQueryActivityBuilder.GenerateInvocationCode(this.jdbcQueryActivity);
-            Assert.AreEqual("this.logger.Info(\"Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity\");\n\nCurrencyResultSet currencyResultSet = this.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
+            Assert.AreEqual("this.logger.Info(\"Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity\");\n\nList<CurrencyResultSet> currencyResultSet = this.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
         }
 
         [Test]

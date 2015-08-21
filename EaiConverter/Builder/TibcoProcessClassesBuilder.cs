@@ -116,9 +116,9 @@
         {
             var imports = new List<CodeNamespaceImport>
             {
-                new CodeNamespaceImport ("System"),
-				new CodeNamespaceImport (tibcoBwProcessToGenerate.InputAndOutputNameSpace),
-                new CodeNamespaceImport (TargetAppNameSpaceService.loggerNameSpace)
+                new CodeNamespaceImport("System"),
+				new CodeNamespaceImport(tibcoBwProcessToGenerate.InputAndOutputNameSpace),
+                new CodeNamespaceImport(TargetAppNameSpaceService.loggerNameSpace)
             };
 
             if (tibcoBwProcessToGenerate.XsdImports != null)
