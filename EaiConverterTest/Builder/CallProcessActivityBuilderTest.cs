@@ -11,15 +11,15 @@ namespace EaiConverter.Test.Builder
     public class CallProcessActivityBuilderTest
     {
 
-        CallProcessActivityBuilder xmlParseActivityBuilder;
+        CallProcessActivityBuilder CallProcessActivityBuilder;
         CallProcessActivity activity;
 
         [SetUp]
         public void SetUp()
         {
-            this.xmlParseActivityBuilder = new CallProcessActivityBuilder(new XslBuilder(new XpathBuilder()));
-            this.activity = new CallProcessActivity ( "My Call Process Activity",ActivityType.callProcessActivityType);
-            this.activity.ProcessName = "Process/DAI/PNO/process.To.Call.process";
+            this.CallProcessActivityBuilder = new CallProcessActivityBuilder(new XslBuilder(new XpathBuilder()));
+            this.activity = new CallProcessActivity ( "My Call Process Activity", ActivityType.callProcessActivityType);
+            this.activity.ProcessName = "/Process/DAI/PNO/process.To.Call.process";
             var xml =
                 @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"">           
         <xmlString>
@@ -36,17 +36,23 @@ namespace EaiConverter.Test.Builder
             };
         }
 
-        [Ignore]
         [Test]
         public void Should_Return_InvocationCode()
         {
-            var expected = @"this.logger.Info(""Start Activity: My Call Process Activity of type: com.tibco.pe.core.CallProcessActivity"");
-string xmlString = ""TestString"";
+            var expected = @"string xmlString = ""TestString"";
 
 var myCallProcessActivity = this.processToCall.Start(xmlString);
 ";
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateInvocationCode(this.activity));
-            Assert.AreEqual(expected,generatedCode);
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.CallProcessActivityBuilder.GenerateInvocationCode(this.activity));
+            Assert.IsTrue(generatedCode.EndsWith(expected));
+        }
+
+        [Test]
+        public void Should_Return_constructor_parameter()
+        {
+            var expected = "Process.DAI.PNO.ProcessToCall";
+            var constructorFields = this.CallProcessActivityBuilder.GenerateConstructorParameter(this.activity);
+            Assert.AreEqual(expected, constructorFields[0].Type.BaseType);
         }
     }
 }

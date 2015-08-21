@@ -35,6 +35,7 @@ namespace EaiConverter.Parser
             {
                 tibcoBwProcess.Description = XElementParserUtils.GetStringValue(allFileElement.Element(XmlnsConstant.tibcoProcessNameSpace + "label").Element(XmlnsConstant.tibcoProcessNameSpace + "description"));
             }
+
             tibcoBwProcess.XsdImports = this.ParseXsdImports (allFileElement);
 
             tibcoBwProcess.StartActivity = this.ParseStartOrEndActivity (allFileElement, tibcoBwProcess.InputAndOutputNameSpace,  ActivityType.startType);

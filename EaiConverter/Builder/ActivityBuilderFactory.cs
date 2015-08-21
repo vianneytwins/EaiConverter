@@ -43,12 +43,13 @@ namespace EaiConverter.Builder
             }
             else if (activityType == ActivityType.assignActivityType)
             {
-                return new AssignActivityBuilder(xslBuilder);
+                return new AssignActivityBuilder(this.xslBuilder);
             }
 			else if (activityType == ActivityType.xmlParseActivityType)
             {
-				return new XmlParseActivityBuilder (xslBuilder, xmlParserHelperBuilder, this.xsdBuilder, this.xsdParser);
-            }else if (activityType == ActivityType.mapperActivityType)
+				return new XmlParseActivityBuilder (this.xslBuilder, xmlParserHelperBuilder, this.xsdBuilder, this.xsdParser);
+            }
+            else if (activityType == ActivityType.mapperActivityType)
             {
 				return new MapperActivityBuilder(this.xslBuilder, this.xsdBuilder, this.xsdParser);
             }
@@ -58,23 +59,27 @@ namespace EaiConverter.Builder
             }
 			else if (activityType == ActivityType.javaActivityType)
             {
-                return new JavaActivityBuilder(xslBuilder);
+                return new JavaActivityBuilder(this.xslBuilder);
+            }
+            else if (activityType == ActivityType.callProcessActivityType)
+            {
+                return new CallProcessActivityBuilder(this.xslBuilder);
             }
 			else if (activityType == ActivityType.writeToLogActivityType)
             {
-                return new WriteToLogActivityBuilder(xslBuilder);
+                return new WriteToLogActivityBuilder(this.xslBuilder);
             }
             else if (activityType == ActivityType.generateErrorActivity)
             {
-                return new GenerateErrorActivityBuilder(xslBuilder);
+                return new GenerateErrorActivityBuilder(this.xslBuilder);
             }
             else if (activityType == ActivityType.sleepActivity)
             {
-                return new SleepActivityBuilder(xslBuilder);
+                return new SleepActivityBuilder(this.xslBuilder);
             }
             else if (activityType == ActivityType.loopGroupActivityType || activityType == ActivityType.criticalSectionGroupActivityType)
             {
-                return new GroupActivityBuilder(xslBuilder);
+                return new GroupActivityBuilder(this.xslBuilder);
             }
 			else if (activityType == ActivityType.rdvEventSourceActivityType)
 			{
@@ -82,10 +87,10 @@ namespace EaiConverter.Builder
 			}
 			else if (activityType == ActivityType.rdvPubActivityType)
 			{
-				return new RdvPublishActivityBuilder (xslBuilder);
+				return new RdvPublishActivityBuilder(this.xslBuilder);
 			}
 
-            return new DefaultActivityBuilder(xslBuilder);
+            return new DefaultActivityBuilder(this.xslBuilder);
         }
     }
 }

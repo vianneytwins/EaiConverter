@@ -40,6 +40,11 @@ namespace EaiConverter.Builder
 
         private string GetServiceToInvoke(JdbcQueryActivity jdbcQueryActivity)
         {
+            if (!string.IsNullOrEmpty(this.ServiceToInvoke))
+            {
+                return this.serviceToInvoke;
+            }
+
             if (this.HasThisSqlRequestAlreadyGenerateAService(jdbcQueryActivity.QueryStatement))
             {
                 this.serviceToInvoke = this.GetExistingJdbcServiceName(jdbcQueryActivity.QueryStatement);

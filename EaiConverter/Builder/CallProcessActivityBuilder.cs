@@ -1,12 +1,12 @@
-using EaiConverter.Model;
-
-using System.CodeDom;
-using EaiConverter.CodeGenerator.Utils;
-using System.Collections.Generic;
-using EaiConverter.Builder.Utils;
-
 namespace EaiConverter.Builder
 {
+    using System.CodeDom;
+    using System.Collections.Generic;
+
+    using EaiConverter.Builder.Utils;
+    using EaiConverter.CodeGenerator.Utils;
+    using EaiConverter.Model;
+
     public class CallProcessActivityBuilder : IActivityBuilder
     {
         XslBuilder xslBuilder;
@@ -27,8 +27,8 @@ namespace EaiConverter.Builder
         {
 			var import4Activities = new List<CodeNamespaceImport>();
 			var callProcessActivity = (CallProcessActivity)activity;
-			import4Activities.Add(new CodeNamespaceImport(TargetAppNameSpaceService.ConvertXsdImportToNameSpace(callProcessActivity.TibcoProcessToCall.ShortNameSpace)));
-			import4Activities.Add(new CodeNamespaceImport(TargetAppNameSpaceService.ConvertXsdImportToNameSpace(callProcessActivity.TibcoProcessToCall.InputAndOutputNameSpace)));
+			import4Activities.Add(new CodeNamespaceImport(TargetAppNameSpaceService.RemoveFirstDot(callProcessActivity.TibcoProcessToCall.ShortNameSpace)));
+            import4Activities.Add(new CodeNamespaceImport(TargetAppNameSpaceService.RemoveFirstDot(callProcessActivity.TibcoProcessToCall.InputAndOutputNameSpace)));
 
 			return import4Activities;
         }
@@ -96,19 +96,15 @@ namespace EaiConverter.Builder
             return invocationCodeCollection;
         }
 
-		private static CodeTypeReference GetServiceFieldType (CallProcessActivity callProcessActivity)
+		private static CodeTypeReference GetServiceFieldType(CallProcessActivity callProcessActivity)
 		{
-			return new CodeTypeReference(VariableHelper.ToClassName(callProcessActivity.ProcessName));
+            return new CodeTypeReference(callProcessActivity.TibcoProcessToCall.ShortNameSpace + "." + VariableHelper.ToClassName(callProcessActivity.TibcoProcessToCall.ProcessName));
 		}
 
 		private static string GetServiceFieldName(CallProcessActivity callProcessActivity)
 		{
-			return VariableHelper.ToVariableName(VariableHelper.ToClassName(callProcessActivity.ProcessName));
+			return VariableHelper.ToVariableName(callProcessActivity.TibcoProcessToCall.ProcessName);
 		}
 
-		private string TargetNamespace (Activity activity)
-		{
-			return TargetAppNameSpaceService.domainContractNamespaceName + "." + VariableHelper.ToClassName(activity.Name); 
-		}
     }
 }

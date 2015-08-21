@@ -7,26 +7,53 @@
 		public TibcoBWProcess (string fullProcessName)
 		{
 			this.FullProcessName = fullProcessName;
-			var indexOfLastSlash = fullProcessName.LastIndexOf ("/");
+
+            this.ShortNameSpace = GetMyShortNameSpace(fullProcessName);
+
+            this.ProcessName = GetMyProcessName(fullProcessName);
+		}
+
+        public static string GetMyProcessName(string fullProcessName)
+        {
+            var indexOfLastSlash = fullProcessName.LastIndexOf("/");
+
+            var indexOfLastDot = fullProcessName.LastIndexOf(".");
+            if (indexOfLastDot == -1)
+            {
+                indexOfLastDot = fullProcessName.Length;
+            }
+
+            var nameLenght = indexOfLastDot - indexOfLastSlash - 1;
+            var myProcessName =
+                fullProcessName.Substring(indexOfLastSlash + 1, nameLenght)
+                    .Replace("-", string.Empty)
+                    .Replace(".", string.Empty)
+                    .Replace("(", "_")
+                    .Replace(")", "_");
+            return myProcessName;
+        }
+
+        public static string GetMyShortNameSpace(string fullProcessName)
+        {
+            if (fullProcessName.StartsWith("/") || fullProcessName.StartsWith("\\"))
+            {
+                fullProcessName = fullProcessName.Remove(0, 1);
+            }
+            var indexOfLastSlash = fullProcessName.LastIndexOf("/");
+            string myShortNameSpace;
             if (indexOfLastSlash == -1)
             {
-                this.ShortNameSpace = string.Empty;
+                myShortNameSpace = string.Empty;
             }
             else
             {
-                this.ShortNameSpace = (fullProcessName.Substring (0, indexOfLastSlash)).Replace("/", ".").Replace("(", "_").Replace(")", "_");
+                myShortNameSpace =
+                    (fullProcessName.Substring(0, indexOfLastSlash)).Replace("/", ".").Replace("(", "_").Replace(")", "_");
             }
+            return myShortNameSpace;
+        }
 
-
-			var indexOfLastDot = fullProcessName.LastIndexOf (".");
-            if (indexOfLastDot == -1) {
-                indexOfLastDot = fullProcessName.Length;
-            }
-			var nameLenght = indexOfLastDot - indexOfLastSlash -1;
-            this.ProcessName = fullProcessName.Substring(indexOfLastSlash + 1, nameLenght).Replace("-", string.Empty).Replace(".", string.Empty).Replace("(", "_").Replace(")", "_");
-		}
-
-		public string ProcessName { get; private set;}
+        public string ProcessName { get; private set;}
 		public string FullProcessName { get; private set;}
 
         public string Description { get; set;}
@@ -60,7 +87,7 @@
 		public string InputAndOutputNameSpace {
 			get
             {
-				return NameSpace + ".InputOutputModel";
+				return NameSpace + "InputOutputModel";
 			}
 
 		}

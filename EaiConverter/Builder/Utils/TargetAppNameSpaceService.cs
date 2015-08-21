@@ -41,7 +41,15 @@
 			return schemaLocation;
 		}
 
+        public static string RemoveFirstDot(string shortNameSpace)
+        {
+            if (shortNameSpace.StartsWith("."))
+            {
+                shortNameSpace = shortNameSpace.Remove(0, 1);
+            }
 
+            return shortNameSpace;
+        }
     }
 }
 

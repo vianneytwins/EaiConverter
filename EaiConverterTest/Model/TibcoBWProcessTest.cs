@@ -18,6 +18,12 @@ namespace EaiConverter.Test.Model
 			Assert.AreEqual ("TOTO.TITI", new TibcoBWProcess ("TOTO/TITI/myProcess.process").ShortNameSpace);
 		}
 
+        [Test]
+        public void Should_Return_remove_first_slash()
+        {
+            Assert.AreEqual("TOTO.TITI", new TibcoBWProcess("/TOTO/TITI/myProcess.process").ShortNameSpace);
+        }
+
 		[Test]
 		public void Should_Return_ProcessName_myProcess_When_fullProcessName_is_TOTO_slash_MyProcess_dot_process()
 		{
