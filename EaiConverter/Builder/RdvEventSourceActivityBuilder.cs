@@ -5,6 +5,7 @@ using EaiConverter.Builder.Utils;
 using EaiConverter.Processor;
 using System.Reflection;
 using EaiConverter.Utils;
+using EaiConverter.Model;
 
 namespace EaiConverter.Builder
 {
@@ -106,12 +107,12 @@ namespace EaiConverter.Builder
 			return subscriberRdvClassNamespace;
 		}
 
-		public System.CodeDom.CodeStatementCollection GenerateInvocationCode (EaiConverter.Model.Activity activity)
+		public System.CodeDom.CodeStatementCollection GenerateInvocationCode(Activity activity)
 		{
-			throw new NotImplementedException ();
+			return new CodeStatementCollection();
 		}
 
-		public List<System.CodeDom.CodeNamespaceImport> GenerateImports (EaiConverter.Model.Activity activity)
+		public List<System.CodeDom.CodeNamespaceImport> GenerateImports(Activity activity)
 		{
 			return new List<CodeNamespaceImport>
 			{
@@ -120,7 +121,7 @@ namespace EaiConverter.Builder
 			};
 		}
 
-		public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter (EaiConverter.Model.Activity activity)
+		public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
 		{
 			var parameters = new CodeParameterDeclarationExpressionCollection
 			{
@@ -130,7 +131,7 @@ namespace EaiConverter.Builder
 			return parameters;
 		}
 
-		public CodeStatementCollection GenerateConstructorCodeStatement (EaiConverter.Model.Activity activity)
+		public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
 		{
 			var parameterReference = new CodeFieldReferenceExpression(
 				new CodeThisReferenceExpression(), GetServiceFieldName());
@@ -145,10 +146,11 @@ namespace EaiConverter.Builder
 			return statements;
 		}
 
-		public List<System.CodeDom.CodeMemberField> GenerateFields (EaiConverter.Model.Activity activity)
+		public List<System.CodeDom.CodeMemberField> GenerateFields(Activity activity)
 		{
 			var fields = new List<CodeMemberField>
-			{new CodeMemberField
+			{
+                new CodeMemberField
 				{
 					Type = GetServiceFieldType(),
 					Name = GetServiceFieldName(),
@@ -159,9 +161,9 @@ namespace EaiConverter.Builder
 			return fields;
 		}
 
-		CodeTypeReference GetServiceFieldType ()
+		CodeTypeReference GetServiceFieldType()
 		{
-			return new CodeTypeReference (interfaceSubscriberName);
+			return new CodeTypeReference(interfaceSubscriberName);
 		}
 
 		string GetServiceFieldName ()

@@ -38,13 +38,13 @@ namespace EaiConverter.CodeGenerator
 
                     if (provider.FileExtension[0] == '.')
                     {
-                        sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + "\\" + namespaceUnit.Types[0].Name + provider.FileExtension;
-                        relativeSourceFile = this.ConvertNamespaceToPath(namespaceName) + "\\" + namespaceUnit.Types[0].Name + provider.FileExtension;
+                        sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + "/" + namespaceUnit.Types[0].Name + provider.FileExtension;
+                        relativeSourceFile = this.ConvertNamespaceToPath(namespaceName) + "/" + namespaceUnit.Types[0].Name + provider.FileExtension;
                     }
                     else
                     {
-                        sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + "\\" + namespaceUnit.Types[0].Name + "." + provider.FileExtension;
-                        relativeSourceFile = this.ConvertNamespaceToPath(namespaceName) + "\\" + namespaceUnit.Types[0].Name + "." + provider.FileExtension;
+                        sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + "/" + namespaceUnit.Types[0].Name + "." + provider.FileExtension;
+                        relativeSourceFile = this.ConvertNamespaceToPath(namespaceName) + "/" + namespaceUnit.Types[0].Name + "." + provider.FileExtension;
                     }
 
                     if (ConfigurationApp.GetProperty(sourceFile) != "true")
@@ -62,13 +62,13 @@ namespace EaiConverter.CodeGenerator
                        //     file.WriteLine("    <Compile Include=\"" + relativeSourceFile + "\"/>\n");
                        // }
 
-                        if (File.Exists(ProjectDestinationPath + "\\GeneratedSolution.csproj"))
+                        if (File.Exists(ProjectDestinationPath + "/GeneratedSolution.csproj"))
                         {
-                            string projectFile = File.ReadAllText(ProjectDestinationPath + "\\GeneratedSolution.csproj");
+                            string projectFile = File.ReadAllText(ProjectDestinationPath + "/GeneratedSolution.csproj");
                             projectFile = projectFile.Replace(
                                 LineToReplace,
                                 LineToReplace + "\n" + "    <Compile Include=\"" + relativeSourceFile + "\"/>");
-                            File.WriteAllText(ProjectDestinationPath + "\\GeneratedSolution.csproj", projectFile);
+                            File.WriteAllText(ProjectDestinationPath + "/GeneratedSolution.csproj", projectFile);
                         }
 
                         Console.WriteLine(sourceFile + " has been generated");
@@ -89,17 +89,17 @@ namespace EaiConverter.CodeGenerator
         public void GenerateSolutionAndProjectFiles()
         {
             this.CreateSolutionDirectory();
-            using (var file = new StreamWriter(SolutionDestinationPath + "\\GeneratedSolution.sln"))
+            using (var file = new StreamWriter(SolutionDestinationPath + "/GeneratedSolution.sln"))
             {
                 file.Write(GeneratedSolution_sln);
             }
 
-            using (var file = new StreamWriter(ProjectDestinationPath + "\\GeneratedSolution.csproj"))
+            using (var file = new StreamWriter(ProjectDestinationPath + "/GeneratedSolution.csproj"))
             {
                 file.Write(GeneratedSolution_csproj);
             }
 
-            using (var file = new StreamWriter(ProjectDestinationPath + "\\Properties\\AssemblyInfo.cs"))
+            using (var file = new StreamWriter(ProjectDestinationPath + "/Properties/AssemblyInfo.cs"))
             {
                 file.Write(AssemblyInfo_cs);
             }
@@ -116,7 +116,7 @@ namespace EaiConverter.CodeGenerator
 
             Directory.CreateDirectory(SolutionDestinationPath);
             Directory.CreateDirectory(ProjectDestinationPath);
-            Directory.CreateDirectory(ProjectDestinationPath + "\\Properties");
+            Directory.CreateDirectory(ProjectDestinationPath + "/Properties");
         }
 
         // TODO refactor because not really SRP
@@ -130,9 +130,10 @@ namespace EaiConverter.CodeGenerator
 
         private string ConvertNamespaceToPath(string ns)
         {
-            var path = ns.Replace('.', '\\');
+            var path = ns.Replace('.', '/');
             return path;
         }
+
 
         public static string GeneratedSolution_sln = @"
 Microsoft Visual Studio Solution File, Format Version 12.00

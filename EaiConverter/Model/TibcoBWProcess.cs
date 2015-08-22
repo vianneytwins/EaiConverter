@@ -73,24 +73,36 @@
         public List<ProcessVariable> ProcessVariables { get; set;}
         public List<XsdImport> XsdImports { get; set;}
 
-		public string ShortNameSpace {
+		public string ShortNameSpace
+        {
 			get;
 			private set;
 		}
 
-		public string NameSpace {
+		public string NameSpace
+        {
 			get
 			{
 				return ShortNameSpace + "." + ProcessName;
 			}
 		}
-		public string InputAndOutputNameSpace {
+
+		public string InputAndOutputNameSpace
+        {
 			get
             {
 				return NameSpace + "InputOutputModel";
 			}
-
 		}
-	}
+
+        public string VariablesNameSpace
+        {
+            get
+            {
+                return NameSpace + "Variables";
+            }
+        }
+
+    }
 }
 

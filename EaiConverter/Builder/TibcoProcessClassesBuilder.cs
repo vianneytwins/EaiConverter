@@ -156,12 +156,13 @@
             {
                 foreach (var variable in tibcoBwProcessToGenerate.ProcessVariables)
                 {
-                    fields.Add(new CodeMemberField
-                    {
-                        Type = new CodeTypeReference(tibcoBwProcessToGenerate.NameSpace + "." + variable.Parameter.Type),
-                        Name = VariableHelper.ToVariableName(variable.Parameter.Name),
-                        Attributes = MemberAttributes.Private
-                    });
+                    fields.Add(
+                        new CodeMemberField
+                        {
+                            Type = new CodeTypeReference(tibcoBwProcessToGenerate.VariablesNameSpace + "." + variable.Parameter.Type),
+                            Name = VariableHelper.ToVariableName(variable.Parameter.Name),
+                            Attributes = MemberAttributes.Private
+                        });
                 }
             }
 
@@ -351,7 +352,7 @@
                         if (!IsBasicType(item.Parameter.Type))
                         {
                             processVariableNameNamespaces.Add(
-                                this.xsdClassGenerator.Build(item.ObjectXNodes, tibcoBwProcessToGenerate.NameSpace));
+                                this.xsdClassGenerator.Build(item.ObjectXNodes, tibcoBwProcessToGenerate.VariablesNameSpace));
                         }
                     }
                     catch (Exception e)

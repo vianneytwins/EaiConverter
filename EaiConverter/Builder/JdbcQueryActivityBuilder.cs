@@ -234,6 +234,11 @@ namespace EaiConverter.Builder
 
         private string GenerateClassName(JdbcQueryActivity jdbcQueryActivity)
         {
+            if (!string.IsNullOrEmpty(jdbcQueryActivity.ClassName))
+            {
+                return jdbcQueryActivity.ClassName;
+            }
+
             if (jdbcQueryActivity.Type == ActivityType.jdbcCallActivityType)
             {
                 return jdbcQueryActivity.QueryStatement;
