@@ -122,7 +122,7 @@ namespace EaiConverter.Test.Builder
             var className = classToGenerate.Namespaces[1].Types[0].Name;
 
             Assert.AreEqual ("group", className);
-            Assert.AreEqual ("MyNamespace.myProcessTest", classToGenerate.Namespaces[1].Name);
+            Assert.AreEqual ("MyNamespace.myProcessTestVariables", classToGenerate.Namespaces[1].Name);
         }
 
 
