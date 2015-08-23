@@ -6,6 +6,6 @@ namespace EaiConverter.CodeGenerator
     {
         void Generate(CodeCompileUnit targetUnit);
 
-        void GenerateSolutionAndProjectFiles();
+        void Init();
     }
 }

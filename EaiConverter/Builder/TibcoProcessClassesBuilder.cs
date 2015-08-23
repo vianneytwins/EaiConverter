@@ -118,6 +118,7 @@
             {
                 new CodeNamespaceImport("System"),
 				new CodeNamespaceImport(tibcoBwProcessToGenerate.InputAndOutputNameSpace),
+                new CodeNamespaceImport(TargetAppNameSpaceService.xmlToolsNameSpace),
                 new CodeNamespaceImport(TargetAppNameSpaceService.loggerNameSpace)
             };
 

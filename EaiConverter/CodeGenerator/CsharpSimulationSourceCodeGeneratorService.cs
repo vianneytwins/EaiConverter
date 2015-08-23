@@ -22,7 +22,7 @@ namespace EaiConverter.CodeGenerator
             Console.WriteLine(classesInString);
         }
 
-        public void GenerateSolutionAndProjectFiles()
+        public void Init()
         {
             // Do nothing
         }

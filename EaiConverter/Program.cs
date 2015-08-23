@@ -39,7 +39,7 @@ namespace EaiConverter
                     tibcoFileReaderService = new TibcoBWDirectoryProcessorService(tibcoFileProcessorService, xsdFileProcessorService, globalVariableProcessor);
                     ConfigurationApp.SaveProperty(ProjectDirectory, sourceDirectory);
 
-				    sourceCodeGeneratorService.GenerateSolutionAndProjectFiles();
+				    sourceCodeGeneratorService.Init();
 					tibcoFileReaderService.Process(sourceDirectory);
 				} else {
                     Console.WriteLine ("Program is going to exit - sorry only MODE S_Csharp and G_Csharp is managed for the moment");

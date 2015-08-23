@@ -1,3 +1,5 @@
+using EaiConverter.Builder.Utils;
+
 namespace EaiConverter.CodeGenerator
 {
     using System;
@@ -24,7 +26,7 @@ namespace EaiConverter.CodeGenerator
             options.IndentString = "    ";
             options.BlankLinesBetweenMembers = true;
 
-            this.CreateSolutionDirectory();
+            //this.CreateSolutionDirectory();
 
             // Build the output file name.
             foreach (CodeNamespace namespaceUnit in targetUnit.Namespaces)
@@ -39,12 +41,12 @@ namespace EaiConverter.CodeGenerator
                     if (provider.FileExtension[0] == '.')
                     {
                         sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + "/" + namespaceUnit.Types[0].Name + provider.FileExtension;
-                        relativeSourceFile = this.ConvertNamespaceToPath(namespaceName) + "/" + namespaceUnit.Types[0].Name + provider.FileExtension;
+                        relativeSourceFile = ConvertNamespaceToPath(namespaceName) + "/" + namespaceUnit.Types[0].Name + provider.FileExtension;
                     }
                     else
                     {
                         sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + "/" + namespaceUnit.Types[0].Name + "." + provider.FileExtension;
-                        relativeSourceFile = this.ConvertNamespaceToPath(namespaceName) + "/" + namespaceUnit.Types[0].Name + "." + provider.FileExtension;
+                        relativeSourceFile = ConvertNamespaceToPath(namespaceName) + "/" + namespaceUnit.Types[0].Name + "." + provider.FileExtension;
                     }
 
                     if (ConfigurationApp.GetProperty(sourceFile) != "true")
@@ -86,7 +88,7 @@ namespace EaiConverter.CodeGenerator
             }
         }
 
-        public void GenerateSolutionAndProjectFiles()
+        public void Init()
         {
             this.CreateSolutionDirectory();
             using (var file = new StreamWriter(SolutionDestinationPath + "/GeneratedSolution.sln"))
@@ -103,6 +105,11 @@ namespace EaiConverter.CodeGenerator
             {
                 file.Write(AssemblyInfo_cs);
             }
+
+            using (var file = new StreamWriter(ProjectDestinationPath + "/" + ConvertNamespaceToPath(TargetAppNameSpaceService.xmlToolsNameSpace) + "/TibcoXslHelper.cs"))
+            {
+                file.Write(TibcoXslHelper_cs);
+            }
         }
 
         private void CreateSolutionDirectory()
@@ -117,18 +124,19 @@ namespace EaiConverter.CodeGenerator
             Directory.CreateDirectory(SolutionDestinationPath);
             Directory.CreateDirectory(ProjectDestinationPath);
             Directory.CreateDirectory(ProjectDestinationPath + "/Properties");
+            Directory.CreateDirectory(ProjectDestinationPath + "/" + ConvertNamespaceToPath(TargetAppNameSpaceService.xmlToolsNameSpace));
         }
 
         // TODO refactor because not really SRP
         private string PathFromNamespace(string outputPath, string ns)
         {
-            var path = String.Format("{0}/{1}", outputPath, this.ConvertNamespaceToPath(ns));
+            var path = String.Format("{0}/{1}", outputPath, ConvertNamespaceToPath(ns));
 
             Directory.CreateDirectory(path);
             return path;
         }
 
-        private string ConvertNamespaceToPath(string ns)
+        private static string ConvertNamespaceToPath(string ns)
         {
             var path = ns.Replace('.', '/');
             return path;
@@ -200,6 +208,7 @@ EndGlobal
     <Reference Include=""System.Xml"" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include=""" + ConvertNamespaceToPath(TargetAppNameSpaceService.xmlToolsNameSpace) + @"\TibcoXslHelper.cs"" />
     <Compile Include=""Properties\AssemblyInfo.cs"" />
     <!-- insert file Generated here -->
   </ItemGroup>
@@ -250,6 +259,96 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion(""1.0.*"")]
 [assembly: AssemblyVersion(""1.0.0.0"")]
 [assembly: AssemblyFileVersion(""1.0.0.0"")]
+";
+
+        public static string TibcoXslHelper_cs = @"namespace MyApp.Tools.Xml
+{
+    using System;
+    using System.Collections.Generic;
+
+    public class TibcoXslHelper
+    {
+        public static DateTime ParseDateTime(string format, string inputDate)
+        {
+            return DateTime.ParseExact(inputDate, format, null);
+        }
+
+        public static string FormatDateTime(string format, DateTime inputDate)
+        {
+            return string.Format(format, inputDate);
+        }
+
+        public static double ParseNumber(string numberInString)
+        {
+            return double.Parse(numberInString);
+        }
+            
+        public static string Concat(params object[] list)
+        {
+            return string.Concat(list);
+        }
+            
+        public static bool Contains(string value, string inputString)
+        {
+            return inputString.Contains(value);
+        }
+
+        // usage of exists : exists ('this string', mycollection)
+        public static bool Exist<T>(T value, List<T> collection)
+        {
+            return collection.Contains(value);
+        }
+
+        // usage of translate : translate (myvaraible/value, '&#xA;', '')
+        public static string Translate(string inputString, string oldstring, string newstring)
+        {
+            return inputString.Replace(oldstring, newstring);
+        }
+
+        // usage of string-lenght : string-lenght (myvariable)
+        public static int StringLength(string inputString)
+        {
+            return inputString.Length;
+        }
+
+        //usage a string, usage sample : tib:render-xml(myvariable, true()) 
+        public static string RenderXml(string inputString, bool isSomething)
+        {
+            return inputString;
+        }
+
+        // usage tib:trim : tib:trim(myvariable)
+        public static string Trim(string inputString)
+        {
+            return inputString.Trim();
+        }
+
+        // usage tib:translate-timezone( : tib:translate-timezone(
+        // TODO find usage exemple
+        public static string TranslateTimezone(string timezone)
+        {
+            return timezone;
+        }
+
+        // usage tib:compare-date( : tib:compare-date(date1, date2) , return 0 if equals
+        //expression = expression.Replace(""tib:compare-date("",""TibcoXslHelper.CompareDate("");
+        public static int CompareDate(DateTime date1, DateTime date2)
+        {
+            return date1.CompareTo(date2);
+        }
+
+        // usage upper-case : upper-case (mystring)
+        public static string UpperCase(string inputString)
+        {
+            return inputString.ToUpper();
+        }
+
+        public static string LowerCase(string inputString)
+        {
+            return inputString.ToLower();
+        }
+    }
+}       
 ";
     }
 }
