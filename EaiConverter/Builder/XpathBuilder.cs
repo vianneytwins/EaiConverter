@@ -21,6 +21,7 @@
             expression = expression.Replace("tib:format-time(","TibcoXslHelper.FormatDateTime(");
 
             expression = expression.Replace("number(","TibcoXslHelper.ParseNumber(");
+            expression = expression.Replace("number (","TibcoXslHelper.ParseNumber(");
             expression = expression.Replace("tib:round-fraction(","Math.Round(");
 
             // concat in xsl is used like that concat(' add this', variable1, '  to that', variable2) and must be replace by something similar
