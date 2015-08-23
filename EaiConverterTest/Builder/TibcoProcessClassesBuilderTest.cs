@@ -128,11 +128,11 @@ namespace EaiConverter.Test.Builder
 
 
 		[Test]
-		public void Should_Return_3_import_For_Empty_Process()
+		public void Should_Return_4_import_For_Empty_Process()
 		{
             var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
 
-			Assert.AreEqual (3, classToGenerate.Namespaces[0].Imports.Count);
+			Assert.AreEqual (4, classToGenerate.Namespaces[0].Imports.Count);
 		}
 
 		[Test]
