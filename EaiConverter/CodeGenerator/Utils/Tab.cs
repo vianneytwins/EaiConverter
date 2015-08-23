@@ -5,7 +5,7 @@ namespace EaiConverter.CodeGenerator.Utils
 	public class Tab
 	{
 		private string spacing = "";
-		private string increment = "  ";
+		private string increment = "    ";
 
 		public Tab ()
 		{
@@ -19,8 +19,8 @@ namespace EaiConverter.CodeGenerator.Utils
 
 		public String Decrement()
 		{
-			if (spacing.Length >= 2) {
-				spacing = spacing.Substring (0, spacing.Length - 2);
+			if (spacing.Length >= 4) {
+				spacing = spacing.Substring (0, spacing.Length - 4);
 			}
 			return spacing;
 		}

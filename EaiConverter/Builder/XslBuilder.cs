@@ -5,6 +5,7 @@ using System.CodeDom;
 using EaiConverter.Parser.Utils;
 using System.Linq;
 using System;
+using EaiConverter.CodeGenerator.Utils;
 
 namespace EaiConverter.Builder
 {
@@ -15,6 +16,7 @@ namespace EaiConverter.Builder
 
         private IXpathBuilder xpathBuilder;
         //xsi:nil="true"
+        private Tab tab = new Tab();
 
         public XslBuilder(IXpathBuilder xpathBuilder)
         {
@@ -23,6 +25,7 @@ namespace EaiConverter.Builder
 
         public CodeStatementCollection Build(IEnumerable<XNode> inputNodes)
         {
+            tab = new Tab();
             var codeInStringList = this.Build(inputNodes, null);
             var codeSnippet = new CodeSnippetStatement(codeInStringList.ToString());
             var codeStatements = new CodeStatementCollection();
@@ -59,7 +62,7 @@ namespace EaiConverter.Builder
                         {
                             if (string.IsNullOrEmpty(parent))
                             {
-                                codeStatements.Append("List<" + returnType + "> ");
+                                codeStatements.Append(this.tab + "List<" + returnType + "> ");
                             }
 
                             codeStatements.Append(variableReference + " = new List<" + returnType + ">();\n");
@@ -81,9 +84,13 @@ namespace EaiConverter.Builder
                     {
                         if (string.IsNullOrEmpty(parent))
                         {
-                            codeStatements.Append(returnType + " ");
+                            codeStatements.Append(this.tab + returnType + " ");
+                            codeStatements.Append(variableReference + " = ");
                         }
-                        codeStatements.Append(variableReference + " = ");
+                        else
+                        {
+                            codeStatements.Append(this.tab + variableReference + " = ");
+                        }
 
                         //recursive call to get the value
                         codeStatements.Append(this.Build(element.Nodes(), parent) + ";\n");
@@ -93,7 +100,7 @@ namespace EaiConverter.Builder
                         // intialise the variable first
                         if (string.IsNullOrEmpty(parent))
                         {
-                            codeStatements.Append(returnType + " ");
+                            codeStatements.Append(this.tab + returnType + " ");
                         }
 
                         codeStatements.Append(variableReference + " = new " + returnType + "();\n");
@@ -101,10 +108,12 @@ namespace EaiConverter.Builder
 
                         if (string.IsNullOrEmpty(parent))
                         {
+                            codeStatements.Append(this.tab);
                             codeStatements.Append(this.Build(element.Nodes(), element.Name.ToString()));
                         }
                         else
                         {
+                            codeStatements.Append(this.tab);
                             codeStatements.Append(this.Build(element.Nodes(), parent + "." + element.Name.ToString()));
                         }
                     }
@@ -151,21 +160,23 @@ namespace EaiConverter.Builder
             var returnType = this.DefineReturnType(element);
             var variableReference = this.DefineVariableReference((XElement)element.FirstNode, null);
             var variableListReference = this.DefineVariableReference((XElement)element.FirstNode, parent) + "s";
-            codeStatements.Append(variableListReference + " = new List<" + returnType + ">();\n");
-            codeStatements.Append("foreach (var item in " + this.ReturnValue(element) + "){\n");
+            codeStatements.Append(this.tab + variableListReference + " = new List<" + returnType + ">();\n");
+            codeStatements.Append(this.tab + "foreach (var item in " + this.ReturnValue(element) + ")\n{\n");
+            this.tab.Increment();
             codeStatements.Append(this.Build(element.Nodes(), null));
-            codeStatements.Append(variableListReference + ".Add(" + variableReference + ");\n");
-            codeStatements.Append("}\n");
+            codeStatements.Append(this.tab + variableListReference + ".Add(" + variableReference + ");\n");
+            codeStatements.Append(this.tab.Decrement() + "}\n");
             return codeStatements;
         }
 
         public StringBuilder ManageConditionTag(XElement element, string parent, bool isIfCondition)
         {
             var codeStatements = new StringBuilder();
-            var test = isIfCondition ? "if (" + this.ReturnCondition(element) + "){\n" : "else{\n";
+            var test = isIfCondition ? "if (" + this.ReturnCondition(element) + ")\n{\n" : "else\n{\n";
             codeStatements.Append(test);
+            this.tab.Increment();
             codeStatements.Append(this.Build(element.Nodes(), parent));
-            codeStatements.Append("}\n");
+            codeStatements.Append(this.tab.Decrement() + "}\n");
             return codeStatements;
         }
 

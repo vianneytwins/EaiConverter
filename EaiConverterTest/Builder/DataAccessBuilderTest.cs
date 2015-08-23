@@ -33,12 +33,12 @@ namespace EaiConverter.Test.Builder
 			var expected = @"using (IDataAccess db = this.dataAccessFactory.CreateAccess())
 {
 db.Query(
-  sqlQueryStatement,
-  new
-    {
-      idParam = idParam
-    }
-  );
+    sqlQueryStatement,
+    new
+        {
+            idParam = idParam
+        }
+    );
 }
 
 ";
@@ -56,7 +56,7 @@ db.Query(
 			var expected = @"using (IDataAccess db = this.dataAccessFactory.CreateAccess())
 {
 db.Query(
-  sqlQueryStatement);
+    sqlQueryStatement);
 }
 
 ";
@@ -74,7 +74,7 @@ db.Query(
 			var expected = @"using (IDataAccess db = this.dataAccessFactory.CreateAccess())
 {
 return db.Query <TestJbdcQueryActivityResultSet>(
-  sqlQueryStatement).ToList();
+    sqlQueryStatement).ToList();
 }
 
 ";
