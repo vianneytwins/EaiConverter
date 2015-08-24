@@ -37,14 +37,15 @@ namespace EaiConverter.Parser
                 jdbcQueryActivity.QueryStatementParameters = new Dictionary<string, string>();
 
                 var parameterElements = preparedParamDataTypeElement.Elements("parameter");
+
+                jdbcQueryActivity.QueryOutputStatementParameters = new List<ClassParameter>();
+
                 foreach (var parameterElement in parameterElements)
                 {
                     string parameterName = (XElementParserUtils.GetStringValue(parameterElement.Element("colName")).Replace(".",string.Empty));
                     parameterName = parameterName.Substring(1, parameterName.Length - 1);
                     string parameterType = XElementParserUtils.GetStringValue(parameterElement.Element("typeName"));
                     string colonneType = XElementParserUtils.GetStringValue(parameterElement.Element("colType"));
-
-                    jdbcQueryActivity.QueryOutputStatementParameters = new List<ClassParameter>();
 
                     //ColonneType= 1 : input parameter
                     if (colonneType == "1")
