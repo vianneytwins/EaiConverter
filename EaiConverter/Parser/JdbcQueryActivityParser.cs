@@ -1,5 +1,6 @@
 namespace EaiConverter.Parser
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml.Linq;
@@ -38,11 +39,23 @@ namespace EaiConverter.Parser
                 var parameterElements = preparedParamDataTypeElement.Elements("parameter");
                 foreach (var parameterElement in parameterElements)
                 {
-                    string parameterName = XElementParserUtils.GetStringValue(parameterElement.Element("colName"));
-                    parameterName = parameterName.Substring (1, parameterName.Length-1);
-                    jdbcQueryActivity.QueryStatementParameters.Add(
-                            parameterName,
-                        XElementParserUtils.GetStringValue(parameterElement.Element("typeName")));
+                    string parameterName = (XElementParserUtils.GetStringValue(parameterElement.Element("colName")).Replace(".",string.Empty));
+                    parameterName = parameterName.Substring(1, parameterName.Length - 1);
+                    string parameterType = XElementParserUtils.GetStringValue(parameterElement.Element("typeName"));
+                    string colonneType = XElementParserUtils.GetStringValue(parameterElement.Element("colType"));
+
+                    jdbcQueryActivity.QueryOutputStatementParameters = new List<ClassParameter>();
+
+                    //ColonneType= 1 : input parameter
+                    if (colonneType == "1")
+                    {
+                        jdbcQueryActivity.QueryStatementParameters.Add(parameterName, parameterType);
+                    }
+                    //ColonneType= 4 : output parameter
+                    else if (colonneType == "4")
+                    {
+                        jdbcQueryActivity.QueryOutputStatementParameters.Add(new ClassParameter { Name = parameterName, Type = parameterType });
+                    }
                 }
             }
             else
@@ -58,14 +71,13 @@ namespace EaiConverter.Parser
                     foreach (var parameterElement in parameterElements)
                     {
                         jdbcQueryActivity.QueryStatementParameters.Add(
-                            XElementParserUtils.GetStringValue(parameterElement.Element ("parameterName")),
-                            XElementParserUtils.GetStringValue(parameterElement.Element ("dataType"))
-                            );
+                            XElementParserUtils.GetStringValue(parameterElement.Element("parameterName")).Replace(".", string.Empty),
+                            XElementParserUtils.GetStringValue(parameterElement.Element("dataType")));
                     }
                 }
-            }
 
-            jdbcQueryActivity.QueryOutputStatementParameters = this.GetOutputParameters(configElement);
+                jdbcQueryActivity.QueryOutputStatementParameters = this.GetOutputParameters(configElement);
+            }
             
             if (inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings") != null && inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("jdbcQueryActivityInput") != null)
             {
@@ -76,26 +88,27 @@ namespace EaiConverter.Parser
             return jdbcQueryActivity;
         }
 
-
-
-        List<ClassParameter> GetOutputParameters(XElement configElement)
+        private List<ClassParameter> GetOutputParameters(XElement configElement)
         {
-
-            IEnumerable<XElement> transitionElements = from element in configElement.Elements ("QueryOutputCachedSchemaColumns")
+            IEnumerable<XElement> queryOutPutElements = from element in configElement.Elements("QueryOutputCachedSchemaColumns")
                 select element;
-            IEnumerable<XElement> typeElements = from element in configElement.Elements ("QueryOutputCachedSchemaDataTypes")
+            IEnumerable<XElement> typeElements = from element in configElement.Elements("QueryOutputCachedSchemaDataTypes")
                 select element;
-            var transitions = new List<ClassParameter> ();
+            var parameters = new List<ClassParameter>();
             int i = 0;
             var typesList = typeElements.ToList();
-            foreach (XElement element in transitionElements) {
-                transitions.Add (new ClassParameter{ Name = element.Value, Type = ((XElement)typesList[i]).Value});
+            foreach (XElement element in queryOutPutElements)
+            {
+                parameters.Add(new ClassParameter
+                                   {
+                                       Name = element.Value,
+                                       Type = ((XElement)typesList[i]).Value
+                                   });
                 i++;
             }
 
-            return transitions;
+            return parameters;
         }
     }
-
 }
 

@@ -24,17 +24,25 @@ namespace EaiConverter.Test.Parser
 <maxRows>100</maxRows>
 <emptyStrAsNil>false</emptyStrAsNil>
 <jdbcSharedConfig>/Configuration/DAI/PNO/JDBC/JDBCIntegration.sharedjdbc</jdbcSharedConfig>
-<ProcedureName>LyxorSetEUTicker;1</ProcedureName>
+<ProcedureName>MySetEUTicker;1</ProcedureName>
 <parameterTypes>
 	<parameter>
 		<colName>@Id_Bb_Unique</colName>
 		<typeName>int</typeName>
 		<dataType>4</dataType>
+        <colType>1</colType>
 	</parameter>
 	<parameter>
 		<colName>@Id_Bb_Unique2</colName>
 		<typeName>int</typeName>
 		<dataType>4</dataType>
+        <colType>1</colType>
+	</parameter>
+	<parameter>
+		<colName>@Id_Bb_Unique3</colName>
+		<typeName>int</typeName>
+		<dataType>4</dataType>
+        <colType>4</colType>
 	</parameter>
 </parameterTypes>
 </config>
@@ -64,15 +72,23 @@ namespace EaiConverter.Test.Parser
 		public void Should_Return_QueryStatement_is_select_Something(){
             JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity) jdbcQueryActivityParser.Parse (doc);
 
-			Assert.AreEqual ("LyxorSetEUTicker", jdbcQueryActivity.QueryStatement);
+			Assert.AreEqual("MySetEUTicker", jdbcQueryActivity.QueryStatement);
 		}
 
 		[Test]
 		public void Should_Return_QueryStatementParameter_is_named_IdBbUnique_and_type_VARCHAR(){
             JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity) jdbcQueryActivityParser.Parse (doc);
 
-			Assert.AreEqual ("int", jdbcQueryActivity.QueryStatementParameters["Id_Bb_Unique"]);
+			Assert.AreEqual("int", jdbcQueryActivity.QueryStatementParameters["Id_Bb_Unique"]);
 		}
+
+        [Test]
+        public void Should_Return_QueryOutputStatementParameter()
+        {
+            JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity)jdbcQueryActivityParser.Parse(doc);
+
+            Assert.AreEqual("int", jdbcQueryActivity.QueryOutputStatementParameters[0].Type);
+        }
 
 	    [Test]
 	    public void Should_Return_QueryStatement_When_no_parameters()

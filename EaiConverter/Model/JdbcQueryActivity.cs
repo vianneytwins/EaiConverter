@@ -27,9 +27,9 @@ namespace EaiConverter.Model
 		/// Value is the parameter Type (VARCHAR, INT, ...)
 		/// </summary>
 		/// <value>The query statement parameters.</value>
-		public Dictionary <string,string> QueryStatementParameters  {get; set;}
+		public Dictionary<string, string> QueryStatementParameters { get; set; }
 	
-        public List<ClassParameter> QueryOutputStatementParameters  {get; set;}
+        public List<ClassParameter> QueryOutputStatementParameters { get; set; }
 
         public string ClassName { get; set; }
 
