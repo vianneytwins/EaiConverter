@@ -10,14 +10,30 @@
     {
         private static Dictionary<string, string> sqlMapping = new Dictionary<string, string> {
             { "VARCHAR", CSharpTypeConstant.SystemString },
+            { "NVARCHAR", CSharpTypeConstant.SystemString },
+            { "TEXT", CSharpTypeConstant.SystemString },
             { "CHAR", CSharpTypeConstant.SystemString },
             { "INT", CSharpTypeConstant.SystemInt32 },
-            { "12", CSharpTypeConstant.SystemString },
-            { "4", CSharpTypeConstant.SystemInt32 },
+            { "INTEGER", CSharpTypeConstant.SystemInt32 },
+            { "SMALLINT", CSharpTypeConstant.SystemInt32 },
             { "NUMBER", CSharpTypeConstant.SystemInt32 },
-            { "FLOAT", "System.Double" },
+            { "FLOAT", "float" },
             { "DATE", "System.DateTime" },
             { "DATETIME", "System.DateTime" },
+            { "SMALLDATETIME", "System.DateTime" },
+            { "TIMESTAMP", "System.DateTime" },
+            { "BIT", "System.Boolean" },
+            { "VARBINARY", CSharpTypeConstant.SystemInt32 },
+            { "REAL",  "float" },
+            { "12", CSharpTypeConstant.SystemString },
+            { "1", CSharpTypeConstant.SystemString },
+            { "4", CSharpTypeConstant.SystemInt32 },
+            { "-5", CSharpTypeConstant.SystemInt32 },
+            { "2", CSharpTypeConstant.SystemInt32 },
+            { "93", "System.DateTime" },
+            { "-7", "System.Boolean" },
+            { "6", "System.Double" },
+            { "-1", CSharpTypeConstant.SystemString },
         };
 
         private static Dictionary<string, string> jdbcSharedConfigMapping = new Dictionary<string, string> {

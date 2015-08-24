@@ -1,9 +1,10 @@
-﻿using EaiConverter.Model;
-using System.CodeDom;
-using System.Collections.Generic;
-
-namespace EaiConverter.Builder
+﻿namespace EaiConverter.Builder
 {
+    using System.CodeDom;
+    using System.Collections.Generic;
+
+    using EaiConverter.Model;
+
     public interface IActivityBuilder
     {
         CodeNamespaceCollection GenerateClassesToGenerate (Activity activity);

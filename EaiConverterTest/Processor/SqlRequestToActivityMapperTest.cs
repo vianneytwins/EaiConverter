@@ -1,8 +1,9 @@
-﻿using NUnit.Framework;
-using EaiConverter.Processor;
-
-namespace EaiConverter.Test.Processor
+﻿namespace EaiConverter.Test.Processor
 {
+    using EaiConverter.Processor;
+
+    using NUnit.Framework;
+
     [TestFixture]
     public class SqlRequestToActivityMapperTest
     {

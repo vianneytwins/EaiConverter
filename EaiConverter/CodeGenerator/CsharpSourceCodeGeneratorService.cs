@@ -40,13 +40,13 @@ namespace EaiConverter.CodeGenerator
 
                     if (provider.FileExtension[0] == '.')
                     {
-                        sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + "/" + namespaceUnit.Types[0].Name + provider.FileExtension;
-                        relativeSourceFile = ConvertNamespaceToPath(namespaceName) + "/" + namespaceUnit.Types[0].Name + provider.FileExtension;
+                        sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + GetFileSeparator() + namespaceUnit.Types[0].Name + provider.FileExtension;
+                        relativeSourceFile = ConvertNamespaceToPath(namespaceName) + GetFileSeparator() + namespaceUnit.Types[0].Name + provider.FileExtension;
                     }
                     else
                     {
-                        sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + "/" + namespaceUnit.Types[0].Name + "." + provider.FileExtension;
-                        relativeSourceFile = ConvertNamespaceToPath(namespaceName) + "/" + namespaceUnit.Types[0].Name + "." + provider.FileExtension;
+                        sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + GetFileSeparator() + namespaceUnit.Types[0].Name + "." + provider.FileExtension;
+                        relativeSourceFile = ConvertNamespaceToPath(namespaceName) + GetFileSeparator() + namespaceUnit.Types[0].Name + "." + provider.FileExtension;
                     }
 
                     if (ConfigurationApp.GetProperty(sourceFile) != "true")
@@ -106,7 +106,7 @@ namespace EaiConverter.CodeGenerator
                 file.Write(AssemblyInfo_cs);
             }
 
-            using (var file = new StreamWriter(ProjectDestinationPath + "/" + ConvertNamespaceToPath(TargetAppNameSpaceService.xmlToolsNameSpace) + "/TibcoXslHelper.cs"))
+            using (var file = new StreamWriter(ProjectDestinationPath + GetFileSeparator() + ConvertNamespaceToPath(TargetAppNameSpaceService.xmlToolsNameSpace) + "/TibcoXslHelper.cs"))
             {
                 file.Write(TibcoXslHelper_cs);
             }
@@ -138,8 +138,20 @@ namespace EaiConverter.CodeGenerator
 
         private static string ConvertNamespaceToPath(string ns)
         {
-            var path = ns.Replace('.', '/');
+            var path = ns.Replace('.', GetFileSeparator().ToCharArray()[0]);
             return path;
+        }
+
+        private static string GetFileSeparator()
+        {
+            if (Environment.OSVersion.ToString().Contains("indows"))
+            {
+                return "\\";
+            }
+            else
+            {
+                return "/";
+            }
         }
 
 

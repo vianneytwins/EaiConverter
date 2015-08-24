@@ -66,6 +66,7 @@ namespace EaiConverter.Builder
             if (this.HasThisSqlRequestAlreadyGenerateAService(jdbcQueryActivity.QueryStatement))
             {
                 this.ServiceToInvoke = this.GetExistingJdbcServiceName(jdbcQueryActivity.QueryStatement);
+                jdbcQueryActivity.ClassName = this.ServiceToInvoke.Replace("Service", string.Empty);
             }
             else
             {

@@ -1,9 +1,9 @@
-﻿using System.CodeDom;
-using System.CodeDom.Compiler;
-using System.IO;
-
-namespace EaiConverter.Test.Utils
+﻿namespace EaiConverter.Test.Utils
 {
+    using System.CodeDom;
+    using System.CodeDom.Compiler;
+    using System.IO;
+
     using Microsoft.CSharp;
 
     public class TestCodeGeneratorUtils
