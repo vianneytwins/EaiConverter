@@ -38,12 +38,12 @@ namespace EaiConverter.Builder
 
         private CodeTypeMember[] GenererateProperties(JdbcQueryActivity jdbcQueryActivity)
         {
-            var fields = new List<CodeTypeMember>();
+            var properties = new List<CodeTypeMember>();
             foreach(var element in jdbcQueryActivity.QueryOutputStatementParameters)
             {
-                fields.Add(CodeDomUtils.GenerateProperty(element.Name, JdbcQueryBuilderUtils.ConvertSQLTypeToTypeInString(element.Type)));
+                properties.Add(CodeDomUtils.GenerateProperty(element.Name, JdbcQueryBuilderUtils.ConvertSQLTypeToTypeInString(element.Type)));
             }
-            return fields.ToArray();
+            return properties.ToArray();
         }
 	}
 
