@@ -50,8 +50,7 @@ namespace EaiConverter.Test.Builder
 			var resultSetNameSpace = this.resultSetBuilder.Build (this.jdbcQueryActivity);
 			Assert.AreEqual (2,resultSetNameSpace.Types[0].Members.Count);
 		}
-
-		[Ignore]
+			
 		[Test]
 		public void Should_generate_class()
 		{
@@ -64,9 +63,11 @@ namespace EaiConverter.Test.Builder
     
     public class CurrencyResultSet
     {
-         
-         public string FirstOutput
+        
+public System.String FirstOutput { get; set; }
+public System.String SecondOutput { get; set; }
     }
+}
 ", generatedCode);
 		}
 

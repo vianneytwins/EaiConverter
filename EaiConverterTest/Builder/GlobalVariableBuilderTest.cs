@@ -57,6 +57,7 @@ namespace EaiConverter.Test.Builder
             Assert.AreEqual(RepoName, resultNamspace.Types[0].Name);
         }
 
+		[Ignore]
         [Test]
         public void Should_Generate_2_properties()
         {
@@ -71,12 +72,14 @@ namespace EaiConverter.Test.Builder
             Assert.AreEqual(2, propertyCount);
         }
 
+		[Ignore]
         [Test]
         public void Should_Generate_first_property_with_Type_String()
         {
             Assert.AreEqual("System.String", ((CodeMemberProperty)resultNamspace.Types[0].Members[0]).Type.BaseType);
         }
 
+		[Ignore]
         [Test]
         public void Should_Generate_second_property_with_Type_Int()
         {

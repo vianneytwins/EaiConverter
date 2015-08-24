@@ -36,9 +36,9 @@ namespace EaiConverter.Builder
             };
         }
 
-        private CodeMemberProperty[] GenererateProperties(JdbcQueryActivity jdbcQueryActivity)
+        private CodeTypeMember[] GenererateProperties(JdbcQueryActivity jdbcQueryActivity)
         {
-            var fields = new List<CodeMemberProperty>();
+            var fields = new List<CodeTypeMember>();
             foreach(var element in jdbcQueryActivity.QueryOutputStatementParameters)
             {
                 fields.Add(CodeDomUtils.GenerateProperty(element.Name, JdbcQueryBuilderUtils.ConvertSQLTypeToTypeInString(element.Type)));
