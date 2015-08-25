@@ -1,26 +1,27 @@
-﻿using NUnit.Framework;
-using EaiConverter.Builder;
-using EaiConverter.Model;
-using EaiConverter.Test.Utils;
-using System.Xml.Linq;
-using System.Collections.Generic;
-using EaiConverter.Parser;
-using EaiConverter.Processor;
-
-namespace EaiConverter.Test.Builder
+﻿namespace EaiConverter.Test.Builder
 {
+    using System.Collections.Generic;
+    using System.Xml.Linq;
+
+    using EaiConverter.Builder;
+    using EaiConverter.Model;
+    using EaiConverter.Parser;
+    using EaiConverter.Processor;
+    using EaiConverter.Test.Utils;
+
+    using NUnit.Framework;
+
     [TestFixture]
     public class XmlParserActivityBuilderTest
     {
-
-        XmlParseActivityBuilder xmlParseActivityBuilder;
-        XmlParseActivity activity;
+        private XmlParseActivityBuilder xmlParseActivityBuilder;
+        private XmlParseActivity activity;
 
         [SetUp]
         public void SetUp()
         {
 			this.xmlParseActivityBuilder = new XmlParseActivityBuilder(new XslBuilder(new XpathBuilder()), new XmlParserHelperBuilder(), new XsdBuilder(), new XsdParser());
-            this.activity = new XmlParseActivity( "My Activity Name",ActivityType.xmlParseActivityType);
+            this.activity = new XmlParseActivity("My Activity Name", ActivityType.xmlParseActivityType);
             this.activity.XsdReference = "pf4:EquityRecord";
             var xml =
                 @"
@@ -38,16 +39,17 @@ namespace EaiConverter.Test.Builder
                     Type= "string"}
             };
         }
+
         [Test]
         public void Should_Generate_invocation_method_When_XsdReference_is_present()
         {
             var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.plugin.xml.XMLParseActivity"");
 string xmlString = ""TestString"";
 
-EquityRecord myActivityName = this.xmlParserHelperService.FromXml(xmlString);
+EquityRecord myActivityName = this.xmlParserHelperService.FromXml<EquityRecord>(xmlString);
 ";
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateInvocationCode(this.activity));
-            Assert.AreEqual(expected,generatedCode);
+            Assert.AreEqual(expected, generatedCode);
         }
 
 		[Test]
@@ -61,7 +63,7 @@ EquityRecord myActivityName = this.xmlParserHelperService.FromXml(xmlString);
 			var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.plugin.xml.XMLParseActivity"");
 string xmlString = ""TestString"";
 
-MyApp.Mydomain.Service.Contract.MyActivityName.EquityRecord myActivityName = this.xmlParserHelperService.FromXml(xmlString);
+MyApp.Mydomain.Service.Contract.MyActivityName.EquityRecord myActivityName = this.xmlParserHelperService.FromXml<MyApp.Mydomain.Service.Contract.MyActivityName.EquityRecord>(xmlString);
 ";
 			var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateInvocationCode(this.activity));
 			Assert.AreEqual(expected,generatedCode);
@@ -82,11 +84,11 @@ MyApp.Mydomain.Service.Contract.MyActivityName.EquityRecord myActivityName = thi
 			this.activity.XsdReference = null;
 			var xsdElement = "<element xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n<xsd:element name=\"EquityRecord\" ><xsd:complexType><xsd:sequence><xsd:element name=\"adminID\" type=\"xsd:string\" /></xsd:sequence></xsd:complexType></xsd:element>\n</element>";
 			XElement doc = XElement.Parse(xsdElement);
-			this.activity.ObjectXNodes =doc.Nodes();
+			this.activity.ObjectXNodes = doc.Nodes();
 
 			var generatedClasses = xmlParseActivityBuilder.GenerateClassesToGenerate (this.activity);
 			Assert.AreEqual(3, generatedClasses.Count);
-			Assert.AreEqual("EquityRecord",generatedClasses[2].Types[0].Name);
+			Assert.AreEqual("EquityRecord", generatedClasses[2].Types[0].Name);
 		}
 
     }

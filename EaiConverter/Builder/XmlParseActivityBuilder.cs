@@ -106,8 +106,9 @@ namespace EaiConverter.Builder
 
             // Add the invocation itself
             // TODO : need to put it in the parser to get the real ReturnType !!
-			var variableReturnType = string.Empty;
-			if (xmlParseActivity.XsdReference != null) {
+			var variableReturnType = "System.String";
+			if (xmlParseActivity.XsdReference != null)
+            {
 				variableReturnType = xmlParseActivity.XsdReference.Split(':')[1];
 			}
 			else
@@ -122,9 +123,9 @@ namespace EaiConverter.Builder
 
             var variableName = VariableHelper.ToVariableName(xmlParseActivity.Name);
 
-            var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(XmlParserHelperBuilder.XmlParserHelperServiceName));
+            var activityServiceReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToVariableName(XmlParserHelperBuilder.XmlParserHelperServiceName));
 
-            var parameters = new CodeExpression[]{};
+            var parameters = new CodeExpression[] { };
             if (xmlParseActivity.Parameters != null)
             {
                 parameters = new CodeExpression[xmlParseActivity.Parameters.Count];
@@ -133,7 +134,8 @@ namespace EaiConverter.Builder
                     parameters[i] = new CodeSnippetExpression(xmlParseActivity.Parameters[i].Name);
                 }
             }
-            var codeInvocation = new CodeMethodInvokeExpression(activityServiceReference, XmlParserHelperBuilder.FromXmlMethodName, parameters);
+
+            var codeInvocation = new CodeMethodInvokeExpression(new CodeMethodReferenceExpression(activityServiceReference, XmlParserHelperBuilder.FromXmlMethodName, new CodeTypeReference(variableReturnType)), parameters);
 
             var code = new CodeVariableDeclarationStatement(variableReturnType, variableName, codeInvocation);
 
@@ -141,17 +143,17 @@ namespace EaiConverter.Builder
             return invocationCodeCollection;
         }
 
-		private static CodeTypeReference GetServiceFieldType ()
+		private static CodeTypeReference GetServiceFieldType()
 		{
-			return new CodeTypeReference (XmlParserHelperBuilder.IXmlParserHelperServiceName);
+			return new CodeTypeReference(XmlParserHelperBuilder.IXmlParserHelperServiceName);
 		}
 
 		private static string GetServiceFieldName()
 		{
-			return VariableHelper.ToVariableName (VariableHelper.ToClassName (XmlParserHelperBuilder.XmlParserHelperServiceName));
+			return VariableHelper.ToVariableName(VariableHelper.ToClassName (XmlParserHelperBuilder.XmlParserHelperServiceName));
 		}
 
-		private string TargetNamespace (Activity activity)
+		private string TargetNamespace(Activity activity)
 		{
 			return TargetAppNameSpaceService.domainContractNamespaceName + "." + VariableHelper.ToClassName(activity.Name); 
 		}
