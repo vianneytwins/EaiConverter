@@ -103,6 +103,18 @@
             }
         }
 
+        public string StartingPoint
+        {
+            get
+            {
+                if (this.StarterActivity != null)
+                {
+                    return this.StarterActivity.Name;
+                }
+
+                return this.StartActivity.Name;
+            }
+        }
     }
 }
 
