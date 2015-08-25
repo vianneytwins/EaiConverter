@@ -41,7 +41,7 @@
             expression = expression.Replace("current-dateTime()","DateTime.Now");
 
             // exemple of string-lenght : string-lenght (myvariable)
-            expression = expression.Replace("string-lenght(","TibcoXslHelper.StringLength(");
+            expression = expression.Replace("string-length(","TibcoXslHelper.StringLength(");
 
             //return a string, usage sample : tib:render-xml(myvariable, true()) 
             expression = expression.Replace("tib:render-xml(","TibcoXslHelper.RenderXml((");
