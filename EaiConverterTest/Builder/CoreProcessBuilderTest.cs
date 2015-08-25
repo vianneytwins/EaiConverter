@@ -27,7 +27,8 @@ namespace EaiConverter.Test.Builder
 				FromActivity = "start",
 				ToActivity = "step1",
 				ConditionType = ConditionType.xpath,
-				ConditionPredicateName = "condition1"
+				ConditionPredicateName = "condition1",
+				ConditionPredicate = "isCondition1"
 			},
 			new Transition {
 				FromActivity = "start",
@@ -125,12 +126,12 @@ catch (System.Exception ex)
 
             var classesInString = TestCodeGeneratorUtils.GenerateCode (codeStatementCollection);
 
-            Assert.AreEqual (expected, classesInString);
+            Assert.AreEqual(expected, classesInString);
         }
 
         [Test]
         public void Should_Return_Complex_Start_Method_Body(){
-            var expected = @"if (condition1)
+            var expected = @"if (isCondition1)
 {
     this.step1Service.ExecuteQuery();
     this.step3Service.ExecuteQuery();

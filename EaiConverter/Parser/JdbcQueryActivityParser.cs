@@ -5,6 +5,7 @@ namespace EaiConverter.Parser
     using System.Linq;
     using System.Xml.Linq;
 
+    using EaiConverter.CodeGenerator.Utils;
     using EaiConverter.Model;
     using EaiConverter.Parser.Utils;
 
@@ -43,7 +44,7 @@ namespace EaiConverter.Parser
                 foreach (var parameterElement in parameterElements)
                 {
                     string parameterName = (XElementParserUtils.GetStringValue(parameterElement.Element("colName")).Replace(".",string.Empty));
-                    parameterName = parameterName.Substring(1, parameterName.Length - 1);
+                    parameterName = VariableHelper.ToSafeType(parameterName.Substring(1, parameterName.Length - 1));
                     string parameterType = XElementParserUtils.GetStringValue(parameterElement.Element("typeName"));
                     string colonneType = XElementParserUtils.GetStringValue(parameterElement.Element("colType"));
 
@@ -72,7 +73,7 @@ namespace EaiConverter.Parser
                     foreach (var parameterElement in parameterElements)
                     {
                         jdbcQueryActivity.QueryStatementParameters.Add(
-                            XElementParserUtils.GetStringValue(parameterElement.Element("parameterName")).Replace(".", string.Empty),
+                            VariableHelper.ToSafeType(XElementParserUtils.GetStringValue(parameterElement.Element("parameterName")).Replace(".", string.Empty)),
                             XElementParserUtils.GetStringValue(parameterElement.Element("dataType")));
                     }
                 }

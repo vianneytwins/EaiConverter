@@ -1,15 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Xml.Linq;
-using System.Text;
-using System.CodeDom;
-using EaiConverter.Parser.Utils;
-using System.Linq;
-using System;
-using EaiConverter.CodeGenerator.Utils;
-
-namespace EaiConverter.Builder
+﻿namespace EaiConverter.Builder
 {
+    using System;
+    using System.CodeDom;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
     using System.Text.RegularExpressions;
+    using System.Xml.Linq;
+
+    using EaiConverter.CodeGenerator.Utils;
+    using EaiConverter.Parser.Utils;
 
     public class XslBuilder
     {

@@ -136,7 +136,7 @@ namespace EaiConverter.Test.Parser
 		public void Should_Return_QueryStatementParameter_is_named_IdBbUnique_and_type_VARCHAR(){
             JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity) jdbcQueryActivityParser.Parse (doc);
 
-			Assert.AreEqual ("VARCHAR", jdbcQueryActivity.QueryStatementParameters["IdBbUnique"]);
+			Assert.AreEqual("VARCHAR", jdbcQueryActivity.QueryStatementParameters["IdBbUnique"]);
 		}
 
         [Test]

@@ -76,7 +76,7 @@
                     var nextActivity = transition.ToActivity;
                     if (ConditionType.xpath == transition.ConditionType)
                     {
-                        condition = new CodeVariableReferenceExpression(transition.ConditionPredicateName);
+                        condition = new CodeVariableReferenceExpression(transition.ConditionPredicate);
                         var statementCollection = this.GenerateMainCodeStatement(processTransitions, nextActivity, nextCommonActivity, activityToServiceMapping);
                         trueCodeStatements = new CodeStatement[statementCollection.Count];
                         statementCollection.CopyTo(trueCodeStatements, 0);

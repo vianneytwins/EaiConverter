@@ -9,6 +9,11 @@ namespace EaiConverter.CodeGenerator.Utils
                 return string.Empty;
             }
 
+            variableNameToFormat = ToSafeType(variableNameToFormat);
+
+            variableNameToFormat = variableNameToFormat.Replace("-", "_");
+            variableNameToFormat = variableNameToFormat.Replace("&", "_");
+
             var firstCharOfTheVariable = variableNameToFormat.Substring(0, 1);
             var endOfTheVariable = variableNameToFormat.Substring(1, variableNameToFormat.Length - 1);
             return (firstCharOfTheVariable.ToLowerInvariant() + endOfTheVariable).Replace(" ", string.Empty);
@@ -20,6 +25,31 @@ namespace EaiConverter.CodeGenerator.Utils
             className = className.Replace("-", "_");
             className = className.Replace("&", "_");
             return className;
+        }
+
+        public static string ToSafeType(string variableNameToFormat)
+        {
+            if (string.IsNullOrWhiteSpace(variableNameToFormat))
+            {
+                return string.Empty;
+            }
+
+            if (variableNameToFormat == "interface")
+            {
+                return "@interface";
+            }
+
+            if (variableNameToFormat == "object")
+            {
+                return "@object";
+            }
+
+            if (variableNameToFormat[0] >= '0' && variableNameToFormat[0] <= '9')
+            {
+                return "a" + variableNameToFormat;
+            }
+
+            return variableNameToFormat;
         }
     }
 }
