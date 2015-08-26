@@ -126,7 +126,7 @@
             {
                 foreach (var xsdImport in tibcoBwProcessToGenerate.XsdImports)
                 {
-					imports.Add(new CodeNamespaceImport(TargetAppNameSpaceService.ConvertXsdImportToNameSpace(xsdImport.SchemaLocation)));
+					imports.Add(new CodeNamespaceImport("global::" + TargetAppNameSpaceService.ConvertXsdImportToNameSpace(xsdImport.SchemaLocation)));
                 }
             }
 
@@ -210,7 +210,7 @@
 			methods.Add(this.GenerateStartMethod (tibcoBwProcessToGenerate, activityNameToServiceNameDictionnary));
 
 			if (tibcoBwProcessToGenerate.StarterActivity != null) {
-				this.GenerateOnEventMethod (tibcoBwProcessToGenerate, activityNameToServiceNameDictionnary);
+                methods.Add(this.GenerateOnEventMethod (tibcoBwProcessToGenerate, activityNameToServiceNameDictionnary));
 			}
 
             return methods.ToArray();
@@ -236,10 +236,9 @@
 
             startMethod.ReturnType = this.GenerateStartMethodReturnType(tibcoBwProcessToGenerate);
 
-			startMethod.Parameters.AddRange(this.GenerateStartMethodInputParameters(tibcoBwProcessToGenerate));
-
 			if (tibcoBwProcessToGenerate.StartActivity != null)
 			{
+                startMethod.Parameters.AddRange(this.GenerateStartMethodInputParameters(tibcoBwProcessToGenerate));
 				startMethod.Statements.AddRange(this.GenerateMainMethodBody (tibcoBwProcessToGenerate,startMethod.ReturnType, activityNameToServiceNameDictionnary));
 			}
 			else if (tibcoBwProcessToGenerate.StarterActivity != null)
@@ -306,7 +305,7 @@
 			var statements = new CodeStatementCollection ();
 			if (tibcoBwProcessToGenerate.Transitions != null)
             {
-                statements.AddRange(this.coreProcessBuilder.GenerateMainCodeStatement(tibcoBwProcessToGenerate.Transitions, "Start", null, activityNameToServiceNameDictionnary));
+                statements.AddRange(this.coreProcessBuilder.GenerateMainCodeStatement(tibcoBwProcessToGenerate.Transitions, tibcoBwProcessToGenerate.StartingPoint, null, activityNameToServiceNameDictionnary));
 
 				if (returnType.BaseType != CSharpTypeConstant.SystemVoid)
                 {
@@ -323,7 +322,7 @@
 		private CodeStatementCollection GenerateStarterMethodBody ()
 		{
 			var statements = new CodeStatementCollection ();
-			statements.Add (new CodeSnippetStatement("this.subscriber.Start()"));
+            statements.Add (new CodeSnippetStatement("this.subscriber.Start();"));
 			return statements;
 		}
 
