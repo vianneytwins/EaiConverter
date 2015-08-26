@@ -1,33 +1,33 @@
-﻿using System;
-using System.Xml.Linq;
-using System.Linq;
-using System.Collections.Generic;
-
-using EaiConverter.Model;
-using EaiConverter.Parser.Utils;
-
-namespace EaiConverter.Parser
+﻿namespace EaiConverter.Parser
 {
-	public class TibcoBWProcessLinqParser
-	{
-		
-        XsdParser xsdParser;
-        ActivityParserFactory activityParserFactory;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Xml.Linq;
 
-        public TibcoBWProcessLinqParser(){
-            this.xsdParser = new XsdParser ();
+    using EaiConverter.Model;
+    using EaiConverter.Parser.Utils;
+
+    public class TibcoBWProcessLinqParser
+	{
+        private readonly XsdParser xsdParser;
+        private readonly ActivityParserFactory activityParserFactory;
+
+        public TibcoBWProcessLinqParser()
+        {
+            this.xsdParser = new XsdParser();
             this.activityParserFactory = new ActivityParserFactory();
         }
-        public TibcoBWProcess Parse (string filePath)
+
+        public TibcoBWProcess Parse(string filePath)
 		{
 			XElement allFileElement = XElement.Load(filePath);
-			return this.Parse (allFileElement);
+			return this.Parse(allFileElement);
 		}
-
-
-		public TibcoBWProcess Parse (XElement allFileElement){
-
-			TibcoBWProcess tibcoBwProcess = new TibcoBWProcess (
+        
+		public TibcoBWProcess Parse (XElement allFileElement)
+        {
+			var tibcoBwProcess = new TibcoBWProcess(
                 allFileElement.Element (XmlnsConstant.tibcoProcessNameSpace + "name").Value
 			);
 
