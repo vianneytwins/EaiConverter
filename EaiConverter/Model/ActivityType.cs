@@ -5,8 +5,8 @@
 
     public sealed class ActivityType
     {
-        private readonly String name;
 
+        private readonly String name;
         private static readonly Dictionary<string, ActivityType> instance = new Dictionary<string, ActivityType>();
 
         public static readonly ActivityType jdbcCallActivityType = new ActivityType("com.tibco.plugin.jdbc.JDBCCallActivity");
@@ -32,7 +32,10 @@
         public static readonly ActivityType sleepActivity = new ActivityType("com.tibco.plugin.timer.SleepActivity");
 
         public static readonly ActivityType rdvPubActivityType = new ActivityType("com.plugin.tibrv.RVPubActivity");
-        public static readonly ActivityType rdvEventSourceActivityType = new ActivityType("com.plugin.tibrv.RVEventSource");
+        public static readonly ActivityType RdvEventSourceAType = new ActivityType("com.plugin.tibrv.RVEventSource");
+        public static readonly ActivityType timerEventSource = new ActivityType("com.tibco.plugin.timer.TimerEventSource");
+        
+        public static readonly ActivityType OnStartupEventSource = new ActivityType("com.tibco.pe.core.OnStartupEventSource");
 
         public static readonly ActivityType startType = new ActivityType("startType");
         public static readonly ActivityType endType = new ActivityType("endType");

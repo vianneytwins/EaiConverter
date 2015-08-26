@@ -64,14 +64,15 @@
 				tibcoBwProcessClassModel.Members.AddRange (activityBuilder.GenerateFields (activity).ToArray());
 			}
 
+            //Same for the starter
 			if (tibcoBwProcessToGenerate.StarterActivity != null)
 			{
-				var activityBuilder = activityBuilderFactory.Get (tibcoBwProcessToGenerate.StarterActivity.Type);
-				targetUnit.Namespaces.AddRange (activityBuilder.GenerateClassesToGenerate (tibcoBwProcessToGenerate.StarterActivity));
-				processNamespace.Imports.AddRange (activityBuilder.GenerateImports (tibcoBwProcessToGenerate.StarterActivity).ToArray ());
-				tibcoBwProcessClassModel.Members.AddRange (activityBuilder.GenerateFields (tibcoBwProcessToGenerate.StarterActivity).ToArray ());
+				var activityBuilder = activityBuilderFactory.Get(tibcoBwProcessToGenerate.StarterActivity.Type);
+				targetUnit.Namespaces.AddRange(activityBuilder.GenerateClassesToGenerate(tibcoBwProcessToGenerate.StarterActivity));
+				processNamespace.Imports.AddRange(activityBuilder.GenerateImports(tibcoBwProcessToGenerate.StarterActivity).ToArray());
+				tibcoBwProcessClassModel.Members.AddRange(activityBuilder.GenerateFields(tibcoBwProcessToGenerate.StarterActivity).ToArray());
 			}
-			//Same for the starter
+			
 
             if (tibcoBwProcessToGenerate.EndActivity != null && tibcoBwProcessToGenerate.EndActivity.ObjectXNodes != null)
             {
@@ -194,7 +195,7 @@
 
 			if (tibcoBwProcessToGenerate.StarterActivity != null)
 			{
-				var builder = this.activityBuilderFactory.Get (tibcoBwProcessToGenerate.StarterActivity.Type);
+				var builder = this.activityBuilderFactory.Get(tibcoBwProcessToGenerate.StarterActivity.Type);
 
 				constructor.Parameters.AddRange(builder.GenerateConstructorParameter(tibcoBwProcessToGenerate.StarterActivity));
 				constructor.Statements.AddRange(builder.GenerateConstructorCodeStatement(tibcoBwProcessToGenerate.StarterActivity));

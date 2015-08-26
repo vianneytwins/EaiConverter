@@ -82,7 +82,8 @@ namespace EaiConverter.Parser
 		{
 			
             var xElement = allFileElement.Element (XmlnsConstant.tibcoProcessNameSpace + activityType.ToString());
-			if (xElement == null) {
+			if (xElement == null)
+            {
 				return null;
 			}
             string activityName = string.Empty;
@@ -90,9 +91,11 @@ namespace EaiConverter.Parser
             {
                 activityName = "startName";
             }
-            else if (activityType == ActivityType.endType) {
+            else if (activityType == ActivityType.endType)
+            {
                 activityName = "endName";
             }
+
             var activity = new Activity (allFileElement.Element (XmlnsConstant.tibcoProcessNameSpace + activityName).Value, activityType);
             if (xElement.Attribute("ref") == null)
             {
@@ -162,27 +165,31 @@ namespace EaiConverter.Parser
             return processVariables;
         }
 
-        public List<Transition> ParseTransitions (XElement allFileElement)
+        public List<Transition> ParseTransitions(XElement allFileElement)
 		{
-            IEnumerable<XElement> transitionElements = from element in allFileElement.Elements (XmlnsConstant.tibcoProcessNameSpace + "transition")
+            IEnumerable<XElement> transitionElements = from element in allFileElement.Elements(XmlnsConstant.tibcoProcessNameSpace + "transition")
 			select element;
-			var transitions = new List<Transition> ();
-			foreach (XElement element in transitionElements) {
-                var transition = new Transition {
-                    FromActivity = element.Element (XmlnsConstant.tibcoProcessNameSpace + "from").Value,
-                    ToActivity = element.Element (XmlnsConstant.tibcoProcessNameSpace + "to").Value,
-                    ConditionType = (ConditionType)Enum.Parse (typeof(ConditionType), element.Element (XmlnsConstant.tibcoProcessNameSpace + "conditionType").Value)
+			var transitions = new List<Transition>();
+			foreach (XElement element in transitionElements)
+            {
+                var transition = new Transition
+                {
+                    FromActivity = XElementParserUtils.GetStringValue(element.Element(XmlnsConstant.tibcoProcessNameSpace + "from")),
+                    ToActivity = XElementParserUtils.GetStringValue(element.Element(XmlnsConstant.tibcoProcessNameSpace + "to")),
+                    ConditionType = (ConditionType)Enum.Parse(typeof(ConditionType), XElementParserUtils.GetStringValue(element.Element (XmlnsConstant.tibcoProcessNameSpace + "conditionType"))),
+                    ConditionPredicateName = XElementParserUtils.GetStringValue(element.Element(XmlnsConstant.tibcoProcessNameSpace + "xpathDescription")),
+                    ConditionPredicate = XElementParserUtils.GetStringValue(element.Element(XmlnsConstant.tibcoProcessNameSpace + "xpath")),
                 };
-				transitions.Add (transition);
+				transitions.Add(transition);
 			}
 
-			transitions.Sort ();
+			transitions.Sort();
             return transitions;
 		}
 
-        public List<Activity> ParseActivities (XElement allFileElement)
+        public List<Activity> ParseActivities(XElement allFileElement)
 		{
-			var activities = new List<Activity> ();
+			var activities = new List<Activity>();
             activities.AddRange(this.ParseStandardActivities(allFileElement));
             activities.AddRange(this.ParseGroupActivities(allFileElement));
 

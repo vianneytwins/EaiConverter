@@ -1,15 +1,16 @@
-using EaiConverter.Model;
-
-using System.CodeDom;
-using EaiConverter.CodeGenerator.Utils;
-using System.Collections.Generic;
-using EaiConverter.Builder.Utils;
-
 namespace EaiConverter.Builder
 {
+    using System.CodeDom;
+    using System.Collections.Generic;
+
+    using EaiConverter.Builder.Utils;
+    using EaiConverter.CodeGenerator.Utils;
+    using EaiConverter.Model;
+
     public class DefaultActivityBuilder : IActivityBuilder
     {
-        public DefaultActivityBuilder(XslBuilder xslbuilder) { }
+        public DefaultActivityBuilder(XslBuilder xslbuilder)
+        {}
 
         public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity)
         {
@@ -49,16 +50,17 @@ namespace EaiConverter.Builder
 
 		public System.Collections.Generic.List<CodeMemberField> GenerateFields(Activity activity)
 		{
-			var fields = new List<CodeMemberField>
-			{new CodeMemberField
-				{
-					Type = GetServiceFieldType(activity),
-					Name = GetServiceFieldName(activity),
-					Attributes = MemberAttributes.Private
-				}
-			};
+		    var fields = new List<CodeMemberField>
+		                     {
+		                         new CodeMemberField
+		                             {
+		                                 Type = GetServiceFieldType(activity),
+		                                 Name = GetServiceFieldName(activity),
+		                                 Attributes = MemberAttributes.Private
+		                             }
+		                     };
 
-			return fields;
+		    return fields;
 		}
 
         public CodeStatementCollection GenerateInvocationCode(Activity activity)

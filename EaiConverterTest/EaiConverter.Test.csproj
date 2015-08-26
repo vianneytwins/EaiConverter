@@ -48,6 +48,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builder\SubscriberBuilderTest.cs" />
     <Compile Include="ressources\TestXsd.cs" />
     <Compile Include="Builder\CallProcessActivityBuilderTest.cs" />
     <Compile Include="Builder\CoreProcessBuilderTest.cs" />

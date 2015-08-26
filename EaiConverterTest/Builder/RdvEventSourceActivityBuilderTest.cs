@@ -1,26 +1,27 @@
-﻿using System;
-using NUnit.Framework;
-using EaiConverter.Builder;
-using EaiConverter.Model;
-using System.Xml.Linq;
-using System.Collections.Generic;
-using EaiConverter.Test.Utils;
-using EaiConverter.Processor;
-
-namespace EaiConverter.Test.Builder
+﻿namespace EaiConverter.Test.Builder
 {
-	[TestFixture]
+    using System.Collections.Generic;
+
+    using EaiConverter.Builder;
+    using EaiConverter.Model;
+    using EaiConverter.Processor;
+    using EaiConverter.Test.Utils;
+
+    using NUnit.Framework;
+
+    [TestFixture]
 	public class RdvEventSourceActivityBuilderTest
 	{
 		RdvEventSourceActivityBuilder activityBuilder;
 
 		RdvEventSourceActivity activity;
 
-		[SetUp]
+
+	    [SetUp]
 		public void SetUp ()
 		{
-			this.activityBuilder = new RdvEventSourceActivityBuilder();
-			this.activity = new RdvEventSourceActivity( "My Activity Name", ActivityType.rdvEventSourceActivityType);
+			this.activityBuilder = new RdvEventSourceActivityBuilder(new SubscriberBuilder());
+			this.activity = new RdvEventSourceActivity( "My Activity Name", ActivityType.RdvEventSourceAType);
 
 			this.activity.Parameters = new List<ClassParameter>{
 				new ClassParameter{
@@ -82,41 +83,6 @@ this.subscriber.ResponseReceived += this.OnEvent;
 			var namespaces = this.activityBuilder.GenerateClassesToGenerate(activity);
 			Assert.AreEqual (1, namespaces.Count);
 		}
-
-		[Test]
-		public void Should_generate_SubscriberInterface ()
-		{
-			var expected = @"namespace MyApp.Tools.EventSourcing
-{
-    using System;
-    
-    
-    public interface ISubscriber
-    {
-        
-        int WaitingTimeLimit
-        {
-            get;
-        }
-        
-        bool IsStarted
-        {
-            get;
-        }
-        
-        private event ResponseReceivedEventHandler ResponseReceived;
-        
-        void Start();
-        
-        void Stop();
-    }
-}
-";
-			var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.activityBuilder.GenerateSubscriberInterface());
-			Assert.AreEqual(expected, generatedCode);
-		}
-
-
 	}
 }
 

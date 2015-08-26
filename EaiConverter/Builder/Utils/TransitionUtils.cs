@@ -16,6 +16,7 @@ namespace EaiConverter.Builder.Utils
                     returnedTransistion.Add(transition);
                 }
             }
+
             return returnedTransistion;
         }
 

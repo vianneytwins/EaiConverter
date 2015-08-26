@@ -7,9 +7,9 @@ namespace EaiConverter.Builder
 
     public class SleepActivityBuilder : IActivityBuilder
 	{
-        XslBuilder xslBuilder;
+        private readonly XslBuilder xslBuilder;
 
-        public SleepActivityBuilder (XslBuilder xslBuilder)
+        public SleepActivityBuilder(XslBuilder xslBuilder)
         {
             this.xslBuilder = xslBuilder;
         }
@@ -42,14 +42,15 @@ namespace EaiConverter.Builder
         public CodeStatementCollection GenerateInvocationCode(Activity activity)
         {
             var invocationCodeCollection = new CodeStatementCollection();
+
             // Add the Log
             invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(activity));
+
             // Add the mapping
             invocationCodeCollection.AddRange(this.xslBuilder.Build(activity.InputBindings));
 
             // Add the invocation new Timer (timerValue)
-            var code = new CodeSnippetStatement ("new Timer("+ activity.Parameters[0].Name+");");
-
+            var code = new CodeSnippetStatement("new Timer(" + activity.Parameters[0].Name + ");");
             invocationCodeCollection.Add(code);
 
             return invocationCodeCollection;

@@ -1,5 +1,6 @@
 ﻿namespace EaiConverter.Builder
 {
+    using System;
     using System.CodeDom;
     using System.Collections.Generic;
 
@@ -35,6 +36,33 @@
             }
             else if (startPointOfTryCatch != null)
             {
+                //Manage the case where the start point of the process has a try catch around it (can append with Starter only)
+                if (invocationCode == null)
+                {
+                    var validTransition = TransitionUtils.GetValidTransitionsFrom(activityName, processTransitions);
+                    if (validTransition.Count > 1)
+                    {
+                        invocationCode = new CodeStatementCollection()
+                                             {
+                                                 new CodeSnippetStatement(
+                                                     "// Your are in a try catch with several conditionnal transitions on a starter activity please check your worflow generation")
+                                             };
+                    }
+                    else
+                    {
+                        var newStartPointOfTryCatch = validTransition[0].ToActivity;
+                        var nextCommonActivity =
+                            TransitionUtils.GetNextCommonActivity(
+                                new List<string> { activityName, startPointOfTryCatch },
+                                processTransitions);
+                        invocationCode = this.GenerateMainCodeStatement(
+                            processTransitions,
+                            newStartPointOfTryCatch,
+                            nextCommonActivity,
+                            activityToServiceMapping);
+                    }
+                }
+
                 // Defines a try statement that calls the ThrowApplicationException method.
                 var try1 = new CodeTryCatchFinallyStatement();
                 try1.TryStatements.AddRange(invocationCode);
@@ -106,6 +134,7 @@
             }
 
             return null;
+
         }
     }
 }

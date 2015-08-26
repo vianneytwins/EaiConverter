@@ -20,8 +20,10 @@ namespace EaiConverter.Builder
 		private readonly XmlParserHelperBuilder xmlParserHelperBuilder;
 		private readonly XsdBuilder xsdBuilder;
 		private readonly XsdParser xsdParser;
-        
-		public ActivityBuilderFactory()
+
+        private readonly SubscriberBuilder subscriberBuilder;
+
+        public ActivityBuilderFactory()
 		{
 			this.xpathBuilder = new XpathBuilder ();
 			this.xslBuilder = new XslBuilder(this.xpathBuilder);
@@ -32,6 +34,7 @@ namespace EaiConverter.Builder
 			this.xmlParserHelperBuilder = new XmlParserHelperBuilder ();
 			this.xsdBuilder =  new XsdBuilder();
 			this.xsdParser = new XsdParser();
+            this.subscriberBuilder = new SubscriberBuilder();
 		}
 
 		public IActivityBuilder Get(ActivityType activityType)
@@ -81,13 +84,17 @@ namespace EaiConverter.Builder
             {
                 return new GroupActivityBuilder(this.xslBuilder);
             }
-			else if (activityType == ActivityType.rdvEventSourceActivityType)
+			else if (activityType == ActivityType.RdvEventSourceAType)
 			{
-				return new RdvEventSourceActivityBuilder();
+                return new RdvEventSourceActivityBuilder(this.subscriberBuilder);
 			}
 			else if (activityType == ActivityType.rdvPubActivityType)
 			{
 				return new RdvPublishActivityBuilder(this.xslBuilder);
+			}
+            else if (activityType == ActivityType.timerEventSource)
+			{
+                return new TimerActivityBuilder(this.subscriberBuilder);
 			}
 
             return new DefaultActivityBuilder(this.xslBuilder);

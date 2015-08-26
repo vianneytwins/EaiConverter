@@ -1,27 +1,30 @@
-using System;
-using System.Collections.Generic;
-using System.CodeDom;
-using EaiConverter.Builder.Utils;
-using EaiConverter.Processor;
-using System.Reflection;
-using EaiConverter.Utils;
-using EaiConverter.Model;
-
 namespace EaiConverter.Builder
 {
-	public class RdvEventSourceActivityBuilder : IActivityBuilder
+    using System;
+    using System.CodeDom;
+    using System.Collections.Generic;
+
+    using EaiConverter.Builder.Utils;
+    using EaiConverter.Model;
+    using EaiConverter.Processor;
+    using EaiConverter.Utils;
+
+    public class RdvEventSourceActivityBuilder : IActivityBuilder
 	{
-		public const string interfaceSubscriberName = "ISubscriber";
+        private readonly SubscriberBuilder subscriberBuilder;
 
-		private const string subscriber = "subscriber";
+        public RdvEventSourceActivityBuilder(SubscriberBuilder subscriberBuilder)
+        {
+            this.subscriberBuilder = subscriberBuilder;
+        }
 
-		public CodeNamespaceCollection GenerateClassesToGenerate (EaiConverter.Model.Activity activity)
+
+        public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity)
 		{
-			var namespaces = new CodeNamespaceCollection ();
+			var namespaces = new CodeNamespaceCollection();
 			if (ConfigurationApp.GetProperty("IsSubscriberInterfaceAlreadyGenerated") != "true")
 			{
-				namespaces.Add(this.GenerateSubscriberInterface());
-				namespaces.Add(this.GenerateResponseReceivedEventHandler());
+				namespaces.AddRange(this.subscriberBuilder.GenerateClasses());
 				ConfigurationApp.SaveProperty("IsSubscriberInterfaceAlreadyGenerated", "true");
 			}
 
@@ -34,53 +37,16 @@ namespace EaiConverter.Builder
 			return namespaces;
 		}
 
-		public CodeNamespace GenerateSubscriberInterface ()
+		CodeNamespace GenerateTibcoSubscriberImplementation()
 		{
-			var subscriberInterfaceNamespace = new CodeNamespace ();
-			subscriberInterfaceNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace;
-			subscriberInterfaceNamespace.Imports.Add (new CodeNamespaceImport("System"));
-
-			var subscriberInterfaceClass = new CodeTypeDeclaration(interfaceSubscriberName);
-			subscriberInterfaceClass.IsInterface = true;
-
-			CodeMemberEvent event1 = new CodeMemberEvent();
-			// Sets a name for the event.
-			event1.Name = "ResponseReceived";
-			// Sets the type of event.
-			event1.Type = new CodeTypeReference("ResponseReceivedEventHandler");
-
-			subscriberInterfaceClass.Members.Add (event1);
-			subscriberInterfaceClass.Members.Add (CodeDomUtils.GeneratePropertyWithoutSetter ("WaitingTimeLimit",CSharpTypeConstant.SystemInt32));
-			subscriberInterfaceClass.Members.Add (CodeDomUtils.GeneratePropertyWithoutSetter ("IsStarted",CSharpTypeConstant.SystemBoolean));
-
-			subscriberInterfaceClass.Members.Add(new CodeMemberMethod {
-				Name = "Start",
-				ReturnType = new CodeTypeReference(CSharpTypeConstant.SystemVoid)
-			});
-			subscriberInterfaceClass.Members.Add(new CodeMemberMethod {
-				Name = "Stop",
-				ReturnType = new CodeTypeReference(CSharpTypeConstant.SystemVoid)
-			});
-
-			subscriberInterfaceNamespace.Types.Add (subscriberInterfaceClass);
-			return subscriberInterfaceNamespace;
-		}
-
-		CodeNamespace GenerateResponseReceivedEventHandler ()
-		{
-			return new CodeNamespace ();
-		}
-
-		CodeNamespace GenerateTibcoSubscriberImplementation ()
-		{
-			var subscriberRdvClassNamespace = new CodeNamespace ();
+			var subscriberRdvClassNamespace = new CodeNamespace();
 			subscriberRdvClassNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace;
 			subscriberRdvClassNamespace.Imports.Add (new CodeNamespaceImport("System"));
 
 			var subscriberRdvClass = new CodeTypeDeclaration("TibcoPublisher");
 			subscriberRdvClass.IsClass = true;
 			subscriberRdvClass.Attributes = MemberAttributes.Public;
-			subscriberRdvClass.BaseTypes.Add(subscriber);
+			subscriberRdvClass.BaseTypes.Add(SubscriberBuilder.Subscriber);
 
 			CodeMemberEvent event1 = new CodeMemberEvent();
 			// Sets a name for the event.
@@ -163,12 +129,12 @@ namespace EaiConverter.Builder
 
 		CodeTypeReference GetServiceFieldType()
 		{
-			return new CodeTypeReference(interfaceSubscriberName);
+			return new CodeTypeReference(Builder.SubscriberBuilder.InterfaceSubscriberName);
 		}
 
 		string GetServiceFieldName ()
 		{
-			return subscriber;
+			return Builder.SubscriberBuilder.Subscriber;
 		}
 	}
 
