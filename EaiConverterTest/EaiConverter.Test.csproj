@@ -95,6 +95,8 @@
     <Compile Include="Builder\ResultSetBuilderTest.cs" />
     <Compile Include="Builder\RdvEventSourceActivityBuilderTest.cs" />
     <Compile Include="Builder\RdvPublishActivityBuilderTest.cs" />
+    <Compile Include="Parser\TimerEventActivityParserTest.cs" />
+    <Compile Include="Parser\AdapterSubscriberActivityParserTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />

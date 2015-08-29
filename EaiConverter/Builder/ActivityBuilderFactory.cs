@@ -92,7 +92,7 @@ namespace EaiConverter.Builder
 			{
 				return new RdvPublishActivityBuilder(this.xslBuilder);
 			}
-            else if (activityType == ActivityType.timerEventSource)
+            else if (activityType == ActivityType.TimerEventSource)
 			{
                 return new TimerActivityBuilder(this.subscriberBuilder);
 			}

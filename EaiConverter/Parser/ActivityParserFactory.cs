@@ -68,9 +68,13 @@
             {
                 return new SleepActivityParser();
             }
-            else if (activityType == ActivityType.timerEventSource.ToString())
+            else if (activityType == ActivityType.TimerEventSource.ToString())
             {
-                return new TimerActivityParser();
+                return new TimerEventActivityParser();
+            }
+            else if (activityType == ActivityType.AeSubscriberActivity.ToString())
+            {
+                return new AdapterSubscriberActivityParser();
             }
             else
             {

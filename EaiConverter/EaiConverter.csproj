@@ -40,8 +40,6 @@
   <ItemGroup>
     <Compile Include="Builder\SubscriberBuilder.cs" />
     <Compile Include="Builder\TimerActivityBuilder.cs" />
-    <Compile Include="Model\TimerActivity.cs" />
-    <Compile Include="Parser\TimerActivityParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\Transition.cs" />
@@ -140,6 +138,10 @@
     <Compile Include="Builder\RdvEventSourceActivityBuilder.cs" />
     <Compile Include="Builder\RdvPublishActivityBuilder.cs" />
     <Compile Include="ressources\TibcoXslHelper.cs" />
+    <Compile Include="Model\TimerEventActivity.cs" />
+    <Compile Include="Parser\TimerEventActivityParser.cs" />
+    <Compile Include="Model\AdapterSubscriberActivity.cs" />
+    <Compile Include="Parser\AdapterSubscriberActivityParser.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
