@@ -15,7 +15,7 @@ namespace EaiConverterTest.Parser
 
 		AdapterSubscriberActivity activity;
 
-		[Test]
+		[SetUp]
 		public void SetUp()
 		{
 			this.activityParser = new AdapterSubscriberActivityParser();
@@ -31,32 +31,9 @@ namespace EaiConverterTest.Parser
 </pd:activity>";
 			doc = XElement.Parse(xml);
 
-			this.activity = (TimerEventActivity) this.activityParser.Parse(doc);
+			this.activity = (AdapterSubscriberActivity) this.activityParser.Parse(doc);
 		}
 
-		[Test]
-		public void Should_return_IntervalUnit()
-		{
-			Assert.AreEqual(TimerUnit.Minute, this.activity.IntervalUnit);
-		}
-
-		[Test]
-		public void Should_return_RunOnce()
-		{
-			Assert.AreEqual(false, this.activity.RunOnce);
-		}
-
-		[Test]
-		public void Should_return_TimeInterval()
-		{
-			Assert.AreEqual(10, this.activity.TimeInterval);
-		}
-
-		[Test]
-		public void Should_return_StartTime()
-		{
-			Assert.AreEqual(new DateTime(1970, 1, 2), this.activity.StartTime);
-		}
 	}
 }
 

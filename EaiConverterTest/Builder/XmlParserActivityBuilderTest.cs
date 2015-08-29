@@ -46,7 +46,7 @@
             var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.plugin.xml.XMLParseActivity"");
 string xmlString = ""TestString"";
 
-EquityRecord myActivityName = this.xmlParserHelperService.FromXml<EquityRecord>(xmlString);
+EquityRecord myActivityName = this.xmlParserHelperService.FromXml <EquityRecord>(xmlString);
 ";
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateInvocationCode(this.activity));
             Assert.AreEqual(expected, generatedCode);
@@ -63,7 +63,7 @@ EquityRecord myActivityName = this.xmlParserHelperService.FromXml<EquityRecord>(
 			var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.plugin.xml.XMLParseActivity"");
 string xmlString = ""TestString"";
 
-MyApp.Mydomain.Service.Contract.MyActivityName.EquityRecord myActivityName = this.xmlParserHelperService.FromXml<MyApp.Mydomain.Service.Contract.MyActivityName.EquityRecord>(xmlString);
+MyApp.Mydomain.Service.Contract.MyActivityName.EquityRecord myActivityName = this.xmlParserHelperService.FromXml <MyApp.Mydomain.Service.Contract.MyActivityName.EquityRecord>(xmlString);
 ";
 			var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateInvocationCode(this.activity));
 			Assert.AreEqual(expected,generatedCode);

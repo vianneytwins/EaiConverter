@@ -15,7 +15,7 @@ namespace EaiConverterTest.Parser
 
 		TimerEventActivity activity;
 
-		[Test]
+		[SetUp]
 		public void SetUp()
 		{
 			this.timerActivityParser = new TimerEventActivityParser();
