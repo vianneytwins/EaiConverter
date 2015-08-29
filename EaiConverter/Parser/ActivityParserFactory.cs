@@ -43,7 +43,7 @@
             {
                 return new GenerateErrorActivityParser();
             }
-            else if (activityType == ActivityType.nullActivityType.ToString())
+            else if (activityType == ActivityType.nullActivityType.ToString() || activityType == ActivityType.OnStartupEventSource.ToString())
             {
                 return new NullActivityParser();
             }
