@@ -5,7 +5,7 @@ namespace EaiConverter.Builder
     using EaiConverter.Builder.Utils;
     using EaiConverter.Utils;
 
-    public class SubscriberBuilder
+    public class SubscriberInterfaceBuilder
     {
         public const string InterfaceSubscriberName = "ISubscriber";
 

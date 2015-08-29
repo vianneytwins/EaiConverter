@@ -38,7 +38,6 @@
     <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Builder\SubscriberBuilder.cs" />
     <Compile Include="Builder\TimerActivityBuilder.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -142,6 +141,8 @@
     <Compile Include="Parser\TimerEventActivityParser.cs" />
     <Compile Include="Model\AdapterSubscriberActivity.cs" />
     <Compile Include="Parser\AdapterSubscriberActivityParser.cs" />
+    <Compile Include="Builder\DefaultSubscriberBuilder.cs" />
+    <Compile Include="Builder\SubscriberInterfaceBuilder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

@@ -20,7 +20,7 @@
 	    [SetUp]
 		public void SetUp ()
 		{
-			this.activityBuilder = new RdvEventSourceActivityBuilder(new SubscriberBuilder());
+			this.activityBuilder = new RdvEventSourceActivityBuilder(new SubscriberInterfaceBuilder());
 			this.activity = new RdvEventSourceActivity( "My Activity Name", ActivityType.RdvEventSourceAType);
 
 			this.activity.Parameters = new List<ClassParameter>{

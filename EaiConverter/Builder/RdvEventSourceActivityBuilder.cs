@@ -11,9 +11,9 @@ namespace EaiConverter.Builder
 
     public class RdvEventSourceActivityBuilder : IActivityBuilder
 	{
-        private readonly SubscriberBuilder subscriberBuilder;
+        private readonly SubscriberInterfaceBuilder subscriberBuilder;
 
-        public RdvEventSourceActivityBuilder(SubscriberBuilder subscriberBuilder)
+        public RdvEventSourceActivityBuilder(SubscriberInterfaceBuilder subscriberBuilder)
         {
             this.subscriberBuilder = subscriberBuilder;
         }
@@ -46,7 +46,7 @@ namespace EaiConverter.Builder
 			var subscriberRdvClass = new CodeTypeDeclaration("TibcoPublisher");
 			subscriberRdvClass.IsClass = true;
 			subscriberRdvClass.Attributes = MemberAttributes.Public;
-			subscriberRdvClass.BaseTypes.Add(SubscriberBuilder.Subscriber);
+			subscriberRdvClass.BaseTypes.Add(SubscriberInterfaceBuilder.Subscriber);
 
 			CodeMemberEvent event1 = new CodeMemberEvent();
 			// Sets a name for the event.
@@ -129,12 +129,12 @@ namespace EaiConverter.Builder
 
 		CodeTypeReference GetServiceFieldType()
 		{
-			return new CodeTypeReference(Builder.SubscriberBuilder.InterfaceSubscriberName);
+			return new CodeTypeReference(Builder.SubscriberInterfaceBuilder.InterfaceSubscriberName);
 		}
 
 		string GetServiceFieldName ()
 		{
-			return Builder.SubscriberBuilder.Subscriber;
+			return Builder.SubscriberInterfaceBuilder.Subscriber;
 		}
 	}
 

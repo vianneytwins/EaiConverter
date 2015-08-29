@@ -7,12 +7,12 @@
 
     public class SubscriberBuilderTest
     {
-        private SubscriberBuilder subscriberBuilder;
+        private SubscriberInterfaceBuilder subscriberBuilder;
 
         [SetUp]
         public void SetUp()
         {
-            this.subscriberBuilder = new SubscriberBuilder();
+            this.subscriberBuilder = new SubscriberInterfaceBuilder();
         }
 
         [Test]

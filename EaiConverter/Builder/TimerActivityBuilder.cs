@@ -10,9 +10,9 @@ namespace EaiConverter.Builder
 
     public class TimerActivityBuilder : IActivityBuilder
     {
-        private readonly SubscriberBuilder subscriberBuilder;
+        private readonly SubscriberInterfaceBuilder subscriberBuilder;
 
-        public TimerActivityBuilder(SubscriberBuilder subscriberBuilder)
+        public TimerActivityBuilder(SubscriberInterfaceBuilder subscriberBuilder)
         {
             this.subscriberBuilder = subscriberBuilder;
         }
@@ -91,7 +91,7 @@ namespace EaiConverter.Builder
 
 		private CodeTypeReference GetServiceFieldType()
 		{
-			return new CodeTypeReference(SubscriberBuilder.InterfaceSubscriberName);
+			return new CodeTypeReference(SubscriberInterfaceBuilder.InterfaceSubscriberName);
 		}
 
 
@@ -110,7 +110,7 @@ namespace EaiConverter.Builder
             var subscriberRdvClass = new CodeTypeDeclaration("TimerSubscriber");
             subscriberRdvClass.IsClass = true;
             subscriberRdvClass.Attributes = MemberAttributes.Public;
-            subscriberRdvClass.BaseTypes.Add(SubscriberBuilder.Subscriber);
+            subscriberRdvClass.BaseTypes.Add(SubscriberInterfaceBuilder.Subscriber);
 
             var event1 = new CodeMemberEvent();
 
