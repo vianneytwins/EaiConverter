@@ -8,13 +8,13 @@ namespace EaiConverter.Builder
         public string Build(string expression){
             // TODO : Get what between $ and next / to Convert to variable name ? at least remove the . in the process name
 
-            // @"\(([^)]*)\)"
-            // \(             # Escaped parenthesis, means "starts with a '(' character"
+            // @"\$([^/]*)\/"
+            // \$             # Escaped parenthesis, means "starts with a '$' character"
             //    (           # Parentheses in a regex mean "put (capture) the stuff in between into the Groups array"     
-            //        [^)]    # Any character that is not a ')' character
-            //        *       # Zero or more occurrences of the aforementioned "non ')' char"
+            //        [^/]    # Any character that is not a '/' character
+            //        *       # Zero or more occurrences of the aforementioned "non '/' char"
             //    )           # Close the capturing group
-            //    \)          # "Ends with a ')' character"
+            //    \/          # "Ends with a '/' character"
 
 
             Regex regex = new Regex(@"\$([^/]*)\/");
