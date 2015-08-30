@@ -1,9 +1,30 @@
-﻿namespace EaiConverter.Builder
+﻿using System.Text.RegularExpressions;
+using EaiConverter.CodeGenerator.Utils;
+
+namespace EaiConverter.Builder
 {
     public class XpathBuilder : IXpathBuilder
     {
         public string Build(string expression){
             // TODO : Get what between $ and next / to Convert to variable name ? at least remove the . in the process name
+
+            // @"\(([^)]*)\)"
+            // \(             # Escaped parenthesis, means "starts with a '(' character"
+            //    (           # Parentheses in a regex mean "put (capture) the stuff in between into the Groups array"     
+            //        [^)]    # Any character that is not a ')' character
+            //        *       # Zero or more occurrences of the aforementioned "non ')' char"
+            //    )           # Close the capturing group
+            //    \)          # "Ends with a ')' character"
+
+
+            Regex regex = new Regex(@"\$([^/]*)\/");
+            var variables = regex.Match(expression);
+            if (variables.Success)
+            {
+                string variableNameToModify = variables.Groups[1].ToString();
+                expression = expression.Replace (variableNameToModify, VariableHelper.ToVariableName( variableNameToModify.Replace('-','_')));
+            }
+
             expression = expression.Replace("$",string.Empty);
 
             expression = expression.Replace('\'', '"');

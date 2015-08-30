@@ -23,6 +23,11 @@ namespace EaiConverter.Test.Builder
         public void Should_Replace_ASCI_quote_with_double_Quote(){
             Assert.AreEqual("\"test\"", this.xpathBuilder.Build("&quot;test&quot;"));
         }
+
+		[Test]
+		public void Should_Replace_Dash_InVariable_name(){
+			Assert.AreEqual("my_test.", this.xpathBuilder.Build("$My-test/"));
+		}
     }
 }
 
