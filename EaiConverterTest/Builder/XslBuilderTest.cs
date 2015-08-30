@@ -316,6 +316,66 @@ sqlParams.param.Add(""testvalue2"");
 
 ", generateCode.ToString());
         }
+
+		[Test]
+		public void Should_manage_add_package_name_When_type_is_complex_and_when_its_inputed()
+		{
+			var packageName = "MyPackage.";
+			var xml =
+				@"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" >
+    <sqlParams>        
+        <param>
+            <xsl:value-of select=""'testvalue1'""/>
+        </param>
+    </sqlParams>  
+</pd:inputBindings>
+";
+			XElement doc = XElement.Parse(xml);
+
+			var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build(packageName, doc.Nodes()));
+
+			Assert.AreEqual ("MyPackage.sqlParams sqlParams = new MyPackage.sqlParams();\nsqlParams.param = \"testvalue1\";\n\n", generateCode.ToString());
+		}
+
+		[Test]
+		public void Should_manage_add_the_dot_At_the_end_Of_package_name_When_its_missing()
+		{
+			var packageName = "MyPackage";
+			var xml =
+				@"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" >
+    <sqlParams>        
+        <param>
+            <xsl:value-of select=""'testvalue1'""/>
+        </param>
+    </sqlParams>  
+</pd:inputBindings>
+";
+			XElement doc = XElement.Parse(xml);
+
+			var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build(packageName, doc.Nodes()));
+
+			Assert.AreEqual ("MyPackage.sqlParams sqlParams = new MyPackage.sqlParams();\nsqlParams.param = \"testvalue1\";\n\n", generateCode.ToString());
+		}
+
+		[Test]
+		public void Should_manage_NOT_add_package_name_When_type_is_basic_and_when_its_inputed()
+		{
+			var packageName = "string.";
+			var xml =
+				@"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" >
+        
+        <param>
+            <xsl:value-of select=""'testvalue1'""/>
+        </param>
+
+</pd:inputBindings>
+";
+			XElement doc = XElement.Parse(xml);
+
+			var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build(packageName, doc.Nodes()));
+
+			Assert.AreEqual ("string param = \"testvalue1\";\n\n", generateCode.ToString());
+		}
 	}
 }
 

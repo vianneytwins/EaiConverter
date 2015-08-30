@@ -25,8 +25,14 @@
 
         public CodeStatementCollection Build(IEnumerable<XNode> inputNodes)
         {
+            return this.Build(string.Empty, inputNodes);
+        }
+
+        public CodeStatementCollection Build(string packageName, IEnumerable<XNode> inputNodes)
+        {
             tab = new Tab();
-            var codeInStringList = this.Build(inputNodes, null);
+            var newPackageName = this.FormatCorrectlyPackageName(packageName);
+            var codeInStringList = this.Build(newPackageName, inputNodes, null);
             var codeSnippet = new CodeSnippetStatement(codeInStringList.ToString());
             var codeStatements = new CodeStatementCollection();
             codeStatements.Add(codeSnippet);
@@ -34,6 +40,11 @@
         }
 
         private StringBuilder Build(IEnumerable<XNode> inputNodes, string parent)
+        {
+            return Build(string.Empty, inputNodes, parent);
+        }
+
+        private StringBuilder Build(string packageName, IEnumerable<XNode> inputNodes, string parent)
         {
             var codeStatements = new StringBuilder();
             if (inputNodes == null)
@@ -100,10 +111,10 @@
                         // intialise the variable first
                         if (string.IsNullOrEmpty(parent))
                         {
-                            codeStatements.Append(this.tab + returnType + " ");
+                            codeStatements.Append(this.tab + packageName + returnType + " ");
                         }
 
-                        codeStatements.Append(variableReference + " = new " + returnType + "();\n");
+                        codeStatements.Append(variableReference + " = new " + packageName + returnType + "();\n");
 
 
                         if (string.IsNullOrEmpty(parent))
@@ -290,6 +301,16 @@
                     this.RetrieveAllTypeInTheElement(item.Nodes(), elementTypes);
                 }
             }
+        }
+
+        private string FormatCorrectlyPackageName(string packageName)
+        {
+            if (packageName.EndsWith(".") || string.IsNullOrEmpty(packageName))
+            {
+                return packageName;
+            }
+
+            return packageName + ".";
         }
     }
 }

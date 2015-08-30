@@ -79,7 +79,7 @@ namespace EaiConverter.Builder
             // Add the Log
             invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(callProcessActivity));
             // Add the mapping
-            invocationCodeCollection.AddRange(this.xslBuilder.Build(callProcessActivity.InputBindings));
+            invocationCodeCollection.AddRange(this.xslBuilder.Build(callProcessActivity.TibcoProcessToCall.InputAndOutputNameSpace, callProcessActivity.InputBindings));
 
             // Add the invocation
             var processToCallReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToVariableName(callProcessActivity.TibcoProcessToCall.ProcessName));
