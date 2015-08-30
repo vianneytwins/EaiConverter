@@ -39,7 +39,7 @@ namespace EaiConverter.Test.Builder
         [Test]
         public void Should_Generate_invocation_method_For_simpleGroup()
         {
-            var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.pe.core.LoopGroup"");
+			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.pe.core.LoopGroup"");
 this.logger.Info(""Start Activity: myNullActivity of type: com.tibco.plugin.timer.NullActivity"");
 ";
             this.activity.GroupType = GroupType.SIMPLEGROUP;
@@ -51,7 +51,7 @@ this.logger.Info(""Start Activity: myNullActivity of type: com.tibco.plugin.time
         [Test]
         public void Should_Generate_invocation_method_For_inputLoop()
         {
-            var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.pe.core.LoopGroup"");
+			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.pe.core.LoopGroup"");
 for (int index = 0; (index < $Paramsets.elements.Lenght); index = (index + 1))
 {
     var current = $Paramsets.elements[index];
@@ -70,7 +70,7 @@ for (int index = 0; (index < $Paramsets.elements.Lenght); index = (index + 1))
         [Test]
         public void Should_Generate_invocation_method_For_repeatLoop()
         {
-            var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.pe.core.LoopGroup"");
+			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.pe.core.LoopGroup"");
 for (
 ; true; 
 )
@@ -88,8 +88,8 @@ for (
         [Test]
         public void Should_Generate_invocation_method_For_criticalSection()
         {
-            var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.pe.core.CriticalSectionGroup"");
-lock (myActivityNameLock){
+			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.pe.core.CriticalSectionGroup"");
+lock (my_Activity_NameLock){
 this.logger.Info(""Start Activity: myNullActivity of type: com.tibco.plugin.timer.NullActivity"");
 }
 ";

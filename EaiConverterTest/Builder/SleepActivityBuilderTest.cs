@@ -18,7 +18,7 @@ namespace EaiConverter.Test.Builder
         public void SetUp()
         {
             this.activityBuilder = new SleepActivityBuilder(new XslBuilder(new XpathBuilder()));
-            this.activity = new SleepActivity( "My Activity Name", ActivityType.sleepActivity);
+            this.activity = new SleepActivity( "MyActivityName", ActivityType.sleepActivity);
             var xml =
                 @"<ns1:SleepInputSchema xmlns:xsl=""http://w3.org/1999/XSL/Transform"" xmlns:ns1=""www.tibco.com/plugin/Sleep"">
         <IntervalInMillisec>
@@ -39,7 +39,7 @@ namespace EaiConverter.Test.Builder
         [Test]
         public void Should_Generate_invocation_method()
         {
-            var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.plugin.timer.SleepActivity"");
+            var expected = @"this.logger.Info(""Start Activity: MyActivityName of type: com.tibco.plugin.timer.SleepActivity"");
 int IntervalInMillisec = 3000;
 
 new Timer(IntervalInMillisec);

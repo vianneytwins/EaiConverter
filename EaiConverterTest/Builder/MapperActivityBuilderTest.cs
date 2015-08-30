@@ -43,11 +43,11 @@
         [Test]
         public void Should_Generate_invocation_method_When_XsdReference_is_present()
         {
-            var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.plugin.mapper.MapperActivity"");
+            var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.mapper.MapperActivity"");
 EquityRecord EquityRecord = new EquityRecord();
 EquityRecord.xmlString = ""TestString"";
 
-EquityRecord myActivityName = EquityRecord;
+EquityRecord my_Activity_Name = EquityRecord;
 ";
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.mapperActivityBuilder.GenerateInvocationCode(this.activity));
             Assert.AreEqual(expected, generatedCode);
@@ -56,11 +56,11 @@ EquityRecord myActivityName = EquityRecord;
         [Test]
         public void Should_Generate_invocation_method_When_XsdReference_is_present_with_no_prefix()
         {
-            var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.plugin.mapper.MapperActivity"");
+            var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.mapper.MapperActivity"");
 EquityRecord EquityRecord = new EquityRecord();
 EquityRecord.xmlString = ""TestString"";
 
-EquityRecord myActivityName = EquityRecord;
+EquityRecord my_Activity_Name = EquityRecord;
 ";
 
             this.activity.XsdReference = "EquityRecord"; 
@@ -77,11 +77,11 @@ EquityRecord myActivityName = EquityRecord;
 		    XElement doc = XElement.Parse(xsdElement);
             this.activity.ObjectXNodes = doc.Nodes();
 
-			var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.plugin.mapper.MapperActivity"");
+			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.mapper.MapperActivity"");
 EquityRecord EquityRecord = new EquityRecord();
 EquityRecord.xmlString = ""TestString"";
 
-MyApp.Mydomain.Service.Contract.MyActivityName.EquityRecord myActivityName = EquityRecord;
+MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord my_Activity_Name = EquityRecord;
 ";
 			var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.mapperActivityBuilder.GenerateInvocationCode(this.activity));
 			Assert.AreEqual(expected, generatedCode);

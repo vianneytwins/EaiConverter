@@ -41,7 +41,7 @@ namespace EaiConverter.Test.Builder
         {
             var expected = @"string xmlString = ""TestString"";
 
-var myCallProcessActivity = this.processToCall.Start(xmlString);
+var my_Call_Process_Activity = this.processToCall.Start(xmlString);
 ";
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.CallProcessActivityBuilder.GenerateInvocationCode(this.activity));
             Assert.IsTrue(generatedCode.EndsWith(expected));

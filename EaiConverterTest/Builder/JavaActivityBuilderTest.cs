@@ -72,14 +72,14 @@ public void invoke () throws Exception{
         [Test]
         public void Should_Generate_invocation_method()
         {
-            var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.plugin.java.JavaActivity"");
+			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.java.JavaActivity"");
 string platform = ""testvalue"";
 
 My.Package.Name.MyJavaFileName myJavaFileName = new My.Package.Name.MyJavaFileName();
 myJavaFileName.setplatform(platform);
 myJavaFileName.Invoke();
-My.Package.Name.MyActivityName myActivityName = new My.Package.Name.MyActivityName();
-myActivityName.lastDate = myJavaFileName.getlastDate();
+My.Package.Name.My_Activity_Name my_Activity_Name = new My.Package.Name.My_Activity_Name();
+my_Activity_Name.lastDate = myJavaFileName.getlastDate();
 ";
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateInvocationCode(this.activity));
             Assert.AreEqual(expected,generatedCode);

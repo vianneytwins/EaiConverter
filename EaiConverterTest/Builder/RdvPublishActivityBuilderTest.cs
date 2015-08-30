@@ -53,7 +53,7 @@ namespace EaiConverter.Test.Builder
 		{
 			var paramaters = this.activityBuilder.GenerateConstructorParameter (activity);
 			Assert.AreEqual (1, paramaters.Count);
-			Assert.AreEqual ("myActivityNameRdvPublisher", paramaters[0].Name);
+			Assert.AreEqual ("my_Activity_NameRdvPublisher", paramaters[0].Name);
 			Assert.AreEqual ("IPublisher", paramaters[0].Type.BaseType);
 		}
 
@@ -62,7 +62,7 @@ namespace EaiConverter.Test.Builder
 		{
 			var fields = this.activityBuilder.GenerateFields(activity);
 			Assert.AreEqual (1, fields.Count);
-			Assert.AreEqual ("myActivityNameRdvPublisher", fields[0].Name);
+			Assert.AreEqual ("my_Activity_NameRdvPublisher", fields[0].Name);
 			Assert.AreEqual ("IPublisher", fields[0].Type.BaseType);
 		}
 
@@ -70,7 +70,7 @@ namespace EaiConverter.Test.Builder
 		[Test]
 		public void Should_return_construstor_statements ()
 		{
-			var expected = @"this.myActivityNameRdvPublisher = myActivityNameRdvPublisher;
+			var expected = @"this.my_Activity_NameRdvPublisher = my_Activity_NameRdvPublisher;
 ";
 			var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.activityBuilder.GenerateConstructorCodeStatement(activity));
 			Assert.AreEqual(expected,generatedCode);
@@ -118,11 +118,11 @@ namespace EaiConverter.Test.Builder
 		[Test]
 		public void Should_return_invocation_Code()
 		{
-			var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.plugin.tibrv.RVPubActivity"");
+			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.plugin.tibrv.RVPubActivity"");
 ActivityInput ActivityInput = new ActivityInput();
 ActivityInput.body = ""TestString"";
 
-this.myActivityNameRdvPublisher.Send(ActivityInput);
+this.my_Activity_NameRdvPublisher.Send(ActivityInput);
 ";
 			var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.activityBuilder.GenerateInvocationCode(this.activity));
 			Assert.AreEqual(expected, generatedCode);

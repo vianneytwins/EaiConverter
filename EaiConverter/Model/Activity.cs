@@ -5,6 +5,8 @@
 
     public class Activity
 	{
+        private string name;
+
     	public Activity (string name, ActivityType type) {
 			this.Name = name;
 			this.Type = type;
@@ -14,7 +16,17 @@
 		{
 		} 
 
-		public string Name {get; set;}
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                name = value.Replace(' ','_');
+            }
+        }
 
         public ActivityType Type {get; set;}
 

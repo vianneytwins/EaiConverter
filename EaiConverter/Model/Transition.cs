@@ -4,10 +4,38 @@ namespace EaiConverter.Model
 {
 	public class Transition : IComparable
 	{
-        public string FromActivity { get; set;}
-		public string ToActivity { get; set;}
+        private string fromActivity;
+
+        private string toActivity;
+
+        public string FromActivity
+        {
+            get
+            {
+                return fromActivity;
+            }
+            set
+            {
+                fromActivity = value.Replace(' ','_');
+            }
+        }
+
+		public string ToActivity
+        {
+            get
+            {
+                return toActivity;
+            }
+            set
+            {
+                toActivity = value.Replace(' ','_');
+            }
+        }
+
 		public ConditionType ConditionType { get; set;}
+
 		public string ConditionPredicateName { get; set; }
+
 		public string ConditionPredicate { get; set; }
 
 		public override string ToString ()
