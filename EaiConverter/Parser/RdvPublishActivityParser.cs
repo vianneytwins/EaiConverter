@@ -24,6 +24,10 @@ namespace EaiConverter.Parser
             {
                 activity.XsdString = configElement.Element("XsdString").Attribute("ref").ToString();
             }
+            else
+            {
+                activity.ObjectXNodes = configElement.Element("XsdString").Nodes();
+            }
 
             if (inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings") != null )
             {
