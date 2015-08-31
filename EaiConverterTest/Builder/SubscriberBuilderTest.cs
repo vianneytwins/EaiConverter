@@ -36,7 +36,7 @@
             get;
         }
         
-        private event ResponseReceivedEventHandler ResponseReceived;
+        private event EventHandler ResponseReceived;
         
         void Start();
         

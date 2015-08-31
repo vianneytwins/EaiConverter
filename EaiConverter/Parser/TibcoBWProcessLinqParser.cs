@@ -116,6 +116,7 @@
                         }
                 };
             }
+
 			return activity;
 		}
 

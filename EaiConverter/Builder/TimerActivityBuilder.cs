@@ -66,7 +66,7 @@ namespace EaiConverter.Builder
 
 			var statements = new CodeStatementCollection
 			{
-				new CodeAssignStatement(parameterReference, new CodeArgumentReferenceExpression(GetServiceFieldName())),
+				new CodeAssignStatement(parameterReference, new CodeArgumentReferenceExpression(this.GetServiceFieldName())),
 				new CodeSnippetStatement("this." + this.GetServiceFieldName() + ".ResponseReceived += this.OnEvent;")
 
 			};
@@ -110,7 +110,7 @@ namespace EaiConverter.Builder
             var subscriberRdvClass = new CodeTypeDeclaration("TimerSubscriber");
             subscriberRdvClass.IsClass = true;
             subscriberRdvClass.Attributes = MemberAttributes.Public;
-            subscriberRdvClass.BaseTypes.Add(SubscriberInterfaceBuilder.Subscriber);
+            subscriberRdvClass.BaseTypes.Add(SubscriberInterfaceBuilder.InterfaceSubscriberName);
 
             var event1 = new CodeMemberEvent();
 
@@ -118,7 +118,7 @@ namespace EaiConverter.Builder
             event1.Name = "ResponseReceived";
 
             // Sets the type of event.
-            event1.Type = new CodeTypeReference("ResponseReceivedEventHandler");
+            event1.Type = new CodeTypeReference("EventHandler");
 
             subscriberRdvClass.Members.Add(event1);
             subscriberRdvClass.Members.Add(

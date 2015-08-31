@@ -14,10 +14,13 @@ namespace EaiConverter.Builder
         private Dictionary<string, CodeStatementCollection> activityNameToServiceNameDictionnary = new Dictionary<string, CodeStatementCollection>();
 		private readonly ActivityBuilderFactory activityBuilderFactory;
 
+        private IXpathBuilder xpathBuilder;
+
         public GroupActivityBuilder(XslBuilder xslBuilder)
         {
             this.xslBuilder = xslBuilder;
             this.coreProcessBuilder = new CoreProcessBuilder();
+            this.xpathBuilder = new XpathBuilder();
 			this.activityBuilderFactory = new ActivityBuilderFactory();
         }
             
@@ -62,11 +65,11 @@ namespace EaiConverter.Builder
 
 		public List<CodeMemberField> GenerateFields(Activity groupActivity)
         {
-			var fields = new List<CodeMemberField> ();
+			var fields = new List<CodeMemberField>();
 
 			foreach (var activity in ((GroupActivity)groupActivity).Activities)
 			{
-				var activityBuilder = activityBuilderFactory.Get(activity.Type);
+				var activityBuilder = this.activityBuilderFactory.Get(activity.Type);
 				fields.AddRange(activityBuilder.GenerateFields(activity));
 			}
 
@@ -162,13 +165,13 @@ namespace EaiConverter.Builder
 
             var whileLoop = new CodeIterationStatement(
                 new CodeSnippetStatement(string.Empty),
-                new CodeSnippetExpression(groupActivity.RepeatCondition),
+                new CodeSnippetExpression(this.xpathBuilder.Build(groupActivity.RepeatCondition)),
                 new CodeSnippetStatement(string.Empty),
                 coreOfTheLoop);
             return whileLoop;
         }
 
-        private CodeStatementCollection  GenerateForCriticalSection(GroupActivity groupActivity)
+        private CodeStatementCollection GenerateForCriticalSection(GroupActivity groupActivity)
         {
             // TODO ADD the myLock object as a field in the process
             var invocationCodeCollection = new CodeStatementCollection();

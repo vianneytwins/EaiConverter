@@ -61,7 +61,7 @@ namespace EaiConverter.Builder
             var statements = new CodeStatementCollection
                 {
                     new CodeAssignStatement(parameterReference, new CodeArgumentReferenceExpression(GetServiceFieldName())),
-                    new CodeSnippetStatement ("this."+ GetServiceFieldName() + ".ResponseReceived += this.OnEvent;")
+                    new CodeSnippetStatement("this."+ GetServiceFieldName() + ".ResponseReceived += this.OnEvent;")
 
                 };
 
@@ -88,9 +88,9 @@ namespace EaiConverter.Builder
             return new CodeTypeReference(Builder.SubscriberInterfaceBuilder.InterfaceSubscriberName);
         }
 
-        string GetServiceFieldName ()
+        string GetServiceFieldName()
         {
-            return Builder.SubscriberInterfaceBuilder.Subscriber;
+            return "DefaultSubscriber";
         }
     }
 }

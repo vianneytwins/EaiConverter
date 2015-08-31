@@ -39,9 +39,12 @@ namespace EaiConverter.Parser
             activity.RvCmSessionRelayAgent = XElementParserUtils.GetStringValue(configElement.Element(AeSubscriberPropertyPrefix + "rvCmSessionRelayAgent"));
             activity.RvCmSessionRequireOldMessages = XElementParserUtils.GetBoolValue(configElement.Element(AeSubscriberPropertyPrefix + "rvCmSessionRequireOldMessages"));
 
-            var OutputSchemaElement = configElement.Element(AeSubscriberPropertyPrefix + "outputMeta");
+            var outputSchemaElement = configElement.Element(AeSubscriberPropertyPrefix + "outputMeta");
 
-            activity.OutputSchema = XElementParserUtils.GetStringValue(OutputSchemaElement.Element("aeMeta"));
+            if (outputSchemaElement != null)
+            {
+                activity.OutputSchema = XElementParserUtils.GetStringValue(outputSchemaElement.Element("aeMeta"));
+            }
 
             return activity;
         }

@@ -54,6 +54,7 @@ namespace EaiConverter.Builder
         {
             return new List<CodeNamespaceImport>
             {
+                new CodeNamespaceImport(TargetAppNameSpaceService.javaToolsNameSpace),
                 new CodeNamespaceImport(TargetAppNameSpaceService.javaToolsNameSpace)
             };
         }
@@ -75,7 +76,7 @@ namespace EaiConverter.Builder
 
         public CodeNamespaceImport[] GenerateImports()
         {
-            return new CodeNamespaceImport[1] { new CodeNamespaceImport("System") };
+            return new CodeNamespaceImport[2] { new CodeNamespaceImport("System"), new CodeNamespaceImport(TargetAppNameSpaceService.javaToolsNameSpace) };
         }
 
         public CodeTypeDeclaration GenerateClass(JavaActivity activity)

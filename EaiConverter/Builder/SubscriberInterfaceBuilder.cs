@@ -37,7 +37,7 @@ namespace EaiConverter.Builder
             event1.Name = "ResponseReceived";
 
             // Sets the type of event.
-            event1.Type = new CodeTypeReference("ResponseReceivedEventHandler");
+            event1.Type = new CodeTypeReference("EventHandler");
 
             subscriberInterfaceClass.Members.Add(event1);
             subscriberInterfaceClass.Members.Add(

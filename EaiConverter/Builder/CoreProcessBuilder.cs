@@ -9,6 +9,13 @@
 
     public class CoreProcessBuilder
     {
+        private IXpathBuilder xpathBuilder;
+
+        public CoreProcessBuilder()
+        {
+            this.xpathBuilder = new XpathBuilder();
+        }
+
         /// <summary>
         /// Generates the code statement.
         /// </summary>
@@ -104,7 +111,7 @@
                     var nextActivity = transition.ToActivity;
                     if (ConditionType.xpath == transition.ConditionType)
                     {
-                        condition = new CodeVariableReferenceExpression(transition.ConditionPredicate);
+                        condition = new CodeVariableReferenceExpression(this.xpathBuilder.Build(transition.ConditionPredicate));
                         var statementCollection = this.GenerateMainCodeStatement(processTransitions, nextActivity, nextCommonActivity, activityToServiceMapping);
                         trueCodeStatements = new CodeStatement[statementCollection.Count];
                         statementCollection.CopyTo(trueCodeStatements, 0);
