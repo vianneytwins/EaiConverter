@@ -36,6 +36,9 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Drawing" />
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Builder\TimerActivityBuilder.cs" />
@@ -149,6 +152,7 @@
   <ItemGroup>
     <None Include="ressources\BasicSample.process" />
     <None Include="ressources\CodeDomGenerationExample.txt" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <ProjectExtensions>
