@@ -5,8 +5,12 @@ namespace EaiConverter.CodeGenerator
     using System.CodeDom.Compiler;
     using System.IO;
 
+    using log4net;
+
     public class CsharpSimulationSourceCodeGeneratorService : ISourceCodeGeneratorService
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(CsharpSimulationSourceCodeGeneratorService));
+
         public void Generate(CodeCompileUnit targetUnit)
         {
             CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
@@ -19,7 +23,7 @@ namespace EaiConverter.CodeGenerator
                 classesInString = writer.GetStringBuilder().ToString();
             }
 
-            Console.WriteLine(classesInString);
+            log.Info(classesInString);
         }
 
         public void Init()

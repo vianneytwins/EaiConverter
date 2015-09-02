@@ -1,11 +1,13 @@
-﻿using System.Text.RegularExpressions;
-using EaiConverter.CodeGenerator.Utils;
-
-namespace EaiConverter.Builder
+﻿namespace EaiConverter.Builder
 {
+    using System.Text.RegularExpressions;
+
+    using EaiConverter.CodeGenerator.Utils;
+
     public class XpathBuilder : IXpathBuilder
     {
-        public string Build(string expression){
+        public string Build(string expression)
+        {
             // TODO : Get what between $ and next / to Convert to variable name ? at least remove the . in the process name
 
             // @"\$([^/]*)\/"
@@ -22,24 +24,27 @@ namespace EaiConverter.Builder
             if (variables.Success)
             {
                 string variableNameToModify = variables.Groups[1].ToString();
-                expression = expression.Replace (variableNameToModify, VariableHelper.ToVariableName( variableNameToModify.Replace('-','_')));
+                expression = expression.Replace(variableNameToModify, VariableHelper.ToVariableName( variableNameToModify.Replace('-','_')));
             }
 
-            expression = expression.Replace("$",string.Empty);
+            expression = expression.Replace("$", string.Empty);
 
             expression = expression.Replace('\'', '"');
-            expression = expression.Replace('/','.');
+            expression = expression.Replace('/', '.');
 
             //TODO swith format and date
-            expression = expression.Replace("tib:parse-dateTime(","TibcoXslHelper.ParseDateTime(");
-            expression = expression.Replace("tib:parse-date(","TibcoXslHelper.ParseDateTime(");
-            expression = expression.Replace("tib:parse-time(","TibcoXslHelper.ParseDateTime(");
+            expression = expression.Replace("tib:parse-dateTime(", "TibcoXslHelper.ParseDateTime(");
+            expression = expression.Replace("tib:parse-date(", "TibcoXslHelper.ParseDateTime(");
+            expression = expression.Replace("tib:parse-time(", "TibcoXslHelper.ParseDateTime(");
 
 
-            //tib:format-dateTime(<<format>>, <<dateTime>>)
-            expression = expression.Replace("tib:format-dateTime(","TibcoXslHelper.FormatDateTime(");
-            expression = expression.Replace("tib:format-date(","TibcoXslHelper.FormatDateTime(");
-            expression = expression.Replace("tib:format-time(","TibcoXslHelper.FormatDateTime(");
+            // tib:format-dateTime(<<format>>, <<dateTime>>)
+            expression = expression.Replace("tib:format-dateTime(", "TibcoXslHelper.FormatDateTime(");
+            expression = expression.Replace("tib:format-date(", "TibcoXslHelper.FormatDateTime(");
+            expression = expression.Replace("tib:format-time(", "TibcoXslHelper.FormatDateTime(");
+
+            // tib:validate-dateTime(<<format>>, <<string>>) return bool
+            expression = expression.Replace("tib:validate-dateTime(", "TibcoXslHelper.ValidateDateTime(");
 
             expression = expression.Replace("number(","TibcoXslHelper.ParseNumber(");
             expression = expression.Replace("number (","TibcoXslHelper.ParseNumber(");
@@ -99,6 +104,14 @@ namespace EaiConverter.Builder
             expression = expression.Replace(" div "," / ");
             expression = expression.Replace(" or "," || ");
             expression = expression.Replace(" and "," && ");
+            expression = expression.Replace("\ndiv\n"," / ");
+            expression = expression.Replace("\nor\n", " || ");
+            expression = expression.Replace("\nor ", " || ");
+            expression = expression.Replace("\nand\n", " && ");
+            expression = expression.Replace("\nand ", " && ");
+            expression = expression.Replace(" = ", " == ");
+            
+
 
             return expression;
         }

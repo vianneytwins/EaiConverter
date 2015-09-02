@@ -1,18 +1,21 @@
-﻿using EaiConverter.Parser;
-using System.Collections.Generic;
-
-namespace EaiConverter.Builder
+﻿namespace EaiConverter.Builder
 {
     using System;
     using System.CodeDom;
+    using System.Collections.Generic;
 
     using EaiConverter.Builder.Utils;
     using EaiConverter.CodeGenerator.Utils;
     using EaiConverter.Model;
+    using EaiConverter.Parser;
     using EaiConverter.Processor;
 
+    using log4net;
+
     public class XmlParseActivityBuilder : IActivityBuilder
-    { 
+    {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(XmlParseActivityBuilder));
+
         private readonly XslBuilder xslBuilder;
         private readonly XmlParserHelperBuilder xmlParserHelperBuilder;
 		private readonly XsdBuilder xsdBuilder;
@@ -44,8 +47,7 @@ namespace EaiConverter.Builder
             }
             catch (Exception e)
             {
-                Console.WriteLine("############### ERROR####### unable to generate class from XSD file inside XMLParseActivity :" + activity.Name);
-                Console.WriteLine(e);
+                Log.Error("Unable to generate class from XSD file inside XMLParseActivity :" + activity.Name, e);
             }
 
             return result;

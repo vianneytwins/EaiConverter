@@ -7,8 +7,12 @@ namespace EaiConverter.Builder
     using EaiConverter.CodeGenerator.Utils;
     using EaiConverter.Model;
 
+    using log4net;
+
     public class GroupActivityBuilder : IActivityBuilder
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(GroupActivityBuilder));
+
         private XslBuilder xslBuilder;
         private readonly CoreProcessBuilder coreProcessBuilder;
         private Dictionary<string, CodeStatementCollection> activityNameToServiceNameDictionnary = new Dictionary<string, CodeStatementCollection>();
@@ -194,8 +198,7 @@ namespace EaiConverter.Builder
             catch (Exception e)
             {
                 invocationCodeCollection.Add(new CodeSnippetStatement("// TODO : Unable to Generate code for this Group"));
-                Console.WriteLine("################ Unable to Generate code for this Group :" + groupActivity.Name);
-                Console.WriteLine(e);
+                Log.Error("################ Unable to Generate code for this Group :" + groupActivity.Name, e);
             }
 
             return invocationCodeCollection;

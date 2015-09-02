@@ -84,6 +84,21 @@
         {
             return inputString.ToLower();
         }
+
+        // tib:validate-dateTime(<<format>>, <<string>>) return bool
+        public static bool ValidateDateTime(string format, string inputDate)
+        {
+            try
+            {
+                DateTime.ParseExact(inputDate, format, null);
+            }
+            catch (System.FormatException ex)
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }
 

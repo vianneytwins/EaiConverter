@@ -43,7 +43,7 @@
             }
             else if (startPointOfTryCatch != null)
             {
-                //Manage the case where the start point of the process has a try catch around it (can append with Starter only)
+                // Manage the case where the start point of the process has a try catch around it (can append with Starter only)
                 if (invocationCode == null)
                 {
                     var validTransition = TransitionUtils.GetValidTransitionsFrom(activityName, processTransitions);
@@ -99,7 +99,7 @@
                     nextActivities.Add(transition.ToActivity);
                 }
 
-                //CodeConditionStatement(CodeExpression, if true => CodeStatement[], else => CodeStatement[])
+                // CodeConditionStatement(CodeExpression, if true => CodeStatement[], else => CodeStatement[])
                 // TODO c'est moche car cela marche que pour 1 seul If... S'il y en a plus il faut rajouter des ConditionsStatements sans else
                 string nextCommonActivity = TransitionUtils.GetNextCommonActivity(nextActivities, processTransitions);
 
@@ -126,7 +126,7 @@
 
                 codeStatementCollection.Add(new CodeConditionStatement(condition, trueCodeStatements, falseCodeStatements));
                 
-                //Call nextCommonActivtyCodeStatementGeneration
+                // Call nextCommonActivtyCodeStatementGeneration
                 codeStatementCollection.AddRange(this.GenerateMainCodeStatement(processTransitions, nextCommonActivity, null, activityToServiceMapping));
             }
 

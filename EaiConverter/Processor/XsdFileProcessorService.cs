@@ -6,8 +6,12 @@ namespace EaiConverter.Processor
     using EaiConverter.Builder;
     using EaiConverter.CodeGenerator;
 
+    using log4net;
+
     public class XsdFileProcessorService : IFileProcessorService
     {
+        private static readonly ILog Log = LogManager.GetLogger(typeof(XsdFileProcessorService));
+
         private readonly ISourceCodeGeneratorService sourceCodeGeneratorService;
 
         public XsdFileProcessorService(ISourceCodeGeneratorService sourceCodeGeneratorService)
@@ -28,8 +32,7 @@ namespace EaiConverter.Processor
             }
             catch (Exception e)
             {
-                Console.WriteLine("############### ERROR####### unable to generate class from XSD file:" + fileName);
-                Console.WriteLine(e);
+                Log.Error("unable to generate class from XSD file:" + fileName, e);
             }
         }
     }

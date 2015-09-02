@@ -1,5 +1,6 @@
 ﻿namespace EaiConverter.Test.Builder
 {
+    using System;
     using System.Collections.Generic;
     using System.Xml.Linq;
 
@@ -43,11 +44,26 @@
         [Test]
         public void Should_Generate_invocation_method_When_XsdReference_is_present()
         {
-			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.xml.XMLParseActivity"");
+            string expected;
+
+            if (Environment.OSVersion.ToString().Contains("indows"))
+            {
+                expected =
+                    @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.xml.XMLParseActivity"");
+string xmlString = ""TestString"";
+
+EquityRecord my_Activity_Name = this.xmlParserHelperService.FromXml<EquityRecord>(xmlString);
+";
+            }
+            else
+            {
+                expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.xml.XMLParseActivity"");
 string xmlString = ""TestString"";
 
 EquityRecord my_Activity_Name = this.xmlParserHelperService.FromXml <EquityRecord>(xmlString);
 ";
+            }
+
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateInvocationCode(this.activity));
             Assert.AreEqual(expected, generatedCode);
         }
@@ -60,12 +76,27 @@ EquityRecord my_Activity_Name = this.xmlParserHelperService.FromXml <EquityRecor
 			XElement doc = XElement.Parse(xsdElement);
 			this.activity.ObjectXNodes =doc.Nodes();
 
-			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.xml.XMLParseActivity"");
+            string expected;
+
+		    if (Environment.OSVersion.ToString().Contains("indows"))
+		    {
+		        expected =
+		            @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.xml.XMLParseActivity"");
+string xmlString = ""TestString"";
+
+MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord my_Activity_Name = this.xmlParserHelperService.FromXml<MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord>(xmlString);
+";
+		    }
+		    else
+		    {
+                expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.xml.XMLParseActivity"");
 string xmlString = ""TestString"";
 
 MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord my_Activity_Name = this.xmlParserHelperService.FromXml <MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord>(xmlString);
 ";
-			var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateInvocationCode(this.activity));
+		    }
+
+		    var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateInvocationCode(this.activity));
 			Assert.AreEqual(expected,generatedCode);
 		}
 

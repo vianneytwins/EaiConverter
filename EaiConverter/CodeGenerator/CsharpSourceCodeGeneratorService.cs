@@ -9,8 +9,12 @@ namespace EaiConverter.CodeGenerator
 
     using EaiConverter.Processor;
 
+    using log4net;
+
     public class CsharpSourceCodeGeneratorService : ISourceCodeGeneratorService
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(CsharpSourceCodeGeneratorService));
+
         //TODO VC : Put the output directory as a parameter";
         public const string SolutionDestinationPath = "./GeneratedSolution";
 
@@ -73,17 +77,17 @@ namespace EaiConverter.CodeGenerator
                             File.WriteAllText(ProjectDestinationPath + "/GeneratedSolution.csproj", projectFile);
                         }
 
-                        Console.WriteLine(sourceFile + " has been generated");
+                        log.Info(sourceFile + " has been generated");
                     }
                     else
                     {
-                        Console.WriteLine("############## Warning" + sourceFile + " has already been generated");
+                        log.Warn("############## Warning" + sourceFile + " has already been generated");
                     }
 
                 }
                 else
                 {
-                    Console.WriteLine("################### Warning" + namespaceName + " is empty");
+                    log.Warn("################### Warning" + namespaceName + " is empty");
                 }
             }
         }
@@ -358,6 +362,21 @@ using System.Runtime.InteropServices;
         public static string LowerCase(string inputString)
         {
             return inputString.ToLower();
+        }
+
+        // tib:validate-dateTime(<<format>>, <<string>>) return bool
+        public static bool ValidateDateTime(string format, string inputDate)
+        {
+            try
+            {
+                DateTime.ParseExact(inputDate, format, null);
+            }
+            catch (System.FormatException ex)
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }       

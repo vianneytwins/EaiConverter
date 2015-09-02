@@ -1,12 +1,12 @@
-﻿using System;
-using System.CodeDom;
-using EaiConverter.Processor;
-using EaiConverter.Model;
-using EaiConverter.Builder.Utils;
-using System.Collections.Generic;
-
-namespace EaiConverter.Builder
+﻿namespace EaiConverter.Builder
 {
+    using System.CodeDom;
+    using System.Collections.Generic;
+
+    using EaiConverter.Builder.Utils;
+    using EaiConverter.Model;
+    using EaiConverter.Processor;
+
     public class DefaultSubscriberBuilder : IActivityBuilder
     {
         private readonly SubscriberInterfaceBuilder subscriberBuilder;
@@ -90,7 +90,7 @@ namespace EaiConverter.Builder
 
         string GetServiceFieldName()
         {
-            return "DefaultSubscriber";
+            return "subscriber";
         }
     }
 }

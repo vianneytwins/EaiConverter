@@ -10,8 +10,12 @@
     using EaiConverter.Model;
     using EaiConverter.Utils;
 
+    using log4net;
+
     public class TibcoProcessClassesBuilder
     {
+        private static readonly ILog log = LogManager.GetLogger(typeof(TibcoProcessClassesBuilder));
+
         private readonly CoreProcessBuilder coreProcessBuilder;
 		private readonly ActivityBuilderFactory activityBuilderFactory;
 
@@ -82,8 +86,7 @@
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("############### ERROR####### unable to generate  END output object class for this process:" + tibcoBwProcessToGenerate.ProcessName);
-                    Console.WriteLine(e);
+                    log.Error("Unable to generate  END output object class for this process:" + tibcoBwProcessToGenerate.ProcessName);
                 }
             }
 
@@ -95,8 +98,7 @@
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("############### ERROR####### unable to generate  Start input object class for this process:" + tibcoBwProcessToGenerate.ProcessName);
-                    Console.WriteLine(e);
+                    log.Error("Unable to generate  Start input object class for this process:" + tibcoBwProcessToGenerate.ProcessName, e);
                 }
             }
 
@@ -358,10 +360,10 @@
                     }
                     catch (Exception e)
                     {
-                        Console.WriteLine(
+                        log.Info(
                             "############### ERROR####### unable to generate Process Variable object class for this process:"
                             + tibcoBwProcessToGenerate.ProcessName);
-                        Console.WriteLine(e);
+                        log.Info(e);
                     }
                 }
             }

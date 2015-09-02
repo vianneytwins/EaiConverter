@@ -97,7 +97,7 @@ namespace EaiConverter.Builder
 
 		private string GetServiceFieldName()
 		{
-            return "timerSubscriber";
+            return "subscriber";
 		}
 
 

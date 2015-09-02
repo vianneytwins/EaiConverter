@@ -1,14 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using EaiConverter.Model;
-
-namespace EaiConverter.Builder.Utils
+﻿namespace EaiConverter.Builder.Utils
 {
-    public class TransitionUtils
+    using System;
+    using System.Collections.Generic;
+
+    using EaiConverter.Model;
+
+    using log4net;
+
+    public static class TransitionUtils
     {
-        public static List<Transition> GetValidTransitionsFrom(string activityName, List<Transition> transitions)
+        private static readonly ILog Log = LogManager.GetLogger(typeof(TransitionUtils));
+
+        public static List<Transition> GetValidTransitionsFrom(string activityName, IEnumerable<Transition> transitions)
         {
-            List<Transition> returnedTransistion = new List<Transition>();
+            var returnedTransistion = new List<Transition>();
             foreach (var transition in transitions)
             {
                 if (transition.FromActivity == activityName && transition.ConditionType != ConditionType.error)
@@ -20,7 +25,7 @@ namespace EaiConverter.Builder.Utils
             return returnedTransistion;
         }
 
-        public static string ToActivityOfErrorTransitionFrom(string activityName, List<Transition> transitions)
+        public static string ToActivityOfErrorTransitionFrom(string activityName, IEnumerable<Transition> transitions)
         {
             foreach (var transition in transitions)
             {
@@ -40,10 +45,11 @@ namespace EaiConverter.Builder.Utils
             if (activityNames.Count != 2)
             {
                 // throw new NotImplementedException();
-                Console.WriteLine("############### ERROR Process with more than 2 branches ########");
+                Log.Error("Process with more than 2 branches");
             }
-            List<string> allNextActivitiesPath1 = GetAllNextActivities(activityNames[0], transitions);
-            List<string> allNextActivitiesPath2 = GetAllNextActivities(activityNames[1], transitions);
+
+            var allNextActivitiesPath1 = GetAllNextActivities(activityNames[0], transitions);
+            var allNextActivitiesPath2 = GetAllNextActivities(activityNames[1], transitions);
 
             foreach (var activity in allNextActivitiesPath1)
             {
@@ -54,7 +60,6 @@ namespace EaiConverter.Builder.Utils
             }
 
             return null;
-            //throw new NotImplementedException();
         }
 
         public static List<string> GetAllNextActivities(string activityName, List<Transition> transitions)
