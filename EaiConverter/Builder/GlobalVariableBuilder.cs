@@ -60,6 +60,7 @@ namespace EaiConverter.Builder
             {
                 return null;
             }
+
             foreach (var variable in globalVariablesRepository.GlobalVariables)
             {
                 result.Add(CodeDomUtils.GenerateProperty(variable.Name, globalVaraibleTypeDictionnary[variable.Type.ToString()]));
