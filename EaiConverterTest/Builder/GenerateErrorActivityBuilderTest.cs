@@ -1,23 +1,25 @@
-﻿using NUnit.Framework;
-using EaiConverter.Builder;
-using EaiConverter.Model;
-using EaiConverter.Test.Utils;
-using System.Xml.Linq;
-using System.Collections.Generic;
-
-namespace EaiConverter.Test.Builder
+﻿namespace EaiConverter.Test.Builder
 {
+    using System.Collections.Generic;
+    using System.Xml.Linq;
+
+    using EaiConverter.Builder;
+    using EaiConverter.Model;
+    using EaiConverter.Test.Utils;
+
+    using NUnit.Framework;
+
     [TestFixture]
     public class GenerateErrorActivityBuilderTest
     {
-        GenerateErrorActivityBuilder activityBuilder;
-        GenerateErrorActivity activity;
+        private GenerateErrorActivityBuilder activityBuilder;
+        private GenerateErrorActivity activity;
 
         [SetUp]
         public void SetUp()
         {
             this.activityBuilder = new GenerateErrorActivityBuilder(new XslBuilder(new XpathBuilder()));
-            this.activity = new GenerateErrorActivity( "My Activity Name",ActivityType.generateErrorActivity);
+            this.activity = new GenerateErrorActivity( "My", ActivityType.generateErrorActivity);
             this.activity.FaultName = "";
             var xml =
                 @"
@@ -42,18 +44,17 @@ namespace EaiConverter.Test.Builder
             };
         }
 
-        [Ignore]
         [Test]
         public void Should_Generate_invocation_method()
         {
-            var expected = @"this.logger.Info(""Start Activity: My Activity Name of type: com.tibco.pe.core.GenerateErrorActivity"");
+            var expected = @"this.logger.Info(""Start Activity: My of type: com.tibco.pe.core.GenerateErrorActivity"");
 string message = ""testvalue"";
 string messageCode = ""EVL"";
 
 throw new System.Exception(String.Format(""Message : {0}\nMessage code : {1} "", message, messageCode));
 ";
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateInvocationCode(this.activity));
-            Assert.AreEqual(expected,generatedCode);
+            Assert.AreEqual(expected, generatedCode);
         }
     }
 }

@@ -1,10 +1,10 @@
-using EaiConverter.Model;
-
-using System.CodeDom;
-using System.Collections.Generic;
-
 namespace EaiConverter.Builder
 {
+    using System.CodeDom;
+    using System.Collections.Generic;
+
+    using EaiConverter.Model;
+
     public class GenerateErrorActivityBuilder : IActivityBuilder
     {
         XslBuilder xslBuilder;
@@ -57,21 +57,22 @@ namespace EaiConverter.Builder
 
         private CodeThrowExceptionStatement GenerateExceptionStatement(GenerateErrorActivity activity)
         {
-            var parameters = DefaultActivityBuilder.GenerateParameters(new List<string> {
-                @"""Message : {0}\nMessage code : {1} """
-            }, activity);
+            var parameters =
+                DefaultActivityBuilder.GenerateParameters(
+                    new List<string> { @"""Message : {0}\nMessage code : {1} """ },
+                    activity);
 
-
-            CodeMethodInvokeExpression stringFormatCall = new CodeMethodInvokeExpression();
+            var stringFormatCall = new CodeMethodInvokeExpression();
             stringFormatCall.Parameters.AddRange(parameters);
 
-            CodeMethodReferenceExpression formatMethod = new CodeMethodReferenceExpression();
-            formatMethod.MethodName = "Format";
-            CodeVariableReferenceExpression stringObject = new CodeVariableReferenceExpression();
-            stringObject.VariableName = "String";
+            var formatMethod = new CodeMethodReferenceExpression { MethodName = "Format" };
+            var stringObject = new CodeVariableReferenceExpression { VariableName = "String" };
             formatMethod.TargetObject = stringObject;
             stringFormatCall.Method = formatMethod;
-            CodeThrowExceptionStatement throwException = new CodeThrowExceptionStatement(new CodeObjectCreateExpression(new CodeTypeReference(typeof(System.Exception)), stringFormatCall));
+
+            var throwException =
+                new CodeThrowExceptionStatement(
+                    new CodeObjectCreateExpression(new CodeTypeReference(typeof(System.Exception)), stringFormatCall));
             return throwException;
         }
     }
