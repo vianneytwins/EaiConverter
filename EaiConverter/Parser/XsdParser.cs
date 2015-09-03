@@ -5,19 +5,28 @@
 
     using EaiConverter.Model;
     using EaiConverter.Parser.Utils;
+    using EaiConverter.Utils;
 
     public class XsdParser
     {
+        private Dictionary<string, string> xsdTypeToCSharpType = new Dictionary<string, string>
+        {
+            { "string", CSharpTypeConstant.SystemString },
+            { "date", "System.DateTime" },
+            { "decimal", "System.Double" },
+            { "integer",  CSharpTypeConstant.SystemInt32 },
+        };
+
         public List<ClassParameter> Parse(IEnumerable<XNode> inputNodes, string targetNameSpace)
         {
             var classProperties = new List<ClassParameter>();
 
 			foreach(var inputNode in inputNodes)
 			{
-
 				var element = (XElement) inputNode;
 				string type = string.Empty;
-                if (element.Name.LocalName == "element" && element.Name.NamespaceName == XmlnsConstant.xsdNameSpace) {
+                if (element.Name.LocalName == "element" && element.Name.NamespaceName == XmlnsConstant.xsdNameSpace)
+                {
 					if (element.Attribute ("type") != null)
                     {
                         type = this.ConvertToBasicType (element.Attribute ("type").Value.ToString().Remove(0,4));
@@ -63,9 +72,18 @@
         {
             return this.Parse(inputNodes, string.Empty);
         }
-        public string ConvertToBasicType (string xsdType)
+
+        public string ConvertToBasicType(string xsdType)
         {
-            return xsdType;
+            string resultType;
+            if (this.xsdTypeToCSharpType.TryGetValue(xsdType, out resultType))
+            {
+                return resultType;
+            }
+            else
+            {
+                return xsdType;
+            }
         }
 
         public string ConvertToComplexType (string type, string targetNamespace)

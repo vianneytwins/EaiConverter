@@ -36,19 +36,19 @@
                 tibcoBwProcess.Description = XElementParserUtils.GetStringValue(allFileElement.Element(XmlnsConstant.tibcoProcessNameSpace + "label").Element(XmlnsConstant.tibcoProcessNameSpace + "description"));
             }
 
-            tibcoBwProcess.XsdImports = this.ParseXsdImports (allFileElement);
+            tibcoBwProcess.XsdImports = this.ParseXsdImports(allFileElement);
 
-            tibcoBwProcess.StartActivity = this.ParseStartOrEndActivity (allFileElement, tibcoBwProcess.InputAndOutputNameSpace,  ActivityType.startType);
+            tibcoBwProcess.StartActivity = this.ParseStartOrEndActivity(allFileElement, tibcoBwProcess.InputAndOutputNameSpace,  ActivityType.startType);
 
-            tibcoBwProcess.StarterActivity = this.ParseStarterActivity (allFileElement);
+            tibcoBwProcess.StarterActivity = this.ParseStarterActivity(allFileElement);
 
-            tibcoBwProcess.EndActivity = this.ParseStartOrEndActivity (allFileElement, tibcoBwProcess.InputAndOutputNameSpace, ActivityType.endType);
+            tibcoBwProcess.EndActivity = this.ParseStartOrEndActivity(allFileElement, tibcoBwProcess.InputAndOutputNameSpace, ActivityType.endType);
 
-            tibcoBwProcess.ProcessVariables = this.ParseProcessVariables (allFileElement);
+            tibcoBwProcess.ProcessVariables = this.ParseProcessVariables(allFileElement);
 
-            tibcoBwProcess.Transitions = this.ParseTransitions (allFileElement);
+            tibcoBwProcess.Transitions = this.ParseTransitions(allFileElement);
 
-            tibcoBwProcess.Activities = this.ParseActivities (allFileElement);
+            tibcoBwProcess.Activities = this.ParseActivities(allFileElement);
 
 			return tibcoBwProcess;
 
@@ -96,12 +96,12 @@
                 activityName = "endName";
             }
 
-            var activity = new Activity (allFileElement.Element (XmlnsConstant.tibcoProcessNameSpace + activityName).Value, activityType);
+            var activity = new Activity(allFileElement.Element(XmlnsConstant.tibcoProcessNameSpace + activityName).Value, activityType);
             if (xElement.Attribute("ref") == null)
             {
-                var activityParameters = this.xsdParser.Parse (xElement.Nodes (), inputAndOutputNameSpace);
+                var activityParameters = this.xsdParser.Parse(xElement.Nodes(), inputAndOutputNameSpace);
 		    	activity.Parameters = activityParameters;
-			    activity.ObjectXNodes = xElement.Nodes ();
+			    activity.ObjectXNodes = xElement.Nodes();
             }
             else
             {

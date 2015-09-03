@@ -5,7 +5,9 @@ using EaiConverter.Model;
 
 namespace EaiConverter.Test.Parser
 {
-	[TestFixture]
+    using EaiConverter.Utils;
+
+    [TestFixture]
 	public class TibcoBWProcessLinqParserTest
 	{
 
@@ -152,7 +154,7 @@ namespace EaiConverter.Test.Parser
                     </pd:processVariables>
                 </pd:ProcessDefinition>";
             var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
-            Assert.AreEqual ("string", tibcoBWProcess.ProcessVariables[0].Parameter.Type);
+            Assert.AreEqual (CSharpTypeConstant.SystemString, tibcoBWProcess.ProcessVariables[0].Parameter.Type);
         }
 
         [Test]
@@ -191,7 +193,7 @@ namespace EaiConverter.Test.Parser
                     </pd:starter>
                 </pd:ProcessDefinition>";
             var tibcoBWProcess = this.tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
-            Assert.AreEqual ("NotHandleYet", tibcoBWProcess.StarterActivity.Type.ToString());
+            Assert.AreEqual("NotHandleYet", tibcoBWProcess.StarterActivity.Type.ToString());
         }
 	}
 }

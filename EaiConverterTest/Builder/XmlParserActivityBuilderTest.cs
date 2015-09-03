@@ -34,10 +34,13 @@
 ";
             XElement doc = XElement.Parse(xml);
             this.activity.InputBindings = doc.Nodes();
-            this.activity.Parameters = new List<ClassParameter>{
-                new ClassParameter{
+            this.activity.Parameters = new List<ClassParameter>
+            {
+                new ClassParameter
+                {
                     Name = "xmlString",
-                    Type= "string"}
+                    Type = "string"
+                }
             };
         }
 
