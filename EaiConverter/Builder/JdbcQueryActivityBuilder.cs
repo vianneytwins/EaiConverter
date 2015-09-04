@@ -140,7 +140,7 @@ namespace EaiConverter.Builder
 
 			if (jdbcQueryActivity.QueryOutputStatementParameters != null && jdbcQueryActivity.QueryOutputStatementParameters.Count > 0)
             {
-                var codeInvocation = new CodeVariableDeclarationStatement(new CodeTypeReference("List<" + VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet>"), VariableHelper.ToVariableName(jdbcQueryActivity.ClassName) + "ResultSet", new CodeMethodInvokeExpression(activityServiceReference, DataAccessServiceBuilder.ExecuteSqlQueryMethodName, parameters));
+                var codeInvocation = new CodeVariableDeclarationStatement(new CodeTypeReference("List<" + VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet>"), VariableHelper.ToVariableName(jdbcQueryActivity.Name) + "ResultSet", new CodeMethodInvokeExpression(activityServiceReference, DataAccessServiceBuilder.ExecuteSqlQueryMethodName, parameters));
                 invocationCodeCollection.Add(codeInvocation);
             }
             else

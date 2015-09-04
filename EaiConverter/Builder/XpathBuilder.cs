@@ -27,6 +27,7 @@
             //for JbdcQueryActivity
             expression = expression.Replace(".resultSet.Record[", "ResultSet[");
             expression = expression.Replace(".resultSet.Record.nb", "ResultSet.Count()");
+            expression = expression.Replace(".resultSet", "ResultSet");
 
             expression = ManageBooleanValues(expression);
 
