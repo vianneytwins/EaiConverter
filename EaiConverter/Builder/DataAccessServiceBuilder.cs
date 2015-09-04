@@ -100,21 +100,7 @@
         public CodeMemberMethod GenerateExecuteQueryMethod(JdbcQueryActivity jdbcQueryActivity)
         {
             {
-                var method = new CodeMemberMethod();
-                method.Attributes = MemberAttributes.Public | MemberAttributes.Final;
-
-                method.Name = ExecuteSqlQueryMethodName;
-
-                if (jdbcQueryActivity.QueryOutputStatementParameters != null && jdbcQueryActivity.QueryOutputStatementParameters.Count > 0)
-                {
-                    method.ReturnType = new CodeTypeReference("List<" + VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet>");
-                }
-                else
-                {
-                    method.ReturnType = new CodeTypeReference(CSharpTypeConstant.SystemVoid);
-                }
-
-                method.Parameters.AddRange(JdbcQueryBuilderUtils.ConvertQueryStatementParameter(jdbcQueryActivity.QueryStatementParameters));
+                var method = GenerateExecuteQuerySignature(jdbcQueryActivity);
 
                 method.Statements.Add(this.GenerateExecuteQueryBody(method));
 
@@ -142,6 +128,30 @@
             {
                 return new CodeExpressionStatement(invocationExpression);
             }
+        }
+
+        public static CodeMemberMethod GenerateExecuteQuerySignature(JdbcQueryActivity jdbcQueryActivity)
+        {
+            var method = new CodeMemberMethod();
+            method.Attributes = MemberAttributes.Public | MemberAttributes.Final;
+            method.Name = ExecuteSqlQueryMethodName;
+            if (jdbcQueryActivity.QueryOutputStatementParameters != null && jdbcQueryActivity.QueryOutputStatementParameters.Count > 0)
+            {
+                if (ActivityType.jdbcCallActivityType != jdbcQueryActivity.Type)
+                {
+                    method.ReturnType = new CodeTypeReference("List<" + VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet>");
+                }
+                else
+                {
+                    method.ReturnType = new CodeTypeReference(VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet");
+                }
+            }
+            else
+            {
+                method.ReturnType = new CodeTypeReference(CSharpTypeConstant.SystemVoid);
+            }
+            method.Parameters.AddRange(JdbcQueryBuilderUtils.ConvertQueryStatementParameter(jdbcQueryActivity.QueryStatementParameters));
+            return method;
         }
     }
 }

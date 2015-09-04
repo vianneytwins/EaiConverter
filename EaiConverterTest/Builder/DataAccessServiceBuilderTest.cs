@@ -52,6 +52,39 @@ namespace EaiConverter.Test.Builder
             Assert.AreEqual (expected,classesInString);
 		}
 
+
+		[Test]
+		public void Should_Return_queryMethod_return_When_activity_type_is_JDBCXXXactivity_And_output_paramnotNull(){
+			var expected = "List<TestJbdcQueryActivityResultSet>";
+			this.jdbcQueryActivity.QueryOutputStatementParameters = new List<ClassParameter>
+			{
+				new ClassParameter {Name = "idBBUnique1", Type = "VARCHAR"},
+				new ClassParameter {Name = "idBBUnique2", Type = "VARCHAR"}
+			};
+			jdbcQueryActivity.Type = ActivityType.jdbcQueryActivityType;
+			jdbcQueryActivity.ClassName = jdbcQueryActivity.Name;
+
+			var executeQueryMethod = this.builder.GenerateExecuteQueryMethod (this.jdbcQueryActivity);
+
+			Assert.AreEqual (expected,executeQueryMethod.ReturnType.BaseType);
+		}
+
+		[Test]
+		public void Should_Return_queryMethod_return_When_activity_type_is_JDBCCallactivity_And_output_paramnotNull(){
+			var expected = "TestJbdcQueryActivityResultSet";
+			this.jdbcQueryActivity.QueryOutputStatementParameters = new List<ClassParameter>
+			{
+				new ClassParameter {Name = "idBBUnique1", Type = "VARCHAR"},
+				new ClassParameter {Name = "idBBUnique2", Type = "VARCHAR"}
+			};
+		
+			jdbcQueryActivity.ClassName = jdbcQueryActivity.Name;
+
+			var executeQueryMethod = this.builder.GenerateExecuteQueryMethod (this.jdbcQueryActivity);
+
+			Assert.AreEqual (expected,executeQueryMethod.ReturnType.BaseType);
+		}
+
 	}
 }
 

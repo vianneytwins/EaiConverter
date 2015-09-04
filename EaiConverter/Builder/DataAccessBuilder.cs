@@ -115,22 +115,7 @@
 
         public CodeMemberMethod GenerateExecuteQueryMethod(JdbcQueryActivity jdbcQueryActivity)
         {
-            var method = new CodeMemberMethod();
-            method.Attributes = MemberAttributes.Public | MemberAttributes.Final;
-
-            method.Name = DataAccessServiceBuilder.ExecuteSqlQueryMethodName;
-
-			if (jdbcQueryActivity.QueryOutputStatementParameters != null && jdbcQueryActivity.QueryOutputStatementParameters.Count > 0)
-            {
-                method.ReturnType = new CodeTypeReference("List<" + VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet>");
-            }
-            else
-            {
-                method.ReturnType = new CodeTypeReference(CSharpTypeConstant.SystemVoid);
-            }
-
-
-            method.Parameters.AddRange(JdbcQueryBuilderUtils.ConvertQueryStatementParameter(jdbcQueryActivity.QueryStatementParameters));
+            var method = DataAccessServiceBuilder.GenerateExecuteQuerySignature(jdbcQueryActivity);
 
             method.Statements.Add(this.GenerateExecuteQueryBody(jdbcQueryActivity, method));
 
@@ -173,7 +158,14 @@
             tabulation.Decrement();
             if (method.ReturnType.BaseType != CSharpTypeConstant.SystemVoid)
             {
-                sb.AppendLine(string.Format("{0}).ToList();", tabulation));
+                if (ActivityType.jdbcCallActivityType != jdbcQueryActivity.Type)
+                {
+                    sb.AppendLine(string.Format("{0}).ToList();", tabulation));
+                }
+                else
+                {
+                    sb.AppendLine(string.Format("{0}).FirstOrDefault();", tabulation));
+                }
             }
             else
             {
