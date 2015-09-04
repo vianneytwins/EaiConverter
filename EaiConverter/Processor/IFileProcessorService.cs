@@ -2,7 +2,7 @@ namespace EaiConverter.Processor
 {
 	public interface IFileProcessorService
 	{
-		void Process (string fileName);
+		void Process(string fileName);
 	}
 
 

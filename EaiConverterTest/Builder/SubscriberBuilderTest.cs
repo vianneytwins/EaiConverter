@@ -26,10 +26,10 @@
     public interface ISubscriber
     {
         
-public System.Int32 WaitingTimeLimit { get; private set; }
-public System.Boolean IsStarted { get; private set; }
+        System.Int32 WaitingTimeLimit { get; }
+        System.Boolean IsStarted { get; }
         
-        private event EventHandler ResponseReceived;
+        public event EventHandler ResponseReceived;
         
         void Start();
         

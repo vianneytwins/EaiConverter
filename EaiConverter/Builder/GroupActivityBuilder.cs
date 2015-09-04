@@ -141,7 +141,7 @@ namespace EaiConverter.Builder
 
             // put the current element in the declare variable
             // TODO convert the $Variable in variable like in Xpath 
-            var iterationElementSlotDeclaration = new CodeVariableDeclarationStatement("var", groupActivity.IterationElementSlot, new CodeVariableReferenceExpression(groupActivity.Over + "[" + groupActivity.IndexSlot + "]"));
+            var iterationElementSlotDeclaration = new CodeVariableDeclarationStatement("var", groupActivity.IterationElementSlot, new CodeVariableReferenceExpression(this.xpathBuilder.Build(groupActivity.Over) + "[" + groupActivity.IndexSlot + "]"));
             coreGroupMethodStatement.Add(iterationElementSlotDeclaration);
 
             // Get the core loop code
@@ -152,7 +152,7 @@ namespace EaiConverter.Builder
             // put it then in the loop
             var forLoop = new CodeIterationStatement(
                 new CodeVariableDeclarationStatement(typeof(int), groupActivity.IndexSlot, new CodePrimitiveExpression(0)),
-                new CodeBinaryOperatorExpression(new CodeVariableReferenceExpression(groupActivity.IndexSlot), CodeBinaryOperatorType.LessThan, new CodeVariableReferenceExpression(groupActivity.Over + ".Lenght")),
+                new CodeBinaryOperatorExpression(new CodeVariableReferenceExpression(groupActivity.IndexSlot), CodeBinaryOperatorType.LessThan, new CodeVariableReferenceExpression( this.xpathBuilder.Build(groupActivity.Over) + ".Lenght")),
                 new CodeAssignStatement(new CodeVariableReferenceExpression(groupActivity.IndexSlot), new CodeBinaryOperatorExpression(new CodeVariableReferenceExpression(groupActivity.IndexSlot), CodeBinaryOperatorType.Add, new CodePrimitiveExpression(1))),
                 coreOfTheLoop);
             return forLoop;

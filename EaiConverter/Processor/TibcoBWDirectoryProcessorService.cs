@@ -35,20 +35,20 @@ namespace EaiConverter.Processor
 			//Directory treatement
 			foreach(string file in files) 
 			{ 
-				if (file.EndsWith (".process"))
+				if (file.EndsWith(".process"))
 				{
 					//file treatement
-					this.tibcoFileProcessorService.Process (file);
+					this.tibcoFileProcessorService.Process(file);
 				}
-                if (file.EndsWith (".xsd"))
+                if (file.EndsWith(".xsd"))
                 {
                     //file treatement
-                    this.xsdFileProcessorService.Process (file);
+                    this.xsdFileProcessorService.Process(file);
                 }
-                if (file.EndsWith ("default.substvar"))
+                if (file.EndsWith(".substvar"))
                 {
                     //file treatement
-                    this.globalVariableProcessor.Process (file);
+                    this.globalVariableProcessor.Process(file);
                 }
 			} 
 			foreach(string subDirectory in directories) 

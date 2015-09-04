@@ -254,14 +254,14 @@
 
 		public CodeParameterDeclarationExpressionCollection GenerateStartMethodInputParameters(TibcoBWProcess tibcoBwProcessToGenerate)
         {
-			var parameters = new CodeParameterDeclarationExpressionCollection ();
+			var parameters = new CodeParameterDeclarationExpressionCollection();
             if (tibcoBwProcessToGenerate.StartActivity != null && tibcoBwProcessToGenerate.StartActivity.Parameters != null)
             {
                 foreach (var parameter in tibcoBwProcessToGenerate.StartActivity.Parameters)
                 {
                     parameters.Add(new CodeParameterDeclarationExpression
                     {
-                        Name = parameter.Name,
+                        Name = "start_" + parameter.Name,
                         Type = new CodeTypeReference(parameter.Type)
                     });
                 }

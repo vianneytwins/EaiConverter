@@ -1,14 +1,15 @@
-using EaiConverter.CodeGenerator;
-using EaiConverter.Parser;
-using EaiConverter.Builder;
-
 namespace EaiConverter.Processor
 {
-	public class TibcoFileProcessorService : IFileProcessorService
-	{
-		ISourceCodeGeneratorService sourceCodeGeneratorService;
+    using EaiConverter.Builder;
+    using EaiConverter.CodeGenerator;
+    using EaiConverter.Parser;
 
-		public TibcoFileProcessorService (ISourceCodeGeneratorService sourceCodeGeneratorService){
+    public class TibcoFileProcessorService : IFileProcessorService
+	{
+        private readonly ISourceCodeGeneratorService sourceCodeGeneratorService;
+
+		public TibcoFileProcessorService (ISourceCodeGeneratorService sourceCodeGeneratorService)
+        {
 			this.sourceCodeGeneratorService = sourceCodeGeneratorService;
 		}
 
@@ -19,9 +20,10 @@ namespace EaiConverter.Processor
 			var targetUnit = tibcoBWProcessBuilder.Build (tibcoBwProcess);
 	
 			// TODO if exist don't add it ? Ugly but no Config manager on Mono/Xamarin
-			if (ConfigurationApp.GetProperty ("IsLoggerAlreadyGenerated") != "true") {
-				targetUnit.Namespaces.Add (new LoggerInterfaceBuilder ().Build ());
-				ConfigurationApp.SaveProperty ("IsLoggerAlreadyGenerated", "true");
+			if (ConfigurationApp.GetProperty ("IsLoggerAlreadyGenerated") != "true")
+            {
+				targetUnit.Namespaces.Add(new LoggerInterfaceBuilder ().Build ());
+				ConfigurationApp.SaveProperty("IsLoggerAlreadyGenerated", "true");
 			}
 			
 			this.sourceCodeGeneratorService.Generate (targetUnit);

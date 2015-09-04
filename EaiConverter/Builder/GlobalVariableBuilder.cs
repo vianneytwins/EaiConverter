@@ -1,19 +1,19 @@
-using System;
-using EaiConverter.Model;
-using System.CodeDom;
-using System.Reflection;
-using EaiConverter.Utils;
-using System.Collections.Generic;
-
 namespace EaiConverter.Builder
 {
-	public class GlobalVariableBuilder
-	{
+    using System;
+    using System.CodeDom;
+    using System.Collections.Generic;
+    using System.Reflection;
 
-        Dictionary <string,string> globalVaraibleTypeDictionnary = new Dictionary <string,string>
+    using EaiConverter.Model;
+    using EaiConverter.Utils;
+
+    public class GlobalVariableBuilder
+	{
+        private readonly Dictionary<string,string> globalVaraibleTypeDictionnary = new Dictionary <string,string>
         {
-            {"String","System.String"},
-            {"Integer","System.Int32"}
+            { "String", "System.String" },
+            { "Integer", "System.Int32" }
         };
 
         public CodeNamespace Build(GlobalVariablesRepository globalVariablesRepository)
@@ -30,8 +30,9 @@ namespace EaiConverter.Builder
 
         public CodeNamespaceImport[] GenerateImports()
         {
-            return new CodeNamespaceImport[1] {
-                new CodeNamespaceImport ("System")
+            return new CodeNamespaceImport[1]
+            {
+                new CodeNamespaceImport("System")
             };
         }
 
@@ -63,7 +64,7 @@ namespace EaiConverter.Builder
 
             foreach (var variable in globalVariablesRepository.GlobalVariables)
             {
-                result.Add(CodeDomUtils.GenerateProperty(variable.Name, globalVaraibleTypeDictionnary[variable.Type.ToString()]));
+                result.Add(CodeDomUtils.GenerateStaticProperty(variable.Name, globalVaraibleTypeDictionnary[variable.Type.ToString()]));
             }
 
             return result;
@@ -75,8 +76,8 @@ namespace EaiConverter.Builder
             constructor.Attributes = MemberAttributes.Public;
             foreach (var variable in globalVariablesRepository.GlobalVariables)
             {
-                var propertyReference = new CodeFieldReferenceExpression(
-                    new CodeThisReferenceExpression(), variable.Name);
+                //var propertyReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), variable.Name);
+                var propertyReference = new CodeVariableReferenceExpression(variable.Name);
                 
                 constructor.Statements.Add(new CodeAssignStatement(propertyReference,
                     new CodePrimitiveExpression(ConvertToPrimitiveType(globalVaraibleTypeDictionnary[variable.Type.ToString()], variable.Value))));

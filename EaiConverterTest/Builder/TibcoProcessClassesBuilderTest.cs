@@ -1,47 +1,46 @@
-﻿using NUnit.Framework;
-
-using System.Collections.Generic;
-
-using EaiConverter.Builder;
-
-using System.CodeDom;
-using EaiConverter.Model;
-using EaiConverter.Test.Utils;
-using System.Xml.Linq;
-using EaiConverter.Builder.Utils;
-
-namespace EaiConverter.Test.Builder
+﻿namespace EaiConverter.Test.Builder
 {
+    using System.CodeDom;
+    using System.Collections.Generic;
+    using System.Xml.Linq;
+
+    using EaiConverter.Builder;
+    using EaiConverter.Builder.Utils;
+    using EaiConverter.Model;
     using EaiConverter.Processor;
+    using EaiConverter.Test.Utils;
+
+    using NUnit.Framework;
 
     [TestFixture]
 	public class TibcoProcessClassesBuilderTest
 	{
 	
-		TibcoBWProcess tibcoBWProcess;
-        TibcoProcessClassesBuilder tibcoBWProcessBuilder;
+		private TibcoBWProcess tibcoBwProcess;
+        private TibcoProcessClassesBuilder tibcoBwProcessBuilder;
 
 
 		[SetUp]
-		public void SetUp ()
+		public void SetUp()
 		{
-            tibcoBWProcessBuilder = new TibcoProcessClassesBuilder ();
+            this.tibcoBwProcessBuilder = new TibcoProcessClassesBuilder();
 
-			tibcoBWProcess = new TibcoBWProcess ("MyNamespace/myProcessTest.process");
-			tibcoBWProcess.Activities = new List<Activity> ();
+			this.tibcoBwProcess = new TibcoBWProcess("MyNamespace/myProcessTest.process");
+			this.tibcoBwProcess.Activities = new List<Activity>();
 		}
 
 		[Test]
 		public void Should_Return_simple_Constructor_When_NoActivies_are_declared()
 		{
-
 			var expected ="this.logger = logger;\n";
-			var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
+			var classToGenerate = this.tibcoBwProcessBuilder.Build(this.tibcoBwProcess);
 
             string classesInString = string.Empty;
 
-			foreach (var member in classToGenerate.Namespaces [0].Types [0].Members) {
-				if (member is CodeConstructor) {
+			foreach (var member in classToGenerate.Namespaces [0].Types [0].Members)
+            {
+				if (member is CodeConstructor)
+                {
                     classesInString = TestCodeGeneratorUtils.GenerateCode(((CodeConstructor)member).Statements);
 				}
 			}
@@ -52,15 +51,17 @@ namespace EaiConverter.Test.Builder
 		[Test]
 		public void Should_Return_Constructor_with_setter_of_Activity_When_1_Activy_is_declared()
 		{
-            tibcoBWProcess.Activities.Add(new Activity ("MySqlRequestActivity", ActivityType.NotHandleYet));
+            this.tibcoBwProcess.Activities.Add(new Activity ("MySqlRequestActivity", ActivityType.NotHandleYet));
             var expected = "this.logger = logger;\nthis.mySqlRequestActivityService = mySqlRequestActivityService;\n";
 			
-            var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
+            var classToGenerate = this.tibcoBwProcessBuilder.Build (this.tibcoBwProcess);
 
             string classesInString = string.Empty;
 
-            foreach (var member in classToGenerate.Namespaces [0].Types [0].Members) {
-                if (member is CodeConstructor) {
+            foreach (var member in classToGenerate.Namespaces [0].Types [0].Members)
+            {
+                if (member is CodeConstructor)
+                {
                     classesInString = TestCodeGeneratorUtils.GenerateCode(((CodeConstructor)member).Statements);
                 }
             }
@@ -73,22 +74,23 @@ namespace EaiConverter.Test.Builder
 		[Test]
 		public void Should_Return_logger_as_a_privateField()
 		{
-
-			var tibcoBWProcessBuilder = new TibcoProcessClassesBuilder ();
-			var classToGenerate = tibcoBWProcessBuilder.Build (tibcoBWProcess);
+			var tibcoBWProcessBuilder = new TibcoProcessClassesBuilder();
+			var classToGenerate = tibcoBWProcessBuilder.Build(this.tibcoBwProcess);
             var fieldName = ((CodeMemberField)classToGenerate.Namespaces[0].Types[0].Members[0]).Name;
-            Assert.AreEqual ("logger", fieldName);
+            Assert.AreEqual("logger", fieldName);
 		}
 
         [Test]
         public void Should_Return_privateField_When_a_Process_Variable_is_declared()
         {
-            tibcoBWProcess.ProcessVariables = new List<ProcessVariable>{
-                new ProcessVariable{
-                    Parameter = new ClassParameter{Name = "var",Type = "string"}
+            this.tibcoBwProcess.ProcessVariables = new List<ProcessVariable>
+            {
+                new ProcessVariable
+                {
+                    Parameter = new ClassParameter { Name = "var", Type = "string" }
                 }
             };
-            var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
+            var classToGenerate = this.tibcoBwProcessBuilder.Build(this.tibcoBwProcess);
 
             var fieldName = ((CodeMemberField)classToGenerate.Namespaces[0].Types[0].Members[1]).Name;
 
@@ -111,13 +113,13 @@ namespace EaiConverter.Test.Builder
 </var>";
             var doc = XElement.Parse(xml);
 
-            tibcoBWProcess.ProcessVariables = new List<ProcessVariable>{
+            this.tibcoBwProcess.ProcessVariables = new List<ProcessVariable>{
                 new ProcessVariable{
                     Parameter = new ClassParameter{Name = "var",Type = "group"},
                     ObjectXNodes = doc.Nodes()
                 }
             };
-            var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
+            var classToGenerate = this.tibcoBwProcessBuilder.Build (this.tibcoBwProcess);
 
             var className = classToGenerate.Namespaces[1].Types[0].Name;
 
@@ -130,7 +132,7 @@ namespace EaiConverter.Test.Builder
 		[Test]
 		public void Should_Return_4_import_For_Empty_Process()
 		{
-            var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
+            var classToGenerate = this.tibcoBwProcessBuilder.Build (this.tibcoBwProcess);
 
 			Assert.AreEqual (4, classToGenerate.Namespaces[0].Imports.Count);
 		}
@@ -138,11 +140,11 @@ namespace EaiConverter.Test.Builder
 		[Test]
 		public void Should_return_void_Start_Method_with_no_input_param_When_no_Start_and_Return_type_are_specified()
 		{
-            tibcoBWProcess.StartActivity = new Activity ("Start", ActivityType.startType);
-            tibcoBWProcess.EndActivity = new Activity ("End", ActivityType.endType);
+            this.tibcoBwProcess.StartActivity = new Activity ("Start", ActivityType.startType);
+            this.tibcoBwProcess.EndActivity = new Activity ("End", ActivityType.endType);
 
 			var expected ="System.Void";
-            var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
+            var classToGenerate = this.tibcoBwProcessBuilder.Build (this.tibcoBwProcess);
 			string actual = string.Empty;
 			foreach (var member in classToGenerate.Namespaces [0].Types [0].Members) {
 				if (member is CodeMemberMethod &&  ((CodeMemberMethod)member).Name == "Start") {
@@ -157,37 +159,38 @@ namespace EaiConverter.Test.Builder
 		[Test]
 		public void Should_return_Start_Method_with_one_input_param_When_Starttype_is_defined()
 		{
-            tibcoBWProcess.StartActivity = new Activity ("Start", ActivityType.startType);
-			tibcoBWProcess.StartActivity.Parameters = new List <ClassParameter> {
+            this.tibcoBwProcess.StartActivity = new Activity ("Start", ActivityType.startType);
+			this.tibcoBwProcess.StartActivity.Parameters = new List <ClassParameter> {
 				new ClassParameter
 				{
 					Type = "string",
 					Name = "inputName"
 				}
 			};
-            tibcoBWProcess.EndActivity = new Activity ("End", ActivityType.endType);
+            this.tibcoBwProcess.EndActivity = new Activity ("End", ActivityType.endType);
 
 			
-            var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
+            var classToGenerate = this.tibcoBwProcessBuilder.Build (this.tibcoBwProcess);
 
 			string actual = string.Empty;
 			foreach (var member in classToGenerate.Namespaces [0].Types [0].Members) {
-				if (member is CodeMemberMethod &&  ((CodeMemberMethod)member).Name == "Start") {
+				if (member is CodeMemberMethod &&  ((CodeMemberMethod)member).Name == "Start")
+                {
 					actual = ((CodeMemberMethod)member).Parameters[0].Name;
 				}
 			}
 
-			Assert.AreEqual ("inputName", actual);
+			Assert.AreEqual ("start_inputName", actual);
 		}
 
 		[Test]
 		public void Should_return_Start_Method_with_return_type_string_When_Return_is_defined()
 		{
             // prepare
-            tibcoBWProcess.StartActivity = new Activity ("Start", ActivityType.startType);
+            this.tibcoBwProcess.StartActivity = new Activity ("Start", ActivityType.startType);
 
-            tibcoBWProcess.EndActivity = new Activity ("End", ActivityType.endType);
-			tibcoBWProcess.EndActivity.Parameters = new List <ClassParameter> {
+            this.tibcoBwProcess.EndActivity = new Activity ("End", ActivityType.endType);
+			this.tibcoBwProcess.EndActivity.Parameters = new List <ClassParameter> {
 				new ClassParameter
 				{
 					Type = "string",
@@ -195,7 +198,7 @@ namespace EaiConverter.Test.Builder
 				}
 			};
 		    // Act
-            var classToGenerate = this.tibcoBWProcessBuilder.Build (tibcoBWProcess);
+            var classToGenerate = this.tibcoBwProcessBuilder.Build (this.tibcoBwProcess);
 
             string actual = string.Empty;
 			foreach (var member in classToGenerate.Namespaces [0].Types [0].Members) {

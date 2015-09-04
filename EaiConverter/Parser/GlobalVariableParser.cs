@@ -21,7 +21,7 @@ namespace EaiConverter.Parser
             globalVariablesRepository.Package = this.ParsePackageName(filePath);
 
             XElement allFileElement = XElement.Load(filePath);
-            globalVariablesRepository.GlobalVariables =  this.ParseVariable (allFileElement);
+            globalVariablesRepository.GlobalVariables = this.ParseVariable(allFileElement);
 
             return globalVariablesRepository;
         }
@@ -51,10 +51,10 @@ namespace EaiConverter.Parser
                 path = path.Remove(0, 1);
             }
 
-            return path;
+            return string.IsNullOrEmpty(path) ? "GlobalVariables" : "GlobalVariables." + path;
         }
 
-        public string ParseFileName(string fileName)
+	    public string ParseFileName(string fileName)
         {
             var path = fileName.Replace(Defaultsubstvar,String.Empty);
             path = path.Remove(path.Length - 1, 1);

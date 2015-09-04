@@ -103,8 +103,8 @@ namespace EaiConverter.Test.Builder
         [Test]
         public void Should_Generate_Constructor_CodeStatement()
         {
-            string expected = @"this.propertyName1 = ""my test value"";
-this.propertyName2 = 12;
+            string expected = @"propertyName1 = ""my test value"";
+propertyName2 = 12;
 ";
             string actual = string.Empty;
             foreach (var member in resultNamspace.Types[0].Members)

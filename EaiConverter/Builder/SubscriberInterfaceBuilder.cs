@@ -32,18 +32,17 @@ namespace EaiConverter.Builder
             subscriberInterfaceClass.IsInterface = true;
 
             var event1 = new CodeMemberEvent();
-
             // Sets a name for the event.
             event1.Name = "ResponseReceived";
-
             // Sets the type of event.
             event1.Type = new CodeTypeReference("EventHandler");
-
+            event1.Attributes = MemberAttributes.Public;
             subscriberInterfaceClass.Members.Add(event1);
+
             subscriberInterfaceClass.Members.Add(
-                CodeDomUtils.GeneratePropertyWithoutSetter("WaitingTimeLimit", CSharpTypeConstant.SystemInt32));
+                CodeDomUtils.GeneratePropertyWithoutSetterForInterface("WaitingTimeLimit", CSharpTypeConstant.SystemInt32));
             subscriberInterfaceClass.Members.Add(
-                CodeDomUtils.GeneratePropertyWithoutSetter("IsStarted", CSharpTypeConstant.SystemBoolean));
+                CodeDomUtils.GeneratePropertyWithoutSetterForInterface("IsStarted", CSharpTypeConstant.SystemBoolean));
 
             subscriberInterfaceClass.Members.Add(
                 new CodeMemberMethod

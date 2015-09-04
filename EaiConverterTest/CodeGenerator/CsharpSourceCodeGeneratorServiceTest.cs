@@ -1,10 +1,12 @@
-﻿using NUnit.Framework;
-using EaiConverter.CodeGenerator;
-using System.CodeDom;
-using System.IO;
-
-namespace EaiConverter.Test.CodeGenerator
+﻿namespace EaiConverter.Test.CodeGenerator
 {
+    using System.CodeDom;
+    using System.IO;
+
+    using EaiConverter.CodeGenerator;
+
+    using NUnit.Framework;
+
     [TestFixture]
     public class CsharpSourceCodeGeneratorServiceTest
     {

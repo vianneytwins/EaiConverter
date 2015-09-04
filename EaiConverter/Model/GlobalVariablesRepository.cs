@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace EaiConverter.Model
+﻿namespace EaiConverter.Model
 {
+    using System;
+    using System.Collections.Generic;
+
     public class GlobalVariablesRepository
     {
         public string Package
