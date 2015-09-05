@@ -86,7 +86,7 @@
                 }
                 catch (Exception e)
                 {
-                    log.Error("Unable to generate  END output object class for this process:" + tibcoBwProcessToGenerate.ProcessName);
+                    log.Error("Unable to generate  END output object class for this process:" + tibcoBwProcessToGenerate.ProcessName, e);
                 }
             }
 
@@ -308,6 +308,14 @@
 			var statements = new CodeStatementCollection ();
 			if (tibcoBwProcessToGenerate.Transitions != null)
             {
+                if (tibcoBwProcessToGenerate.StarterActivity != null)
+                {
+                    //foreach (var parameter in tibcoBwProcessToGenerate.StarterActivity.Parameters)
+                    //{
+                        //statements.Add(new CodeParameterDeclarationExpression(new CodeTypeReference(parameter.Type), parameter.Name));
+                    //}
+                }
+
                 statements.AddRange(this.coreProcessBuilder.GenerateMainCodeStatement(tibcoBwProcessToGenerate.Transitions, tibcoBwProcessToGenerate.StartingPoint, null, activityNameToServiceNameDictionnary));
 
 				if (returnType.BaseType != CSharpTypeConstant.SystemVoid)
@@ -325,21 +333,16 @@
 		private CodeStatementCollection GenerateStarterMethodBody ()
 		{
 			var statements = new CodeStatementCollection ();
-            statements.Add (new CodeSnippetStatement("this.subscriber.Start();"));
+            statements.Add (new CodeSnippetStatement("        this.subscriber.Start();"));
 			return statements;
 		}
 
 		public CodeParameterDeclarationExpressionCollection GenerateOnEventMethodInputParameters(TibcoBWProcess tibcoBwProcessToGenerate)
 		{
 			var parameters = new CodeParameterDeclarationExpressionCollection ();
-            if (tibcoBwProcessToGenerate.StarterActivity.Parameters == null)
-            {
-                return parameters;
-            }
+            parameters.Add (new CodeParameterDeclarationExpression (new CodeTypeReference (CSharpTypeConstant.SystemObject), "sender"));
+            parameters.Add (new CodeParameterDeclarationExpression (new CodeTypeReference ("System.EventArgs"), "args"));
 
-			foreach (var parameter in tibcoBwProcessToGenerate.StarterActivity.Parameters) {
-				parameters.Add (new CodeParameterDeclarationExpression (new CodeTypeReference (parameter.Type), parameter.Name));
-			}
 			return parameters;
 		}
 			
@@ -360,10 +363,9 @@
                     }
                     catch (Exception e)
                     {
-                        log.Info(
-                            "############### ERROR####### unable to generate Process Variable object class for this process:"
-                            + tibcoBwProcessToGenerate.ProcessName);
-                        log.Info(e);
+                        log.Error(
+                            "unable to generate Process Variable object class for this process: "
+                            + tibcoBwProcessToGenerate.ProcessName, e);
                     }
                 }
             }
