@@ -34,7 +34,7 @@ namespace EaiConverter.Parser
             }
 
             xmlParseActivity.InputBindings = inputElement.Element (XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Nodes();
-            xmlParseActivity.Parameters = new XslParser().Build(xmlParseActivity.InputBindings);
+            xmlParseActivity.Parameters = new XslParser().Parse(xmlParseActivity.InputBindings);
             return xmlParseActivity;
         }
     }

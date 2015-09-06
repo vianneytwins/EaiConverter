@@ -4,7 +4,7 @@ using EaiConverter.Parser;
 using System.Xml.Linq;
 using EaiConverter.Model;
 
-namespace EaiConverterTest.Parser
+namespace EaiConverter.Test.Parser
 {
 	[TestFixture]
 	public class TimerEventActivityParserTest

@@ -84,7 +84,7 @@ namespace EaiConverter.Parser
             if (inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings") != null && inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("jdbcQueryActivityInput") != null)
             {
                 jdbcQueryActivity.InputBindings = inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("jdbcQueryActivityInput").Nodes();
-                jdbcQueryActivity.Parameters = new XslParser().Build(jdbcQueryActivity.InputBindings);
+                jdbcQueryActivity.Parameters = new XslParser().Parse(jdbcQueryActivity.InputBindings);
             }
 
             return jdbcQueryActivity;

@@ -43,7 +43,7 @@ namespace EaiConverter.Parser
 
             mapperActivity.InputBindings = inputElement.Element (XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Nodes();
 
-            mapperActivity.Parameters = new XslParser().Build(mapperActivity.InputBindings);
+            mapperActivity.Parameters = new XslParser().Parse(mapperActivity.InputBindings);
 
             return mapperActivity;
         }

@@ -1,4 +1,6 @@
-﻿namespace EaiConverter.Builder
+﻿using EaiConverter.Utils;
+
+namespace EaiConverter.Builder
 {
     using System;
     using System.CodeDom;
@@ -61,14 +63,14 @@
                 var element = (XElement)inputNode;
                 if (!Regex.IsMatch(element.Name.NamespaceName, XmlnsConstant.xslNameSpace))
                 {
-                    string returnType = this.DefineReturnType(element);
-                    string variableReference = this.DefineVariableReference(element, parent);
+                    string returnType = DefineReturnType(element);
+                    string variableReference = DefineVariableReference(element, parent);
                     isAlistElement = this.IsAListElement(element, inputNodes);
                     var hasTheListBeenInitialised = false;
 
                     if (isAlistElement)
                     {
-                        hasTheListBeenInitialised = listElements.ContainsKey(element.Name.ToString());
+                        hasTheListBeenInitialised = listElements.ContainsKey(element.Name.LocalName);
                         if (!hasTheListBeenInitialised)
                         {
                             if (string.IsNullOrEmpty(parent))
@@ -77,7 +79,7 @@
                             }
 
                             codeStatements.Append(variableReference + " = new List<" + returnType + ">();\n");
-                            listElements.Add(element.Name.ToString(), true);
+                            listElements.Add(element.Name.LocalName, true);
                         }
                         //recursive call to get the value
                         codeStatements.Append(variableReference + ".Add(" + this.Build(element.Nodes(), parent) + ");\n");
@@ -91,7 +93,7 @@
                         }
                         codeStatements.Append(variableReference + " = null;");
                     }
-                    else if (this.IsBasicReturnType(returnType))
+                    else if (IsBasicReturnType(returnType))
                     {
                         if (string.IsNullOrEmpty(parent))
                         {
@@ -120,12 +122,12 @@
                         if (string.IsNullOrEmpty(parent))
                         {
                             codeStatements.Append(this.tab);
-                            codeStatements.Append(this.Build(element.Nodes(), element.Name.ToString()));
+                            codeStatements.Append(this.Build(element.Nodes(), element.Name.LocalName));
                         }
                         else
                         {
                             codeStatements.Append(this.tab);
-                            codeStatements.Append(this.Build(element.Nodes(), parent + "." + element.Name.ToString()));
+                            codeStatements.Append(this.Build(element.Nodes(), parent + "." + element.Name.LocalName));
                         }
                     }
                 }
@@ -168,7 +170,7 @@
         public StringBuilder ManageIterationTag(XElement element, string parent)
         {
             var codeStatements = new StringBuilder();
-            var returnType = this.DefineReturnType(element);
+            var returnType = DefineReturnType(element);
             var variableReference = this.DefineVariableReference((XElement)element.FirstNode, null);
             var variableListReference = this.DefineVariableReference((XElement)element.FirstNode, parent) + "s";
             codeStatements.Append(this.tab + variableListReference + " = new List<" + returnType + ">();\n");
@@ -201,11 +203,11 @@
             return this.xpathBuilder.Build(element.Attribute("test").Value);
         }
 
-        public bool IsBasicReturnType(string returnType)
+        public static bool IsBasicReturnType(string returnType)
         {
             switch (returnType)
             {
-                case "string":
+                case CSharpTypeConstant.SystemString:
                     return true;
                 case "double":
                     return true;
@@ -220,7 +222,7 @@
             }
         }
 
-        public string DefineReturnType(XElement inputedElement)
+        public static string DefineReturnType(XElement inputedElement)
         {
             if (inputedElement.Attribute(XmlnsConstant.xsiNameSpace + "nil") != null && inputedElement.Attribute(XmlnsConstant.xsiNameSpace + "nil").Value == "true")
             {
@@ -229,7 +231,7 @@
 
             var elementTypes = new List<string>();
             var nodes = new List<XNode> { inputedElement };
-            this.RetrieveAllTypeInTheElement(nodes, elementTypes);
+            RetrieveAllTypeInTheElement(nodes, elementTypes);
             if (elementTypes.Count > 1 && IsBasicReturnType(elementTypes[1]))
             {
                 return elementTypes[1];
@@ -242,7 +244,7 @@
         {
             var elementTypes = new List<string>();
             var nodes = new List<XNode> { inputedElement };
-            this.RetrieveAllTypeInTheElement(nodes, elementTypes);
+            RetrieveAllTypeInTheElement(nodes, elementTypes);
             if (parent == null)
             {
                 return elementTypes[0];
@@ -263,14 +265,14 @@
             return false;
         }
 
-        private void RetrieveAllTypeInTheElement(IEnumerable<XNode> inputedElement, List<string> elementTypes)
+        private static void RetrieveAllTypeInTheElement(IEnumerable<XNode> inputedElement, List<string> elementTypes)
         {
             int number = 0;
             foreach (XElement item in inputedElement)
             {
                 if (!Regex.IsMatch(item.Name.NamespaceName, XmlnsConstant.xslNameSpace))
                 {
-                    elementTypes.Add(item.Name.ToString());
+                    elementTypes.Add(item.Name.LocalName);
                 }
                 else if (item.Name.LocalName == "value-of")
                 {
@@ -288,7 +290,7 @@
                     }    
                     else
                     {
-                        elementTypes.Add("string");
+                        elementTypes.Add(CSharpTypeConstant.SystemString);
                     }
                 }
                 else if (item.Name.LocalName == "variable")
@@ -298,7 +300,7 @@
 
                 if (item.HasElements)
                 {
-                    this.RetrieveAllTypeInTheElement(item.Nodes(), elementTypes);
+                    RetrieveAllTypeInTheElement(item.Nodes(), elementTypes);
                 }
             }
         }

@@ -35,10 +35,10 @@ namespace EaiConverter.Test.Builder
             this.activity.Parameters = new List<ClassParameter>{
                 new ClassParameter{
                     Name = "message",
-                    Type= "String"},
+					Type= "System.String"},
                 new ClassParameter{
                     Name = "msgCode",
-                    Type= "String"}
+					Type= "System.String"}
             };
         }
 
@@ -46,8 +46,8 @@ namespace EaiConverter.Test.Builder
         public void Should_Generate_invocation_method()
         {
 			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.pe.core.WriteToLogActivity"");
-string message = ""testvalue"";
-string msgCode = ""EVL"";
+System.String message = ""testvalue"";
+System.String msgCode = ""EVL"";
 
 this.logger.Error(String.Format(""Message : {0}\nMessage code : {1} "", message, msgCode));
 ";

@@ -32,14 +32,14 @@ namespace EaiConverter.Test.Builder
             this.activity.Parameters = new List<ClassParameter>{
                 new ClassParameter{
                     Name = "xmlString",
-                    Type= "string"}
+                    Type= "System.String"}
             };
         }
 
         [Test]
         public void Should_Return_InvocationCode()
         {
-            var expected = @"string xmlString = ""TestString"";
+            var expected = @"System.String xmlString = ""TestString"";
 
 var my_Call_Process_Activity = this.processToCall.Start(xmlString);
 ";

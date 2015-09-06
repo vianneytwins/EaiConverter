@@ -2,6 +2,7 @@
 using System.Xml.Linq;
 using NUnit.Framework;
 using EaiConverter.Model;
+using EaiConverter.Utils;
 
 namespace EaiConverter.Test.Parser
 {
@@ -83,7 +84,7 @@ namespace EaiConverter.Test.Parser
         public void Should_Return_One_Parameter_of_type_string(){
             XmlParseActivity xmlParseActivity = (XmlParseActivity) xmlParseActivityParser.Parse (doc);
 
-            Assert.AreEqual ("string", xmlParseActivity.Parameters[0].Type);
+			Assert.AreEqual (CSharpTypeConstant.SystemString, xmlParseActivity.Parameters[0].Type);
         }
     }
 }

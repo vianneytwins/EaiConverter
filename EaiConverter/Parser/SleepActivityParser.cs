@@ -18,7 +18,7 @@ namespace EaiConverter.Parser
             if (inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings") != null && inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element(XmlnsConstant.sleeptibcoActivityNameSpace + "SleepInputSchema") != null)
             {
                 activity.InputBindings = inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element(XmlnsConstant.sleeptibcoActivityNameSpace + "SleepInputSchema").Nodes();
-                activity.Parameters = new XslParser().Build(activity.InputBindings);
+                activity.Parameters = new XslParser().Parse(activity.InputBindings);
             }
             return activity;
         }

@@ -33,7 +33,7 @@ namespace EaiConverter.Test.Builder
             var codeStatement = xslBuilder.Build (doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual (@"string FundName = ""testvalue"";
+			Assert.AreEqual (@"System.String FundName = ""testvalue"";
 
 ", generateCode);
         }
@@ -91,8 +91,8 @@ namespace EaiConverter.Test.Builder
 
             var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build (doc.Nodes()));
 
-            Assert.AreEqual (@"string FundName = ""testvalue"";
-string AdminID = ""EVL"";
+			Assert.AreEqual (@"System.String FundName = ""testvalue"";
+System.String AdminID = ""EVL"";
 
 ", generateCode);
         }
@@ -168,7 +168,7 @@ sqlParams.AdminID = ""EVL"";
             var codeStatement = xslBuilder.Build (doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual ("if (true)\n{\n    string FundName = \"testvalue\";\n}\n\n", generateCode);
+			Assert.AreEqual ("if (true)\n{\n    System.String FundName = \"testvalue\";\n}\n\n", generateCode);
         }
 
         [Test]
@@ -194,7 +194,7 @@ sqlParams.AdminID = ""EVL"";
             var codeStatement = xslBuilder.Build (doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-			Assert.AreEqual ("if (true)\n{\n    string FundName = \"testvalue1\";\n}\nelse\n{\n    string FundName = \"testvalue2\";\n}\n\n", generateCode);
+			Assert.AreEqual ("if (true)\n{\n    System.String FundName = \"testvalue1\";\n}\nelse\n{\n    System.String FundName = \"testvalue2\";\n}\n\n", generateCode);
         }
 
         [Test]
@@ -216,7 +216,7 @@ sqlParams.AdminID = ""EVL"";
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
             Assert.AreEqual (
-"FundCompany FundCompany = new FundCompany();\nFundCompany.FundNames = new List<string>();\nforeach (var item in items)\n{\n    string FundName = \"testvalue1\";\n    FundCompany.FundNames.Add(FundName);\n}\n\n", generateCode);
+				"FundCompany FundCompany = new FundCompany();\nFundCompany.FundNames = new List<System.String>();\nforeach (var item in items)\n{\n    System.String FundName = \"testvalue1\";\n    FundCompany.FundNames.Add(FundName);\n}\n\n", generateCode);
         }
 
 
@@ -310,7 +310,7 @@ sqlParams.AdminID = null;
             var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build (doc.Nodes()));
 
             Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
-sqlParams.param = new List<string>();
+sqlParams.param = new List<System.String>();
 sqlParams.param.Add(""testvalue1"");
 sqlParams.param.Add(""testvalue2"");
 
@@ -374,7 +374,26 @@ sqlParams.param.Add(""testvalue2"");
 
 			var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build(packageName, doc.Nodes()));
 
-			Assert.AreEqual ("string param = \"testvalue1\";\n\n", generateCode.ToString());
+			Assert.AreEqual ("System.String param = \"testvalue1\";\n\n", generateCode.ToString());
+		}
+
+		[Test]
+		public void Should_Return_remove_prefix (){
+			var xml =
+				@"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" xmlns:pfx1=""http://www.SomeWhere.com"">
+ <pfx1:logInfo>       
+<FundName>
+            <xsl:value-of select=""'testvalue'""/>
+        </FundName>
+</pfx1:logInfo>
+</pd:inputBindings>
+";
+			XElement doc = XElement.Parse(xml);
+
+			var codeStatement = xslBuilder.Build (doc.Nodes());
+
+			string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
+			Assert.AreEqual ("logInfo logInfo = new logInfo();\nlogInfo.FundName = \"testvalue\";\n\n", generateCode);
 		}
 	}
 }

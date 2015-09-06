@@ -37,10 +37,10 @@
             this.activity.Parameters = new List<ClassParameter>{
                 new ClassParameter{
                     Name = "message",
-                    Type= "String"},
+					Type= "System.String"},
                 new ClassParameter{
                     Name = "messageCode",
-                    Type= "String"}
+					Type= "System.String"}
             };
         }
 
@@ -48,8 +48,8 @@
         public void Should_Generate_invocation_method()
         {
             var expected = @"this.logger.Info(""Start Activity: My of type: com.tibco.pe.core.GenerateErrorActivity"");
-string message = ""testvalue"";
-string messageCode = ""EVL"";
+System.String message = ""testvalue"";
+System.String messageCode = ""EVL"";
 
 throw new System.Exception(String.Format(""Message : {0}\nMessage code : {1} "", message, messageCode));
 ";

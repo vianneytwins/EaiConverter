@@ -1,4 +1,7 @@
-﻿namespace EaiConverter.Parser
+﻿using EaiConverter.Utils;
+using EaiConverter.Builder;
+
+namespace EaiConverter.Parser
 {
     using System.Collections.Generic;
     using System.Text;
@@ -10,7 +13,7 @@
 
     public class XslParser
     {
-         public List<ClassParameter> Build (IEnumerable<XNode> inputNodes)
+         public List<ClassParameter> Parse(IEnumerable<XNode> inputNodes)
          {
             var paramaters = new List<ClassParameter>();
             if (inputNodes == null)
@@ -23,14 +26,14 @@
                 var element = (XElement) inputNode;
                 if (!Regex.IsMatch(element.Name.NamespaceName, XmlnsConstant.xslNameSpace))
                 {
-                    string returnType = this.DefineReturnType(element);
-                    if (this.IsBasicReturnType(returnType))
+                    string returnType = XslBuilder.DefineReturnType(element);
+                    if (XslBuilder.IsBasicReturnType(returnType))
                     {
                         paramaters.Add(new ClassParameter{Type=returnType,Name = element.Name.LocalName});
                     }
                     else
                     {
-                        paramaters.Add(new ClassParameter{Type=returnType,Name = element.Name.LocalName, ChildProperties=this.Build(element.Nodes())});
+                        paramaters.Add(new ClassParameter{Type=returnType,Name = element.Name.LocalName, ChildProperties=this.Parse(element.Nodes())});
                     }
                 }
                 else
@@ -40,23 +43,23 @@
                     }
                     else if (element.Name.LocalName =="if")
                     {
-                        return this.Build(element.Nodes());
+                        return this.Parse(element.Nodes());
                     }
                     else if (element.Name.LocalName =="choose")
                     {
-                        return this.Build(element.Nodes());
+                        return this.Parse(element.Nodes());
                     }
                     else if (element.Name.LocalName =="when")
                     {
-                        return this.Build(element.Nodes());
+                        return this.Parse(element.Nodes());
                     }
                     else if (element.Name.LocalName =="otherwise")
                     {
-                        return this.Build(element.Nodes());
+                        return this.Parse(element.Nodes());
                     }
                     else if (element.Name.LocalName =="for-each")
                     {
-                        return this.Build(element.Nodes());
+                        return this.Parse(element.Nodes());
                     }
                 }
 
@@ -65,78 +68,9 @@
 
         }
 
-        public bool IsBasicReturnType(string returnType)
-        {
-            switch (returnType)
-            {
-                case "string":
-                    return true;
-                case "double":
-                    return true;
-                case "bool":
-                    return true;
-                case "DateTime":
-                    return true;
-                default:
-                    return false;
-            }
-
-        }
-
-        public string DefineReturnType(XElement inputedElement)
-        {
-            var elementTypes = new List<string>();
-            var nodes = new List<XNode>();
-            nodes.Add(inputedElement);
-            this.RetrieveAllTypeInTheElement(nodes, elementTypes);
-            if (elementTypes.Count > 1 && IsBasicReturnType(elementTypes[1]))
-            {
-                return elementTypes[1];
-            }
-            return elementTypes[0];
-        }
 
 
-        private void RetrieveAllTypeInTheElement(IEnumerable<XNode> inputedElement, List<string> elementTypes)
-        {
-            foreach (XElement item in inputedElement)
-            {
-                if (!Regex.IsMatch(item.Name.NamespaceName, XmlnsConstant.xslNameSpace))
-                {
-                    elementTypes.Add(item.Name.ToString());
-                }
-                else if (item.Name.LocalName =="value-of")
-                {
-                    if (item.Attribute("select").Value.Contains("tib:parse-date"))
-                    {
-                        elementTypes.Add("DateTime");
-
-                    } else if (item.Attribute("select").Value.StartsWith("number(")){
-                        elementTypes.Add("double");
-                    }
-                    else{
-                        elementTypes.Add("string");
-                    }
-
-                }
-
-                if (item.HasElements)
-                {
-                    this.RetrieveAllTypeInTheElement(item.Nodes(), elementTypes);
-                }
-
-            }
-        }
-
-        string GenerateCode(List<string> codeStatement)
-        {
-            var generatedCode = new StringBuilder();
-            foreach (var item in codeStatement)
-            {
-                generatedCode.Append(item);
-            }
-            return generatedCode.ToString();
-        }
+          
 
     }
 }

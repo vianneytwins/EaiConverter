@@ -21,7 +21,7 @@ namespace EaiConverter.Parser
             if (inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings") != null)
             {
                 callProcessActivity.InputBindings = inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Nodes();
-                callProcessActivity.Parameters = new XslParser().Build(callProcessActivity.InputBindings);
+                callProcessActivity.Parameters = new XslParser().Parse(callProcessActivity.InputBindings);
             }
 
             return callProcessActivity;
