@@ -83,7 +83,9 @@ namespace EaiConverter.Builder
 				ReturnType = new CodeTypeReference (CSharpTypeConstant.SystemVoid),
 				Attributes = MemberAttributes.Public
 			};
-			sendMethod.Parameters.Add (new CodeParameterDeclarationExpression (new CodeTypeReference (CSharpTypeConstant.SystemString), "message"));
+			sendMethod.Parameters.Add (new CodeParameterDeclarationExpression (new CodeTypeReference (CSharpTypeConstant.SystemString), "subject"));
+            sendMethod.Parameters.Add (new CodeParameterDeclarationExpression (new CodeTypeReference (CSharpTypeConstant.SystemString), "message"));
+
 			return sendMethod;
 		}
 
@@ -97,11 +99,16 @@ namespace EaiConverter.Builder
 
 			// Add the mapping
 			invocationCodeCollection.AddRange(this.xslBuilder.Build(rdvPublishActivity.InputBindings));
+            invocationCodeCollection.Add(new CodeSnippetStatement("string subject = \"" + rdvPublishActivity.Subject+ "\";"));
 
 			// Add the invocation itself
 			var activityServiceReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), this.GetServiceFieldName(activity));
 
-			var parameters = DefaultActivityBuilder.GenerateParameters(rdvPublishActivity);
+            var initParameters = new List<string>
+                {
+                    "subject"
+                };
+			var parameters = DefaultActivityBuilder.GenerateParameters(initParameters, rdvPublishActivity);
 
 			var codeInvocation = new CodeMethodInvokeExpression(activityServiceReference, "Send", parameters);
 			invocationCodeCollection.Add(codeInvocation);

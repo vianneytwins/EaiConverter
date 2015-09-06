@@ -22,6 +22,7 @@ namespace EaiConverter.Test.Builder
 			this.activityBuilder = new RdvPublishActivityBuilder(new XslBuilder(new XpathBuilder()));
 			this.activity = new RdvPublishActivity( "My Activity Name", ActivityType.rdvPubActivityType);
 			this.activity.XsdString = "pfx:FileStatisticalData";
+			this.activity.Subject = "MY.Tibco.subject";
 			var xml =
 				@"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
     <ActivityInput>            
@@ -107,7 +108,7 @@ namespace EaiConverter.Test.Builder
     public interface IPublisher
     {
         
-        void Send(string message);
+        void Send(string subject, string message);
     }
 }
 ";
@@ -122,7 +123,8 @@ namespace EaiConverter.Test.Builder
 ActivityInput ActivityInput = new ActivityInput();
 ActivityInput.body = ""TestString"";
 
-this.my_Activity_NameRdvPublisher.Send(ActivityInput);
+string subject = ""MY.Tibco.subject"";
+this.my_Activity_NameRdvPublisher.Send(subject, ActivityInput);
 ";
 			var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.activityBuilder.GenerateInvocationCode(this.activity));
 			Assert.AreEqual(expected, generatedCode);
