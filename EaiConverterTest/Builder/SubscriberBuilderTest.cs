@@ -28,8 +28,7 @@
         
         System.Int32 WaitingTimeLimit { get; }
         System.Boolean IsStarted { get; }
-        
-        public event EventHandler ResponseReceived;
+        event EventHandler ResponseReceived;
         
         void Start();
         
