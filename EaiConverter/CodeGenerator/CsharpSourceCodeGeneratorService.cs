@@ -383,7 +383,7 @@ using System.Runtime.InteropServices;
         // for exemple tib:string-round-fraction(round(1.100), 2) Output as 1.00
         public string StringRoundFraction(string myNumber, int nbDecimal)
         {
-            return Math.Round(decimal.Parse(myNumber), nbDecimal).ToString(CultureInfo.InvariantCulture);
+            return Math.Round(decimal.Parse(myNumber), nbDecimal).ToString();
         }
     }
 }       

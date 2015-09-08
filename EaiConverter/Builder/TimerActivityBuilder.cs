@@ -116,7 +116,7 @@ namespace EaiConverter.Builder
 
             // Sets a name for the event.
             event1.Name = "ResponseReceived";
-
+            event1.Attributes = MemberAttributes.Public;
             // Sets the type of event.
             event1.Type = new CodeTypeReference("EventHandler");
 
