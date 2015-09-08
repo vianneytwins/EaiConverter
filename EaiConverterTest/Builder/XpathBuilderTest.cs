@@ -19,10 +19,9 @@ namespace EaiConverter.Test.Builder
             Assert.AreEqual("\"test\"", this.xpathBuilder.Build("'test'"));
         }
 
-        [Ignore]
         [Test]
         public void Should_Replace_ASCI_quote_with_double_Quote(){
-            Assert.AreEqual("\"test\"", this.xpathBuilder.Build("&quot;test&quot;"));
+			Assert.AreEqual(@"\""test\""", this.xpathBuilder.Build("&quot;test&quot;"));
         }
 
 		[Test]

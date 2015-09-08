@@ -51,7 +51,7 @@
 
         private static string ManageMathOperation(string expression)
         {
-            //expression = expression.Replace("&quot;", "\"");
+            expression = expression.Replace("&quot;", "\\"+"\"");
             expression = expression.Replace(" div ", " / ");
             expression = expression.Replace(" or ", " || ");
             expression = expression.Replace(" and ", " && ");
