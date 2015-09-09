@@ -17,7 +17,8 @@
 
             expression = ManageGlobalVariable(expression);
 
-            expression = expression.Replace('\'', '"');
+            expression = Regex.Replace(expression, "'([^']+)'", m => "\"" + m.Groups[1].Value.Replace(@"""", @"\""") + "\"");
+            //expression = expression.Replace('\'', '"');
             expression = expression.Replace('/', '.');
    
             expression = ManageTibcoXpathFunction(expression);
@@ -51,7 +52,7 @@
 
         private static string ManageMathOperation(string expression)
         {
-            expression = expression.Replace("&quot;", "\\"+"\"");
+
             expression = expression.Replace(" div ", " / ");
             expression = expression.Replace(" or ", " || ");
             expression = expression.Replace(" and ", " && ");

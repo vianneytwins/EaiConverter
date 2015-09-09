@@ -10,7 +10,8 @@ namespace EaiConverter.Test.Builder
         IXpathBuilder xpathBuilder;
 
         [SetUp]
-        public void SetUp(){
+        public void SetUp()
+        {
             this.xpathBuilder = new XpathBuilder();
         }
 
@@ -18,13 +19,42 @@ namespace EaiConverter.Test.Builder
         public void Should_Replace_Simple_quote_with_double_Quote(){
             Assert.AreEqual("\"test\"", this.xpathBuilder.Build("'test'"));
         }
-
+        
         [Test]
-        public void Should_Replace_ASCI_quote_with_double_Quote(){
-			Assert.AreEqual(@"\""test\""", this.xpathBuilder.Build("&quot;test&quot;"));
+        public void Should_Replace_Simple_quote_with_double_Quote2(){
+            Assert.AreEqual("\"te\\\"st\"", this.xpathBuilder.Build("'te\"st'"));
         }
 
-		[Test]
+        [Test]
+        public void Should_escape_double_quote_inside_expression(){
+			Assert.AreEqual(@"""test""", this.xpathBuilder.Build("\"test\""));
+        }
+
+        [Test]
+        public void Should_escape_double_quote_inside_expression5()
+        {
+            Assert.AreEqual(@"""te'st""", this.xpathBuilder.Build("\"te'st\""));
+        }
+
+        [Test]
+        public void Should_escape_double_quote_inside_expression2()
+        {
+            Assert.AreEqual(@"Concat(""test"")", this.xpathBuilder.Build(@"Concat(""test"")"));
+        }
+
+        [Test]
+        public void Should_escape_double_quote_inside_expression3()
+        {
+            Assert.AreEqual(@"Concat(""te\""st"")", this.xpathBuilder.Build(@"Concat('te""st')"));
+        }
+
+        [Test]
+        public void Should_escape_double_quote_inside_expression4()
+        {
+            Assert.AreEqual(@"Concat(""te\""s\""t"")", this.xpathBuilder.Build(@"Concat('te""s""t')"));
+        }
+        
+        [Test]
 		public void Should_Replace_Dash_InVariable_name(){
 			Assert.AreEqual("my_test.", this.xpathBuilder.Build("$My-test/"));
 		}
