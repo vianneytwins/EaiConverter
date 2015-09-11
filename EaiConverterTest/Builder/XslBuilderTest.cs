@@ -396,7 +396,6 @@ sqlParams.param.Add(""testvalue2"");
 			Assert.AreEqual ("logInfo logInfo = new logInfo();\nlogInfo.FundName = \"testvalue\";\n\n", generateCode);
 		}
 
-        [Ignore]
         [Test]
 		public void Should_Manage_xsl_attribute()
         {
@@ -410,33 +409,39 @@ sqlParams.param.Add(""testvalue2"");
                     <MessageID>
                         <xsl:value-of select=""concat('bondOption', tib:translate-timezone(current-dateTime(), 'UTC'))""/>
                     </MessageID>
-                    <Timezone>
-                        <xsl:value-of select=""'UTC'""/>
-                    </Timezone>
-                    <DateFormat>
-                        <xsl:attribute name=""format"">
-                            <xsl:value-of select=""'ISO8601'""/>
-                        </xsl:attribute>
-                    </DateFormat>
-                    <GeneratedTime>
-                        <xsl:value-of select=""tib:translate-timezone(current-dateTime(),'UTC')""/>
-                    </GeneratedTime>
-                    <PublishResponse>
-                        <xsl:attribute name=""value"">
-                            <xsl:value-of select=""'Publish'""/>
-                        </xsl:attribute>
-                    </PublishResponse>
                 </NTMHeader>
 </NTMMessage>
 </pd:inputBindings>
 ";
 			XElement doc = XElement.Parse(xml);
 
-			var codeStatement = xslBuilder.Build (doc.Nodes());
+			var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
 			string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-			Assert.AreEqual ("logInfo logInfo = new logInfo();\nlogInfo.FundName = \"testvalue\";\n\n", generateCode);
+            Assert.AreEqual("NTMMessage NTMMessage = new NTMMessage();\nNTMMessage.NTMMessageVersion =  \"1.03\";\n\n", generateCode);
 		}
+
+        [Test]
+        public void Should_manage_complex_type_embedded()
+        {
+            var xml =
+                @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" xmlns:pfx1=""http://www.SomeWhere.com"">
+ <logInfo>       
+<FundStruct>
+<FundName>
+            <xsl:value-of select=""'testvalue'""/>
+        </FundName>
+        </FundStruct>
+</logInfo>
+</pd:inputBindings>
+";
+            XElement doc = XElement.Parse(xml);
+
+            var codeStatement = xslBuilder.Build(doc.Nodes());
+
+            string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
+            Assert.AreEqual("logInfo logInfo = new logInfo();\nlogInfo.FundStruct = new FundStruct();\nlogInfo.FundStruct.FundName = \"testvalue\";\n\n", generateCode);
+        }
 	}
 }
 

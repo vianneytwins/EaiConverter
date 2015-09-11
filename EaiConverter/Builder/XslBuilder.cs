@@ -141,6 +141,10 @@ namespace EaiConverter.Builder
                     {
                         codeStatements.Append(this.ReturnValue(element));
                     }
+                    else if (element.Name.LocalName == "attribute")
+                    {
+                        codeStatements.Append(this.BuildAttribute(element));
+                    }
                     else if (element.Name.LocalName == "if")
                     {
                         codeStatements.Append(this.ManageConditionTag(element, parent, true));
@@ -165,6 +169,12 @@ namespace EaiConverter.Builder
             }
 
             return codeStatements;
+        }
+
+        private string BuildAttribute(XElement element)
+        {
+            //return this.xpathBuilder.Build(element.Attribute("select").Value);
+            return string.Empty;
         }
 
         public StringBuilder ManageIterationTag(XElement element, string parent)
@@ -294,6 +304,10 @@ namespace EaiConverter.Builder
                     }
                 }
                 else if (item.Name.LocalName == "variable")
+                {
+                    elementTypes.Add(item.Attribute("name").Value);
+                }
+                else if (item.Name.LocalName == "attribute")
                 {
                     elementTypes.Add(item.Attribute("name").Value);
                 }
