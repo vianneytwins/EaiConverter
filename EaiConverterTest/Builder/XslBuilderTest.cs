@@ -405,11 +405,6 @@ sqlParams.param.Add(""testvalue2"");
                 <xsl:attribute name=""version"">
                     <xsl:value-of select=""'1.03'""/>
                 </xsl:attribute>
-                <NTMHeader>
-                    <MessageID>
-                        <xsl:value-of select=""concat('bondOption', tib:translate-timezone(current-dateTime(), 'UTC'))""/>
-                    </MessageID>
-                </NTMHeader>
 </NTMMessage>
 </pd:inputBindings>
 ";
@@ -418,7 +413,7 @@ sqlParams.param.Add(""testvalue2"");
 			var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
 			string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual("NTMMessage NTMMessage = new NTMMessage();\nNTMMessage.NTMMessageVersion =  \"1.03\";\n\n", generateCode);
+            Assert.AreEqual("NTMMessage NTMMessage = new NTMMessage();\nNTMMessage.NTMMessageVersion = \"1.03\";\n\n", generateCode);
 		}
 
         [Test]

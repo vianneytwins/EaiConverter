@@ -143,7 +143,7 @@ namespace EaiConverter.Builder
                     }
                     else if (element.Name.LocalName == "attribute")
                     {
-                        codeStatements.Append(this.BuildAttribute(element));
+                        codeStatements.Append(this.BuildAttribute(element, parent));
                     }
                     else if (element.Name.LocalName == "if")
                     {
@@ -171,10 +171,10 @@ namespace EaiConverter.Builder
             return codeStatements;
         }
 
-        private string BuildAttribute(XElement element)
+        private string BuildAttribute(XElement element, string parent)
         {
             //return this.xpathBuilder.Build(element.Attribute("select").Value);
-            return string.Empty;
+            return parent+ "." + parent + VariableHelper.ToClassName(element.Attribute("name").Value) + " = " + this.Build(element.Nodes(), null) + ";\n";
         }
 
         public StringBuilder ManageIterationTag(XElement element, string parent)
