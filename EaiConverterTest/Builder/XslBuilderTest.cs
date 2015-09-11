@@ -395,6 +395,48 @@ sqlParams.param.Add(""testvalue2"");
 			string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
 			Assert.AreEqual ("logInfo logInfo = new logInfo();\nlogInfo.FundName = \"testvalue\";\n\n", generateCode);
 		}
+
+        [Ignore]
+        [Test]
+		public void Should_Manage_xsl_attribute()
+        {
+			var xml =
+                @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" xmlns:pfx1=""http://www.SomeWhere.com"">
+             <NTMMessage>
+                <xsl:attribute name=""version"">
+                    <xsl:value-of select=""'1.03'""/>
+                </xsl:attribute>
+                <NTMHeader>
+                    <MessageID>
+                        <xsl:value-of select=""concat('bondOption', tib:translate-timezone(current-dateTime(), 'UTC'))""/>
+                    </MessageID>
+                    <Timezone>
+                        <xsl:value-of select=""'UTC'""/>
+                    </Timezone>
+                    <DateFormat>
+                        <xsl:attribute name=""format"">
+                            <xsl:value-of select=""'ISO8601'""/>
+                        </xsl:attribute>
+                    </DateFormat>
+                    <GeneratedTime>
+                        <xsl:value-of select=""tib:translate-timezone(current-dateTime(),'UTC')""/>
+                    </GeneratedTime>
+                    <PublishResponse>
+                        <xsl:attribute name=""value"">
+                            <xsl:value-of select=""'Publish'""/>
+                        </xsl:attribute>
+                    </PublishResponse>
+                </NTMHeader>
+</NTMMessage>
+</pd:inputBindings>
+";
+			XElement doc = XElement.Parse(xml);
+
+			var codeStatement = xslBuilder.Build (doc.Nodes());
+
+			string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
+			Assert.AreEqual ("logInfo logInfo = new logInfo();\nlogInfo.FundName = \"testvalue\";\n\n", generateCode);
+		}
 	}
 }
 

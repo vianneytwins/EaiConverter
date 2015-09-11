@@ -59,6 +59,18 @@ namespace EaiConverter.Parser
                         jdbcQueryActivity.QueryOutputStatementParameters.Add(new ClassParameter { Name = parameterName, Type = parameterType });
                     }
                 }
+
+                var xElement = configElement.Element("ResultSets");
+                if (xElement != null)
+                {
+                    jdbcQueryActivity.QueryOutputStatementParameters.AddRange(this.GetOutputParameters(xElement.Element("ResultSet")));
+                }
+
+                if (inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings") != null && inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("inputs") != null && inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("inputs").Element("inputSet") != null)
+                {
+                    jdbcQueryActivity.InputBindings = inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("inputs").Element("inputSet").Nodes();
+                    jdbcQueryActivity.Parameters = new XslParser().Parse(jdbcQueryActivity.InputBindings);
+                }
             }
             else
             {
@@ -79,22 +91,23 @@ namespace EaiConverter.Parser
                 }
 
                 jdbcQueryActivity.QueryOutputStatementParameters = this.GetOutputParameters(configElement);
+
+                if (inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings") != null && inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("jdbcQueryActivityInput") != null)
+                {
+                    jdbcQueryActivity.InputBindings = inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("jdbcQueryActivityInput").Nodes();
+                    jdbcQueryActivity.Parameters = new XslParser().Parse(jdbcQueryActivity.InputBindings);
+                }
             }
             
-            if (inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings") != null && inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("jdbcQueryActivityInput") != null)
-            {
-                jdbcQueryActivity.InputBindings = inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("jdbcQueryActivityInput").Nodes();
-                jdbcQueryActivity.Parameters = new XslParser().Parse(jdbcQueryActivity.InputBindings);
-            }
 
             return jdbcQueryActivity;
         }
 
-        private List<ClassParameter> GetOutputParameters(XElement configElement)
+        private List<ClassParameter> GetOutputParameters(XElement rootElement)
         {
-            IEnumerable<XElement> queryOutPutElements = from element in configElement.Elements("QueryOutputCachedSchemaColumns")
+            IEnumerable<XElement> queryOutPutElements = from element in rootElement.Elements("QueryOutputCachedSchemaColumns")
                 select element;
-            IEnumerable<XElement> typeElements = from element in configElement.Elements("QueryOutputCachedSchemaDataTypes")
+            IEnumerable<XElement> typeElements = from element in rootElement.Elements("QueryOutputCachedSchemaDataTypes")
                 select element;
             var parameters = new List<ClassParameter>();
             int i = 0;
