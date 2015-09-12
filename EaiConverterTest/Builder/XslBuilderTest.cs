@@ -171,6 +171,35 @@ sqlParams.AdminID = ""EVL"";
 			Assert.AreEqual ("if (true)\n{\n    System.String FundName = \"testvalue\";\n}\n\n", generateCode);
         }
 
+		[Ignore]
+		[Test]
+		public void Should_manage_choose_condition_Outside(){
+			var xml =
+				@"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
+<FundName>
+<xsl:choose>
+    <xsl:when test=""true"">        
+        
+                <xsl:value-of select=""'testvalue1'""/>
+    
+    </xsl:when>
+    <xsl:otherwise>        
+       
+                <xsl:value-of select=""'testvalue2'""/>
+        
+    </xsl:otherwise>
+</xsl:choose>
+</FundName>
+</pd:inputBindings>
+";
+			XElement doc = XElement.Parse(xml);
+
+			var codeStatement = xslBuilder.Build (doc.Nodes());
+
+			string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
+			Assert.AreEqual ("System.String FundName;\nif (true)\n{\n    FundName = \"testvalue1\";\n}\nelse\n{\n    FundName = \"testvalue2\";\n}\n\n", generateCode);
+		}
+
         [Test]
         public void Should_manage_Choose_condition(){
             var xml =

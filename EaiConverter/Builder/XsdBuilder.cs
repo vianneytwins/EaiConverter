@@ -72,7 +72,7 @@ namespace EaiConverter.Builder
                 codeExporter.ExportTypeMapping(map);
             }
 
-            this.RemoveUnusedStuff(codeNamespace);
+            //this.RemoveUnusedStuff(codeNamespace);
 
             return codeNamespace;
         }

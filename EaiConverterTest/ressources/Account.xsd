@@ -16,7 +16,7 @@
             <xsd:enumeration value="FirstChild" />
             <xsd:enumeration value="LastChild" />
             <xsd:enumeration value="FirstNonEmpty" />
-            <xsd:enumeration value="LastNonEmpty" />
+            <xsd:enumeration value="'1.03'" />
           </xsd:restriction>
         </xsd:simpleType>
       </xsd:element>
@@ -28,14 +28,7 @@
           </xsd:sequence>
         </xsd:complexType>
       </xsd:element>
-      <xsd:element name="Annotations" minOccurs="0">
-        <xsd:complexType>
-          <xsd:sequence>
-            <xsd:element name="Annotation"  type="Annotation" minOccurs="0"
-                         maxOccurs="unbounded"/>
-          </xsd:sequence>
-        </xsd:complexType>
-      </xsd:element>
+
     </xsd:all>
   </xsd:complexType>
 </xsd:schema>
