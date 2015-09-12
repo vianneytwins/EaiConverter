@@ -281,6 +281,7 @@ using System.Runtime.InteropServices;
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
 
     public class TibcoXslHelper
     {
@@ -327,6 +328,18 @@ using System.Runtime.InteropServices;
             return inputString.Length;
         }
 
+        // usage of Left : left(myvariable,3)
+        public static string Left(string inputString, int lenght)
+        {
+            return inputString.Substring (0, lenght);
+        }
+
+        // usage of substring : substring(myvariable,3,5)
+        public static string Substring(string inputString, int startindex, int endindex)
+        {
+            return inputString.Substring (startindex-1, endindex-1);
+        }
+
         //usage a string, usage sample : tib:render-xml(myvariable, true()) 
         public static string RenderXml(string inputString, bool isSomething)
         {
@@ -339,11 +352,21 @@ using System.Runtime.InteropServices;
             return inputString.Trim();
         }
 
-        // usage tib:translate-timezone( : tib:translate-timezone(
+        // usage tib:translate-timezone( : tib:translate-timezone(date, ""UTC"")
         // TODO find usage exemple
-        public static string TranslateTimezone(string timezone)
+        public static DateTime TranslateTimezone(DateTime date, string timezone)
         {
-            return timezone;
+            TimeZoneInfo destinationTimeZone;
+            if (timezone == ""UTC"")
+            {
+                destinationTimeZone = TimeZoneInfo.Utc;
+            }
+            else
+            {
+                throw NotImplementedException;
+            }
+            return TimeZoneInfo.ConvertTime(date, destinationTimeZone);
+
         }
 
         // usage tib:compare-date( : tib:compare-date(date1, date2) , return 0 if equals

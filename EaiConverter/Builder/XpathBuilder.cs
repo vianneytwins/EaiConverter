@@ -99,6 +99,11 @@
             expression = expression.Replace("upper-case(", "TibcoXslHelper.UpperCase(");
 
             expression = expression.Replace("lower-case(", "TibcoXslHelper.LowerCase(");
+
+            expression = expression.Replace("tib:left(", "TibcoXslHelper.Left(");
+
+            expression = expression.Replace("substring(", "TibcoXslHelper.Substring(");
+
             return expression;
         }
 
