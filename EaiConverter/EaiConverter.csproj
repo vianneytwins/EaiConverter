@@ -94,6 +94,7 @@
     <Compile Include="Builder\TibcoProcessClassesBuilder.cs" />
     <Compile Include="Builder\JdbcQueryActivityBuilder.cs" />
     <Compile Include="Builder\DataAccessServiceBuilder.cs" />
+    <Compile Include="Builder\GetSharedVariableActivityBuilder.cs" />
     <Compile Include="Builder\DataAccessBuilder.cs" />
     <Compile Include="Builder\CoreProcessBuilder.cs" />
     <Compile Include="Builder\LoggerInterfaceBuilder.cs" />
@@ -151,6 +152,9 @@
     <Compile Include="Parser\ConfirmActivityParser.cs" />
     <Compile Include="Model\ConfirmActivity.cs" />
     <Compile Include="Builder\ConfirmActivityBuilder.cs" />
+    <Compile Include="Builder\SetSharedVariableActivityBuilder.cs" />
+    <Compile Include="Builder\SharedVariableServiceBuilder.cs" />
+    <Compile Include="Builder\AbstractSharedVariableActivityBuilder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

@@ -49,8 +49,7 @@ namespace EaiConverter.Builder
 
         public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
         {
-            var parameterReference = new CodeFieldReferenceExpression(
-                new CodeThisReferenceExpression(), GetServiceFieldName());
+            var parameterReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), GetServiceFieldName());
 
             var statements = new CodeStatementCollection
                 {

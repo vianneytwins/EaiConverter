@@ -101,6 +101,8 @@
     <Compile Include="Parser\XslParserTest.cs" />
     <Compile Include="Parser\ConfirmActivityParserTest.cs" />
     <Compile Include="Builder\ConfirmActivityBuilderTest.cs" />
+    <Compile Include="Builder\SetSharedVariableActivityBuilderTest.cs" />
+    <Compile Include="Builder\GetSharedVariableActivityBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />

@@ -30,7 +30,7 @@ namespace EaiConverter.Builder
 
             // Add the input bindings
             invocationCodeCollection.AddRange(this.xslBuilder.Build(sharedVariableActivity.InputBindings));
-            invocationCodeCollection.Add(new CodeSnippetStatement("var configName = \""+sharedVariableActivity.VariableConfig+"\";"));
+            invocationCodeCollection.Add(new CodeSnippetStatement("var configName = \"" + sharedVariableActivity.VariableConfig + "\";"));
 
             // Add the invocation itself
             // TODO : need to put it in the parser to get the real ReturnType !!
