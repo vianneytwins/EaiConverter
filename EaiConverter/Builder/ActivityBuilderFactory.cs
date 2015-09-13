@@ -100,7 +100,18 @@ namespace EaiConverter.Builder
             {
                 return new DefaultSubscriberBuilder(this.subscriberBuilder);
             }
-
+            else if (activityType == ActivityType.setSharedVariableActivityType )
+            {
+                return new SetSharedVariableActivityBuilder(this.xslBuilder);
+            }
+            else if (activityType == ActivityType.getSharedVariableActivityType )
+            {
+                return new GetSharedVariableActivityBuilder(this.xslBuilder);
+            }
+            else if (activityType == ActivityType.ConfirmActivityType)
+            {
+                return new ConfirmActivityBuilder();
+            }
 
             return new DefaultActivityBuilder(this.xslBuilder);
         }

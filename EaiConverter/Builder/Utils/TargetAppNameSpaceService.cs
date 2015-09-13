@@ -10,6 +10,7 @@
         public const string dataAccessCommonNamespace = myAppName + ".Mydomain.DataAccess.Common";
         public const string loggerNameSpace = myAppName + ".Tools.Logging";
         public const string xmlToolsNameSpace = myAppName + ".Tools.Xml";
+        public const string sharedVariableNameSpace = myAppName + ".Tools.SharedVariable";
         public const string EventSourcingNameSpace = myAppName + ".Tools.EventSourcing";
         public const string domainContractNamespaceName = myAppName + ".Mydomain.Service.Contract";
         public const string javaToolsNameSpace = myAppName + ".Tools.Java";
