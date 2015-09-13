@@ -21,7 +21,7 @@
 		public void SetUp ()
 		{
 			this.activityBuilder = new RdvEventSourceActivityBuilder(new SubscriberInterfaceBuilder());
-			this.activity = new RdvEventSourceActivity( "My Activity Name", ActivityType.RdvEventSourceAType);
+			this.activity = new RdvEventSourceActivity( "My Activity Name", ActivityType.RdvEventSourceActivityType);
 
 			this.activity.Parameters = new List<ClassParameter>{
 				new ClassParameter{
@@ -65,13 +65,13 @@ this.subscriber.ResponseReceived += this.OnEvent;
 		}
 
 		[Test]
-		public void Should_return_3_Classes_To_Generate_if_they_are_not_already_generated ()
+		public void Should_return_2_Classes_To_Generate_if_they_are_not_already_generated ()
 		{
 			ConfigurationApp.SaveProperty("IsSubscriberInterfaceAlreadyGenerated", "false");
 			ConfigurationApp.SaveProperty("IsTibcoSubscriberImplemAlreadyGenerated", "false");
 
 			var namespaces = this.activityBuilder.GenerateClassesToGenerate(activity);
-			Assert.AreEqual (3, namespaces.Count);
+			Assert.AreEqual (2, namespaces.Count);
 		}
 
 		[Test]

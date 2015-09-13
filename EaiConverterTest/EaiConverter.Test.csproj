@@ -99,6 +99,8 @@
     <Compile Include="Parser\TimerEventActivityParserTest.cs" />
     <Compile Include="Parser\AdapterSubscriberActivityParserTest.cs" />
     <Compile Include="Parser\XslParserTest.cs" />
+    <Compile Include="Parser\ConfirmActivityParserTest.cs" />
+    <Compile Include="Builder\ConfirmActivityBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />

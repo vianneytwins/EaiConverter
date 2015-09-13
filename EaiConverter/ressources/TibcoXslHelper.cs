@@ -84,7 +84,7 @@
             }
             else
             {
-                throw NotImplementedException;
+                throw new NotImplementedException();
             }
             return TimeZoneInfo.ConvertTime(date, destinationTimeZone);
 

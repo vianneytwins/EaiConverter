@@ -68,7 +68,14 @@ namespace EaiConverter.Builder
 				ReturnType = new CodeTypeReference(CSharpTypeConstant.SystemVoid),
 				Attributes = MemberAttributes.Public
 			});
-
+            subscriberRdvClass.Members.Add(
+                new CodeMemberMethod
+                {
+                    Name = "Confirm",
+                    ReturnType = new CodeTypeReference(CSharpTypeConstant.SystemVoid),
+                    Attributes = MemberAttributes.Public
+                });
+            
 			subscriberRdvClassNamespace.Types.Add (subscriberRdvClass);
 			return subscriberRdvClassNamespace;
 		}

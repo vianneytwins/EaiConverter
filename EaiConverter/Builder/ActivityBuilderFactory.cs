@@ -84,7 +84,7 @@ namespace EaiConverter.Builder
             {
                 return new GroupActivityBuilder(this.xslBuilder);
             }
-			else if (activityType == ActivityType.RdvEventSourceAType)
+			else if (activityType == ActivityType.RdvEventSourceActivityType)
 			{
                 return new RdvEventSourceActivityBuilder(this.subscriberBuilder);
 			}

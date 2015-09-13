@@ -148,6 +148,9 @@
     <Compile Include="Parser\AdapterSubscriberActivityParser.cs" />
     <Compile Include="Builder\DefaultSubscriberBuilder.cs" />
     <Compile Include="Builder\SubscriberInterfaceBuilder.cs" />
+    <Compile Include="Parser\ConfirmActivityParser.cs" />
+    <Compile Include="Model\ConfirmActivity.cs" />
+    <Compile Include="Builder\ConfirmActivityBuilder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

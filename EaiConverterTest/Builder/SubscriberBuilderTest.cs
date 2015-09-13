@@ -33,11 +33,13 @@
         void Start();
         
         void Stop();
+        
+        void Confirm();
     }
 }
 ";
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.subscriberBuilder.GenerateClasses()[0]);
-            Assert.AreEqual(expected, generatedCode);
+			Assert.AreEqual(expected.RemoveWindowsReturnLineChar(), generatedCode);
         }
     }
 }

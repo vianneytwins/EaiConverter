@@ -13,10 +13,9 @@ namespace EaiConverter.Builder
         
         public CodeNamespace[] GenerateClasses()
         {
-            var classes = new CodeNamespace[2]
+            var classes = new CodeNamespace[1]
                               {
-                                  this.GenerateSubscriberInterface(),
-                                  this.GenerateResponseReceivedEventHandler()
+                                  this.GenerateSubscriberInterface()
                               };
 
             return classes;
@@ -52,15 +51,17 @@ namespace EaiConverter.Builder
                         Name = "Stop",
                         ReturnType = new CodeTypeReference(CSharpTypeConstant.SystemVoid)
                     });
-
+            subscriberInterfaceClass.Members.Add(
+                new CodeMemberMethod
+                {
+                    Name = "Confirm",
+                    ReturnType = new CodeTypeReference(CSharpTypeConstant.SystemVoid)
+                });
+            
             subscriberInterfaceNamespace.Types.Add(subscriberInterfaceClass);
             return subscriberInterfaceNamespace;
         }
 
-        private CodeNamespace GenerateResponseReceivedEventHandler()
-        {
-            return new CodeNamespace();
-        }
         
     }
 }

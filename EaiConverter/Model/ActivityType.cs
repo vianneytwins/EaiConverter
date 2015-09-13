@@ -35,8 +35,10 @@
 
         public static readonly ActivityType rdvPubActivityType = new ActivityType("com.plugin.tibrv.RVPubActivity");
 
+        public static readonly ActivityType ConfirmActivityType = new ActivityType("com.tibco.pe.core.ConfirmActivity");
+
         // Starter activity type
-        public static readonly ActivityType RdvEventSourceAType = new ActivityType("com.plugin.tibrv.RVEventSource");
+        public static readonly ActivityType RdvEventSourceActivityType = new ActivityType("com.plugin.tibrv.RVEventSource");
 
         public static readonly ActivityType TimerEventSource = new ActivityType("com.tibco.plugin.timer.TimerEventSource");
         

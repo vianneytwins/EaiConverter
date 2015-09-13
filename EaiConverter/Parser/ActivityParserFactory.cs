@@ -60,7 +60,7 @@
             {
                 return new RdvPublishActivityParser();
             }
-            else if (activityType == ActivityType.RdvEventSourceAType.ToString())
+            else if (activityType == ActivityType.RdvEventSourceActivityType.ToString())
             {
                 return new RdvEventSourceActivityParser();
             }
@@ -75,6 +75,10 @@
             else if (activityType == ActivityType.AeSubscriberActivity.ToString())
             {
                 return new AdapterSubscriberActivityParser();
+            }
+            else if (activityType == ActivityType.ConfirmActivityType.ToString())
+            {
+                return new ConfirmActivityParser();
             }
             else
             {

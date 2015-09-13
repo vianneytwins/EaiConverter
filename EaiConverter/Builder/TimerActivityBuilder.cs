@@ -103,14 +103,14 @@ namespace EaiConverter.Builder
 
         private CodeNamespace GenerateTimerSubscriberImplementation()
         {
-            var subscriberRdvClassNamespace = new CodeNamespace();
-            subscriberRdvClassNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace;
-            subscriberRdvClassNamespace.Imports.Add(new CodeNamespaceImport("System"));
+            var timerSubscriberNamespace = new CodeNamespace();
+            timerSubscriberNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace;
+            timerSubscriberNamespace.Imports.Add(new CodeNamespaceImport("System"));
 
-            var subscriberRdvClass = new CodeTypeDeclaration("TimerSubscriber");
-            subscriberRdvClass.IsClass = true;
-            subscriberRdvClass.Attributes = MemberAttributes.Public;
-            subscriberRdvClass.BaseTypes.Add(SubscriberInterfaceBuilder.InterfaceSubscriberName);
+            var timerSubscriberClass = new CodeTypeDeclaration("TimerSubscriber");
+            timerSubscriberClass.IsClass = true;
+            timerSubscriberClass.Attributes = MemberAttributes.Public;
+            timerSubscriberClass.BaseTypes.Add(SubscriberInterfaceBuilder.InterfaceSubscriberName);
 
             var event1 = new CodeMemberEvent();
 
@@ -120,29 +120,36 @@ namespace EaiConverter.Builder
             // Sets the type of event.
             event1.Type = new CodeTypeReference("EventHandler");
 
-            subscriberRdvClass.Members.Add(event1);
-            subscriberRdvClass.Members.Add(
+            timerSubscriberClass.Members.Add(event1);
+            timerSubscriberClass.Members.Add(
                 CodeDomUtils.GeneratePropertyWithoutSetter("WaitingTimeLimit", CSharpTypeConstant.SystemInt32));
-            subscriberRdvClass.Members.Add(
+            timerSubscriberClass.Members.Add(
                 CodeDomUtils.GeneratePropertyWithoutSetter("IsStarted", CSharpTypeConstant.SystemBoolean));
 
-            subscriberRdvClass.Members.Add(
+            timerSubscriberClass.Members.Add(
                 new CodeMemberMethod
                 {
                     Name = "Start",
                     ReturnType = new CodeTypeReference(CSharpTypeConstant.SystemVoid),
                     Attributes = MemberAttributes.Public
                 });
-            subscriberRdvClass.Members.Add(
+            timerSubscriberClass.Members.Add(
                 new CodeMemberMethod
                 {
                     Name = "Stop",
                     ReturnType = new CodeTypeReference(CSharpTypeConstant.SystemVoid),
                     Attributes = MemberAttributes.Public
                 });
-
-            subscriberRdvClassNamespace.Types.Add(subscriberRdvClass);
-            return subscriberRdvClassNamespace;
+            timerSubscriberClass.Members.Add(
+                new CodeMemberMethod
+                {
+                    Name = "Confirm",
+                    ReturnType = new CodeTypeReference(CSharpTypeConstant.SystemVoid),
+                    Attributes = MemberAttributes.Public
+                });
+            
+            timerSubscriberNamespace.Types.Add(timerSubscriberClass);
+            return timerSubscriberNamespace;
         }
 	}
 
