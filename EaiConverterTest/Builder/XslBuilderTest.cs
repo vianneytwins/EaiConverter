@@ -429,11 +429,11 @@ sqlParams.param.Add(""testvalue2"");
 		public void Should_Manage_xsl_attribute()
         {
 			var xml =
-                @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" xmlns:pfx1=""http://www.SomeWhere.com"">
-             <NTMMessage>
-                <xsl:attribute name=""version"">
-                    <xsl:value-of select=""'1.03'""/>
-                </xsl:attribute>
+ @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" xmlns:pfx1=""http://www.SomeWhere.com"">
+<NTMMessage>
+    <xsl:attribute name=""version"">
+        <xsl:value-of select=""'1.03'""/>
+    </xsl:attribute>
 </NTMMessage>
 </pd:inputBindings>
 ";
@@ -444,6 +444,26 @@ sqlParams.param.Add(""testvalue2"");
 			string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
             Assert.AreEqual("NTMMessage NTMMessage = new NTMMessage();\nNTMMessage.NTMMessageVersion = \"1.03\";\n\n", generateCode);
 		}
+
+        [Test]
+        public void Should_Manage_xsl_attribute_null_value()
+        {
+            var xml =
+ @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" xmlns:pfx1=""http://www.SomeWhere.com"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"">
+<NTMMessage>
+    <xsl:attribute name=""xsi:nil"">
+        true
+    </xsl:attribute>
+</NTMMessage>
+</pd:inputBindings>
+";
+            XElement doc = XElement.Parse(xml);
+
+            var codeStatement = this.xslBuilder.Build(doc.Nodes());
+
+            string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
+            Assert.AreEqual("NTMMessage NTMMessage = new NTMMessage();\nNTMMessage.NTMMessageVersion = \"1.03\";\n\n", generateCode);
+        }
 
         [Test]
         public void Should_manage_complex_type_embedded()

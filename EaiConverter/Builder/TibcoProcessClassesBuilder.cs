@@ -120,10 +120,15 @@
             var imports = new List<CodeNamespaceImport>
             {
                 new CodeNamespaceImport("System"),
-				new CodeNamespaceImport(tibcoBwProcessToGenerate.InputAndOutputNameSpace),
                 new CodeNamespaceImport(TargetAppNameSpaceService.xmlToolsNameSpace),
                 new CodeNamespaceImport(TargetAppNameSpaceService.loggerNameSpace)
             };
+
+            if ((tibcoBwProcessToGenerate.StartActivity != null && tibcoBwProcessToGenerate.StartActivity.Parameters != null)
+                || (tibcoBwProcessToGenerate.EndActivity != null && tibcoBwProcessToGenerate.EndActivity.Parameters != null))
+            {
+                imports.Add(new CodeNamespaceImport(tibcoBwProcessToGenerate.InputAndOutputNameSpace));
+            }
 
             if (tibcoBwProcessToGenerate.XsdImports != null)
             {

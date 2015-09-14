@@ -86,6 +86,7 @@
             {
 				return null;
 			}
+
             string activityName = string.Empty;
             if (activityType == ActivityType.startType)
             {

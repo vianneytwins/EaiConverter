@@ -174,7 +174,15 @@ namespace EaiConverter.Builder
         private string BuildAttribute(XElement element, string parent)
         {
             //return this.xpathBuilder.Build(element.Attribute("select").Value);
-            return parent+ "." + parent + VariableHelper.ToClassName(element.Attribute("name").Value) + " = " + this.Build(element.Nodes(), null) + ";\n";
+            string elementName = element.Attribute("name").Value;
+            var assignationString = parent + "." + parent + VariableHelper.ToClassName(elementName) + " = ";
+
+            if (elementName != "xsi:nil")
+            {
+                return assignationString + this.Build(element.Nodes(), null) + ";\n";
+            }
+
+            return parent + " = " + "null;\n";
         }
 
         public StringBuilder ManageIterationTag(XElement element, string parent)

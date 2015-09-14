@@ -134,7 +134,7 @@
 		{
             var classToGenerate = this.tibcoBwProcessBuilder.Build (this.tibcoBwProcess);
 
-			Assert.AreEqual (4, classToGenerate.Namespaces[0].Imports.Count);
+			Assert.AreEqual(3, classToGenerate.Namespaces[0].Imports.Count);
 		}
 
 		[Test]
