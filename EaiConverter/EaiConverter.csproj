@@ -155,6 +155,8 @@
     <Compile Include="Builder\SetSharedVariableActivityBuilder.cs" />
     <Compile Include="Builder\SharedVariableServiceBuilder.cs" />
     <Compile Include="Builder\AbstractSharedVariableActivityBuilder.cs" />
+    <Compile Include="Builder\XslSyntaxBuilder.cs" />
+    <Compile Include="Model\XslSyntaxElement.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
