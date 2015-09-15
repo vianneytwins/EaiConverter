@@ -103,6 +103,7 @@
     <Compile Include="Builder\ConfirmActivityBuilderTest.cs" />
     <Compile Include="Builder\SetSharedVariableActivityBuilderTest.cs" />
     <Compile Include="Builder\GetSharedVariableActivityBuilderTest.cs" />
+    <Compile Include="Builder\XslSyntaxBuilderTest .cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />

@@ -33,7 +33,7 @@ namespace EaiConverter.Builder
         public CodeStatementCollection Build(string packageName, IEnumerable<XNode> inputNodes)
         {
             tab = new Tab();
-            var newPackageName = this.FormatCorrectlyPackageName(packageName);
+            var newPackageName = FormatCorrectlyPackageName(packageName);
             var codeInStringList = this.Build(newPackageName, inputNodes, null);
             var codeSnippet = new CodeSnippetStatement(codeInStringList.ToString());
             var codeStatements = new CodeStatementCollection();
@@ -337,7 +337,7 @@ namespace EaiConverter.Builder
             }
         }
 
-        private string FormatCorrectlyPackageName(string packageName)
+        public static string FormatCorrectlyPackageName(string packageName)
         {
             if (packageName.EndsWith(".") || string.IsNullOrEmpty(packageName))
             {

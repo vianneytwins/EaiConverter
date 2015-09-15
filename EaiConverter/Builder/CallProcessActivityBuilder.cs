@@ -31,8 +31,10 @@ namespace EaiConverter.Builder
 			var import4Activities = new List<CodeNamespaceImport>();
 			var callProcessActivity = (CallProcessActivity)activity;
 			import4Activities.Add(new CodeNamespaceImport(TargetAppNameSpaceService.RemoveFirstDot(callProcessActivity.TibcoProcessToCall.ShortNameSpace)));
-            import4Activities.Add(new CodeNamespaceImport(TargetAppNameSpaceService.RemoveFirstDot(callProcessActivity.TibcoProcessToCall.InputAndOutputNameSpace)));
-
+            if(callProcessActivity.Parameters != null && callProcessActivity.Parameters.Count > 0)
+            {
+                import4Activities.Add(new CodeNamespaceImport(TargetAppNameSpaceService.RemoveFirstDot(callProcessActivity.TibcoProcessToCall.InputAndOutputNameSpace)));
+            }
 			return import4Activities;
         }
 
