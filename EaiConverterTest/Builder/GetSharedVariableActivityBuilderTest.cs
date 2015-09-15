@@ -27,13 +27,12 @@ namespace EaiConverter.Test.Builder
         [Test]
         public void Should_Generate_invocation_method()
         {
-			var expected = @"this.logger.Info(""Start Activity: MyActivityName of type: com.tibco.pe.core.GetSharedVariableActivity"");
-
+			var expected = @"
 var configName = ""myconfigPath"";
 var myActivityName = this.sharedVariableService.Get(configName);
 ";
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateInvocationCode(this.activity));
-            Assert.AreEqual(expected,generatedCode);
+            Assert.IsTrue(generatedCode.EndsWith(expected));
         }
     }
 }

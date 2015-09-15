@@ -252,10 +252,20 @@ namespace EaiConverter.Builder
             RetrieveAllTypeInTheElement(nodes, elementTypes);
             if (elementTypes.Count > 1 && IsBasicReturnType(elementTypes[1]))
             {
-                return elementTypes[1];
+                return ConvertToSafeType(elementTypes[1]);
             }
 
-            return elementTypes[0];
+            return ConvertToSafeType(elementTypes[0]);
+        }
+
+        private static string ConvertToSafeType(string elementType)
+        {
+            if (elementType == "param")
+            {
+                return "@param";
+            }
+
+            return elementType;
         }
 
         public string DefineVariableReference(XElement inputedElement, string parent)

@@ -295,6 +295,13 @@ using System.Runtime.InteropServices;
             return string.Format(format, inputDate);
         }
 
+        public static DateTime AddToDate(DateTime inputDate, int yearToAdd, int monthToAdd, int dayToAdd)
+        {
+            inputDate.AddYears(yearToAdd);
+            inputDate.AddMonths(monthToAdd);
+            return inputDate.AddDays(dayToAdd);
+        }
+
         public static double ParseNumber(string numberInString)
         {
             return double.Parse(numberInString);
@@ -344,6 +351,21 @@ using System.Runtime.InteropServices;
         public static string RenderXml(string inputString, bool isSomething)
         {
             return inputString;
+        }
+
+        public static int Round(int nb)
+        {
+            return nb;
+        }
+
+        public static int Round(double nb)
+        {
+            return Convert.ToInt32(Math.Round(nb));
+        }
+
+        public static int Round(decimal nb)
+        {
+            return Convert.ToInt32(Math.Round(nb));
         }
 
         // usage tib:trim : tib:trim(myvariable)

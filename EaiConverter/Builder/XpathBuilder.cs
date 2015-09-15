@@ -28,6 +28,8 @@
             //for JbdcQueryActivity
             expression = expression.Replace(".resultSet.Record[", "ResultSet[");
             expression = expression.Replace(".resultSet.Record.nb", "ResultSet.Count()");
+            expression = expression.Replace(".resultSet.Record.Length", "ResultSet.Count()");
+            expression = expression.Replace(".Record", "");
             expression = expression.Replace(".resultSet.outputSet", "ResultSet");
             expression = expression.Replace(".resultSet", "ResultSet");
 
@@ -56,11 +58,13 @@
             expression = expression.Replace(" div ", " / ");
             expression = expression.Replace(" or ", " || ");
             expression = expression.Replace(" and ", " && ");
+            expression = expression.Replace("\nand\n", " && ");
+            expression = expression.Replace("\nand ", " && ");
+            expression = expression.Replace(" and\n", " && ");
             expression = expression.Replace("\ndiv\n", " / ");
             expression = expression.Replace("\nor\n", " || ");
             expression = expression.Replace("\nor ", " || ");
-            expression = expression.Replace("\nand\n", " && ");
-            expression = expression.Replace("\nand ", " && ");
+            expression = expression.Replace(" or\n", " || ");
             expression = expression.Replace(" = ", " == ");
             expression = expression.Replace(@" =""", @" == """);
             expression = expression.Replace(" =\"", " == \"");
@@ -103,6 +107,11 @@
             expression = expression.Replace("tib:left(", "TibcoXslHelper.Left(");
 
             expression = expression.Replace("substring(", "TibcoXslHelper.Substring(");
+
+            expression = expression.Replace("round(", "TibcoXslHelper.Round(");
+
+            expression = expression.Replace("tib:add-to-date(", "TibcoXslHelper.AddToDate(");
+
 
             return expression;
         }

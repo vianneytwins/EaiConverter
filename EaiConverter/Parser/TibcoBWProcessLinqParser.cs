@@ -110,10 +110,11 @@
 
                 activity.Parameters = new List<ClassParameter>
                 {
-                        new ClassParameter{
+                        new ClassParameter
+                        {
                             Name = inputReferences[1],
                             // TODO : find out to convert prefix in type
-                            Type = inputReferences[0]
+                            Type = inputReferences[1]
                         }
                 };
             }

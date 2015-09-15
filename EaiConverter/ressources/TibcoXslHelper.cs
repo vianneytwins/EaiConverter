@@ -15,6 +15,13 @@
         {
             return string.Format(format, inputDate);
         }
+        
+        public static DateTime AddToDate(DateTime inputDate, int yearToAdd, int monthToAdd, int dayToAdd)
+        {
+            inputDate.AddYears(yearToAdd);
+            inputDate.AddMonths(monthToAdd);
+            return inputDate.AddDays(dayToAdd);
+        }
 
         public static double ParseNumber(string numberInString)
         {
@@ -25,7 +32,22 @@
         {
             return string.Concat(list);
         }
-            
+
+        public static int Round(int nb)
+        {
+            return nb;
+        }
+
+        public static int Round(double nb)
+        {
+            return Convert.ToInt32(Math.Round(nb));
+        }
+
+        public static int Round(decimal nb)
+        {
+            return Convert.ToInt32(Math.Round(nb));
+        }
+
         public static bool Contains(string value, string inputString)
         {
             return inputString.Contains(value);
