@@ -3,6 +3,7 @@
     using System;
     using System.CodeDom;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
 
     using EaiConverter.Builder.Utils;
@@ -61,22 +62,24 @@
 
 			foreach (var activity in tibcoBwProcessToGenerate.Activities)
 			{
-				var activityBuilder = activityBuilderFactory.Get(activity.Type);
+				var activityBuilder = this.activityBuilderFactory.Get(activity.Type);
 				targetUnit.Namespaces.AddRange(activityBuilder.GenerateClassesToGenerate(activity));
 				activityNameToServiceNameDictionnary.Add(activity.Name, activityBuilder.GenerateInvocationCode(activity));
 				processNamespace.Imports.AddRange(activityBuilder.GenerateImports(activity).ToArray());
-				tibcoBwProcessClassModel.Members.AddRange (activityBuilder.GenerateFields (activity).ToArray());
+				tibcoBwProcessClassModel.Members.AddRange(activityBuilder.GenerateFields (activity).ToArray());
 			}
 
             //Same for the starter
 			if (tibcoBwProcessToGenerate.StarterActivity != null)
 			{
-				var activityBuilder = activityBuilderFactory.Get(tibcoBwProcessToGenerate.StarterActivity.Type);
+				var activityBuilder = this.activityBuilderFactory.Get(tibcoBwProcessToGenerate.StarterActivity.Type);
 				targetUnit.Namespaces.AddRange(activityBuilder.GenerateClassesToGenerate(tibcoBwProcessToGenerate.StarterActivity));
 				processNamespace.Imports.AddRange(activityBuilder.GenerateImports(tibcoBwProcessToGenerate.StarterActivity).ToArray());
 				tibcoBwProcessClassModel.Members.AddRange(activityBuilder.GenerateFields(tibcoBwProcessToGenerate.StarterActivity).ToArray());
 			}
 			
+            // TODO VC : add the reduction on fields
+            this.RemoveDuplicateFields(tibcoBwProcessClassModel);
 
             if (tibcoBwProcessToGenerate.EndActivity != null && tibcoBwProcessToGenerate.EndActivity.ObjectXNodes != null)
             {
@@ -178,6 +181,23 @@
             return fields;
         }
 
+        public void RemoveDuplicateFields(CodeTypeDeclaration tibcoBwProcessClassModel)
+        {
+            var keepers = tibcoBwProcessClassModel.Members
+                .Cast<CodeTypeMember>()
+                .GroupBy(x => new { x.Name })
+                .SelectMany(x => x.Take(1))
+                .ToArray();
+
+            tibcoBwProcessClassModel.Members.Clear();
+
+            foreach (var objTestReport in keepers)
+            {
+                tibcoBwProcessClassModel.Members.Add(objTestReport);
+            }
+
+        }
+
         public CodeConstructor GenerateConstructor(TibcoBWProcess tibcoBwProcessToGenerate)
         {
 
@@ -193,12 +213,15 @@
 
 			foreach (Activity activity in tibcoBwProcessToGenerate.Activities)
             {
-				var builder = this.activityBuilderFactory.Get (activity.Type);
+				var builder = this.activityBuilderFactory.Get(activity.Type);
 
 				constructor.Parameters.AddRange(builder.GenerateConstructorParameter(activity));
 				constructor.Statements.AddRange(builder.GenerateConstructorCodeStatement(activity));
             
             }
+
+            this.RemoveDuplicateParameters(constructor.Parameters);
+           // this.RemoveDuplicateStatements(constructor.Statements);
 
 			if (tibcoBwProcessToGenerate.StarterActivity != null)
 			{
@@ -211,6 +234,23 @@
             return constructor;
         }
 
+
+
+        private void RemoveDuplicateParameters(CodeParameterDeclarationExpressionCollection parameters)
+        {
+            var toKeep = parameters
+    .Cast<CodeParameterDeclarationExpression>()
+    .GroupBy(x => new { x.Name })
+    .SelectMany(x => x.Take(1))
+    .ToArray();
+
+            parameters.Clear();
+
+            foreach (var objToKeep in toKeep)
+            {
+                parameters.Add(objToKeep);
+            }
+        }
 
         public CodeMemberMethod[] GenerateMethod(TibcoBWProcess tibcoBwProcessToGenerate, Dictionary<string, CodeStatementCollection> activityNameToServiceNameDictionnary)
         {

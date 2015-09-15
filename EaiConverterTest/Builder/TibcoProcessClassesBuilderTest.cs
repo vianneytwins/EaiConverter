@@ -2,6 +2,7 @@
 {
     using System.CodeDom;
     using System.Collections.Generic;
+    using System.Reflection;
     using System.Xml.Linq;
 
     using EaiConverter.Builder;
@@ -248,6 +249,36 @@
 
             // Assert
             Assert.AreEqual(expected, import);
+        }
+
+        [Test]
+        public void Should_RemoveDuplicate_fields()
+        {
+
+            var tibcoBwProcessClassModel = new CodeTypeDeclaration("MyTestprocess")
+            {
+                IsClass = true,
+                TypeAttributes = TypeAttributes.Public
+            };
+            var fields = new List<CodeMemberField>
+                             {
+                                 new CodeMemberField
+                                     {
+                                         Type = new CodeTypeReference("ILogger"),
+                                         Name = "logger",
+                                         Attributes = MemberAttributes.Private
+                                     },
+                                     new CodeMemberField
+                                     {
+                                         Type = new CodeTypeReference("ILogger"),
+                                         Name = "logger",
+                                         Attributes = MemberAttributes.Private
+                                     }
+                             };
+            tibcoBwProcessClassModel.Members.AddRange(fields.ToArray());
+            
+            this.tibcoBwProcessBuilder.RemoveDuplicateFields(tibcoBwProcessClassModel);
+            Assert.AreEqual(1, tibcoBwProcessClassModel.Members.Count);
         }
 	}
 }

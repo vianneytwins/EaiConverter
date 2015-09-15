@@ -31,10 +31,11 @@ namespace EaiConverter.Builder
 			var import4Activities = new List<CodeNamespaceImport>();
 			var callProcessActivity = (CallProcessActivity)activity;
 			import4Activities.Add(new CodeNamespaceImport(TargetAppNameSpaceService.RemoveFirstDot(callProcessActivity.TibcoProcessToCall.ShortNameSpace)));
-            if(callProcessActivity.Parameters != null && callProcessActivity.Parameters.Count > 0)
+            if (IsTheProcessInputRequiresAnImport(callProcessActivity))
             {
                 import4Activities.Add(new CodeNamespaceImport(TargetAppNameSpaceService.RemoveFirstDot(callProcessActivity.TibcoProcessToCall.InputAndOutputNameSpace)));
             }
+
 			return import4Activities;
         }
 
@@ -84,7 +85,7 @@ namespace EaiConverter.Builder
             // Add the Log
             invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(callProcessActivity));
             // Add the mapping
-            if (callProcessActivity.InputBindings != null && callProcessActivity.InputBindings.Count() != 0 && String.IsNullOrEmpty(((XElement)callProcessActivity.InputBindings.First()).Name.Namespace.ToString()))
+            if (IsTheProcessInputRequiresAnImport(callProcessActivity))
             {
                 invocationCodeCollection.AddRange(
                     this.xslBuilder.Build(
@@ -112,7 +113,12 @@ namespace EaiConverter.Builder
             return invocationCodeCollection;
         }
 
-		private static CodeTypeReference GetServiceFieldType(CallProcessActivity callProcessActivity)
+        private static bool IsTheProcessInputRequiresAnImport(CallProcessActivity callProcessActivity)
+        {
+            return callProcessActivity.InputBindings != null && callProcessActivity.InputBindings.Count() != 0 && String.IsNullOrEmpty(((XElement)callProcessActivity.InputBindings.First()).Name.Namespace.ToString());
+        }
+
+        private static CodeTypeReference GetServiceFieldType(CallProcessActivity callProcessActivity)
 		{
             return new CodeTypeReference(callProcessActivity.TibcoProcessToCall.ShortNameSpace + "." + VariableHelper.ToClassName(callProcessActivity.TibcoProcessToCall.ProcessName));
 		}
