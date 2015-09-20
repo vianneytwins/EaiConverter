@@ -1,10 +1,13 @@
 using System;
 using System.IO;
+using log4net;
 
 namespace EaiConverter.Processor
 {
 	public class TibcoBWDirectoryProcessorService : ITibcoBWDirectoryProcessorService
 	{
+        private static readonly ILog log = LogManager.GetLogger(typeof(TibcoBWDirectoryProcessorService));
+
 		IFileProcessorService tibcoFileProcessorService;
         IFileProcessorService xsdFileProcessorService;
         IFileProcessorService globalVariableProcessor;
@@ -26,9 +29,7 @@ namespace EaiConverter.Processor
 			} 
 			catch(Exception e) 
 			{ 
-				Console.WriteLine ("Unknow Error I'm going to quit because: ");
-				Console.WriteLine (e.Message);
-				Console.WriteLine (e.StackTrace);
+                log.Error("Unknow Error I'm going to quit because: ", e);
 				return; 
 			} 
 

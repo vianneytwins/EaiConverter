@@ -52,9 +52,18 @@ namespace EaiConverter
 				    sourceCodeGeneratorService.Init();
 					tibcoFileReaderService.Process(sourceDirectory);
 				}
+                else if (mode == "A")
+                {
+                    var tibcoDependencyAnalyserProcessorService = new TibcoDependencyAnalyserProcessorService(new AnalyserFileProcessorService());
+                    ConfigurationApp.SaveProperty(ProjectDirectory, sourceDirectory);
+
+                    var processToAnalyseFileName = args[2];
+
+                    tibcoDependencyAnalyserProcessorService.Process(processToAnalyseFileName);
+                }
                 else
                 {
-                    log.Error("Program is going to exit - sorry only MODE S_Csharp and G_Csharp is managed for the moment");
+                    log.Error("Program is going to exit - sorry only MODE S_Csharp, G_Csharp and A are managed for the moment");
 				}
 
 			}

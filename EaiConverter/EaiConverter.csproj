@@ -157,6 +157,8 @@
     <Compile Include="Builder\AbstractSharedVariableActivityBuilder.cs" />
     <Compile Include="Builder\XslSyntaxBuilder.cs" />
     <Compile Include="Model\XslSyntaxElement.cs" />
+    <Compile Include="Processor\TibcoDependencyAnalyserProcessorService.cs" />
+    <Compile Include="Processor\AnalyserFileProcessorService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
