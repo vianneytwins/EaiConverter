@@ -44,6 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Builder\TimerActivityBuilder.cs" />
+    <Compile Include="Model\TbwConfiguration.cs" />
+    <Compile Include="Parser\ConfigurationParser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\Transition.cs" />

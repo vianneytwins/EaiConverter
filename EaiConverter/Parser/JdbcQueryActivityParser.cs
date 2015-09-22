@@ -105,10 +105,9 @@ namespace EaiConverter.Parser
 
         private List<ClassParameter> GetOutputParameters(XElement rootElement)
         {
-            IEnumerable<XElement> queryOutPutElements = from element in rootElement.Elements("QueryOutputCachedSchemaColumns")
-                select element;
-            IEnumerable<XElement> typeElements = from element in rootElement.Elements("QueryOutputCachedSchemaDataTypes")
-                select element;
+            IEnumerable<XElement> queryOutPutElements = rootElement.Elements("QueryOutputCachedSchemaColumns");
+            IEnumerable<XElement> typeElements = rootElement.Elements("QueryOutputCachedSchemaDataTypes");
+
             var parameters = new List<ClassParameter>();
             int i = 0;
             var typesList = typeElements.ToList();

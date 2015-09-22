@@ -25,7 +25,7 @@
 			return this.Parse(allFileElement);
 		}
         
-		public TibcoBWProcess Parse (XElement allFileElement)
+		public TibcoBWProcess Parse(XElement allFileElement)
         {
 			var tibcoBwProcess = new TibcoBWProcess(
                 allFileElement.Element (XmlnsConstant.tibcoProcessNameSpace + "name").Value

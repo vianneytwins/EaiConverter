@@ -4,21 +4,33 @@ using EaiConverter.Model;
 
 namespace EaiConverter.Processor
 {
+    using System.IO;
+
     public class AnalyserFileProcessorService : IFileProcessorService
     {
         public AnalyserFileProcessorService()
         {
         }
 
-        public void Process (string fileName)
+        public void Process(string processFileName)
         {
             string projectDirectory = ConfigurationApp.GetProperty(MainClass.ProjectDirectory);
 
-            var tibcoBwProcess = new TibcoBWProcessLinqParser().Parse (fileName);
-            Console.WriteLine(fileName);
+            var tibcoBwProcess = new TibcoBWProcessLinqParser().Parse(processFileName);
+            WriteToFile(processFileName);
             var activities = tibcoBwProcess.Activities;
 
-            ProcessActivities(projectDirectory, activities);
+            this.ProcessActivities(projectDirectory, activities);
+        }
+
+        private static void WriteToFile(string processFileName)
+        {
+            Console.WriteLine(processFileName);
+
+            using (var file = new StreamWriter("C:/Homeware/MyOuput.txt", true))
+            {
+                file.WriteLine(processFileName);
+            }
         }
 
         public void ProcessActivities(string projectDirectory, System.Collections.Generic.List<Activity> activities)
