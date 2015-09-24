@@ -110,6 +110,8 @@
 
             expression = expression.Replace("round(", "TibcoXslHelper.Round(");
 
+            expression = expression.Replace("not(", "!(");
+
             expression = expression.Replace("tib:add-to-date(", "TibcoXslHelper.AddToDate(");
 
 
