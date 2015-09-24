@@ -25,8 +25,8 @@ namespace EaiConverter.Processor
         /// <param name="processToAnalyseFileName">the path of the XML application configuration file</param>
         public void Process(string processToAnalyseFileName)
         {
-            //this.AnalyseViaTheTbwXmlConfigFile(processToAnalyseFileName);
-                        this.AnalyseViaGivenListOfProcess(processToAnalyseFileName);
+            this.AnalyseViaTheTbwXmlConfigFile(processToAnalyseFileName);
+            //this.AnalyseViaGivenListOfProcess(processToAnalyseFileName);
         }
 
         private void AnalyseViaTheTbwXmlConfigFile(string processToAnalyseFileName)

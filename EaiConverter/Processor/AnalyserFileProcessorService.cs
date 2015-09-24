@@ -1,15 +1,18 @@
-﻿using System;
-using EaiConverter.Parser;
-using EaiConverter.Model;
-
-namespace EaiConverter.Processor
+﻿namespace EaiConverter.Processor
 {
+    using System;
     using System.IO;
+
+    using EaiConverter.Model;
+    using EaiConverter.Parser;
 
     public class AnalyserFileProcessorService : IFileProcessorService
     {
+        private string projectDir;
+
         public AnalyserFileProcessorService()
         {
+            this.projectDir = ConfigurationApp.GetProperty(MainClass.ProjectDirectory);
         }
 
         public void Process(string processFileName)
@@ -17,17 +20,17 @@ namespace EaiConverter.Processor
             string projectDirectory = ConfigurationApp.GetProperty(MainClass.ProjectDirectory);
 
             var tibcoBwProcess = new TibcoBWProcessLinqParser().Parse(processFileName);
-            WriteToFile(processFileName);
+            WriteToFile(processFileName, this.projectDir);
             var activities = tibcoBwProcess.Activities;
 
             this.ProcessActivities(projectDirectory, activities);
         }
 
-        private static void WriteToFile(string processFileName)
+        private static void WriteToFile(string processFileName, string outputDir)
         {
             Console.WriteLine(processFileName);
 
-            using (var file = new StreamWriter("C:/Homeware/MyOuput.txt", true))
+            using (var file = new StreamWriter(outputDir + "/MyOuput.txt", true))
             {
                 file.WriteLine(processFileName);
             }
