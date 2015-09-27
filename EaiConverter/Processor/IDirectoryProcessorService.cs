@@ -1,6 +1,6 @@
 namespace EaiConverter.Processor
 {
-	public interface ITibcoBWDirectoryProcessorService
+	public interface IDirectoryProcessorService
 	{
 		void Process (string directory);
 	}

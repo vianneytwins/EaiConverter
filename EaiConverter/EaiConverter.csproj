@@ -44,7 +44,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Builder\TimerActivityBuilder.cs" />
-    <Compile Include="FileFilter.cs" />
     <Compile Include="Model\TbwConfiguration.cs" />
     <Compile Include="Parser\ConfigurationParser.cs" />
     <Compile Include="Processor\IFileFilter.cs" />
@@ -63,7 +62,6 @@
     <Compile Include="Processor\TibcoBWDirectoryProcessorService.cs" />
     <Compile Include="CodeGenerator\CsharpSimulationSourceCodeGeneratorService.cs" />
     <Compile Include="CodeGenerator\CsharpSourceCodeGeneratorService.cs" />
-    <Compile Include="Processor\ITibcoBWDirectoryProcessorService.cs" />
     <Compile Include="Processor\ConfigurationApp.cs" />
     <Compile Include="CodeGenerator\Utils\Tab.cs" />
     <Compile Include="CodeGenerator\Utils\VariableHelper.cs" />
@@ -163,6 +161,7 @@
     <Compile Include="Model\XslSyntaxElement.cs" />
     <Compile Include="Processor\TibcoDependencyAnalyserProcessorService.cs" />
     <Compile Include="Processor\AnalyserFileProcessorService.cs" />
+    <Compile Include="Processor\IDirectoryProcessorService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />

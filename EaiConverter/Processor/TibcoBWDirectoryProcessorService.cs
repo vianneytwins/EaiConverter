@@ -5,7 +5,7 @@ namespace EaiConverter.Processor
 
     using log4net;
 
-    public class TibcoBWDirectoryProcessorService : ITibcoBWDirectoryProcessorService
+    public class TibcoBWDirectoryProcessorService : IDirectoryProcessorService
 	{
         private static readonly ILog Log = LogManager.GetLogger(typeof(TibcoBWDirectoryProcessorService));
 
@@ -13,13 +13,16 @@ namespace EaiConverter.Processor
         private readonly IFileProcessorService xsdFileProcessorService;
         private readonly IFileProcessorService globalVariableProcessor;
 
+        private readonly IFileProcessorService adapterSchemaProcessor;
+
         private readonly IFileFilter filter;
 
-        public TibcoBWDirectoryProcessorService(IFileProcessorService tibcoFileProcessorService, IFileProcessorService xsdFileProcessorService, IFileProcessorService globalVariableProcessor, IFileFilter fileFilter)
+        public TibcoBWDirectoryProcessorService(IFileProcessorService tibcoFileProcessorService, IFileProcessorService xsdFileProcessorService, IFileProcessorService globalVariableProcessor, IFileProcessorService adapterSchemaProcessor, IFileFilter fileFilter)
         {
 			this.tibcoFileProcessorService = tibcoFileProcessorService;
             this.xsdFileProcessorService = xsdFileProcessorService;
             this.globalVariableProcessor = globalVariableProcessor;
+            this.adapterSchemaProcessor = adapterSchemaProcessor;
             this.filter = fileFilter;
         }
 
@@ -60,6 +63,11 @@ namespace EaiConverter.Processor
 			        //file treatement
 			        this.globalVariableProcessor.Process(file);
 			    }
+                if (file.EndsWith(".aeschema"))
+                {
+                    //file treatement
+                    this.adapterSchemaProcessor.Process(file);
+                }
 			} 
 
 			foreach(string subDirectory in directories) 
