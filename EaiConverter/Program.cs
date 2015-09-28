@@ -22,6 +22,7 @@
 			IFileProcessorService tibcoFileProcessorService;
             IFileProcessorService xsdFileProcessorService;
             IFileProcessorService globalVariableProcessor;
+            IFileProcessorService adapterFileProcessorService;
 			ISourceCodeGeneratorService sourceCodeGeneratorService;
 			IFileFilter fileFilter;
 
@@ -48,8 +49,8 @@
 					tibcoFileProcessorService = new TibcoFileProcessorService(sourceCodeGeneratorService);
                     xsdFileProcessorService = new XsdFileProcessorService(sourceCodeGeneratorService);
                     globalVariableProcessor = new GlobalVariableProcessor(sourceCodeGeneratorService);
-                    
-                    tibcoFileReaderService = new TibcoBWDirectoryProcessorService(tibcoFileProcessorService, xsdFileProcessorService, globalVariableProcessor, fileFilter);
+                    adapterFileProcessorService = new AdapterFileProcessorService(sourceCodeGeneratorService);
+                    tibcoFileReaderService = new TibcoBWDirectoryProcessorService(tibcoFileProcessorService, xsdFileProcessorService, globalVariableProcessor, adapterFileProcessorService, fileFilter);
                     ConfigurationApp.SaveProperty(ProjectDirectory, sourceDirectory);
 					tibcoFileReaderService.Process(sourceDirectory);
 				}
@@ -59,7 +60,8 @@
 					tibcoFileProcessorService = new TibcoFileProcessorService(sourceCodeGeneratorService);
                     xsdFileProcessorService = new XsdFileProcessorService(sourceCodeGeneratorService);
                     globalVariableProcessor = new GlobalVariableProcessor(sourceCodeGeneratorService);
-                    tibcoFileReaderService = new TibcoBWDirectoryProcessorService(tibcoFileProcessorService, xsdFileProcessorService, globalVariableProcessor, fileFilter);
+                    adapterFileProcessorService = new AdapterFileProcessorService(sourceCodeGeneratorService);
+                    tibcoFileReaderService = new TibcoBWDirectoryProcessorService(tibcoFileProcessorService, xsdFileProcessorService, globalVariableProcessor, adapterFileProcessorService, fileFilter);
                     ConfigurationApp.SaveProperty(ProjectDirectory, sourceDirectory);
 
 				    sourceCodeGeneratorService.Init();

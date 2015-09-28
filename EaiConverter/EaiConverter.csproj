@@ -44,9 +44,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Builder\TimerActivityBuilder.cs" />
+    <Compile Include="FileFilter.cs" />
     <Compile Include="Model\TbwConfiguration.cs" />
+    <Compile Include="Model\AdapterSchemaModel.cs" />
     <Compile Include="Parser\ConfigurationParser.cs" />
     <Compile Include="Processor\AdapterFileProcessorService.cs" />
+    <Compile Include="Parser\AdapterSchemaParser.cs" />
+    <Compile Include="Builder\AdapterSchemaBuilder.cs" />
     <Compile Include="Processor\IFileFilter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
