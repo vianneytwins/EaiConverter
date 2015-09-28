@@ -18,7 +18,7 @@
 		{
             BasicConfigurator.Configure();
 
-			ITibcoBWDirectoryProcessorService tibcoFileReaderService;
+			IDirectoryProcessorService tibcoFileReaderService;
 			IFileProcessorService tibcoFileProcessorService;
             IFileProcessorService xsdFileProcessorService;
             IFileProcessorService globalVariableProcessor;
