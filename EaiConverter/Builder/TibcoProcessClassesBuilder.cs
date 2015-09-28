@@ -418,13 +418,23 @@
 
         private static bool IsBasicType(string type)
         {
-            switch (type.ToLower())
+            switch (type)
             {
                 case "string":
                     return true;
+                case CSharpTypeConstant.SystemInt32:
+                    return true;
+                case CSharpTypeConstant.SystemString:
+                    return true;
+                case CSharpTypeConstant.SystemDateTime:
+                    return true;
+                case CSharpTypeConstant.SystemDouble:
+                    return true;
+                case CSharpTypeConstant.SystemBoolean:
+                    return true;
                 case "int":
                     return true;
-                case "datetime":
+                case "DateTime":
                     return true;
                 case "bool":
                     return true;

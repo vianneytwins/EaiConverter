@@ -88,13 +88,13 @@
             {
                 new ProcessVariable
                 {
-                    Parameter = new ClassParameter { Name = "var", Type = "string" }
+                    Parameter = new ClassParameter { Name = "var", Type = "System.String" }
                 }
             };
             var classToGenerate = this.tibcoBwProcessBuilder.Build(this.tibcoBwProcess);
 
             Assert.AreEqual("var", ((CodeMemberField)classToGenerate.Namespaces[0].Types[0].Members[1]).Name);
-            Assert.AreEqual("string", ((CodeMemberField)classToGenerate.Namespaces[0].Types[0].Members[1]).Type.BaseType);
+            Assert.AreEqual("System.String", ((CodeMemberField)classToGenerate.Namespaces[0].Types[0].Members[1]).Type.BaseType);
         }
 
         [Test]
