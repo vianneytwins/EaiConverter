@@ -17,6 +17,7 @@
 
             expression = ManageGlobalVariable(expression);
 
+            expression = expression.Replace("''", "\"\"");
             expression = Regex.Replace(expression, "'([^']+)'", m => "\"" + m.Groups[1].Value.Replace(@"""", @"\""") + "\"");
             //expression = expression.Replace('\'', '"');
             expression = expression.Replace('/', '.');
@@ -187,7 +188,7 @@
                 string variableNameToModify = variables.Groups[1].ToString();
                 expression = expression.Replace(
                     variableNameToModify,
-                    VariableHelper.ToVariableName(variableNameToModify.Replace('-', '_')));
+                    VariableHelper.ToVariableName(variableNameToModify.Replace('-', '_').Replace('.', '_')));
             }
 
             expression = expression.Replace("$", string.Empty);

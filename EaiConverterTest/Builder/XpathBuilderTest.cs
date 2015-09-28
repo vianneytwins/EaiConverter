@@ -21,6 +21,11 @@ namespace EaiConverter.Test.Builder
         }
         
         [Test]
+        public void Should_Replace_Simple_quote_with_double_Quote_and_value_is_empty(){
+            Assert.AreEqual("\"\"", this.xpathBuilder.Build("''"));
+        }
+        
+        [Test]
         public void Should_Replace_Simple_quote_with_double_Quote2(){
             Assert.AreEqual("\"te\\\"st\"", this.xpathBuilder.Build("'te\"st'"));
         }
