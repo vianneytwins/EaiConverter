@@ -11,6 +11,7 @@ namespace EaiConverter.Utils
         public const string SystemInt32 = "System.Int32";
         public const string SystemDouble = "System.Double";
         public const string SystemDateTime = "System.DateTime";
+
     }
 }
 

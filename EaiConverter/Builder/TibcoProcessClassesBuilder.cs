@@ -30,6 +30,8 @@
 
         public CodeCompileUnit Build(TibcoBWProcess tibcoBwProcessToGenerate)
         {
+            Log.Info("Starting Generation of process:" + tibcoBwProcessToGenerate.FullProcessName);
+
             var activityNameToServiceNameDictionnary = new Dictionary<string, CodeStatementCollection>();
 
             var targetUnit = new CodeCompileUnit();
@@ -80,29 +82,10 @@
             // TODO VC : add the reduction on fields
             this.RemoveDuplicateFields(tibcoBwProcessClassModel);
 
-            if (tibcoBwProcessToGenerate.EndActivity != null && tibcoBwProcessToGenerate.EndActivity.ObjectXNodes != null)
-            {
-                try
-                {
-                    targetUnit.Namespaces.Add(this.xsdClassGenerator.Build(tibcoBwProcessToGenerate.EndActivity.ObjectXNodes, tibcoBwProcessToGenerate.InputAndOutputNameSpace));
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Unable to generate  END output object class for this process:" + tibcoBwProcessToGenerate.ProcessName, e);
-                }
-            }
+            // Generate ouput and input classes
+            targetUnit.Namespaces.Add(this.GenerateInputOutputClasses(tibcoBwProcessToGenerate.EndActivity, tibcoBwProcessToGenerate.InputAndOutputNameSpace));
+            targetUnit.Namespaces.Add(this.GenerateInputOutputClasses(tibcoBwProcessToGenerate.StartActivity, tibcoBwProcessToGenerate.InputAndOutputNameSpace));
 
-            if (tibcoBwProcessToGenerate.StartActivity != null && tibcoBwProcessToGenerate.StartActivity.ObjectXNodes != null)
-            {
-                try
-                {
-                    targetUnit.Namespaces.Add(this.xsdClassGenerator.Build(tibcoBwProcessToGenerate.StartActivity.ObjectXNodes, tibcoBwProcessToGenerate.InputAndOutputNameSpace));
-                }
-                catch (Exception e)
-                {
-                    Log.Error("Unable to generate  Start input object class for this process:" + tibcoBwProcessToGenerate.ProcessName, e);
-                }
-            }
 
             targetUnit.Namespaces.AddRange(this.GenerateProcessVariablesNamespaces(tibcoBwProcessToGenerate));
 
@@ -169,7 +152,7 @@
                 {
                     CodeTypeReference typeReference;
 
-                    if (!IsBasicType(variable.Parameter.Type))
+                    if (!CodeDomUtils.IsBasicType(variable.Parameter.Type))
                     {
                         typeReference = new CodeTypeReference(tibcoBwProcessToGenerate.VariablesNameSpace + "." + variable.Parameter.Type);
                     }
@@ -382,6 +365,32 @@
 			return parameters;
 		}
 
+        public CodeNamespace GenerateInputOutputClasses(Activity myActivity, string inputOutputNamespace)
+        {
+            var xsdCodeNamespace = new CodeNamespace();
+            if (myActivity != null && myActivity.ObjectXNodes != null)
+            {
+                try
+                {
+                    xsdCodeNamespace = this.xsdClassGenerator.Build(myActivity.ObjectXNodes, inputOutputNamespace);
+                }
+                catch (Exception e)
+                {
+                    try
+                    {
+                        Log.Warn("Error generating " + myActivity.Name + " object class for this namespace :" + inputOutputNamespace + ", we will try with a homemade xsdbuilder", e);
+                        xsdCodeNamespace = this.xsdClassGenerator.Build(myActivity.Parameters, inputOutputNamespace);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("Unable to generate " + myActivity.Name + " object class for this namespace :" + inputOutputNamespace, e);
+                    }
+
+                }
+            }
+            return xsdCodeNamespace;
+        }
+
         private CodeStatementCollection GenerateStarterMethodBody()
         {
             var statements = new CodeStatementCollection();
@@ -396,53 +405,26 @@
             {
                 foreach (var item in tibcoBwProcessToGenerate.ProcessVariables)
                 {
-                    try
+                    if (!CodeDomUtils.IsBasicType(item.Parameter.Type))
                     {
-                        if (!IsBasicType(item.Parameter.Type))
+                        try
                         {
-                            processVariableNameNamespaces.Add(
-                                this.xsdClassGenerator.Build(item.ObjectXNodes, tibcoBwProcessToGenerate.VariablesNameSpace));
+                            
+                                processVariableNameNamespaces.Add(
+                                    this.xsdClassGenerator.Build(item.ObjectXNodes, tibcoBwProcessToGenerate.VariablesNameSpace));
+                           
                         }
-                    }
-                    catch (Exception e)
-                    {
-                        Log.Error(
-                            "unable to generate Process Variable object class for this process: "
-                            + tibcoBwProcessToGenerate.ProcessName, e);
+                        catch (Exception e)
+                        {
+                            Log.Error(
+                                "unable to generate Process Variable object class for this process: "
+                                + tibcoBwProcessToGenerate.ProcessName, e);
+                        }
                     }
                 }
             }
 
             return processVariableNameNamespaces;
-        }
-
-        private static bool IsBasicType(string type)
-        {
-            switch (type)
-            {
-                case "string":
-                    return true;
-                case CSharpTypeConstant.SystemInt32:
-                    return true;
-                case CSharpTypeConstant.SystemString:
-                    return true;
-                case CSharpTypeConstant.SystemDateTime:
-                    return true;
-                case CSharpTypeConstant.SystemDouble:
-                    return true;
-                case CSharpTypeConstant.SystemBoolean:
-                    return true;
-                case "int":
-                    return true;
-                case "DateTime":
-                    return true;
-                case "bool":
-                    return true;
-                case "double":
-                    return true;
-                default:
-                    return false;
-            }
         }
 
         private void RemoveDuplicateParameters(CodeParameterDeclarationExpressionCollection parameters)

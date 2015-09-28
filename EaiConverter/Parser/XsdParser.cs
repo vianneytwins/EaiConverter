@@ -53,7 +53,7 @@
                                 new ClassParameter
                                 {
                                     Name = element.Attribute("ref").Value.Split(':')[1],
-                                    Type = element.Attribute("ref").Value
+                                    Type = element.Attribute("ref").Value.Split(':')[1]
                                 });
                         }
 					}

@@ -1,4 +1,6 @@
 ﻿using EaiConverter.Builder.Utils;
+using EaiConverter.Model;
+using EaiConverter.Utils;
 
 namespace EaiConverter.Builder
 {
@@ -28,6 +30,23 @@ namespace EaiConverter.Builder
             var xsdCodeNamespace = this.GeneratedClassFromStream(stream, nameSpace);
 
             return xsdCodeNamespace;
+        }
+
+
+        public CodeNamespace Build(List<ClassParameter> parameters, string nameSpace)
+        {
+  
+            var xsdCodeNamespace = new CodeNamespace();
+            xsdCodeNamespace.Name = nameSpace;
+            foreach (var parameter in parameters)
+            {
+                if (!CodeDomUtils.IsBasicType(parameter.Type))
+                {
+                    
+                }
+            }
+            throw new System.NotImplementedException();
+           
         }
 
         public CodeNamespace Build(string fileName)

@@ -7,7 +7,8 @@ namespace EaiConverter.Model
 	{
         public ClassParameter Parameter { get; set;}
 
-        public IEnumerable<XNode> ObjectXNodes {
+        public IEnumerable<XNode> ObjectXNodes
+        {
             get;
             set;
         }
