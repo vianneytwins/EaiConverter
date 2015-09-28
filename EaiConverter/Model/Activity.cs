@@ -7,12 +7,13 @@
 	{
         private string name;
 
-    	public Activity (string name, ActivityType type) {
+    	public Activity (string name, ActivityType type)
+        {
 			this.Name = name;
 			this.Type = type;
 		}
 
-		public Activity ()
+		public Activity()
 		{
 		} 
 
@@ -20,28 +21,30 @@
         {
             get
             {
-                return name;
+                return this.name;
             }
+
             set
             {
-                name = value.Replace(' ','_');
+                this.name = value.Replace(' ', '_').Replace('.', '_');
             }
         }
 
-        public ActivityType Type {get; set;}
+        public ActivityType Type { get; set; }
 
-		public List<ClassParameter> Parameters {get; set;}
+		public List<ClassParameter> Parameters { get; set; }
 
-		public IEnumerable<XNode> ObjectXNodes {
+		public IEnumerable<XNode> ObjectXNodes
+        {
 			get;
 			set;
 		}
 
-        public IEnumerable<XNode> InputBindings {get; set;}
+        public IEnumerable<XNode> InputBindings { get; set; }
 
 		public override string ToString()
 		{
-			return string.Format("[Activity: Name={0}, Type={1}]", Name, Type);
+			return string.Format("[Activity: Name={0}, Type={1}]", this.Name, this.Type);
 		}
 	}
 }

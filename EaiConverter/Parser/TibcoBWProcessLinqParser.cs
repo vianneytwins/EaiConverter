@@ -125,7 +125,7 @@
 
         public Activity ParseStarterActivity(XElement allFileElement)
         {
-            var element = allFileElement.Element (XmlnsConstant.tibcoProcessNameSpace + "starter");
+            var element = allFileElement.Element(XmlnsConstant.tibcoProcessNameSpace + "starter");
 
             if (element == null)
             {
