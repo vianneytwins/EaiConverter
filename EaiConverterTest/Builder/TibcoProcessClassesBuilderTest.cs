@@ -93,9 +93,8 @@
             };
             var classToGenerate = this.tibcoBwProcessBuilder.Build(this.tibcoBwProcess);
 
-            var fieldName = ((CodeMemberField)classToGenerate.Namespaces[0].Types[0].Members[1]).Name;
-
-            Assert.AreEqual ("var", fieldName);
+            Assert.AreEqual("var", ((CodeMemberField)classToGenerate.Namespaces[0].Types[0].Members[1]).Name);
+            Assert.AreEqual("string", ((CodeMemberField)classToGenerate.Namespaces[0].Types[0].Members[1]).Type.BaseType);
         }
 
         [Test]
@@ -116,7 +115,7 @@
 
             this.tibcoBwProcess.ProcessVariables = new List<ProcessVariable>{
                 new ProcessVariable{
-                    Parameter = new ClassParameter{Name = "var",Type = "group"},
+                    Parameter = new ClassParameter{Name = "var", Type = "group"},
                     ObjectXNodes = doc.Nodes()
                 }
             };
@@ -124,8 +123,8 @@
 
             var className = classToGenerate.Namespaces[1].Types[0].Name;
 
-            Assert.AreEqual ("group", className);
-            Assert.AreEqual ("MyNamespace.myProcessTestVariables", classToGenerate.Namespaces[1].Name);
+            Assert.AreEqual("group", className);
+            Assert.AreEqual("MyNamespace.myProcessTestVariables", classToGenerate.Namespaces[1].Name);
         }
 
 

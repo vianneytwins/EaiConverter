@@ -147,7 +147,7 @@
             var processVariables = new List<ProcessVariable>();
             foreach (var variable in xElement.Elements())
             {
-                var variableParameters = this.xsdParser.Parse (variable.Nodes ());
+                var variableParameters = this.xsdParser.Parse(variable.Nodes());
 
                 if (variableParameters.Count > 0)
                 {

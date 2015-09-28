@@ -1,17 +1,12 @@
-using System;
-using EaiConverter.Builder;
-using EaiConverter.Model;
-using System.Xml.Linq;
-using System.Collections.Generic;
-using System.CodeDom;
-using EaiConverter.Processor;
-using EaiConverter.Builder.Utils;
-using System.Reflection;
-using EaiConverter.Utils;
-
 namespace EaiConverter.Builder
 {
-	public class SharedVariableServiceBuilder
+    using System.CodeDom;
+    using System.Reflection;
+
+    using EaiConverter.Builder.Utils;
+    using EaiConverter.Utils;
+
+    public class SharedVariableServiceBuilder
 	{
         public const string GetMethodName = "Get";
         public const string SetMethodName = "Set";

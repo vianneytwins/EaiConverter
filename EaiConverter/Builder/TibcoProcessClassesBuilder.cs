@@ -168,10 +168,22 @@
             {
                 foreach (var variable in tibcoBwProcessToGenerate.ProcessVariables)
                 {
+                    CodeTypeReference typeReference;
+
+                    if (!IsBasicType(variable.Parameter.Type))
+                    {
+                        typeReference = new CodeTypeReference(tibcoBwProcessToGenerate.VariablesNameSpace + "." + variable.Parameter.Type);
+                    }
+                    else
+                    {
+                        typeReference = new CodeTypeReference(variable.Parameter.Type);
+                    }
+
+
                     fields.Add(
                         new CodeMemberField
                         {
-                            Type = new CodeTypeReference(tibcoBwProcessToGenerate.VariablesNameSpace + "." + variable.Parameter.Type),
+                            Type = typeReference,
                             Name = VariableHelper.ToVariableName(variable.Parameter.Name),
                             Attributes = MemberAttributes.Private
                         });
