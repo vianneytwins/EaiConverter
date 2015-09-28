@@ -78,14 +78,9 @@
 
         }
 
-        public Activity ParseStartOrEndActivity (XElement allFileElement, string inputAndOutputNameSpace, ActivityType activityType)
+        public Activity ParseStartOrEndActivity(XElement allFileElement, string inputAndOutputNameSpace, ActivityType activityType)
 		{
-			
-            var xElement = allFileElement.Element (XmlnsConstant.tibcoProcessNameSpace + activityType.ToString());
-			if (xElement == null)
-            {
-				return null;
-			}
+            
 
             string activityName = string.Empty;
             if (activityType == ActivityType.startType)
@@ -97,26 +92,32 @@
                 activityName = "endName";
             }
 
-            var activity = new Activity(allFileElement.Element(XmlnsConstant.tibcoProcessNameSpace + activityName).Value, activityType);
-            if (xElement.Attribute("ref") == null)
+            var elementNameElement = allFileElement.Element(XmlnsConstant.tibcoProcessNameSpace + activityName);
+            if (elementNameElement == null)
             {
-                var activityParameters = this.xsdParser.Parse(xElement.Nodes(), inputAndOutputNameSpace);
-		    	activity.Parameters = activityParameters;
-			    activity.ObjectXNodes = xElement.Nodes();
+                return null;
             }
-            else
-            {
-                var inputReferences = xElement.Attribute("ref").Value.Split(':');
 
-                activity.Parameters = new List<ClassParameter>
+            var activity = new Activity(elementNameElement.Value, activityType);
+
+            var xElement = allFileElement.Element(XmlnsConstant.tibcoProcessNameSpace + activityType.ToString());
+
+            if (xElement != null)
+            {
+                if (xElement.Attribute("ref") == null)
                 {
-                        new ClassParameter
-                        {
-                            Name = inputReferences[1],
-                            // TODO : find out to convert prefix in type
-                            Type = inputReferences[1]
-                        }
-                };
+                    var activityParameters = this.xsdParser.Parse(xElement.Nodes(), inputAndOutputNameSpace);
+                    activity.Parameters = activityParameters;
+                    activity.ObjectXNodes = xElement.Nodes();
+                }
+                else
+                {
+                    var inputReferences = xElement.Attribute("ref").Value.Split(':');
+
+                    activity.Parameters = new List<ClassParameter> { new ClassParameter { Name = inputReferences[1],
+                                                                                          // TODO : find out to convert prefix in type
+                                                                                          Type = inputReferences[1] } };
+                }
             }
 
 			return activity;

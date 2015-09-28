@@ -15,18 +15,18 @@
 
     public class TibcoProcessClassesBuilder
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(TibcoProcessClassesBuilder));
+        private static readonly ILog Log = LogManager.GetLogger(typeof(TibcoProcessClassesBuilder));
 
         private readonly CoreProcessBuilder coreProcessBuilder;
 		private readonly ActivityBuilderFactory activityBuilderFactory;
+
+        private readonly XsdBuilder xsdClassGenerator = new XsdBuilder();
 
         public TibcoProcessClassesBuilder()
         {
             this.coreProcessBuilder = new CoreProcessBuilder();
 			this.activityBuilderFactory = new ActivityBuilderFactory();
         }
-
-        XsdBuilder xsdClassGenerator = new XsdBuilder();
 
         public CodeCompileUnit Build(TibcoBWProcess tibcoBwProcessToGenerate)
         {
@@ -58,8 +58,7 @@
 
             targetUnit.Namespaces.Add(processNamespace);
 
-            //7 Mappe les classes des activity
-
+            // 7 Mappe les classes des activity
 			foreach (var activity in tibcoBwProcessToGenerate.Activities)
 			{
 				var activityBuilder = this.activityBuilderFactory.Get(activity.Type);
@@ -69,7 +68,7 @@
 				tibcoBwProcessClassModel.Members.AddRange(activityBuilder.GenerateFields (activity).ToArray());
 			}
 
-            //Same for the starter
+            // Same for the starter
 			if (tibcoBwProcessToGenerate.StarterActivity != null)
 			{
 				var activityBuilder = this.activityBuilderFactory.Get(tibcoBwProcessToGenerate.StarterActivity.Type);
@@ -89,7 +88,7 @@
                 }
                 catch (Exception e)
                 {
-                    log.Error("Unable to generate  END output object class for this process:" + tibcoBwProcessToGenerate.ProcessName, e);
+                    Log.Error("Unable to generate  END output object class for this process:" + tibcoBwProcessToGenerate.ProcessName, e);
                 }
             }
 
@@ -101,13 +100,13 @@
                 }
                 catch (Exception e)
                 {
-                    log.Error("Unable to generate  Start input object class for this process:" + tibcoBwProcessToGenerate.ProcessName, e);
+                    Log.Error("Unable to generate  Start input object class for this process:" + tibcoBwProcessToGenerate.ProcessName, e);
                 }
             }
 
             targetUnit.Namespaces.AddRange(this.GenerateProcessVariablesNamespaces(tibcoBwProcessToGenerate));
 
-            //7 la methode start avec input starttype et return du endtype
+            // 8 la methode start avec input starttype et return du endtype
             tibcoBwProcessClassModel.Members.AddRange(this.GenerateMethod(tibcoBwProcessToGenerate, activityNameToServiceNameDictionnary));
 
             return targetUnit;
@@ -161,7 +160,7 @@
             return fields.ToArray();
         }
 
-        private List<CodeMemberField> GenerateFieldForProcessVariables(TibcoBWProcess tibcoBwProcessToGenerate)
+        public List<CodeMemberField> GenerateFieldForProcessVariables(TibcoBWProcess tibcoBwProcessToGenerate)
         {
             var fields = new List<CodeMemberField>();
             if (tibcoBwProcessToGenerate.ProcessVariables != null)
@@ -212,7 +211,6 @@
 
         public CodeConstructor GenerateConstructor(TibcoBWProcess tibcoBwProcessToGenerate)
         {
-
             var constructor = new CodeConstructor();
             constructor.Attributes = MemberAttributes.Public;
 
@@ -248,28 +246,15 @@
 
 
 
-        private void RemoveDuplicateParameters(CodeParameterDeclarationExpressionCollection parameters)
-        {
-            var toKeep = parameters
-    .Cast<CodeParameterDeclarationExpression>()
-    .GroupBy(x => new { x.Name })
-    .SelectMany(x => x.Take(1))
-    .ToArray();
 
-            parameters.Clear();
-
-            foreach (var objToKeep in toKeep)
-            {
-                parameters.Add(objToKeep);
-            }
-        }
 
         public CodeMemberMethod[] GenerateMethod(TibcoBWProcess tibcoBwProcessToGenerate, Dictionary<string, CodeStatementCollection> activityNameToServiceNameDictionnary)
         {
-			var methods = new List<CodeMemberMethod> ();
-			methods.Add(this.GenerateStartMethod (tibcoBwProcessToGenerate, activityNameToServiceNameDictionnary));
+			var methods = new List<CodeMemberMethod>();
+			methods.Add(this.GenerateStartMethod(tibcoBwProcessToGenerate, activityNameToServiceNameDictionnary));
 
-			if (tibcoBwProcessToGenerate.StarterActivity != null) {
+			if (tibcoBwProcessToGenerate.StarterActivity != null)
+            {
                 methods.Add(this.GenerateOnEventMethod (tibcoBwProcessToGenerate, activityNameToServiceNameDictionnary));
 			}
 
@@ -387,12 +372,6 @@
 			return statements;
         }
 
-		private CodeStatementCollection GenerateStarterMethodBody ()
-		{
-			var statements = new CodeStatementCollection ();
-            statements.Add (new CodeSnippetStatement("        this.subscriber.Start();"));
-			return statements;
-		}
 
 		public CodeParameterDeclarationExpressionCollection GenerateOnEventMethodInputParameters(TibcoBWProcess tibcoBwProcessToGenerate)
 		{
@@ -402,7 +381,14 @@
 
 			return parameters;
 		}
-			
+
+        private CodeStatementCollection GenerateStarterMethodBody()
+        {
+            var statements = new CodeStatementCollection();
+            statements.Add(new CodeSnippetStatement("        this.subscriber.Start();"));
+            return statements;
+        }
+	
         private CodeNamespaceCollection GenerateProcessVariablesNamespaces(TibcoBWProcess tibcoBwProcessToGenerate)
         {
             var processVariableNameNamespaces = new CodeNamespaceCollection();
@@ -420,7 +406,7 @@
                     }
                     catch (Exception e)
                     {
-                        log.Error(
+                        Log.Error(
                             "unable to generate Process Variable object class for this process: "
                             + tibcoBwProcessToGenerate.ProcessName, e);
                     }
@@ -446,6 +432,22 @@
                     return true;
                 default:
                     return false;
+            }
+        }
+
+        private void RemoveDuplicateParameters(CodeParameterDeclarationExpressionCollection parameters)
+        {
+            var toKeep = parameters
+    .Cast<CodeParameterDeclarationExpression>()
+    .GroupBy(x => new { x.Name })
+    .SelectMany(x => x.Take(1))
+    .ToArray();
+
+            parameters.Clear();
+
+            foreach (var objToKeep in toKeep)
+            {
+                parameters.Add(objToKeep);
             }
         }
     }

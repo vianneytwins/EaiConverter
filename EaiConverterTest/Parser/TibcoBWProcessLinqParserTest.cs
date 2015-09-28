@@ -78,6 +78,14 @@ namespace EaiConverter.Test.Parser
 			Assert.AreEqual ("Start", tibcoBWProcess.StartActivity.Name);
 		}
 
+        [Test]
+        public void Should_return_start_Activity_name_When_StartType_is_not_present()
+        {
+            string xml = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""><pd:name>repertoire/myProcessName.process</pd:name><pd:startName>Start</pd:startName></pd:ProcessDefinition>";
+            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+            Assert.AreEqual("Start", tibcoBWProcess.StartActivity.Name);
+        }
+
 		[Test]
 		public void Should_return_start_Activity_with_StartType_Defined_in_the_Process_xml ()
 		{
