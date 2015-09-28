@@ -27,9 +27,14 @@ namespace EaiConverter.Test.Model
 		[Test]
 		public void Should_Return_ProcessName_myProcess_When_fullProcessName_is_TOTO_slash_MyProcess_dot_process()
 		{
-			Assert.AreEqual ("myProcess", new TibcoBWProcess ("TOTO/myProcess.processjkljh").ProcessName);
+			Assert.AreEqual("myProcess", new TibcoBWProcess("TOTO/myProcess.processjkljh").ProcessName);
 		}
 
+        [Test]
+        public void Should_Return_ProcessName_When_processName_contains_a_space()
+        {
+            Assert.AreEqual("myProcess", new TibcoBWProcess("TOTO/my Process.process").ProcessName);
+        }
 
 		[Test]
 		public void Should_Return_ProcessName_PrMapRM3DtoPNOEquitytoEquity_When_fullProcessName_is_fullOfSlashDashAndDot()

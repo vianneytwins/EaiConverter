@@ -29,7 +29,8 @@
                     .Replace("-", string.Empty)
                     .Replace(".", string.Empty)
                     .Replace("(", "_")
-                    .Replace(")", "_");
+                    .Replace(")", "_")
+                    .Replace(" ", string.Empty);
             return myProcessName;
         }
 
@@ -48,7 +49,7 @@
             else
             {
                 myShortNameSpace =
-                    (fullProcessName.Substring(0, indexOfLastSlash)).Replace("/", ".").Replace("(", "_").Replace(")", "_");
+                    (fullProcessName.Substring(0, indexOfLastSlash)).Replace("/", ".").Replace("(", "_").Replace(")", "_").Replace(" ", string.Empty);
             }
             return myShortNameSpace;
         }
