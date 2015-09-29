@@ -409,16 +409,15 @@
                     {
                         try
                         {
-                            
                                 processVariableNameNamespaces.Add(
                                     this.xsdClassGenerator.Build(item.ObjectXNodes, tibcoBwProcessToGenerate.VariablesNameSpace));
-                           
                         }
                         catch (Exception e)
                         {
                             Log.Error(
                                 "unable to generate Process Variable object class for this process: "
-                                + tibcoBwProcessToGenerate.ProcessName, e);
+                                + tibcoBwProcessToGenerate.ProcessName,
+                                e);
                         }
                     }
                 }

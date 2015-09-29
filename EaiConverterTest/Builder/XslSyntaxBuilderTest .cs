@@ -30,7 +30,7 @@ namespace EaiConverter.Test.Builder
 ";
             XElement doc = XElement.Parse(xml);
 
-            var codeStatement = xslBuilder.Build (doc.Nodes());
+            var codeStatement = xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
 			Assert.AreEqual (@"System.String FundName = ""testvalue"";

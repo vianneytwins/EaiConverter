@@ -113,18 +113,20 @@
 </var>";
             var doc = XElement.Parse(xml);
 
-            this.tibcoBwProcess.ProcessVariables = new List<ProcessVariable>{
-                new ProcessVariable{
-                    Parameter = new ClassParameter{Name = "var", Type = "group"},
+            this.tibcoBwProcess.ProcessVariables = new List<ProcessVariable>
+            {
+                new ProcessVariable
+                {
+                    Parameter = new ClassParameter { Name = "var", Type = "group" },
                     ObjectXNodes = doc.Nodes()
                 }
             };
-            var classToGenerate = this.tibcoBwProcessBuilder.Build (this.tibcoBwProcess);
+            var classToGenerate = this.tibcoBwProcessBuilder.Build(this.tibcoBwProcess);
 
-            var className = classToGenerate.Namespaces[1].Types[0].Name;
+            var className = classToGenerate.Namespaces[3].Types[0].Name;
 
             Assert.AreEqual("group", className);
-            Assert.AreEqual("MyNamespace.myProcessTestVariables", classToGenerate.Namespaces[1].Name);
+            Assert.AreEqual("MyNamespace.myProcessTestVariables", classToGenerate.Namespaces[3].Name);
         }
 
 
