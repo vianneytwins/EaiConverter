@@ -107,6 +107,8 @@
 
             expression = expression.Replace("tib:left(", "TibcoXslHelper.Left(");
 
+            expression = expression.Replace("tib:index-of(", "TibcoXslHelper.IndexOf(");
+
             expression = expression.Replace("substring(", "TibcoXslHelper.Substring(");
 
             expression = expression.Replace("round(", "TibcoXslHelper.Round(");

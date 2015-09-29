@@ -52,6 +52,11 @@
         {
             return inputString.Contains(value);
         }
+        
+        public static int IndexOf(string inputString, string stringToFind)
+        {
+            return inputString.IndexOf(stringToFind);
+        }
 
         // usage of exists : exists ('this string', mycollection)
         public static bool Exist<T>(T value, List<T> collection)

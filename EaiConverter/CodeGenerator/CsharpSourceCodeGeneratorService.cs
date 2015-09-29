@@ -347,6 +347,11 @@ using System.Runtime.InteropServices;
             return inputString.Substring (startindex-1, endindex-1);
         }
 
+        public static int IndexOf(string inputString, string stringToFind)
+        {
+            return inputString.IndexOf(stringToFind);
+        }
+
         //usage a string, usage sample : tib:render-xml(myvariable, true()) 
         public static string RenderXml(string inputString, bool isSomething)
         {
