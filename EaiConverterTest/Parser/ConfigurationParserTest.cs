@@ -1,4 +1,4 @@
-﻿namespace EaiConverterTest.Parser
+﻿namespace EaiConverter.Test.Parser
 {
     using System.ComponentModel.Design;
     using System.Xml.Linq;

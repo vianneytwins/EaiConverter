@@ -1,6 +1,8 @@
 ﻿using EaiConverter.Builder.Utils;
 using EaiConverter.Model;
 using EaiConverter.Utils;
+using EaiConverter.CodeGenerator.Utils;
+using System.Reflection;
 
 namespace EaiConverter.Builder
 {
@@ -38,16 +40,48 @@ namespace EaiConverter.Builder
   
             var xsdCodeNamespace = new CodeNamespace();
             xsdCodeNamespace.Name = nameSpace;
-            foreach (var parameter in parameters)
-            {
-                if (!CodeDomUtils.IsBasicType(parameter.Type))
-                {
-                    
-                }
-            }
-            throw new System.NotImplementedException();
+            xsdCodeNamespace.Types.AddRange(GenerateClassForParameters(parameters));
+            return xsdCodeNamespace;
            
         }
+
+        CodeTypeDeclarationCollection GenerateClassForParameters(List<ClassParameter> parameters)
+        {
+            var classes = new CodeTypeDeclarationCollection();
+            foreach (var parameter in parameters)
+            {
+                if (!CodeDomUtils.IsBasicType(parameter.Type) && parameter.ChildProperties != null)
+                {
+                    classes.Add(this.CreateParameterClass(parameter));
+                    classes.AddRange(this.GenerateClassForParameters(parameter.ChildProperties));
+                }
+            }
+            return classes;
+        }
+
+        CodeTypeDeclaration CreateParameterClass(ClassParameter parameter)
+        {
+            var parameterClass = new CodeTypeDeclaration();
+            parameterClass.IsClass = true;
+            parameterClass.TypeAttributes = TypeAttributes.Public;
+
+            parameterClass.Name = parameter.Type;
+
+            parameterClass.Members.AddRange(this.GenererateProperties(parameter.ChildProperties));
+
+            return parameterClass;
+        }
+
+        CodeTypeMember[] GenererateProperties(List<ClassParameter> childProperties)
+        {
+            var properties = new List<CodeTypeMember>();
+            foreach (var parameter in childProperties)
+            {
+                properties.Add(CodeDomUtils.GenerateProperty(parameter.Name, parameter.Type));
+            }
+            return properties.ToArray();
+        }
+   
 
         public CodeNamespace Build(string fileName)
         {
@@ -91,26 +125,9 @@ namespace EaiConverter.Builder
                 codeExporter.ExportTypeMapping(map);
             }
 
-            //this.RemoveUnusedStuff(codeNamespace);
-
             return codeNamespace;
         }
 
-        private void RemoveUnusedStuff(CodeNamespace codeNamespace)
-        {
-            foreach (CodeTypeDeclaration codeType in codeNamespace.Types)
-            {
-
-                codeType.Comments.Clear();
-                codeType.CustomAttributes.Clear();
-                codeType.IsPartial = false;
-                foreach (CodeTypeMember codeTypeMember in codeType.Members)
-                {
-                    codeTypeMember.CustomAttributes = null;
-                    codeTypeMember.Comments.Clear();
-                }
-            }
-        }
     }
 }
 

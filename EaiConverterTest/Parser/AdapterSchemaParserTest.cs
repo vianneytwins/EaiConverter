@@ -1,4 +1,4 @@
-﻿namespace EaiConverterTest.Parser
+﻿namespace EaiConverter.Test.Parser
 {
     using EaiConverter.Parser;
 

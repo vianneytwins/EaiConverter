@@ -19,6 +19,7 @@ namespace EaiConverter.Test.Builder
 
         }
 
+		[Ignore]
         [Test]
         public void Should_Return_1_Variable_assignement_with_String_Type (){
             var xml =
