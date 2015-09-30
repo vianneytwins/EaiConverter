@@ -17,7 +17,7 @@ namespace EaiConverter.Test.Builder
 		RdvPublishActivity activity;
 
 		[SetUp]
-		public void SetUp ()
+		public void SetUp()
 		{
 			this.activityBuilder = new RdvPublishActivityBuilder(new XslBuilder(new XpathBuilder()));
 			this.activity = new RdvPublishActivity( "My Activity Name", ActivityType.rdvPubActivityType);
@@ -50,7 +50,7 @@ namespace EaiConverter.Test.Builder
 		}
 
 		[Test]
-		public void Should_return_One_ConstructorParameter_named_myActivityNameRdvPublisher ()
+		public void Should_return_One_ConstructorParameter_named_myActivityNameRdvPublisher()
 		{
 			var paramaters = this.activityBuilder.GenerateConstructorParameter (activity);
 			Assert.AreEqual (1, paramaters.Count);

@@ -22,7 +22,7 @@ namespace EaiConverter.Builder
             sharedVariableServiceNameSpace.Imports.AddRange(this.GenerateImports());
             var sharedVariableService = this.GenerateClass();
             sharedVariableServiceNameSpace.Types.Add(sharedVariableService);
-
+            
             // Generate the corresponding interface
             var sharedVariableServiceInterfaceNameSpace = InterfaceExtractorFromClass.Extract(sharedVariableService, TargetAppNameSpaceService.sharedVariableNameSpace);
 

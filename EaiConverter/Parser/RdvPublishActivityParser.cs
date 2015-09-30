@@ -9,12 +9,12 @@ namespace EaiConverter.Parser
         #region IActivityParser implementation
         public Activity Parse(XElement inputElement)
         {
-            var activity = new RdvPublishActivity ();
+            var activity = new RdvPublishActivity();
 
-            activity.Name = inputElement.Attribute ("name").Value;
+            activity.Name = inputElement.Attribute("name").Value;
             activity.Type = (ActivityType) inputElement.Element (XmlnsConstant.tibcoProcessNameSpace + "type").Value;
 
-            var configElement = inputElement.Element ("config");
+            var configElement = inputElement.Element("config");
 
             activity.Subject = XElementParserUtils.GetStringValue(configElement.Element("subject"));
             activity.SharedChannel = XElementParserUtils.GetStringValue(configElement.Element("sharedChannel"));
