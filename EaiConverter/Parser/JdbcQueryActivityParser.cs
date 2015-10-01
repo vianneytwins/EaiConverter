@@ -54,7 +54,7 @@ namespace EaiConverter.Parser
                         jdbcQueryActivity.QueryStatementParameters.Add(parameterName, parameterType);
                     }
                     //ColonneType= 4 : output parameter
-                    else if (colonneType == "4")
+                    else if (colonneType == "4" || colonneType == "2" || colonneType == "4"  )
                     {
                         jdbcQueryActivity.QueryOutputStatementParameters.Add(new ClassParameter { Name = parameterName, Type = parameterType });
                     }
