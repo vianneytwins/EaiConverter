@@ -243,9 +243,9 @@
             var variables = regex.Match(expression);
             if (variables.Success)
             {
-                string variableNameToModify = variables.Groups[1].ToString();
-                expression = expression.Replace(variableNameToModify + ":", string.Empty);
-                expression = expression.Replace("pfx", string.Empty);
+                string variableNameToModify = variables.Groups[0].ToString();
+                expression = expression.Replace(variableNameToModify, string.Empty);
+                expression = RemovePrefix(expression);
             }
 
             return expression;
