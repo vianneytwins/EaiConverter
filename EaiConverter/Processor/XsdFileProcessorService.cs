@@ -5,6 +5,7 @@ namespace EaiConverter.Processor
 
     using EaiConverter.Builder;
     using EaiConverter.CodeGenerator;
+    using EaiConverter.Parser;
 
     using log4net;
 
@@ -14,26 +15,30 @@ namespace EaiConverter.Processor
 
         private readonly ISourceCodeGeneratorService sourceCodeGeneratorService;
 
+        private XsdParser xsdParser;
+
         public XsdFileProcessorService(ISourceCodeGeneratorService sourceCodeGeneratorService)
         {
             this.sourceCodeGeneratorService = sourceCodeGeneratorService;
+            this.xsdParser = new XsdParser();
         }
 
         public void Process(string fileName)
         {
+            CodeNamespace xsdNameSpacetoGenerate = new CodeNamespace();
             try
             {
-                var xsdNameSpacetoGenerate = new XsdBuilder().Build(fileName);
-
-                var targetUnit = new CodeCompileUnit();
-                targetUnit.Namespaces.Add(xsdNameSpacetoGenerate);
-
-                this.sourceCodeGeneratorService.Generate(targetUnit);
+                xsdNameSpacetoGenerate = new XsdBuilder().Build(fileName);
             }
             catch (Exception e)
             {
                 Log.Error("unable to generate class from XSD file:" + fileName, e);
             }
+
+            var targetUnit = new CodeCompileUnit();
+            targetUnit.Namespaces.Add(xsdNameSpacetoGenerate);
+
+            this.sourceCodeGeneratorService.Generate(targetUnit);
         }
     }
 }

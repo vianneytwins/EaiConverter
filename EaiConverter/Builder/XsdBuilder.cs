@@ -85,6 +85,7 @@ namespace EaiConverter.Builder
 
         public CodeNamespace Build(string fileName)
         {
+
             var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
 
 			var xsdCodeNamespace = this.GeneratedClassFromStream(stream, TargetAppNameSpaceService.ConvertXsdImportToNameSpace(fileName));
