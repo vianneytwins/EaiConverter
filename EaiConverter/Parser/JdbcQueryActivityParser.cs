@@ -8,6 +8,7 @@ namespace EaiConverter.Parser
     using EaiConverter.CodeGenerator.Utils;
     using EaiConverter.Model;
     using EaiConverter.Parser.Utils;
+    using EaiConverter.Utils;
 
     public class JdbcQueryActivityParser : IActivityParser
     {
@@ -39,8 +40,14 @@ namespace EaiConverter.Parser
 
                 var parameterElements = preparedParamDataTypeElement.Elements("parameter");
 
-                jdbcQueryActivity.QueryOutputStatementParameters = new List<ClassParameter>();
-
+                jdbcQueryActivity.QueryOutputStatementParameters = new List<ClassParameter>
+                                                                       {
+                                                                           new ClassParameter
+                                                                               {
+                                                                                   Name = "UnresolvedResultsets",
+                                                                                   Type = "VARCHAR"
+                                                                               }
+                                                                       };
                 foreach (var parameterElement in parameterElements)
                 {
                     string parameterName = (XElementParserUtils.GetStringValue(parameterElement.Element("colName")).Replace(".",string.Empty));
@@ -54,7 +61,7 @@ namespace EaiConverter.Parser
                         jdbcQueryActivity.QueryStatementParameters.Add(parameterName, parameterType);
                     }
                     //ColonneType= 4 : output parameter
-                    else if (colonneType == "4" || colonneType == "2" || colonneType == "4"  )
+                    else if (colonneType == "4" || colonneType == "2" || colonneType == "5")
                     {
                         jdbcQueryActivity.QueryOutputStatementParameters.Add(new ClassParameter { Name = parameterName, Type = parameterType });
                     }

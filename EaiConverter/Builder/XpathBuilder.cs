@@ -238,8 +238,8 @@
             //    \:              # "Ends with a ':' character"
 
             //(?<=This is)(.*)(?=sentence)
-            //var regex = new Regex(@"_globalVariables/([^:]*)\:");
-            var regex = new Regex(@"(?<=pfx)(.*)(?=:)");
+            var regex = new Regex(@"pfx([^:]*)\:");
+            //var regex = new Regex(@"(?<=pfx)(.*)(?=:)");
             var variables = regex.Match(expression);
             if (variables.Success)
             {

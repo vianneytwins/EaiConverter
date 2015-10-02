@@ -77,6 +77,14 @@ namespace EaiConverter.Test.Builder
             Assert.AreEqual("start_root", this.xpathBuilder.Build("$Start/pfx1:root"));
         }
 
+        
+        [Test]
+        public void Should_Remove_prefix_complex_usecase()
+        {
+            Assert.AreEqual(@"TibcoXslHelper.Concat(getInstanceInfo.output.GetProcessInstanceInfo[1].ProcessInstanceName,"" "", getInstanceInfo.output.GetProcessInstanceInfo[1].MainProcessName,"""", start_logInfo.message,"""", TibcoXslHelper.RenderXml((GetExceptions.output, true));",
+                this.xpathBuilder.Build("concat($GetInstanceInfo/pfx4:output/pfx4:GetProcessInstanceInfo[1]/ProcessInstanceName,' ', $GetInstanceInfo/pfx4:output/pfx4:GetProcessInstanceInfo[1]/MainProcessName,'', $Start/pfx3:logInfo/message,'', tib:render-xml($GetExceptions/pfx4:output, true()))"));
+        }
+
         [Test]
         public void Should_Remove_global_variable_prefix()
         {

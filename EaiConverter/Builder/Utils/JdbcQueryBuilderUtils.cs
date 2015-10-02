@@ -33,10 +33,11 @@
             { "93", CSharpTypeConstant.SystemDateTime },
             { "-7", CSharpTypeConstant.SystemBoolean },
             { "6", CSharpTypeConstant.SystemDouble },
-            { "-1", CSharpTypeConstant.SystemString },
+            { "-1", CSharpTypeConstant.SystemString }
         };
 
-        private static Dictionary<string, string> jdbcSharedConfigMapping = new Dictionary<string, string> {
+        private static Dictionary<string, string> jdbcSharedConfigMapping = new Dictionary<string, string>
+        {
             { "/Configuration/DAI/PNO/JDBC/JDBCIntegration.sharedjdbc", "IntegrationDatabase" },
             { "/Configuration/DAI/PNO/JDBC/JDBCPanorama.sharedjdbc", "PanoramaDatabase" },
             { "/Configuration/DAI/PNO/JDBC/JDBCPanoramaMasterFiles.sharedjdbc", "MasterFilesDatabase" },
@@ -58,6 +59,7 @@
                     Type = ConvertSQLTypeToObjectType(queryParam.Value)
                 });
             }
+
             return methodInputParameters;
         }
 
@@ -80,7 +82,7 @@
             }
         }
 
-        public static string ConvertJDBCConnectionName(string type)
+        public static string ConvertJdbcConnectionName(string type)
         {
             string resultType;
             if (jdbcSharedConfigMapping.TryGetValue(type, out resultType))

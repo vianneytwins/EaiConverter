@@ -1,11 +1,13 @@
-﻿using EaiConverter.Parser;
-using System.Xml.Linq;
-using NUnit.Framework;
-using EaiConverter.Model;
-
-namespace EaiConverter.Test.Parser
+﻿namespace EaiConverter.Test.Parser
 {
-	[TestFixture]
+    using System.Xml.Linq;
+
+    using EaiConverter.Model;
+    using EaiConverter.Parser;
+
+    using NUnit.Framework;
+
+    [TestFixture]
 	public class JdbcCallActivityParserTest
 	{
 		JdbcQueryActivityParser jdbcQueryActivityParser;
@@ -73,14 +75,14 @@ namespace EaiConverter.Test.Parser
 
 		[Test]
 		public void Should_Return_QueryStatement_is_select_Something(){
-            JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity) jdbcQueryActivityParser.Parse (doc);
+            var jdbcQueryActivity = (JdbcQueryActivity) jdbcQueryActivityParser.Parse (doc);
 
 			Assert.AreEqual("MySetEUTicker", jdbcQueryActivity.QueryStatement);
 		}
 
 		[Test]
 		public void Should_Return_QueryStatementParameter_is_named_IdBbUnique_and_type_VARCHAR(){
-            JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity) jdbcQueryActivityParser.Parse (doc);
+            var jdbcQueryActivity = (JdbcQueryActivity) jdbcQueryActivityParser.Parse (doc);
 
 			Assert.AreEqual("int", jdbcQueryActivity.QueryStatementParameters["Id_Bb_Unique"]);
 		}
@@ -88,9 +90,10 @@ namespace EaiConverter.Test.Parser
         [Test]
         public void Should_Return_QueryOutputStatementParameter()
         {
-            JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity)jdbcQueryActivityParser.Parse(doc);
+            var jdbcQueryActivity = (JdbcQueryActivity)jdbcQueryActivityParser.Parse(doc);
 
-            Assert.AreEqual("int", jdbcQueryActivity.QueryOutputStatementParameters[0].Type);
+            Assert.AreEqual("VARCHAR", jdbcQueryActivity.QueryOutputStatementParameters[0].Type);
+            Assert.AreEqual("int", jdbcQueryActivity.QueryOutputStatementParameters[1].Type);
         }
 
 	    [Test]
@@ -213,8 +216,8 @@ namespace EaiConverter.Test.Parser
 
             JdbcQueryActivity jdbcQueryActivity = (JdbcQueryActivity)jdbcQueryActivityParser.Parse(doc);
 
-            Assert.AreEqual("IssueID", jdbcQueryActivity.QueryOutputStatementParameters[0].Name);
-            Assert.AreEqual("1", jdbcQueryActivity.QueryOutputStatementParameters[0].Type);
+            Assert.AreEqual("IssueID", jdbcQueryActivity.QueryOutputStatementParameters[2].Name);
+            Assert.AreEqual("1", jdbcQueryActivity.QueryOutputStatementParameters[2].Type);
 	    }
 	}
 }

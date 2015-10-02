@@ -97,7 +97,7 @@
                             // TODO verifier que ca marche
                             CustomAttributes = new CodeAttributeDeclarationCollection {
                                 new CodeAttributeDeclaration(
-                                    JdbcQueryBuilderUtils.ConvertJDBCConnectionName (jdbcQueryActivity.JdbcSharedConfig)
+                                    JdbcQueryBuilderUtils.ConvertJdbcConnectionName (jdbcQueryActivity.JdbcSharedConfig)
                                 )
                             }
                         });
