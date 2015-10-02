@@ -65,7 +65,7 @@ namespace EaiConverter.Builder
             parameterClass.IsClass = true;
             parameterClass.TypeAttributes = TypeAttributes.Public;
 
-            parameterClass.Name = parameter.Type;
+            parameterClass.Name = parameter.Name;
 
             parameterClass.Members.AddRange(this.GenererateProperties(parameter.ChildProperties));
 

@@ -72,6 +72,12 @@ namespace EaiConverter.Test.Builder
         }
 
         [Test]
+        public void Should_Remove_prefix()
+        {
+            Assert.AreEqual("start_root", this.xpathBuilder.Build("$Start/pfx1:root"));
+        }
+
+        [Test]
         public void Should_Remove_global_variable_prefix()
         {
             Assert.AreEqual("GlobalVariables", this.xpathBuilder.Build("$_globalVariables/ns:GlobalVariables"));

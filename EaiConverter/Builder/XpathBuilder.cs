@@ -17,6 +17,8 @@
 
             expression = ManageGlobalVariable(expression);
 
+            expression = RemovePrefix(expression);
+
             expression = expression.Replace("''", "\"\"");
             expression = Regex.Replace(expression, "'([^']+)'", m => "\"" + m.Groups[1].Value.Replace(@"""", @"\""") + "\"");
             //expression = expression.Replace('\'', '"');
@@ -26,13 +28,16 @@
 
             expression = ManageXpathFunctions(expression);
 
-            //for JbdcQueryActivity
+            // for JbdcQueryActivity
             expression = expression.Replace(".resultSet.Record[", "ResultSet[");
             expression = expression.Replace(".resultSet.Record.nb", "ResultSet.Count()");
             expression = expression.Replace(".resultSet.Record.Length", "ResultSet.Count()");
-            expression = expression.Replace(".Record", "");
+            expression = expression.Replace(".Record", string.Empty);
             expression = expression.Replace(".resultSet.outputSet", "ResultSet");
             expression = expression.Replace(".resultSet", "ResultSet");
+
+            // for java activity ouput
+            expression = expression.Replace("javaCodeActivityOutput.", string.Empty);
 
             expression = ManageBooleanValues(expression);
 
@@ -217,6 +222,30 @@
                 string variableNameToModify = variables.Groups[1].ToString();
                 expression = expression.Replace(variableNameToModify + ":", string.Empty);
                 expression = expression.Replace("_globalVariables/", string.Empty);
+            }
+
+            return expression;
+        }
+        
+        private static string RemovePrefix(string expression)
+        {
+            // @"pfx([^:]*)\:"
+            // pfx # Escaped parenthesis, means "starts with a 'pfx' "
+            //    (               # Parentheses in a regex mean "put (capture) the stuff in between into the Groups array"     
+            //        [^:]        # Any character that is not a ':' character
+            //        *           # Zero or more occurrences of the aforementioned "non ':' char"
+            //    )               # Close the capturing group
+            //    \:              # "Ends with a ':' character"
+
+            //(?<=This is)(.*)(?=sentence)
+            //var regex = new Regex(@"_globalVariables/([^:]*)\:");
+            var regex = new Regex(@"(?<=pfx)(.*)(?=:)");
+            var variables = regex.Match(expression);
+            if (variables.Success)
+            {
+                string variableNameToModify = variables.Groups[1].ToString();
+                expression = expression.Replace(variableNameToModify + ":", string.Empty);
+                expression = expression.Replace("pfx", string.Empty);
             }
 
             return expression;
