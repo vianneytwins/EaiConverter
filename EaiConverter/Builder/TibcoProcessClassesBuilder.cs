@@ -82,10 +82,15 @@
             // TODO VC : add the reduction on fields
             this.RemoveDuplicateFields(tibcoBwProcessClassModel);
 
-            // Generate ouput and input classes
+            // Generate ouput and input classes from start and End Activity
             targetUnit.Namespaces.Add(this.GenerateInputOutputClasses(tibcoBwProcessToGenerate.EndActivity, tibcoBwProcessToGenerate.InputAndOutputNameSpace));
             targetUnit.Namespaces.Add(this.GenerateInputOutputClasses(tibcoBwProcessToGenerate.StartActivity, tibcoBwProcessToGenerate.InputAndOutputNameSpace));
 
+            // Add the invocation code of the End if any
+            if (tibcoBwProcessToGenerate.EndActivity != null)
+            {
+                activityNameToServiceNameDictionnary.Add(tibcoBwProcessToGenerate.EndActivity.Name, this.GenerateEndActivityInvocationCode(tibcoBwProcessToGenerate));
+            }
 
             targetUnit.Namespaces.AddRange(this.GenerateProcessVariablesNamespaces(tibcoBwProcessToGenerate));
 
@@ -267,7 +272,7 @@
 			if (tibcoBwProcessToGenerate.StartActivity != null)
 			{
                 startMethod.Parameters.AddRange(this.GenerateStartMethodInputParameters(tibcoBwProcessToGenerate));
-				startMethod.Statements.AddRange(this.GenerateMainMethodBody (tibcoBwProcessToGenerate,startMethod.ReturnType, activityNameToServiceNameDictionnary));
+				startMethod.Statements.AddRange(this.GenerateMainMethodBody (tibcoBwProcessToGenerate, activityNameToServiceNameDictionnary));
 			}
 			else if (tibcoBwProcessToGenerate.StarterActivity != null)
 			{
@@ -323,14 +328,14 @@
 
 			onEventMethod.Parameters.AddRange(this.GenerateOnEventMethodInputParameters(tibcoBwProcessToGenerate));
 
-			onEventMethod.Statements.AddRange(this.GenerateMainMethodBody (tibcoBwProcessToGenerate, onEventMethod.ReturnType, activityNameToServiceNameDictionnary));
+			onEventMethod.Statements.AddRange(this.GenerateMainMethodBody (tibcoBwProcessToGenerate, activityNameToServiceNameDictionnary));
 
 			return onEventMethod;
 		}
 
-		public CodeStatementCollection GenerateMainMethodBody(TibcoBWProcess tibcoBwProcessToGenerate, CodeTypeReference returnType, Dictionary<string, CodeStatementCollection> activityNameToServiceNameDictionnary)
+		public CodeStatementCollection GenerateMainMethodBody(TibcoBWProcess tibcoBwProcessToGenerate, Dictionary<string, CodeStatementCollection> activityNameToServiceNameDictionnary)
         {
-			var statements = new CodeStatementCollection ();
+			var statements = new CodeStatementCollection();
 			if (tibcoBwProcessToGenerate.Transitions != null)
             {
                 if (tibcoBwProcessToGenerate.StarterActivity != null)
@@ -343,14 +348,6 @@
 
                 statements.AddRange(this.coreProcessBuilder.GenerateMainCodeStatement(tibcoBwProcessToGenerate.Transitions, tibcoBwProcessToGenerate.StartingPoint, null, activityNameToServiceNameDictionnary));
 
-				if (returnType.BaseType != CSharpTypeConstant.SystemVoid)
-                {
-                    var returnName = VariableHelper.ToVariableName(tibcoBwProcessToGenerate.EndActivity.Parameters[0].Name);
-					var objectCreate = new CodeObjectCreateExpression(returnType);
-					statements.Add(new CodeVariableDeclarationStatement(returnType, returnName, objectCreate));
-                    var returnStatement = new CodeMethodReturnStatement(new CodeVariableReferenceExpression(returnName));
-                    statements.Add(returnStatement);
-                }
             }
 			return statements;
         }
@@ -389,6 +386,34 @@
                 }
             }
             return xsdCodeNamespace;
+        }
+
+        public CodeStatementCollection GenerateEndActivityInvocationCode(TibcoBWProcess tibcoBwProcessToGenerate)
+        {
+            var statements = new CodeStatementCollection();
+
+            var returnType = this.GenerateStartMethodReturnType(tibcoBwProcessToGenerate);
+
+            if (returnType.BaseType != CSharpTypeConstant.SystemVoid)
+            {
+                /**
+                var invocationCodeCollection = new CodeStatementCollection();
+                invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(tibcoBwProcessToGenerate.EndActivity));
+
+                invocationCodeCollection.AddRange(new XslBuilder().Build(tibcoBwProcessToGenerate.EndActivity.InputBindings));
+
+                var variableToAssignReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(assignActivity.VariableName));
+                var codeInvocation = new CodeAssignStatement (variableToAssignReference, new CodeVariableReferenceExpression(VariableHelper.ToVariableName(assignActivity.VariableName)));
+                invocationCodeCollection.Add(codeInvocation);
+                */
+                var returnName = VariableHelper.ToVariableName(tibcoBwProcessToGenerate.EndActivity.Parameters[0].Name);
+                var objectCreate = new CodeObjectCreateExpression(returnType);
+                statements.Add(new CodeVariableDeclarationStatement(returnType, returnName, objectCreate));
+                var returnStatement = new CodeMethodReturnStatement(new CodeVariableReferenceExpression(returnName));
+                statements.Add(returnStatement);
+            }
+
+            return statements;
         }
 
         private CodeStatementCollection GenerateStarterMethodBody()

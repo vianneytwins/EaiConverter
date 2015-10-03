@@ -17,7 +17,8 @@ namespace EaiConverter.Test.Builder
         {
             {"step1",new CodeStatementCollection{ DefaultInvocationMethod("step1Service")}},
             {"step2",new CodeStatementCollection{ DefaultInvocationMethod("step2Service")}},
-            {"step3",new CodeStatementCollection{ DefaultInvocationMethod("step3Service")}}
+            {"step3",new CodeStatementCollection{ DefaultInvocationMethod("step3Service")}},
+            {"End",new CodeStatementCollection{ DefaultInvocationMethod("returnStatement")}}
         };
 
 		CoreProcessBuilder builder;
@@ -93,6 +94,7 @@ namespace EaiConverter.Test.Builder
         [Test]
         public void Should_Return_Simple_Start_Method_Body(){
             var expected = @"this.step1Service.ExecuteQuery();
+this.returnStatement.ExecuteQuery();
 ";
             var tibcoBWProcess = new TibcoBWProcess("MyTestProcess");
             tibcoBWProcess.StartActivity = new Activity("start", ActivityType.startType);
@@ -116,6 +118,7 @@ catch (System.Exception ex)
 {
     this.step2Service.ExecuteQuery();
 }
+this.returnStatement.ExecuteQuery();
 ";
             var tibcoBWProcess = new TibcoBWProcess("MyTestProcess");
             tibcoBWProcess.StartActivity = new Activity("start", ActivityType.startType);
@@ -140,6 +143,7 @@ else
 {
     this.step2Service.ExecuteQuery();
 }
+this.returnStatement.ExecuteQuery();
 ";
             var tibcoBWProcess = new TibcoBWProcess("MyTestProcess");
             tibcoBWProcess.StartActivity = new Activity("start", ActivityType.startType);
