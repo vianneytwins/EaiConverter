@@ -28,6 +28,8 @@
         public static readonly ActivityType loopGroupActivityType = new ActivityType("com.tibco.pe.core.LoopGroup");
         public static readonly ActivityType criticalSectionGroupActivityType = new ActivityType("com.tibco.pe.core.CriticalSectionGroup");
 
+        public static readonly ActivityType EngineCommandActivityType = new ActivityType("com.tibco.pe.core.EngineCommandActivity");
+
         public static readonly ActivityType javaActivityType = new ActivityType("com.tibco.plugin.java.JavaActivity");
 
         public static readonly ActivityType nullActivityType = new ActivityType("com.tibco.plugin.timer.NullActivity");

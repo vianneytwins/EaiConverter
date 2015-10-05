@@ -23,6 +23,8 @@ namespace EaiConverter.Builder
 
         private readonly SubscriberInterfaceBuilder subscriberBuilder;
 
+        private readonly EngineCommandServiceHelperBuilder engineCommandServiceHelperBuilder;
+
         public ActivityBuilderFactory()
 		{
 			this.xpathBuilder = new XpathBuilder ();
@@ -32,6 +34,7 @@ namespace EaiConverter.Builder
 			this.dataAccessInterfacesCommonBuilder = new DataAccessInterfacesCommonBuilder ();
 			this.resultSetBuilder = new ResultSetBuilder ();
 			this.xmlParserHelperBuilder = new XmlParserHelperBuilder ();
+            this.engineCommandServiceHelperBuilder = new EngineCommandServiceHelperBuilder();
 			this.xsdBuilder =  new XsdBuilder();
 			this.xsdParser = new XsdParser();
             this.subscriberBuilder = new SubscriberInterfaceBuilder();
@@ -50,7 +53,11 @@ namespace EaiConverter.Builder
             }
 			else if (activityType == ActivityType.xmlParseActivityType)
             {
-				return new XmlParseActivityBuilder (this.xslBuilder, xmlParserHelperBuilder, this.xsdBuilder, this.xsdParser);
+				return new XmlParseActivityBuilder (this.xslBuilder, this.xmlParserHelperBuilder, this.xsdBuilder, this.xsdParser);
+            }
+			else if (activityType == ActivityType.EngineCommandActivityType)
+            {
+				return new EngineCommandActivityBuilder(this.xslBuilder, this.engineCommandServiceHelperBuilder, this.xsdBuilder);
             }
             else if (activityType == ActivityType.mapperActivityType)
             {

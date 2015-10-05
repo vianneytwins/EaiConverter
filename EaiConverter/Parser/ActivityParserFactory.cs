@@ -80,6 +80,10 @@
             {
                 return new ConfirmActivityParser();
             }
+            else if (activityType == ActivityType.EngineCommandActivityType.ToString())
+            {
+                return new EngineCommandActivityParser();
+            }
             else
             {
                 return null;

@@ -15,7 +15,9 @@
         public const string domainContractNamespaceName = myAppName + ".Mydomain.Service.Contract";
         public const string javaToolsNameSpace = myAppName + ".Tools.Java";
 
-		public static string ConvertXsdImportToNameSpace(string schemaLocation)
+        public const string EngineCommandNamespace = myAppName + ".Tools.EngineCommand";
+
+        public static string ConvertXsdImportToNameSpace(string schemaLocation)
 		{
 		    var initialProjectPath = ConfigurationApp.GetProperty(MainClass.ProjectDirectory);
             if (initialProjectPath != null && schemaLocation.StartsWith(initialProjectPath))

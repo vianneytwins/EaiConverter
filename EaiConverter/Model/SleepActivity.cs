@@ -1,16 +1,12 @@
-using System;
-using System.Xml.Linq;
-
 namespace EaiConverter.Model
 {
-
 	public class SleepActivity : Activity
 	{
-        public SleepActivity (string name, ActivityType type) : base (name, type)
+        public SleepActivity(string name, ActivityType type) : base(name, type)
         {
         }
 
-        public SleepActivity () 
+        public SleepActivity() 
         {
         }
 

@@ -51,6 +51,7 @@
     <Compile Include="Builder\SubscriberBuilderTest.cs" />
     <Compile Include="Parser\AdapterSchemaParserTest.cs" />
     <Compile Include="Parser\ConfigurationParserTest.cs" />
+    <Compile Include="Parser\EngineCommandActivityParserTest.cs" />
     <Compile Include="Parser\GenerateErrorActivityParserTest.cs" />
     <Compile Include="ressources\TestXsd.cs" />
     <Compile Include="Builder\CallProcessActivityBuilderTest.cs" />
