@@ -91,7 +91,8 @@ namespace EaiConverter.Builder
                         {
                             codeStatements.Append("object ");
                         }
-                        codeStatements.Append(variableReference + " = null;");
+
+                        codeStatements.Append(variableReference + " = null;\n");
                     }
                     else if (IsBasicReturnType(returnType))
                     {

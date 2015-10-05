@@ -291,8 +291,9 @@ sqlParams.AdminID = ""EVL"";
             XElement doc = XElement.Parse(xml);
             var codeStatement = xslBuilder.Build (doc.Nodes());
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual (
+            Assert.AreEqual(
                 @"object FundName = null;
+
 ", generateCode);
         }
 
@@ -317,6 +318,7 @@ sqlParams.AdminID = ""EVL"";
             Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
 sqlParams.FundName = ""testvalue"";
 sqlParams.AdminID = null;
+
 ", generateCode.ToString());
         }
 
