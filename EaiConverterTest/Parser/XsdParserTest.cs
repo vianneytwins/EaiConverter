@@ -11,7 +11,7 @@
 	public class XsdParserTest
 	{
 		[Test]
-		public void Should_return_One_element_with_Type_String ()
+		public void Should_return_One_element_with_Type_String()
 		{
 			var xsdParser = new XsdParser();
 			string xml = @"<xsd:element name=""adminID"" type=""xsd:string"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""/>";
@@ -73,6 +73,39 @@
 			Assert.AreEqual("param", actual[0].ChildProperties[2].Name);
 		}
 
+        [Test]
+        public void Should_Manage_ref_element_without_prefix()
+        {
+            var xsdParser = new XsdParser();
+            string xml = @"<xsd:element ref=""mkdSchedulerInfo"" minOccurs=""0"" maxOccurs=""unbounded"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""/>";
+
+            var doc = XElement.Parse(xml);
+            var actual = xsdParser.Parse(new List<XNode>()
+			                                 {
+			                                     doc
+			                                 });
+
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual("mkdSchedulerInfo", actual[0].Name);
+            Assert.AreEqual("mkdSchedulerInfo", actual[0].Type);
+        }
+
+        [Test]
+        public void Should_Manage_ref_element_with_prefix()
+        {
+            var xsdParser = new XsdParser();
+            string xml = @"<xsd:element ref=""pfx1:mkdSchedulerInfo"" minOccurs=""0"" maxOccurs=""unbounded"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""/>";
+
+            var doc = XElement.Parse(xml);
+            var actual = xsdParser.Parse(new List<XNode>()
+			                                 {
+			                                     doc
+			                                 });
+
+            Assert.AreEqual(1, actual.Count);
+            Assert.AreEqual("mkdSchedulerInfo", actual[0].Name);
+            Assert.AreEqual("mkdSchedulerInfo", actual[0].Type);
+        }
 	}
 
 }

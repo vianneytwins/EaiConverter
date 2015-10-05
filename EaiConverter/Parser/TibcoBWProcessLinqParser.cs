@@ -60,7 +60,8 @@
         {
             IEnumerable<XElement> xElement = from element in allFileElement.Elements (XmlnsConstant.xsdNameSpace + "import")
                 select element;
-            if (xElement == null) {
+            if (xElement == null)
+            {
                 return null;
             }
             var xsdImports = new List<XsdImport>();

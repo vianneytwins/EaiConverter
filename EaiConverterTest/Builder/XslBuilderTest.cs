@@ -1,22 +1,22 @@
-﻿using NUnit.Framework;
-
-using System.Xml.Linq;
-using EaiConverter.Builder;
-using EaiConverter.Test.Utils;
-
-namespace EaiConverter.Test.Builder
+﻿namespace EaiConverter.Test.Builder
 {
-	[TestFixture]
+    using System.Xml.Linq;
+
+    using EaiConverter.Builder;
+    using EaiConverter.Test.Utils;
+
+    using NUnit.Framework;
+
+    [TestFixture]
 	public class XslBuilderTest
 	{
-        XslBuilder xslBuilder;
+        private XslBuilder xslBuilder;
    
 
         [SetUp]
-        public void SetUp ()
+        public void SetUp()
         {
-            xslBuilder = new XslBuilder (new XpathBuilder());
-
+            this.xslBuilder = new XslBuilder(new XpathBuilder());
         }
 
         [Test]
@@ -30,12 +30,13 @@ namespace EaiConverter.Test.Builder
 ";
             XElement doc = XElement.Parse(xml);
 
-            var codeStatement = xslBuilder.Build (doc.Nodes());
+            var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
 			Assert.AreEqual (@"System.String FundName = ""testvalue"";
 
-", generateCode);
+",
+ generateCode);
         }
 
         [Test]
@@ -49,12 +50,13 @@ namespace EaiConverter.Test.Builder
 ";
             XElement doc = XElement.Parse(xml);
 
-            var codeStatement = xslBuilder.Build (doc.Nodes());
+            var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
             Assert.AreEqual (@"double FundName = TibcoXslHelper.ParseNumber(""testvalue"");
 
-", generateCode);
+",
+ generateCode);
         }
 
         [Test]
@@ -68,7 +70,7 @@ namespace EaiConverter.Test.Builder
 ";
             XElement doc = XElement.Parse(xml);
 
-            var codeStatement = xslBuilder.Build (doc.Nodes());
+            var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
             Assert.AreEqual ("DateTime FundName = TibcoXslHelper.ParseDateTime(\"MMM dd yyyy\", Mystuff);\n\n", generateCode);
@@ -89,12 +91,13 @@ namespace EaiConverter.Test.Builder
 ";
             XElement doc = XElement.Parse(xml);
 
-            var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build (doc.Nodes()));
+            var generateCode = TestCodeGeneratorUtils.GenerateCode(this.xslBuilder.Build(doc.Nodes()));
 
-			Assert.AreEqual (@"System.String FundName = ""testvalue"";
+			Assert.AreEqual(@"System.String FundName = ""testvalue"";
 System.String AdminID = ""EVL"";
 
-", generateCode);
+",
+ generateCode);
         }
 
 
@@ -120,7 +123,8 @@ System.String AdminID = ""EVL"";
 sqlParams.FundName = ""testvalue"";
 sqlParams.AdminID = ""EVL"";
 
-", generateCode.ToString());
+",
+ generateCode.ToString());
         }
 
 
@@ -149,7 +153,8 @@ sqlParams.FundCompany = new FundCompany();
 sqlParams.FundCompany.FundName = ""testvalue"";
 sqlParams.AdminID = ""EVL"";
 
-", generateCode.ToString());
+",
+ generateCode.ToString());
         }
 
         [Test]
@@ -165,10 +170,10 @@ sqlParams.AdminID = ""EVL"";
 ";
             XElement doc = XElement.Parse(xml);
 
-            var codeStatement = xslBuilder.Build (doc.Nodes());
+            var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-			Assert.AreEqual ("if (true)\n{\n    System.String FundName = \"testvalue\";\n}\n\n", generateCode);
+			Assert.AreEqual("if (true)\n{\n    System.String FundName = \"testvalue\";\n}\n\n", generateCode);
         }
 
 		[Ignore]
@@ -194,10 +199,10 @@ sqlParams.AdminID = ""EVL"";
 ";
 			XElement doc = XElement.Parse(xml);
 
-			var codeStatement = xslBuilder.Build (doc.Nodes());
+            var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
 			string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-			Assert.AreEqual ("System.String FundName;\nif (true)\n{\n    FundName = \"testvalue1\";\n}\nelse\n{\n    FundName = \"testvalue2\";\n}\n\n", generateCode);
+			Assert.AreEqual("System.String FundName;\nif (true)\n{\n    FundName = \"testvalue1\";\n}\nelse\n{\n    FundName = \"testvalue2\";\n}\n\n", generateCode);
 		}
 
         [Test]
@@ -220,10 +225,10 @@ sqlParams.AdminID = ""EVL"";
 ";
             XElement doc = XElement.Parse(xml);
 
-            var codeStatement = xslBuilder.Build (doc.Nodes());
+            var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-			Assert.AreEqual ("if (true)\n{\n    System.String FundName = \"testvalue1\";\n}\nelse\n{\n    System.String FundName = \"testvalue2\";\n}\n\n", generateCode);
+			Assert.AreEqual("if (true)\n{\n    System.String FundName = \"testvalue1\";\n}\nelse\n{\n    System.String FundName = \"testvalue2\";\n}\n\n", generateCode);
         }
 
         [Test]

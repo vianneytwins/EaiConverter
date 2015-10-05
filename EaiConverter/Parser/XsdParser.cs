@@ -30,7 +30,8 @@
 					if (element.Attribute ("type") != null)
                     {
                         type = this.ConvertToBasicType (element.Attribute ("type").Value.ToString().Remove(0,4));
-						classProperties.Add (new ClassParameter {
+						classProperties.Add (new ClassParameter
+                        {
 							Name = element.Attribute("name").Value,
 							Type = type
 						});
@@ -49,23 +50,34 @@
 					    }
                         else
                         {
+                            var xAttribute = element.Attribute("ref").Value;
+                            var name = string.Empty;
+                            if (xAttribute.Contains(":"))
+                            {
+                                name = xAttribute.Split(':')[1];
+                            }
+                            else
+                            {
+                                name = xAttribute;
+                            }
+
                             classProperties.Add(
                                 new ClassParameter
                                 {
-                                    Name = element.Attribute("ref").Value.Split(':')[1],
-                                    Type = element.Attribute("ref").Value.Split(':')[1]
+                                    Name = name,
+                                    Type = name
                                 });
                         }
 					}
                 }
+
                 if ((element.Name.LocalName == "complexType" || element.Name.LocalName == "sequence") && element.Name.NamespaceName == XmlnsConstant.xsdNameSpace)
 				{
 					return this.Parse(element.Nodes());
 				}
-
 			}
-			return classProperties;
 
+			return classProperties;
 		}
 
         public List<ClassParameter> Parse (IEnumerable<XNode> inputNodes)
