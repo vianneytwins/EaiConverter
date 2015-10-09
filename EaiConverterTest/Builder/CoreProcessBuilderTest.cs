@@ -1,19 +1,17 @@
-﻿using NUnit.Framework;
-using System.Collections.Generic;
-
-using EaiConverter.Builder;
-
-using System.CodeDom;
-using EaiConverter.Model;
-using EaiConverter.Test.Utils;
-using EaiConverter.CodeGenerator.Utils;
-
-namespace EaiConverter.Test.Builder
+﻿namespace EaiConverter.Test.Builder
 {
+    using System.CodeDom;
+    using System.Collections.Generic;
     using System.Xml;
     using System.Xml.Linq;
 
+    using EaiConverter.Builder;
+    using EaiConverter.CodeGenerator.Utils;
+    using EaiConverter.Model;
     using EaiConverter.Parser;
+    using EaiConverter.Test.Utils;
+
+    using NUnit.Framework;
 
     [TestFixture]
 	public class CoreProcessBuilderTest
