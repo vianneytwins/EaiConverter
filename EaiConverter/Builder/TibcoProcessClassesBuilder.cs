@@ -412,6 +412,10 @@
                 var returnStatement = new CodeMethodReturnStatement(new CodeVariableReferenceExpression(returnName));
                 statements.Add(returnStatement);
             }
+            else
+            {
+                statements.Add(new CodeMethodReturnStatement());
+            }
 
             return statements;
         }

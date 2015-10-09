@@ -18,10 +18,16 @@
 	{
         Dictionary <string, CodeStatementCollection> activitiesToServiceMapping = new Dictionary <string, CodeStatementCollection> 
         {
-            {"step1",new CodeStatementCollection{ DefaultInvocationMethod("step1Service")}},
-            {"step2",new CodeStatementCollection{ DefaultInvocationMethod("step2Service")}},
-            {"step3",new CodeStatementCollection{ DefaultInvocationMethod("step3Service")}},
-            {"End",new CodeStatementCollection{ DefaultInvocationMethod("returnStatement")}}
+            {"step1", new CodeStatementCollection{ DefaultInvocationMethod("step1Service")}},
+            {"step2", new CodeStatementCollection{ DefaultInvocationMethod("step2Service")}},
+            {"step3", new CodeStatementCollection{ DefaultInvocationMethod("step3Service")}},
+            {"error", new CodeStatementCollection{ DefaultInvocationMethod("errorService")}},
+            {"sendmail", new CodeStatementCollection{ DefaultInvocationMethod("sendmailService")}},
+            {"getDBDate", new CodeStatementCollection{ DefaultInvocationMethod("getDBDateService")}},
+            {"lastValidDate", new CodeStatementCollection{ DefaultInvocationMethod("lastValidDateService")}},
+            {"tradeinvalid", new CodeStatementCollection{ DefaultInvocationMethod("tradeinvalidService")}},
+            {"step5", new CodeStatementCollection{ DefaultInvocationMethod("step5Service")}},
+            {"End",new CodeStatementCollection{ new CodeMethodReturnStatement() }}
         };
 
 		CoreProcessBuilder builder;
@@ -89,20 +95,16 @@
             }
         };
 
-	
-
-
-
 
 		[SetUp]
 		public void SetUp(){
-			this.builder = new CoreProcessBuilder ();
+			this.builder = new CoreProcessBuilder();
 		}
 
         [Test]
         public void Should_Return_Simple_Start_Method_Body(){
             var expected = @"this.step1Service.ExecuteQuery();
-this.returnStatement.ExecuteQuery();
+return;
 ";
             var tibcoBWProcess = new TibcoBWProcess("MyTestProcess");
             tibcoBWProcess.StartActivity = new Activity("start", ActivityType.startType);
@@ -126,7 +128,7 @@ catch (System.Exception ex)
 {
     this.step2Service.ExecuteQuery();
 }
-this.returnStatement.ExecuteQuery();
+return;
 ";
             var tibcoBWProcess = new TibcoBWProcess("MyTestProcess");
             tibcoBWProcess.StartActivity = new Activity("start", ActivityType.startType);
@@ -151,7 +153,7 @@ else
 {
     this.step2Service.ExecuteQuery();
 }
-this.returnStatement.ExecuteQuery();
+return;
 ";
             var tibcoBWProcess = new TibcoBWProcess("MyTestProcess");
             tibcoBWProcess.StartActivity = new Activity("start", ActivityType.startType);
@@ -168,11 +170,36 @@ this.returnStatement.ExecuteQuery();
 	    [Test]
 	    public void Should_be_managed_by_kevin()
 	    {
+            var expected = @"this.getDBDateService.ExecuteQuery();
+if (condition_2)
+{
+	return;
+}
+else if (condition_1)
+{
+    this.lastValidDateService.ExecuteQuery();
+    if (condition_2)
+    {
+		return;        
+    }
+}
+this.tradeinvalidService.ExecuteQuery();
+if (!GOTO_ERROR)
+{
+	this.sendmailService.ExecuteQuery();
+}
+this.errorService.ExecuteQuery();
+";
 	        var tibcoParser = new TibcoBWProcessLinqParser();
 	        var docXml = XElement.Load("../../ressources/complex_transition.xml");
 
-	        var transtions = tibcoParser.ParseTransitions(docXml);
+	        var transitions = tibcoParser.ParseTransitions(docXml);
 
+            var codeStatementCollection = this.builder.GenerateMainCodeStatement(transitions, "start", null, this.activitiesToServiceMapping);
+
+            var classesInString = TestCodeGeneratorUtils.GenerateCode(codeStatementCollection);
+
+            Assert.AreEqual(expected, classesInString);
 
 	    }
 

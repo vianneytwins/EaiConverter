@@ -1,54 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>  
 <pd:ProcessDefinition xmlns:pd="http://xmlns.tibco.com/bw/process/2003" >
 <pd:transition >
-  <pd:from>Start</pd:from>
-  <pd:to>step1</pd:to>
+  <pd:from>start</pd:from>
+  <pd:to>getDBDate</pd:to>
   <pd:conditionType>always</pd:conditionType>
   </pd:transition>
     <pd:transition>
-        <pd:from>step1</pd:from>
+        <pd:from>getDBDate</pd:from>
         <pd:to>End</pd:to>
         <pd:xpathDescription>Flag = 'FALSE'</pd:xpathDescription>
         <pd:conditionType>xpath</pd:conditionType>
-        <pd:xpath>condition_1</pd:xpath>
+        <pd:xpath>Flag_=_'FALSE'</pd:xpath>
     </pd:transition>
     <pd:transition>
-        <pd:from>step1</pd:from>
-        <pd:to>step2</pd:to>
+        <pd:from>getDBDate</pd:from>
+        <pd:to>lastValidDate</pd:to>
         <pd:conditionType>otherwise</pd:conditionType>
     </pd:transition>
     <pd:transition>
-        <pd:from>step2</pd:from>
+        <pd:from>lastValidDate</pd:from>
         <pd:to>End</pd:to>
         <pd:xpathDescription>matching dates</pd:xpathDescription>
         <pd:conditionType>xpath</pd:conditionType>
         <pd:xpath>condition_2</pd:xpath>
     </pd:transition>
     <pd:transition>
-        <pd:from>step2</pd:from>
-        <pd:to>step3</pd:to>
+        <pd:from>lastValidDate</pd:from>
+        <pd:to>tradeinvalid</pd:to>
         <pd:conditionType>otherwise</pd:conditionType>
     </pd:transition>
     <pd:transition>
-        <pd:from>step3</pd:from>
-        <pd:to>step4</pd:to>
-        <pd:xpathDescription>NumLigne &gt; 1</pd:xpathDescription>
+        <pd:from>tradeinvalid</pd:from>
+        <pd:to>error</pd:to>
+        <pd:xpathDescription>NumLigne greater than 1</pd:xpathDescription>
         <pd:conditionType>xpath</pd:conditionType>
-        <pd:xpath>condition_4</pd:xpath>
+        <pd:xpath>GOTO_ERROR</pd:xpath>
     </pd:transition>
     <pd:transition>
-        <pd:from>step3</pd:from>
-        <pd:to>step5</pd:to>
+        <pd:from>tradeinvalid</pd:from>
+        <pd:to>sendmail</pd:to>
         <pd:conditionType>otherwise</pd:conditionType>
     </pd:transition>
     <pd:transition>
-        <pd:from>step5</pd:from>
-        <pd:to>step4</pd:to>
+        <pd:from>sendmail</pd:from>
+        <pd:to>error</pd:to>
         <pd:conditionType>always</pd:conditionType>
     </pd:transition>
     <pd:transition>
-        <pd:from>step1</pd:from>
-        <pd:to>step3</pd:to>
+        <pd:from>getDBDate</pd:from>
+        <pd:to>tradeinvalid</pd:to>
         <pd:conditionType>xpath</pd:conditionType>
         <pd:xpath>condition_3</pd:xpath>
     </pd:transition>

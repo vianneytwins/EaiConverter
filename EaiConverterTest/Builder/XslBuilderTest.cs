@@ -176,8 +176,7 @@ sqlParams.AdminID = ""EVL"";
 			Assert.AreEqual("if (true)\n{\n    System.String FundName = \"testvalue\";\n}\n\n", generateCode);
         }
 
-		[Ignore]
-		[Test]
+	    [Test]
 		public void Should_manage_choose_condition_Outside(){
 			var xml =
 				@"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
