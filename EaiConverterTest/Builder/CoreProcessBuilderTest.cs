@@ -10,7 +10,12 @@ using EaiConverter.CodeGenerator.Utils;
 
 namespace EaiConverter.Test.Builder
 {
-	[TestFixture]
+    using System.Xml;
+    using System.Xml.Linq;
+
+    using EaiConverter.Parser;
+
+    [TestFixture]
 	public class CoreProcessBuilderTest
 	{
         Dictionary <string, CodeStatementCollection> activitiesToServiceMapping = new Dictionary <string, CodeStatementCollection> 
@@ -85,6 +90,11 @@ namespace EaiConverter.Test.Builder
             }
         };
 
+	
+
+
+
+
 		[SetUp]
 		public void SetUp(){
 			this.builder = new CoreProcessBuilder ();
@@ -146,14 +156,25 @@ else
             tibcoBWProcess.EndActivity = new Activity("End", ActivityType.endType);
             tibcoBWProcess.Transitions = this.complexProcessTransitions;
 
-            var codeStatementCollection = this.builder.GenerateMainCodeStatement (tibcoBWProcess.Transitions, tibcoBWProcess.StartActivity.Name, null, activitiesToServiceMapping);
+            var codeStatementCollection = this.builder.GenerateMainCodeStatement (tibcoBWProcess.Transitions, tibcoBWProcess.StartActivity.Name, null, this.activitiesToServiceMapping);
 
             var classesInString = TestCodeGeneratorUtils.GenerateCode (codeStatementCollection);
 
             Assert.AreEqual (expected, classesInString);
         }
 
-        public static CodeMethodInvokeExpression DefaultInvocationMethod (string activityName){
+	    [Test]
+	    public void Should_be_managed_by_kevin()
+	    {
+	        var tibcoParser = new TibcoBWProcessLinqParser();
+	        var docXml = XElement.Load("../../ressources/complex_transition.xml");
+
+	        var transtions = tibcoParser.ParseTransitions(docXml);
+
+
+	    }
+
+	    public static CodeMethodInvokeExpression DefaultInvocationMethod (string activityName){
             var activityServiceReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(activityName));
             return new CodeMethodInvokeExpression (activityServiceReference, "ExecuteQuery", new CodeExpression[] {});
         }
