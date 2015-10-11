@@ -358,8 +358,11 @@ sqlParams.AdminID = null;
 
             Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
 sqlParams.param = new List<System.String>();
-sqlParams.param.Add(""testvalue1"");
-sqlParams.param.Add(""testvalue2"");
+System.String tempparam = new System.String();
+tempparam = ""testvalue1"";
+sqlParams.param.Add(tempparam);
+tempparam = ""testvalue2"";
+sqlParams.param.Add(tempparam);
 
 ", generateCode.ToString());
         }
@@ -388,12 +391,13 @@ sqlParams.param.Add(""testvalue2"");
 
             Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
 sqlParams.parameter = new List<parameter>();
-parameter parameter = new parameter();
-parameter.subParam = ""testvalue1"";
-sqlParams.parameter.Add(parameter);
-parameter parameter = new parameter();
-parameter.subParam = ""testvalue2"";
-sqlParams.param.Add(parameter);
+parameter tempparameter = new parameter();
+tempparameter.subParam = new System.String();
+tempparameter.subParam = ""testvalue1"";
+sqlParams.parameter.Add(tempparameter);
+tempparameter.subParam = new System.String();
+tempparameter.subParam = ""testvalue2"";
+sqlParams.parameter.Add(tempparameter);
 
 ", generateCode.ToString());
         }

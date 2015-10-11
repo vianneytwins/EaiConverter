@@ -84,9 +84,9 @@ namespace EaiConverter.Builder
 
                             codeStatements.Append(variableReference + " = new List<" + returnType + ">();\n");
                             listElements.Add(element.Name.LocalName, true);
-
-                            codeStatements.Append(this.Build(element.Nodes(), parent));
+                            codeStatements.Append(returnType + " temp"+ element.Name.LocalName + " = new " + returnType + "();\n");
                         }
+                        codeStatements.Append(this.Build(element.Nodes(), "temp"+ element.Name.LocalName));
                     }
                     else if (returnType == null)
                     {
@@ -124,7 +124,7 @@ namespace EaiConverter.Builder
                     {
                         //recursive call to get the value
                         //codeStatements.Append(variableReference + ".Add(" + this.Build(element.Nodes(), parent) + ");\n");
-                        codeStatements.Append(variableReference + ".Add(" + variableReference + ");\n");
+                        codeStatements.Append(variableReference + ".Add(temp" + element.Name.LocalName + ");\n");
                     }
 
                 }
