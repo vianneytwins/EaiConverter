@@ -81,7 +81,7 @@ namespace EaiConverter.Parser
             }
             else
             {
-                jdbcQueryActivity.QueryStatement = XElementParserUtils.GetStringValue(configElement.Element("statement"));
+                jdbcQueryActivity.QueryStatement = XElementParserUtils.GetStringValue(configElement.Element("statement")).Replace("\n"," ");
 
                 var preparedParamDataTypeElement = configElement.Element("Prepared_Param_DataType");
                 jdbcQueryActivity.QueryStatementParameters = new Dictionary<string, string>();

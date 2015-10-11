@@ -53,7 +53,8 @@
             {
                 expected =
                     @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.xml.XMLParseActivity"");
-System.String xmlString = ""TestString"";
+System.String xmlString = new System.String();
+xmlString = ""TestString"";
 
 EquityRecord my_Activity_Name = this.xmlParserHelperService.FromXml<EquityRecord>(xmlString);
 ";
@@ -61,7 +62,8 @@ EquityRecord my_Activity_Name = this.xmlParserHelperService.FromXml<EquityRecord
             else
             {
                 expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.xml.XMLParseActivity"");
-System.String xmlString = ""TestString"";
+System.String xmlString = new System.String();
+xmlString = ""TestString"";
 
 EquityRecord my_Activity_Name = this.xmlParserHelperService.FromXml <EquityRecord>(xmlString);
 ";
@@ -85,7 +87,8 @@ EquityRecord my_Activity_Name = this.xmlParserHelperService.FromXml <EquityRecor
 		    {
 		        expected =
 		            @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.xml.XMLParseActivity"");
-System.String xmlString = ""TestString"";
+System.String xmlString = new System.String();
+xmlString = ""TestString"";
 
 MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord my_Activity_Name = this.xmlParserHelperService.FromXml<MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord>(xmlString);
 ";
@@ -93,7 +96,8 @@ MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord my_Activity_Name =
 		    else
 		    {
                 expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.xml.XMLParseActivity"");
-System.String xmlString = ""TestString"";
+System.String xmlString = new System.String();
+xmlString = ""TestString"";
 
 MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord my_Activity_Name = this.xmlParserHelperService.FromXml <MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord>(xmlString);
 ";

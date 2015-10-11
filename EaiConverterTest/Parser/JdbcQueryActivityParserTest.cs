@@ -26,7 +26,8 @@ namespace EaiConverter.Test.Parser
 <maxRows>100</maxRows>
 <emptyStrAsNil>false</emptyStrAsNil>
 <jdbcSharedConfig>/Configuration/DAI/PNO/JDBC/JDBCIntegration.sharedjdbc</jdbcSharedConfig>
-<statement>select CRNCY from T_EQUITY_PNO where ID_BB_UNIQUE= ?</statement>
+<statement>select CRNCY from T_EQUITY_PNO
+where ID_BB_UNIQUE= ?</statement>
 <Prepared_Param_DataType>
 	<parameter>
 		<parameterName>IdBbUnique</parameterName>

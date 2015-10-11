@@ -46,8 +46,10 @@ namespace EaiConverter.Test.Builder
         public void Should_Generate_invocation_method()
         {
 			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.pe.core.WriteToLogActivity"");
-System.String message = ""testvalue"";
-System.String msgCode = ""EVL"";
+System.String message = new System.String();
+message = ""testvalue"";
+System.String msgCode = new System.String();
+msgCode = ""EVL"";
 
 this.logger.Error(String.Format(""Message : {0}\nMessage code : {1} "", message, msgCode));
 ";

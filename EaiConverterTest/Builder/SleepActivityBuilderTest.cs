@@ -40,7 +40,8 @@ namespace EaiConverter.Test.Builder
         public void Should_Generate_invocation_method()
         {
             var expected = @"this.logger.Info(""Start Activity: MyActivityName of type: com.tibco.plugin.timer.SleepActivity"");
-int IntervalInMillisec = 3000;
+Int32 IntervalInMillisec = new Int32();
+IntervalInMillisec = 3000;
 
 new Timer(IntervalInMillisec);
 ";

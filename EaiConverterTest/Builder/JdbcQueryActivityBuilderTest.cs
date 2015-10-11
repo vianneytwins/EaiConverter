@@ -136,7 +136,8 @@
             CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateInvocationCode (this.jdbcQueryActivity);
             Assert.AreEqual (
                 @"this.logger.Info(""Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity"");
-System.String IdBbUnique = ""test"";
+System.String IdBbUnique = new System.String();
+IdBbUnique = ""test"";
 
 this.myService.ExecuteQuery(IdBbUnique);
 ", TestCodeGeneratorUtils.GenerateCode(invocationExpression));

@@ -48,8 +48,10 @@
         public void Should_Generate_invocation_method()
         {
             var expected = @"this.logger.Info(""Start Activity: My of type: com.tibco.pe.core.GenerateErrorActivity"");
-System.String message = ""testvalue"";
-System.String messageCode = ""EVL"";
+System.String message = new System.String();
+message = ""testvalue"";
+System.String messageCode = new System.String();
+messageCode = ""EVL"";
 
 throw new System.Exception(String.Format(""Message : {0}\nMessage code : {1} "", message, messageCode));
 ";

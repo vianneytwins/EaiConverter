@@ -23,7 +23,7 @@
             return inputDate.AddDays(dayToAdd);
         }
 
-        public static double ParseNumber(string numberInString)
+        public static Double ParseNumber(string numberInString)
         {
             return double.Parse(numberInString);
         }

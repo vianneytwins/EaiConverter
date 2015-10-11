@@ -33,7 +33,8 @@
             var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-			Assert.AreEqual (@"System.String FundName = ""testvalue"";
+            Assert.AreEqual (@"System.String FundName = new System.String();
+FundName = ""testvalue"";
 
 ",
  generateCode);
@@ -43,9 +44,9 @@
         public void Should_Return_1_Variable_assignement_with_double_Type (){
             var xml =
                 @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
-        <FundName>
+        <FundValue>
             <xsl:value-of select=""number('testvalue')""/>
-        </FundName>
+        </FundValue>
 </pd:inputBindings>
 ";
             XElement doc = XElement.Parse(xml);
@@ -53,7 +54,8 @@
             var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual (@"double FundName = TibcoXslHelper.ParseNumber(""testvalue"");
+            Assert.AreEqual (@"Double FundValue = new Double();
+FundValue = TibcoXslHelper.ParseNumber(""testvalue"");
 
 ",
  generateCode);
@@ -63,9 +65,9 @@
         public void Should_Return_1_Variable_assignement_with_DateTime_Type (){
             var xml =
                 @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
-        <FundName>
+        <FundDate>
             <xsl:value-of select=""tib:parse-dateTime('MMM dd yyyy', $Mystuff)""/>
-        </FundName>
+        </FundDate>
 </pd:inputBindings>
 ";
             XElement doc = XElement.Parse(xml);
@@ -73,7 +75,10 @@
             var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual ("DateTime FundName = TibcoXslHelper.ParseDateTime(\"MMM dd yyyy\", Mystuff);\n\n", generateCode);
+            Assert.AreEqual (@"DateTime FundDate = new DateTime();
+FundDate = TibcoXslHelper.ParseDateTime(""MMM dd yyyy"", Mystuff);
+
+", generateCode);
 
         }
 
@@ -93,8 +98,10 @@
 
             var generateCode = TestCodeGeneratorUtils.GenerateCode(this.xslBuilder.Build(doc.Nodes()));
 
-			Assert.AreEqual(@"System.String FundName = ""testvalue"";
-System.String AdminID = ""EVL"";
+            Assert.AreEqual(@"System.String FundName = new System.String();
+FundName = ""testvalue"";
+System.String AdminID = new System.String();
+AdminID = ""EVL"";
 
 ",
  generateCode);
@@ -120,7 +127,9 @@ System.String AdminID = ""EVL"";
             var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build (doc.Nodes()));
 
             Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
+sqlParams.FundName = new System.String();
 sqlParams.FundName = ""testvalue"";
+sqlParams.AdminID = new System.String();
 sqlParams.AdminID = ""EVL"";
 
 ",
@@ -138,9 +147,9 @@ sqlParams.AdminID = ""EVL"";
             <xsl:value-of select=""'testvalue'""/>
         </FundName>
     </FundCompany> 
-        <AdminID>
-            <xsl:value-of select=""'EVL'""/>
-        </AdminID>
+    <AdminID>
+        <xsl:value-of select=""'EVL'""/>
+    </AdminID>
 </sqlParams>  
 </pd:inputBindings>
 ";
@@ -150,7 +159,9 @@ sqlParams.AdminID = ""EVL"";
 
             Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
 sqlParams.FundCompany = new FundCompany();
+sqlParams.FundCompany.FundName = new System.String();
 sqlParams.FundCompany.FundName = ""testvalue"";
+sqlParams.AdminID = new System.String();
 sqlParams.AdminID = ""EVL"";
 
 ",
@@ -173,7 +184,7 @@ sqlParams.AdminID = ""EVL"";
             var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-			Assert.AreEqual("if (true)\n{\n    System.String FundName = \"testvalue\";\n}\n\n", generateCode);
+            Assert.AreEqual("if (true)\n{\n    System.String FundName = new System.String();\n    FundName = \"testvalue\";\n}\n\n", generateCode);
         }
 
 	    [Test]
@@ -201,7 +212,7 @@ sqlParams.AdminID = ""EVL"";
             var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
 			string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-			Assert.AreEqual("System.String FundName;\nif (true)\n{\n    FundName = \"testvalue1\";\n}\nelse\n{\n    FundName = \"testvalue2\";\n}\n\n", generateCode);
+            Assert.AreEqual("System.String FundName = new System.String();\nif (true)\n{\nFundName = \"testvalue1\";\n}\nelse\n{\nFundName = \"testvalue2\";\n}\n\n", generateCode);
 		}
 
         [Test]
@@ -227,7 +238,7 @@ sqlParams.AdminID = ""EVL"";
             var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-			Assert.AreEqual("if (true)\n{\n    System.String FundName = \"testvalue1\";\n}\nelse\n{\n    System.String FundName = \"testvalue2\";\n}\n\n", generateCode);
+            Assert.AreEqual("if (true)\n{\n    System.String FundName = new System.String();\n    FundName = \"testvalue1\";\n}\nelse\n{\n    System.String FundName = new System.String();\n    FundName = \"testvalue2\";\n}\n\n", generateCode);
         }
 
         [Test]
@@ -249,7 +260,7 @@ sqlParams.AdminID = ""EVL"";
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
             Assert.AreEqual (
-				"FundCompany FundCompany = new FundCompany();\nFundCompany.FundNames = new List<System.String>();\nforeach (var item in items)\n{\n    System.String FundName = \"testvalue1\";\n    FundCompany.FundNames.Add(FundName);\n}\n\n", generateCode);
+                "FundCompany FundCompany = new FundCompany();\nFundCompany.FundNames = new List<System.String>();\nforeach (var item in items)\n{\n    System.String FundName = new System.String();\n    FundName = \"testvalue1\";\n    FundCompany.FundNames.Add(FundName);\n}\n\n", generateCode);
         }
 
 
@@ -320,6 +331,7 @@ sqlParams.AdminID = ""EVL"";
             var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build (doc.Nodes()));
 
             Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
+sqlParams.FundName = new System.String();
 sqlParams.FundName = ""testvalue"";
 sqlParams.AdminID = null;
 
@@ -352,6 +364,41 @@ sqlParams.param.Add(""testvalue2"");
 ", generateCode.ToString());
         }
 
+        [Test]
+        public void Should_Return_manage_List_With_complex_value (){
+            var xml =
+                @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" >
+    <sqlParams>        
+        <parameter>
+            <subParam>
+                <xsl:value-of select=""'testvalue1'""/>
+            </subParam>
+        </parameter>
+        <parameter >
+            <subParam>
+                <xsl:value-of select=""'testvalue2'""/>
+            </subParam>
+        </parameter>
+    </sqlParams>  
+</pd:inputBindings>
+";
+            XElement doc = XElement.Parse(xml);
+
+            var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build (doc.Nodes()));
+
+            Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
+sqlParams.parameter = new List<parameter>();
+parameter parameter = new parameter();
+parameter.subParam = ""testvalue1"";
+sqlParams.parameter.Add(parameter);
+parameter parameter = new parameter();
+parameter.subParam = ""testvalue2"";
+sqlParams.param.Add(parameter);
+
+", generateCode.ToString());
+        }
+
+
 		[Test]
 		public void Should_manage_add_package_name_When_type_is_complex_and_when_its_inputed()
 		{
@@ -369,7 +416,7 @@ sqlParams.param.Add(""testvalue2"");
 
 			var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build(packageName, doc.Nodes()));
 
-			Assert.AreEqual ("MyPackage.sqlParams sqlParams = new MyPackage.sqlParams();\nsqlParams.param = \"testvalue1\";\n\n", generateCode.ToString());
+            Assert.AreEqual ("MyPackage.sqlParams sqlParams = new MyPackage.sqlParams();\nsqlParams.param = new System.String();\nsqlParams.param = \"testvalue1\";\n\n", generateCode.ToString());
 		}
 
 		[Test]
@@ -389,7 +436,7 @@ sqlParams.param.Add(""testvalue2"");
 
 			var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build(packageName, doc.Nodes()));
 
-			Assert.AreEqual ("MyPackage.sqlParams sqlParams = new MyPackage.sqlParams();\nsqlParams.param = \"testvalue1\";\n\n", generateCode.ToString());
+            Assert.AreEqual ("MyPackage.sqlParams sqlParams = new MyPackage.sqlParams();\nsqlParams.param = new System.String();\nsqlParams.param = \"testvalue1\";\n\n", generateCode.ToString());
 		}
 
 		[Test]
@@ -409,7 +456,7 @@ sqlParams.param.Add(""testvalue2"");
 
 			var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build(packageName, doc.Nodes()));
 
-			Assert.AreEqual ("System.String param = \"testvalue1\";\n\n", generateCode.ToString());
+            Assert.AreEqual ("System.String param = new System.String();\nparam = \"testvalue1\";\n\n", generateCode.ToString());
 		}
 
 		[Test]
@@ -428,7 +475,7 @@ sqlParams.param.Add(""testvalue2"");
 			var codeStatement = xslBuilder.Build (doc.Nodes());
 
 			string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-			Assert.AreEqual ("logInfo logInfo = new logInfo();\nlogInfo.FundName = \"testvalue\";\n\n", generateCode);
+            Assert.AreEqual ("logInfo logInfo = new logInfo();\nlogInfo.FundName = new System.String();\nlogInfo.FundName = \"testvalue\";\n\n", generateCode);
 		}
 
         [Test]
@@ -477,11 +524,11 @@ sqlParams.param.Add(""testvalue2"");
             var xml =
                 @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" xmlns:pfx1=""http://www.SomeWhere.com"">
  <logInfo>       
-<FundStruct>
-<FundName>
-            <xsl:value-of select=""'testvalue'""/>
+    <FundStruct>
+        <FundName>
+                <xsl:value-of select=""'testvalue'""/>
         </FundName>
-        </FundStruct>
+    </FundStruct>
 </logInfo>
 </pd:inputBindings>
 ";
@@ -490,7 +537,7 @@ sqlParams.param.Add(""testvalue2"");
             var codeStatement = xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual("logInfo logInfo = new logInfo();\nlogInfo.FundStruct = new FundStruct();\nlogInfo.FundStruct.FundName = \"testvalue\";\n\n", generateCode);
+            Assert.AreEqual("logInfo logInfo = new logInfo();\nlogInfo.FundStruct = new FundStruct();\nlogInfo.FundStruct.FundName = new System.String();\nlogInfo.FundStruct.FundName = \"testvalue\";\n\n", generateCode);
         }
 	}
 }

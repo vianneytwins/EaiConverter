@@ -73,7 +73,8 @@ public void invoke () throws Exception{
         public void Should_Generate_invocation_method()
         {
 			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.java.JavaActivity"");
-System.String platform = ""testvalue"";
+System.String platform = new System.String();
+platform = ""testvalue"";
 
 My.Package.Name.MyJavaFileName myJavaFileName = new My.Package.Name.MyJavaFileName();
 myJavaFileName.setplatform(platform);
