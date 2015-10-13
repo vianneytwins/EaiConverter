@@ -45,7 +45,6 @@
         {
             var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.mapper.MapperActivity"");
 EquityRecord EquityRecord = new EquityRecord();
-EquityRecord.xmlString = new System.String();
 EquityRecord.xmlString = ""TestString"";
 
 EquityRecord my_Activity_Name = EquityRecord;
@@ -59,7 +58,6 @@ EquityRecord my_Activity_Name = EquityRecord;
         {
             var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.mapper.MapperActivity"");
 EquityRecord EquityRecord = new EquityRecord();
-EquityRecord.xmlString = new System.String();
 EquityRecord.xmlString = ""TestString"";
 
 EquityRecord my_Activity_Name = EquityRecord;
@@ -81,7 +79,6 @@ EquityRecord my_Activity_Name = EquityRecord;
 
 			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.mapper.MapperActivity"");
 EquityRecord EquityRecord = new EquityRecord();
-EquityRecord.xmlString = new System.String();
 EquityRecord.xmlString = ""TestString"";
 
 MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord my_Activity_Name = EquityRecord;

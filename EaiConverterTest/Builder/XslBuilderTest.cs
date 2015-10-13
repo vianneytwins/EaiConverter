@@ -33,7 +33,7 @@
             var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual (@"System.String FundName = new System.String();
+            Assert.AreEqual (@"System.String FundName;
 FundName = ""testvalue"";
 
 ",
@@ -54,7 +54,7 @@ FundName = ""testvalue"";
             var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual (@"Double FundValue = new Double();
+            Assert.AreEqual (@"Double FundValue;
 FundValue = TibcoXslHelper.ParseNumber(""testvalue"");
 
 ",
@@ -75,7 +75,7 @@ FundValue = TibcoXslHelper.ParseNumber(""testvalue"");
             var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual (@"DateTime FundDate = new DateTime();
+            Assert.AreEqual (@"DateTime FundDate;
 FundDate = TibcoXslHelper.ParseDateTime(""MMM dd yyyy"", Mystuff);
 
 ", generateCode);
@@ -98,9 +98,9 @@ FundDate = TibcoXslHelper.ParseDateTime(""MMM dd yyyy"", Mystuff);
 
             var generateCode = TestCodeGeneratorUtils.GenerateCode(this.xslBuilder.Build(doc.Nodes()));
 
-            Assert.AreEqual(@"System.String FundName = new System.String();
+            Assert.AreEqual(@"System.String FundName;
 FundName = ""testvalue"";
-System.String AdminID = new System.String();
+System.String AdminID;
 AdminID = ""EVL"";
 
 ",
@@ -127,9 +127,7 @@ AdminID = ""EVL"";
             var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build (doc.Nodes()));
 
             Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
-sqlParams.FundName = new System.String();
 sqlParams.FundName = ""testvalue"";
-sqlParams.AdminID = new System.String();
 sqlParams.AdminID = ""EVL"";
 
 ",
@@ -159,9 +157,7 @@ sqlParams.AdminID = ""EVL"";
 
             Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
 sqlParams.FundCompany = new FundCompany();
-sqlParams.FundCompany.FundName = new System.String();
 sqlParams.FundCompany.FundName = ""testvalue"";
-sqlParams.AdminID = new System.String();
 sqlParams.AdminID = ""EVL"";
 
 ",
@@ -184,7 +180,7 @@ sqlParams.AdminID = ""EVL"";
             var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual("if (true)\n{\n    System.String FundName = new System.String();\n    FundName = \"testvalue\";\n}\n\n", generateCode);
+            Assert.AreEqual("if (true)\n{\n    System.String FundName;\n    FundName = \"testvalue\";\n}\n\n", generateCode);
         }
 
 	    [Test]
@@ -212,7 +208,7 @@ sqlParams.AdminID = ""EVL"";
             var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
 			string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual("System.String FundName = new System.String();\nif (true)\n{\nFundName = \"testvalue1\";\n}\nelse\n{\nFundName = \"testvalue2\";\n}\n\n", generateCode);
+            Assert.AreEqual("System.String FundName;\nif (true)\n{\nFundName = \"testvalue1\";\n}\nelse\n{\nFundName = \"testvalue2\";\n}\n\n", generateCode);
 		}
 
         [Test]
@@ -238,7 +234,7 @@ sqlParams.AdminID = ""EVL"";
             var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual("if (true)\n{\n    System.String FundName = new System.String();\n    FundName = \"testvalue1\";\n}\nelse\n{\n    System.String FundName = new System.String();\n    FundName = \"testvalue2\";\n}\n\n", generateCode);
+            Assert.AreEqual("if (true)\n{\n    System.String FundName;\n    FundName = \"testvalue1\";\n}\nelse\n{\n    System.String FundName;\n    FundName = \"testvalue2\";\n}\n\n", generateCode);
         }
 
         [Test]
@@ -260,7 +256,7 @@ sqlParams.AdminID = ""EVL"";
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
             Assert.AreEqual (
-                "FundCompany FundCompany = new FundCompany();\nFundCompany.FundNames = new List<System.String>();\nforeach (var item in items)\n{\n    System.String FundName = new System.String();\n    FundName = \"testvalue1\";\n    FundCompany.FundNames.Add(FundName);\n}\n\n", generateCode);
+                "FundCompany FundCompany = new FundCompany();\nFundCompany.FundNames = new List<System.String>();\nforeach (var item in items)\n{\n    System.String FundName;\n    FundName = \"testvalue1\";\n    FundCompany.FundNames.Add(FundName);\n}\n\n", generateCode);
         }
 
 
@@ -331,7 +327,6 @@ sqlParams.AdminID = ""EVL"";
             var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build (doc.Nodes()));
 
             Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
-sqlParams.FundName = new System.String();
 sqlParams.FundName = ""testvalue"";
 sqlParams.AdminID = null;
 
@@ -358,7 +353,7 @@ sqlParams.AdminID = null;
 
             Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
 sqlParams.param = new List<System.String>();
-System.String tempparam = new System.String();
+System.String tempparam;
 tempparam = ""testvalue1"";
 sqlParams.param.Add(tempparam);
 tempparam = ""testvalue2"";
@@ -392,10 +387,8 @@ sqlParams.param.Add(tempparam);
             Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
 sqlParams.parameter = new List<parameter>();
 parameter tempparameter = new parameter();
-tempparameter.subParam = new System.String();
 tempparameter.subParam = ""testvalue1"";
 sqlParams.parameter.Add(tempparameter);
-tempparameter.subParam = new System.String();
 tempparameter.subParam = ""testvalue2"";
 sqlParams.parameter.Add(tempparameter);
 
@@ -420,7 +413,7 @@ sqlParams.parameter.Add(tempparameter);
 
 			var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build(packageName, doc.Nodes()));
 
-            Assert.AreEqual ("MyPackage.sqlParams sqlParams = new MyPackage.sqlParams();\nsqlParams.param = new System.String();\nsqlParams.param = \"testvalue1\";\n\n", generateCode.ToString());
+            Assert.AreEqual ("MyPackage.sqlParams sqlParams = new MyPackage.sqlParams();\nsqlParams.param = \"testvalue1\";\n\n", generateCode.ToString());
 		}
 
 		[Test]
@@ -440,7 +433,7 @@ sqlParams.parameter.Add(tempparameter);
 
 			var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build(packageName, doc.Nodes()));
 
-            Assert.AreEqual ("MyPackage.sqlParams sqlParams = new MyPackage.sqlParams();\nsqlParams.param = new System.String();\nsqlParams.param = \"testvalue1\";\n\n", generateCode.ToString());
+            Assert.AreEqual ("MyPackage.sqlParams sqlParams = new MyPackage.sqlParams();\nsqlParams.param = \"testvalue1\";\n\n", generateCode.ToString());
 		}
 
 		[Test]
@@ -460,7 +453,7 @@ sqlParams.parameter.Add(tempparameter);
 
 			var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build(packageName, doc.Nodes()));
 
-            Assert.AreEqual ("System.String param = new System.String();\nparam = \"testvalue1\";\n\n", generateCode.ToString());
+            Assert.AreEqual ("System.String param;\nparam = \"testvalue1\";\n\n", generateCode.ToString());
 		}
 
 		[Test]
@@ -479,7 +472,7 @@ sqlParams.parameter.Add(tempparameter);
 			var codeStatement = xslBuilder.Build (doc.Nodes());
 
 			string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual ("logInfo logInfo = new logInfo();\nlogInfo.FundName = new System.String();\nlogInfo.FundName = \"testvalue\";\n\n", generateCode);
+            Assert.AreEqual ("logInfo logInfo = new logInfo();\nlogInfo.FundName = \"testvalue\";\n\n", generateCode);
 		}
 
         [Test]
@@ -541,7 +534,7 @@ sqlParams.parameter.Add(tempparameter);
             var codeStatement = xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual("logInfo logInfo = new logInfo();\nlogInfo.FundStruct = new FundStruct();\nlogInfo.FundStruct.FundName = new System.String();\nlogInfo.FundStruct.FundName = \"testvalue\";\n\n", generateCode);
+            Assert.AreEqual("logInfo logInfo = new logInfo();\nlogInfo.FundStruct = new FundStruct();\nlogInfo.FundStruct.FundName = \"testvalue\";\n\n", generateCode);
         }
 	}
 }

@@ -81,8 +81,21 @@ namespace EaiConverter.Test.Builder
         [Test]
         public void Should_Remove_prefix_complex_usecase()
         {
-            Assert.AreEqual(@"TibcoXslHelper.Concat(getInstanceInfo.output.GetProcessInstanceInfo[1].ProcessInstanceName,"" "", getInstanceInfo.output.GetProcessInstanceInfo[1].MainProcessName,"""", start_logInfo.message,"""", TibcoXslHelper.RenderXml((GetExceptions.output, true))",
-                this.xpathBuilder.Build("concat($GetInstanceInfo/pfx4:output/pfx4:GetProcessInstanceInfo[1]/ProcessInstanceName,' ', $GetInstanceInfo/pfx4:output/pfx4:GetProcessInstanceInfo[1]/MainProcessName,'', $Start/pfx3:logInfo/message,'', tib:render-xml($GetExceptions/pfx4:output, true()))"));
+            Assert.AreEqual(@"TibcoXslHelper.Concat(getInstanceInfo.out.GetProcessInstanceInfo[1].ProcessInstanceName,"" "", getInstanceInfo.out.GetProcessInstanceInfo[1].MainProcessName,"""", start_logInfo.message,"""", TibcoXslHelper.RenderXml((GetExceptions.out, true))",
+                this.xpathBuilder.Build("concat($GetInstanceInfo/pfx4:out/pfx4:GetProcessInstanceInfo[1]/ProcessInstanceName,' ', $GetInstanceInfo/pfx4:out/pfx4:GetProcessInstanceInfo[1]/MainProcessName,'', $Start/pfx3:logInfo/message,'', tib:render-xml($GetExceptions/pfx4:out, true()))"));
+        }
+        
+        [Test]
+        public void Should_Reformat_process_info_element()
+        {
+            Assert.AreEqual(@"TibcoXslHelper.Concat(getInstanceInfo[1].ProcessInstanceName,"" "")",
+                this.xpathBuilder.Build("concat($GetInstanceInfo/pfx4:output/pfx4:GetProcessInstanceInfo[1]/ProcessInstanceName,' ')"));
+        }
+        
+        [Test]
+        public void Should_Reformat_process_exception_element()
+        {
+            Assert.AreEqual(@"getExceptions[1].ProcessDefinitionName", this.xpathBuilder.Build("$GetExceptions/pfx4:output/pfx4:GetProcessInstanceExceptions[1]/ProcessDefinitionName"));
         }
 
         [Test]

@@ -84,8 +84,18 @@ namespace EaiConverter.Builder
 
                             codeStatements.Append(variableReference + " = new List<" + returnType + ">();\n");
                             listElements.Add(element.Name.LocalName, true);
-                            codeStatements.Append(returnType + " temp"+ element.Name.LocalName + " = new " + returnType + "();\n");
+                            if (!IsBasicReturnType(returnType))
+                            {
+                                codeStatements.Append(
+                                    returnType + " temp" + element.Name.LocalName + " = new " + returnType + "();\n");
+                            }
+                            else
+                            {
+                                codeStatements.Append(
+                                    returnType + " temp" + element.Name.LocalName + ";\n");
+                            }
                         }
+
                         codeStatements.Append(this.Build(element.Nodes(), "temp"+ element.Name.LocalName));
                     }
                     else if (returnType == null)
@@ -104,10 +114,24 @@ namespace EaiConverter.Builder
                         if (string.IsNullOrEmpty(parent))
                         {
                             codeStatements.Append(this.tab + packageName + returnType + " ");
+                            if (!IsBasicReturnType(returnType))
+                            {
+                                codeStatements.Append(
+                                    variableReference + " = new " + packageName + returnType + "();\n");
+                            }
+                            else
+                            {
+                                codeStatements.Append(variableReference + ";\n");
+                            }
                         }
-
-                        codeStatements.Append(variableReference + " = new " + packageName + returnType + "();\n");
-
+                        else
+                        {
+                            if (!IsBasicReturnType(returnType))
+                            {
+                                codeStatements.Append(
+                                    variableReference + " = new " + packageName + returnType + "();\n");
+                            }
+                        }
 
                         if (string.IsNullOrEmpty(parent))
                         {

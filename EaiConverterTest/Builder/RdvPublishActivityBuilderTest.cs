@@ -121,7 +121,6 @@ namespace EaiConverter.Test.Builder
 		{
 			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.plugin.tibrv.RVPubActivity"");
 ActivityInput ActivityInput = new ActivityInput();
-ActivityInput.body = new System.String();
 ActivityInput.body = ""TestString"";
 
 string subject = ""MY.Tibco.subject"";

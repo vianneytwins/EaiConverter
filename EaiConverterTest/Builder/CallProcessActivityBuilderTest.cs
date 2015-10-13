@@ -39,7 +39,7 @@ namespace EaiConverter.Test.Builder
         [Test]
         public void Should_Return_InvocationCode()
         {
-            var expected = @"System.String xmlString = new System.String();
+            var expected = @"System.String xmlString;
 xmlString = ""TestString"";
 
 var my_Call_Process_Activity = this.processToCall.Start(xmlString);

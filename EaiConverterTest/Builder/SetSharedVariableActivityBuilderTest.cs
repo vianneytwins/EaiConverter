@@ -41,7 +41,7 @@ namespace EaiConverter.Test.Builder
         [Test]
         public void Should_Generate_invocation_method()
         {
-            var expected = @"System.String message = new System.String();
+            var expected = @"System.String message;
 message = ""testvalue"";
 
 var configName = ""myconfigPath"";

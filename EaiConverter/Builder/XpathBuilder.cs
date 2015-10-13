@@ -28,8 +28,8 @@
 
             expression = ManageXpathFunctions(expression);
 
-            expression.Replace("output.GetProcessInstanceInfo", string.Empty);
-            expression.Replace("output.GetProcessInstanceExceptions", string.Empty);
+            expression = expression.Replace(".output.GetProcessInstanceInfo", string.Empty);
+            expression = expression.Replace(".output.GetProcessInstanceExceptions", string.Empty);
 
             // for JbdcQueryActivity
             expression = expression.Replace(".resultSet.Record[", "ResultSet[");
