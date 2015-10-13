@@ -21,7 +21,7 @@ namespace EaiConverter.Builder
 
 		public List<CodeNamespaceImport> GenerateImports(Activity activity)
 		{
-			return new List<CodeNamespaceImport>();
+            return new List<CodeNamespaceImport> { new CodeNamespaceImport("System.Timers") };
 		}
 
         public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)

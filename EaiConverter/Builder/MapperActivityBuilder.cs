@@ -61,8 +61,6 @@
             // Add the Log
             invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(mapperActivity));
 
-            // Add the mapping
-            invocationCodeCollection.AddRange(this.xslBuilder.Build(mapperActivity.InputBindings));
 
             // Add the invocation
             // TODO : need to put it in the parser to get the real ReturnType !!
@@ -81,6 +79,11 @@
                 parameter = new CodeVariableReferenceExpression(mapperActivity.Parameters[0].Name);
             }
 
+            var packageName = this.RemoveFinalType(variableReturnType);
+            // Add the mapping
+            invocationCodeCollection.AddRange(this.xslBuilder.Build(packageName, mapperActivity.InputBindings));
+
+
             var variableName = VariableHelper.ToVariableName(mapperActivity.Name);
 
             var code = new CodeVariableDeclarationStatement(variableReturnType, variableName, parameter);
@@ -88,6 +91,17 @@
             invocationCodeCollection.Add(code);
 
             return invocationCodeCollection;
+        }
+
+        private string RemoveFinalType(string variableReturnType)
+        {
+            var lastIndexOf = variableReturnType.LastIndexOf('.');
+            if (variableReturnType == null || lastIndexOf < 0)
+            {
+                return string.Empty;
+            }
+            return variableReturnType.Remove(lastIndexOf, variableReturnType.Length - lastIndexOf);
+            
         }
 
         private string GetReturnType(string xsdReference)

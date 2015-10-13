@@ -78,7 +78,7 @@ EquityRecord my_Activity_Name = EquityRecord;
             this.activity.ObjectXNodes = doc.Nodes();
 
 			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.mapper.MapperActivity"");
-EquityRecord EquityRecord = new EquityRecord();
+MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord EquityRecord = new MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord();
 EquityRecord.xmlString = ""TestString"";
 
 MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord my_Activity_Name = EquityRecord;
