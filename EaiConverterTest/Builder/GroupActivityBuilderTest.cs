@@ -72,7 +72,7 @@ for (int index = 0; (index < paramsets.elements.Lenght); index = (index + 1))
         {
 			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.pe.core.LoopGroup"");
 for (
-; true; 
+; !(true); 
 )
 {
     this.logger.Info(""Start Activity: myNullActivity of type: com.tibco.plugin.timer.NullActivity"");

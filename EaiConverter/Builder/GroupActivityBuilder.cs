@@ -119,9 +119,13 @@ namespace EaiConverter.Builder
             {
                 invocationCodeCollection.Add(this.GenerateForLoop(groupActivity));
             }
-            else if (groupActivity.GroupType == GroupType.REPEAT || groupActivity.GroupType == GroupType.WHILE)
+            else if (groupActivity.GroupType == GroupType.REPEAT)
             {
-                invocationCodeCollection.Add(this.GenerateForRepeat(groupActivity));
+                invocationCodeCollection.Add(this.GenerateForRepeat(groupActivity, true));
+            }
+            else if (groupActivity.GroupType == GroupType.WHILE)
+            {
+                invocationCodeCollection.Add(this.GenerateForRepeat(groupActivity, false));
             }
             else if (groupActivity.GroupType == GroupType.CRITICALSECTION)
             {
@@ -158,7 +162,7 @@ namespace EaiConverter.Builder
             return forLoop;
         }
 
-        private CodeIterationStatement GenerateForRepeat(GroupActivity groupActivity)
+        private CodeIterationStatement GenerateForRepeat(GroupActivity groupActivity, bool isRepeat)
         {
             var coreGroupMethodStatement = new CodeStatementCollection();
 
@@ -167,9 +171,19 @@ namespace EaiConverter.Builder
             var coreOfTheLoop = new CodeStatement[coreGroupMethodStatement.Count];
             coreGroupMethodStatement.CopyTo(coreOfTheLoop, 0);
 
+            string outCondition;
+            if (isRepeat)
+            {
+                outCondition = "!(" + this.xpathBuilder.Build(groupActivity.RepeatCondition) + ")";
+            }
+            else
+            {
+                outCondition = this.xpathBuilder.Build(groupActivity.RepeatCondition);
+            }
+
             var whileLoop = new CodeIterationStatement(
                 new CodeSnippetStatement(string.Empty),
-                new CodeSnippetExpression(this.xpathBuilder.Build(groupActivity.RepeatCondition)),
+                new CodeSnippetExpression(outCondition),
                 new CodeSnippetStatement(string.Empty),
                 coreOfTheLoop);
             return whileLoop;

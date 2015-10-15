@@ -77,6 +77,13 @@ namespace EaiConverter.Test.Builder
             Assert.AreEqual("start_root", this.xpathBuilder.Build("$Start/pfx1:root"));
         }
 
+        [Ignore]
+        [Test]
+        public void Should_Remove_dollars_variable_put_next_char_to_lower()
+        {
+            Assert.AreEqual("iterator.value > 3 || TibcoXslHelper.StringLength(isPresentCheck.result.Id)>0", this.xpathBuilder.Build("$Iterator/value > 3 or string-length($IsPresentCheck/result/Id)>0"));
+        }
+
         
         [Test]
         public void Should_Remove_prefix_complex_usecase()
