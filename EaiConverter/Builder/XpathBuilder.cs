@@ -105,7 +105,7 @@
             // exemple of current-dateTime()
             expression = expression.Replace("current-dateTime()", "DateTime.Now");
 
-            // exemple of string-lenght : string-lenght (myvariable)
+            // exemple of string-length : string-length (myvariable)
             expression = expression.Replace("string-length(", "TibcoXslHelper.StringLength(");
 
             // usage upper-case : upper-case (mystring)
@@ -195,13 +195,14 @@
             var variables = regex.Match(expression);
             if (variables.Success)
             {
-                string variableNameToModify = variables.Groups[1].ToString();
+                string variableNameToModify = variables.Groups[0].ToString();
                 expression = expression.Replace(
                     variableNameToModify,
-                    VariableHelper.ToVariableName(variableNameToModify.Replace('-', '_').Replace('.', '_')));
+                    VariableHelper.ToVariableName(variableNameToModify.Replace("$", string.Empty).Replace('-', '_').Replace('.', '_')));
+                expression = FormatActivityNameInXpath(expression);
             }
 
-            expression = expression.Replace("$", string.Empty);
+            //expression = expression.Replace("$", string.Empty);
             return expression;
         }
 

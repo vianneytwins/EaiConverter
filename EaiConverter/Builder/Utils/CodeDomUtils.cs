@@ -66,6 +66,23 @@
                     return false;
             }
         }
+
+        public static string GetCorrectBasicType(string type)
+        {
+            switch (type)
+            {
+                case "string":
+                    return CSharpTypeConstant.SystemString;
+                case "int":
+                    return CSharpTypeConstant.SystemInt32;
+                case "bool":
+                    return CSharpTypeConstant.SystemBoolean;
+                case "double":
+                    return CSharpTypeConstant.SystemDouble;
+                default:
+                    return type;
+            }
+        }
     }
 }
 

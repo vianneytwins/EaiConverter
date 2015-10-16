@@ -329,16 +329,16 @@ using System.Runtime.InteropServices;
             return inputString.Replace(oldstring, newstring);
         }
 
-        // usage of string-lenght : string-lenght (myvariable)
+        // usage of string-length : string-length (myvariable)
         public static int StringLength(string inputString)
         {
             return inputString.Length;
         }
 
         // usage of Left : left(myvariable,3)
-        public static string Left(string inputString, int lenght)
+        public static string Left(string inputString, int length)
         {
-            return inputString.Substring (0, lenght);
+            return inputString.Substring (0, length);
         }
 
         // usage of substring : substring(myvariable,3,5)

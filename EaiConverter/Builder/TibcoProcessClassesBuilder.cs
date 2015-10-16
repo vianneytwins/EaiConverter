@@ -163,7 +163,7 @@
                     }
                     else
                     {
-                        typeReference = new CodeTypeReference(variable.Parameter.Type);
+                        typeReference = new CodeTypeReference(CodeDomUtils.GetCorrectBasicType(variable.Parameter.Type));
                     }
 
 

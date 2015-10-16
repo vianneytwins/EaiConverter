@@ -52,7 +52,7 @@ this.logger.Info(""Start Activity: myNullActivity of type: com.tibco.plugin.time
         public void Should_Generate_invocation_method_For_inputLoop()
         {
 			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.pe.core.LoopGroup"");
-for (int index = 0; (index < paramsets.elements.Lenght); index = (index + 1))
+for (int index = 0; (index < paramsets.elements.Length); index = (index + 1))
 {
     var current = paramsets.elements[index];
     this.logger.Info(""Start Activity: myNullActivity of type: com.tibco.plugin.timer.NullActivity"");

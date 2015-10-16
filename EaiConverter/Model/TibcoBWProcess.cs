@@ -23,9 +23,9 @@
                 indexOfLastDot = fullProcessName.Length;
             }
 
-            var nameLenght = indexOfLastDot - indexOfLastSlash - 1;
+            var nameLength = indexOfLastDot - indexOfLastSlash - 1;
             var myProcessName =
-                fullProcessName.Substring(indexOfLastSlash + 1, nameLenght)
+                fullProcessName.Substring(indexOfLastSlash + 1, nameLength)
                     .Replace("-", string.Empty)
                     .Replace(".", string.Empty)
                     .Replace("(", "_")

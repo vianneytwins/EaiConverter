@@ -62,11 +62,12 @@ FundValue = TibcoXslHelper.ParseNumber(""testvalue"");
         }
 
         [Test]
-        public void Should_Return_1_Variable_assignement_with_DateTime_Type (){
+        public void Should_Return_1_Variable_assignement_with_DateTime_Type ()
+        {
             var xml =
                 @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
         <FundDate>
-            <xsl:value-of select=""tib:parse-dateTime('MMM dd yyyy', $Mystuff)""/>
+            <xsl:value-of select=""tib:parse-dateTime('MMM dd yyyy', $Mystuff/do)""/>
         </FundDate>
 </pd:inputBindings>
 ";
@@ -76,7 +77,7 @@ FundValue = TibcoXslHelper.ParseNumber(""testvalue"");
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
             Assert.AreEqual (@"DateTime FundDate;
-FundDate = TibcoXslHelper.ParseDateTime(""MMM dd yyyy"", Mystuff);
+FundDate = TibcoXslHelper.ParseDateTime(""MMM dd yyyy"", mystuff.do);
 
 ", generateCode);
 

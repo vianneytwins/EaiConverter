@@ -156,7 +156,7 @@ namespace EaiConverter.Builder
             // put it then in the loop
             var forLoop = new CodeIterationStatement(
                 new CodeVariableDeclarationStatement(typeof(int), groupActivity.IndexSlot, new CodePrimitiveExpression(0)),
-                new CodeBinaryOperatorExpression(new CodeVariableReferenceExpression(groupActivity.IndexSlot), CodeBinaryOperatorType.LessThan, new CodeVariableReferenceExpression( this.xpathBuilder.Build(groupActivity.Over) + ".Lenght")),
+                new CodeBinaryOperatorExpression(new CodeVariableReferenceExpression(groupActivity.IndexSlot), CodeBinaryOperatorType.LessThan, new CodeVariableReferenceExpression(this.xpathBuilder.Build(groupActivity.Over) + ".Length")),
                 new CodeAssignStatement(new CodeVariableReferenceExpression(groupActivity.IndexSlot), new CodeBinaryOperatorExpression(new CodeVariableReferenceExpression(groupActivity.IndexSlot), CodeBinaryOperatorType.Add, new CodePrimitiveExpression(1))),
                 coreOfTheLoop);
             return forLoop;
