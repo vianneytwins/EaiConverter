@@ -243,7 +243,7 @@
 
 			if (tibcoBwProcessToGenerate.StarterActivity != null)
             {
-                methods.Add(this.GenerateOnEventMethod (tibcoBwProcessToGenerate, activityNameToServiceNameDictionnary));
+                methods.Add(this.GenerateOnEventMethod(tibcoBwProcessToGenerate, activityNameToServiceNameDictionnary));
 			}
 
             return methods.ToArray();
@@ -272,7 +272,7 @@
 			if (tibcoBwProcessToGenerate.StartActivity != null)
 			{
                 startMethod.Parameters.AddRange(this.GenerateStartMethodInputParameters(tibcoBwProcessToGenerate));
-				startMethod.Statements.AddRange(this.GenerateMainMethodBody (tibcoBwProcessToGenerate, activityNameToServiceNameDictionnary));
+				startMethod.Statements.AddRange(this.GenerateMainMethodBody(tibcoBwProcessToGenerate, activityNameToServiceNameDictionnary));
 			}
 			else if (tibcoBwProcessToGenerate.StarterActivity != null)
 			{
