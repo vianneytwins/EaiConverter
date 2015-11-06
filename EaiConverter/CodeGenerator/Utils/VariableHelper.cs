@@ -12,7 +12,7 @@ namespace EaiConverter.CodeGenerator.Utils
             variableNameToFormat = ToSafeType(variableNameToFormat);
 
             variableNameToFormat = variableNameToFormat.Replace("-", "_");
-            variableNameToFormat = variableNameToFormat.Replace("&", "_");
+            variableNameToFormat = variableNameToFormat.Replace("&", "");
 
             var firstCharOfTheVariable = variableNameToFormat.Substring(0, 1);
             var endOfTheVariable = variableNameToFormat.Substring(1, variableNameToFormat.Length - 1);
@@ -23,7 +23,7 @@ namespace EaiConverter.CodeGenerator.Utils
         {
             var className = name.Substring(0, 1).ToUpper() + name.Substring(1, name.Length - 1).Replace(" ", string.Empty);
             className = className.Replace("-", "_");
-            className = className.Replace("&", "_");
+            className = className.Replace("&", "");
             return className;
         }
 
@@ -44,6 +44,10 @@ namespace EaiConverter.CodeGenerator.Utils
                 return "@object";
             }
 
+            if (variableNameToFormat == "param")
+            {
+                return "@param";
+            }
             if (variableNameToFormat[0] >= '0' && variableNameToFormat[0] <= '9')
             {
                 return "a" + variableNameToFormat;

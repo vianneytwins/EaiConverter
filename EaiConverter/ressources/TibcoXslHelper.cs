@@ -100,6 +100,12 @@
             return inputString.Trim();
         }
 
+        // usage tib:tokenize : tib:tokenize("tot1;tot2", ";")
+        public static string[] Tokenize(string inputString, string delimiter)
+        {
+            return inputString.Split(delimiter.ToCharArray()[0]);
+        }
+
         // usage tib:translate-timezone( : tib:translate-timezone(date, "UTC")
         // TODO find usage exemple
         public static DateTime TranslateTimezone(DateTime date, string timezone)

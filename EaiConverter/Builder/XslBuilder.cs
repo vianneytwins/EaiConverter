@@ -35,7 +35,13 @@ namespace EaiConverter.Builder
             tab = new Tab();
             var newPackageName = FormatCorrectlyPackageName(packageName);
             var codeInStringList = this.Build(newPackageName, inputNodes, null);
-            var codeSnippet = new CodeSnippetStatement(codeInStringList.ToString());
+            
+            string codeinString = codeInStringList.ToString();
+            // TODO : remove this ugly fix !!!
+            codeinString = codeinString.Replace("NTMMessage.NTMTrade.", "((NTMTrade)NTMMessage.Items[0]).");
+            codeinString = codeinString.Replace("NTMMessage.NTMTrade", "NTMMessage.Items[0]");
+
+            var codeSnippet = new CodeSnippetStatement(codeinString);
             var codeStatements = new CodeStatementCollection();
             codeStatements.Add(codeSnippet);
             return codeStatements;

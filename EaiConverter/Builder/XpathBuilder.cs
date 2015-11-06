@@ -63,7 +63,6 @@
 
         private static string ManageMathOperation(string expression)
         {
-
             expression = expression.Replace(" div ", " / ");
             expression = expression.Replace(" or ", " || ");
             expression = expression.Replace(" and ", " && ");
@@ -74,9 +73,7 @@
             expression = expression.Replace("\nor\n", " || ");
             expression = expression.Replace("\nor ", " || ");
             expression = expression.Replace(" or\n", " || ");
-            expression = expression.Replace(" = ", " == ");
-            expression = expression.Replace(@" =""", @" == """);
-            expression = expression.Replace(" =\"", " == \"");
+            expression = expression.Replace("=", "==");
             return expression;
         }
 
@@ -125,6 +122,8 @@
 
             expression = expression.Replace("tib:add-to-date(", "TibcoXslHelper.AddToDate(");
 
+            expression = expression.Replace("tib:tokenize(", "TibcoXslHelper.Tokenize(");
+            
 
             return expression;
         }
