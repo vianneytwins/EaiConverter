@@ -110,10 +110,10 @@
 								<pd:conditionType>always</pd:conditionType>
 							</pd:transition></pd:ProcessDefinition>";
 			var tibcoBWProcess = this.tibcoBwProcessLinqParser.Parse(XElement.Parse(xml));
-			Assert.AreEqual (1, tibcoBWProcess.Transitions.Count);
-			Assert.AreEqual ("Start", tibcoBWProcess.Transitions[0].FromActivity);
-			Assert.AreEqual ("End", tibcoBWProcess.Transitions[0].ToActivity);
-			Assert.AreEqual (ConditionType.always, tibcoBWProcess.Transitions[0].ConditionType);
+			Assert.AreEqual(1, tibcoBWProcess.Transitions.Count);
+			Assert.AreEqual("Start", tibcoBWProcess.Transitions[0].FromActivity);
+			Assert.AreEqual("End", tibcoBWProcess.Transitions[0].ToActivity);
+			Assert.AreEqual(ConditionType.always, tibcoBWProcess.Transitions[0].ConditionType);
 		}
         
         [Test]
@@ -125,10 +125,10 @@
 								<pd:conditionType>always</pd:conditionType>
 							</pd:transition></pd:ProcessDefinition>";
 			var tibcoBWProcess = this.tibcoBwProcessLinqParser.Parse(XElement.Parse(xml));
-			Assert.AreEqual (1, tibcoBWProcess.Transitions.Count);
-			Assert.AreEqual ("Start_begin", tibcoBWProcess.Transitions[0].FromActivity);
-			Assert.AreEqual ("End", tibcoBWProcess.Transitions[0].ToActivity);
-			Assert.AreEqual (ConditionType.always, tibcoBWProcess.Transitions[0].ConditionType);
+			Assert.AreEqual(1, tibcoBWProcess.Transitions.Count);
+			Assert.AreEqual("Start_begin", tibcoBWProcess.Transitions[0].FromActivity);
+			Assert.AreEqual("End", tibcoBWProcess.Transitions[0].ToActivity);
+			Assert.AreEqual(ConditionType.always, tibcoBWProcess.Transitions[0].ConditionType);
 		}
 			
 		[Test]

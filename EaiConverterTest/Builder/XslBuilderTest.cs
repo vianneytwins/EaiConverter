@@ -493,7 +493,7 @@ sqlParams.parameter.Add(tempparameter);
 			var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
 			string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual("NTMMessage NTMMessage = new NTMMessage();\nNTMMessage.NTMMessageVersion = \"1.03\";\n\n", generateCode);
+            Assert.AreEqual("NTMMessage NTMMessage = new NTMMessage();\nNTMMessage.version = \"1.03\";\n\n", generateCode);
 		}
 
         [Test]
@@ -535,7 +535,7 @@ sqlParams.parameter.Add(tempparameter);
             var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual("NTMMessage NTMMessage = new NTMMessage();\nNTMMessage.NTMHeader = new NTMHeader();\nNTMMessage.NTMHeader.NTMHeaderVersion = \"1.03\";\n\n", generateCode);
+            Assert.AreEqual("NTMMessage NTMMessage = new NTMMessage();\nNTMMessage.NTMHeader = new NTMHeader();\nNTMMessage.NTMHeader.version = \"1.03\";\n\n", generateCode);
         }
 
         [Test]

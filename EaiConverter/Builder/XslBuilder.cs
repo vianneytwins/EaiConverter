@@ -203,8 +203,7 @@ namespace EaiConverter.Builder
         {
             //return this.xpathBuilder.Build(element.Attribute("select").Value);
             string elementName = element.Attribute("name").Value;
-            string lastElementName = this.GetLastElement(parent);
-            var assignationString = parent + "." + lastElementName + VariableHelper.ToClassName(elementName);
+            var assignationString = parent + "." + elementName;
 
             if (elementName != "xsi:nil")
             {
@@ -212,16 +211,6 @@ namespace EaiConverter.Builder
             }
 
             return parent + " = " + "null;\n";
-        }
-
-        public string GetLastElement(string parent)
-        {
-            if (!parent.Contains("."))
-            {
-                return parent;
-            }
-            return parent.Substring(parent.LastIndexOf(".") +1 , parent.Length - (parent.LastIndexOf(".") + 1));
-
         }
 
         public StringBuilder ManageIterationTag(XElement element, string parent)
@@ -315,7 +304,10 @@ namespace EaiConverter.Builder
             {
                 return "@param";
             }
-
+            if (elementType == "params")
+            {
+                return "@params";
+            }
             return elementType;
         }
 
