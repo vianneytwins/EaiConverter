@@ -517,6 +517,28 @@ sqlParams.parameter.Add(tempparameter);
         }
 
         [Test]
+        public void Should_Manage_xsl_attribute_on_complextype()
+        {
+            var xml =
+ @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" xmlns:pfx1=""http://www.SomeWhere.com"">
+<NTMMessage>
+    <NTMHeader>
+        <xsl:attribute name=""version"">
+            <xsl:value-of select=""'1.03'""/>
+        </xsl:attribute>
+    </NTMHeader>
+</NTMMessage>
+</pd:inputBindings>
+";
+            XElement doc = XElement.Parse(xml);
+
+            var codeStatement = this.xslBuilder.Build(doc.Nodes());
+
+            string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
+            Assert.AreEqual("NTMMessage NTMMessage = new NTMMessage();\nNTMMessage.NTMHeader = new NTMHeader();\nNTMMessage.NTMHeader.NTMHeaderVersion = \"1.03\";\n\n", generateCode);
+        }
+
+        [Test]
         public void Should_manage_complex_type_embedded()
         {
             var xml =
