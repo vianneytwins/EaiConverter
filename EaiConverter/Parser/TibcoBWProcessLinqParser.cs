@@ -81,8 +81,6 @@
 
         public Activity ParseStartOrEndActivity(XElement allFileElement, string inputAndOutputNameSpace, ActivityType activityType)
 		{
-            
-
             string activityName = string.Empty;
             if (activityType == ActivityType.startType)
             {
@@ -179,8 +177,8 @@
             {
                 var transition = new Transition
                 {
-                    FromActivity = XElementParserUtils.GetStringValue(element.Element(XmlnsConstant.tibcoProcessNameSpace + "from")),
-                    ToActivity = XElementParserUtils.GetStringValue(element.Element(XmlnsConstant.tibcoProcessNameSpace + "to")),
+                    FromActivity = Activity.FormatActivityName(XElementParserUtils.GetStringValue(element.Element(XmlnsConstant.tibcoProcessNameSpace + "from"))),
+                    ToActivity = Activity.FormatActivityName(XElementParserUtils.GetStringValue(element.Element(XmlnsConstant.tibcoProcessNameSpace + "to"))),
                     ConditionType = (ConditionType)Enum.Parse(typeof(ConditionType), XElementParserUtils.GetStringValue(element.Element (XmlnsConstant.tibcoProcessNameSpace + "conditionType"))),
                     ConditionPredicateName = XElementParserUtils.GetStringValue(element.Element(XmlnsConstant.tibcoProcessNameSpace + "xpathDescription")),
                     ConditionPredicate = XElementParserUtils.GetStringValue(element.Element(XmlnsConstant.tibcoProcessNameSpace + "xpath")),

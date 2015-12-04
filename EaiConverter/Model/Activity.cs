@@ -7,7 +7,7 @@
 	{
         private string name;
 
-    	public Activity (string name, ActivityType type)
+    	public Activity(string name, ActivityType type)
         {
 			this.Name = name;
 			this.Type = type;
@@ -26,8 +26,13 @@
 
             set
             {
-                this.name = value.Replace(' ', '_').Replace('.', '_');
+                this.name = FormatActivityName(value);
             }
+        }
+
+        public static string FormatActivityName(string value)
+        {
+            return value.Replace(' ', '_').Replace('.', '_');
         }
 
         public ActivityType Type { get; set; }

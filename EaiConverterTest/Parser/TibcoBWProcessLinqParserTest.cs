@@ -1,19 +1,17 @@
-﻿using NUnit.Framework;
-using System.Xml.Linq;
-using EaiConverter.Parser;
-using EaiConverter.Model;
-
-namespace EaiConverter.Test.Parser
+﻿namespace EaiConverter.Test.Parser
 {
+    using System.Xml.Linq;
+
+    using EaiConverter.Model;
+    using EaiConverter.Parser;
     using EaiConverter.Utils;
+
+    using NUnit.Framework;
 
     [TestFixture]
 	public class TibcoBWProcessLinqParserTest
 	{
-
-		TibcoBWProcessLinqParser tibcoBWProcessLinqParser;
-
-        string xmlWithGroup = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+        private const string xmlWithGroup = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
                             <pd:name>repertoire/myProcessName.process</pd:name>
 <pd:group name=""groupName"">
 <pd:type>com.tibco.pe.core.LoopGroup</pd:type>
@@ -33,27 +31,28 @@ namespace EaiConverter.Test.Parser
                                 <pd:from>Start</pd:from><pd:to>End</pd:to>
                                 <pd:conditionType>always</pd:conditionType>
                             </pd:transition></pd:ProcessDefinition>";
-        
-		[SetUp]
-		public void SetUp ()
+
+        private TibcoBWProcessLinqParser tibcoBwProcessLinqParser;
+
+        [SetUp]
+		public void SetUp()
 		{
-			tibcoBWProcessLinqParser = new TibcoBWProcessLinqParser();
+			this.tibcoBwProcessLinqParser = new TibcoBWProcessLinqParser();
 		}
 	
-
         [Test]
         public void Should_return_full_process_name_is_repertoire_dash_myProcessName ()
         {
             string xml = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""><pd:name>repertoire/myProcessName.process</pd:name></pd:ProcessDefinition>";
-            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
-            Assert.AreEqual ("repertoire/myProcessName.process", tibcoBWProcess.FullProcessName);
+            var tibcoBWProcess = this.tibcoBwProcessLinqParser.Parse(XElement.Parse(xml));
+            Assert.AreEqual("repertoire/myProcessName.process", tibcoBWProcess.FullProcessName);
         }
 
         [Test]
         public void Should_return_description ()
         {
             string xml = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""><pd:name>repertoire/myProcessName.process</pd:name><pd:label><pd:description>my description</pd:description></pd:label></pd:ProcessDefinition>";
-            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+            var tibcoBWProcess = this.tibcoBwProcessLinqParser.Parse(XElement.Parse(xml));
             Assert.AreEqual ("my description", tibcoBWProcess.Description);
         }
 
@@ -65,7 +64,7 @@ namespace EaiConverter.Test.Parser
 </pd:ProcessDefinition>"
 
                 ;
-            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+            var tibcoBWProcess = this.tibcoBwProcessLinqParser.Parse(XElement.Parse(xml));
             Assert.AreEqual ("http://www.tibco.com/ns/no_namspace_schema_location/XmlSchemas/DAI/PNO/XSD/RM3D.xsd", tibcoBWProcess.XsdImports[0].Namespace);
             Assert.AreEqual ("/XmlSchemas/DAI/PNO/XSD/RM3D.xsd", tibcoBWProcess.XsdImports[0].SchemaLocation);
         }
@@ -74,7 +73,7 @@ namespace EaiConverter.Test.Parser
 		public void Should_return_start_Activity_name_is_Start ()
 		{
 			string xml = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""><pd:name>repertoire/myProcessName.process</pd:name><pd:startName>Start</pd:startName><pd:startType/></pd:ProcessDefinition>";
-			var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+			var tibcoBWProcess = this.tibcoBwProcessLinqParser.Parse(XElement.Parse(xml));
 			Assert.AreEqual ("Start", tibcoBWProcess.StartActivity.Name);
 		}
 
@@ -82,7 +81,7 @@ namespace EaiConverter.Test.Parser
         public void Should_return_start_Activity_name_When_StartType_is_not_present()
         {
             string xml = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""><pd:name>repertoire/myProcessName.process</pd:name><pd:startName>Start</pd:startName></pd:ProcessDefinition>";
-            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+            var tibcoBWProcess = this.tibcoBwProcessLinqParser.Parse(XElement.Parse(xml));
             Assert.AreEqual("Start", tibcoBWProcess.StartActivity.Name);
         }
 
@@ -90,7 +89,7 @@ namespace EaiConverter.Test.Parser
 		public void Should_return_start_Activity_with_StartType_Defined_in_the_Process_xml ()
 		{
 			string xml = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema""><pd:name>repertoire/myProcessName.process</pd:name><pd:startName>Start</pd:startName><pd:startType><xsd:element name=""adminID"" type=""xsd:string"" /></pd:startType></pd:ProcessDefinition>";
-			var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+			var tibcoBWProcess = this.tibcoBwProcessLinqParser.Parse(XElement.Parse(xml));
             Assert.AreEqual ("adminID", tibcoBWProcess.StartActivity.Parameters[0].Name);
 		}
             
@@ -98,7 +97,7 @@ namespace EaiConverter.Test.Parser
         public void Should_return_start_Activity_with_StartType_Defined_in_reference()
         {
             string xml = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:pfx1=""http://testschema/2001/XMLSchema""><pd:name>repertoire/myProcessName.process</pd:name><pd:startName>Start</pd:startName><pd:startType ref=""pfx1:myType""/></pd:ProcessDefinition>";
-            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+            var tibcoBWProcess = this.tibcoBwProcessLinqParser.Parse(XElement.Parse(xml));
             Assert.AreEqual ("myType", tibcoBWProcess.StartActivity.Parameters[0].Name);
         }
 
@@ -110,9 +109,24 @@ namespace EaiConverter.Test.Parser
 								<pd:from>Start</pd:from><pd:to>End</pd:to>
 								<pd:conditionType>always</pd:conditionType>
 							</pd:transition></pd:ProcessDefinition>";
-			var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+			var tibcoBWProcess = this.tibcoBwProcessLinqParser.Parse(XElement.Parse(xml));
 			Assert.AreEqual (1, tibcoBWProcess.Transitions.Count);
 			Assert.AreEqual ("Start", tibcoBWProcess.Transitions[0].FromActivity);
+			Assert.AreEqual ("End", tibcoBWProcess.Transitions[0].ToActivity);
+			Assert.AreEqual (ConditionType.always, tibcoBWProcess.Transitions[0].ConditionType);
+		}
+        
+        [Test]
+		public void Should_return_remove_dot_or_space_in_activityname_in_transition_when_present()
+		{
+			string xml = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
+							<pd:name>repertoire/myProcessName.process</pd:name><pd:transition>
+								<pd:from>Start.begin</pd:from><pd:to>End</pd:to>
+								<pd:conditionType>always</pd:conditionType>
+							</pd:transition></pd:ProcessDefinition>";
+			var tibcoBWProcess = this.tibcoBwProcessLinqParser.Parse(XElement.Parse(xml));
+			Assert.AreEqual (1, tibcoBWProcess.Transitions.Count);
+			Assert.AreEqual ("Start_begin", tibcoBWProcess.Transitions[0].FromActivity);
 			Assert.AreEqual ("End", tibcoBWProcess.Transitions[0].ToActivity);
 			Assert.AreEqual (ConditionType.always, tibcoBWProcess.Transitions[0].ConditionType);
 		}
@@ -127,7 +141,7 @@ namespace EaiConverter.Test.Parser
 						<pd:type>NotHandleYet</pd:type>
 					</pd:activity>
 				</pd:ProcessDefinition>";
-			var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+			var tibcoBWProcess = this.tibcoBwProcessLinqParser.Parse(XElement.Parse(xml));
 			Assert.AreEqual (1, tibcoBWProcess.Activities.Count);
 			Assert.AreEqual ("activity2", tibcoBWProcess.Activities[0].Name);
             Assert.AreEqual ("NotHandleYet", tibcoBWProcess.Activities[0].Type.ToString());
@@ -145,7 +159,7 @@ namespace EaiConverter.Test.Parser
                         </variable1>
                     </pd:processVariables>
                 </pd:ProcessDefinition>";
-            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+            var tibcoBWProcess = this.tibcoBwProcessLinqParser.Parse(XElement.Parse(xml));
             Assert.AreEqual ("variable1", tibcoBWProcess.ProcessVariables[0].Parameter.Name);
         }
 
@@ -161,7 +175,7 @@ namespace EaiConverter.Test.Parser
                         </variable1>
                     </pd:processVariables>
                 </pd:ProcessDefinition>";
-            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+            var tibcoBWProcess = this.tibcoBwProcessLinqParser.Parse(XElement.Parse(xml));
             Assert.AreEqual (CSharpTypeConstant.SystemString, tibcoBWProcess.ProcessVariables[0].Parameter.Type);
         }
 
@@ -169,21 +183,21 @@ namespace EaiConverter.Test.Parser
         public void Should_return_1_transition_even_when_there_is_a_group()
         {
 
-            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xmlWithGroup));
+            var tibcoBWProcess = this.tibcoBwProcessLinqParser.Parse(XElement.Parse(xmlWithGroup));
             Assert.AreEqual (1, tibcoBWProcess.Transitions.Count);
         }
 
         [Test]
         public void Should_return_1_transition_in_the_group()
         {
-            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xmlWithGroup));
+            var tibcoBWProcess = this.tibcoBwProcessLinqParser.Parse(XElement.Parse(xmlWithGroup));
             Assert.AreEqual (1, ((GroupActivity)tibcoBWProcess.Activities[0]).Transitions.Count);
         }
 
         [Test]
         public void Should_return_group_config()
         {
-            var tibcoBWProcess = tibcoBWProcessLinqParser.Parse(XElement.Parse(xmlWithGroup));
+            var tibcoBWProcess = this.tibcoBwProcessLinqParser.Parse(XElement.Parse(xmlWithGroup));
             Assert.AreEqual("INPUTLOOP", ((GroupActivity)tibcoBWProcess.Activities[0]).GroupType.ToString());
             Assert.AreEqual("myCollection", ((GroupActivity)tibcoBWProcess.Activities[0]).Over);
             Assert.AreEqual("current", ((GroupActivity)tibcoBWProcess.Activities[0]).IterationElementSlot);
@@ -200,7 +214,7 @@ namespace EaiConverter.Test.Parser
                         <pd:type>NotHandleYet</pd:type>
                     </pd:starter>
                 </pd:ProcessDefinition>";
-            var tibcoBWProcess = this.tibcoBWProcessLinqParser.Parse(XElement.Parse(xml));
+            var tibcoBWProcess = this.tibcoBwProcessLinqParser.Parse(XElement.Parse(xml));
             Assert.AreEqual("NotHandleYet", tibcoBWProcess.StarterActivity.Type.ToString());
         }
 	}

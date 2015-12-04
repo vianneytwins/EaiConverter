@@ -84,8 +84,14 @@
             },
             new Transition {
                 FromActivity = "step1",
+                ToActivity = "step3",
+                ConditionType = ConditionType.otherwise,
+                ConditionPredicateName = "Condition1"
+            },
+            new Transition {
+                FromActivity = "step3",
                 ToActivity = "End",
-                ConditionType = ConditionType.xpath,
+                ConditionType = ConditionType.otherwise,
                 ConditionPredicateName = "Condition1"
             },
             new Transition {
@@ -111,11 +117,11 @@ return;
             tibcoBWProcess.EndActivity = new Activity("End", ActivityType.endType);
             tibcoBWProcess.Transitions = this.simpleProcessTransitions;
 
-            var codeStatementCollection = this.builder.GenerateMainCodeStatement (tibcoBWProcess.Transitions, tibcoBWProcess.StartActivity.Name, null, activitiesToServiceMapping);
+            var codeStatementCollection = this.builder.GenerateMainCodeStatement(tibcoBWProcess.Transitions, tibcoBWProcess.StartActivity.Name, null, activitiesToServiceMapping);
 
-            var classesInString = TestCodeGeneratorUtils.GenerateCode (codeStatementCollection);
+            var classesInString = TestCodeGeneratorUtils.GenerateCode(codeStatementCollection);
 
-            Assert.AreEqual (expected, classesInString);
+            Assert.AreEqual(expected, classesInString);
         }
 
         [Test]
@@ -128,6 +134,7 @@ catch (System.Exception ex)
 {
     this.step2Service.ExecuteQuery();
 }
+this.step3Service.ExecuteQuery();
 return;
 ";
             var tibcoBWProcess = new TibcoBWProcess("MyTestProcess");
@@ -135,9 +142,9 @@ return;
             tibcoBWProcess.EndActivity = new Activity("End", ActivityType.endType);
             tibcoBWProcess.Transitions = this.errorProcessTransitions;
 
-            var codeStatementCollection = this.builder.GenerateMainCodeStatement (tibcoBWProcess.Transitions, tibcoBWProcess.StartActivity.Name, null, activitiesToServiceMapping);
+            var codeStatementCollection = this.builder.GenerateMainCodeStatement(tibcoBWProcess.Transitions, tibcoBWProcess.StartActivity.Name, null, activitiesToServiceMapping);
 
-            var classesInString = TestCodeGeneratorUtils.GenerateCode (codeStatementCollection);
+            var classesInString = TestCodeGeneratorUtils.GenerateCode(codeStatementCollection);
 
             Assert.AreEqual(expected, classesInString);
         }
