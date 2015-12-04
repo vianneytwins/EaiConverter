@@ -396,19 +396,12 @@
 
             if (returnType.BaseType != CSharpTypeConstant.SystemVoid)
             {
-                /**
-                var invocationCodeCollection = new CodeStatementCollection();
-                invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(tibcoBwProcessToGenerate.EndActivity));
+                
 
-                invocationCodeCollection.AddRange(new XslBuilder().Build(tibcoBwProcessToGenerate.EndActivity.InputBindings));
-
-                var variableToAssignReference = new CodeFieldReferenceExpression ( new CodeThisReferenceExpression (), VariableHelper.ToVariableName(assignActivity.VariableName));
-                var codeInvocation = new CodeAssignStatement (variableToAssignReference, new CodeVariableReferenceExpression(VariableHelper.ToVariableName(assignActivity.VariableName)));
-                invocationCodeCollection.Add(codeInvocation);
-                */
-                var returnName = VariableHelper.ToVariableName(tibcoBwProcessToGenerate.EndActivity.Parameters[0].Name);
-                var objectCreate = new CodeObjectCreateExpression(returnType);
-                statements.Add(new CodeVariableDeclarationStatement(returnType, returnName, objectCreate));
+                statements.AddRange(DefaultActivityBuilder.LogActivity(tibcoBwProcessToGenerate.EndActivity));
+                statements.AddRange(new XslBuilder(new XpathBuilder()).Build(tibcoBwProcessToGenerate.EndActivity.InputBindings));
+                var returnName = tibcoBwProcessToGenerate.EndActivity.Parameters[0].Name;
+           
                 var returnStatement = new CodeMethodReturnStatement(new CodeVariableReferenceExpression(returnName));
                 statements.Add(returnStatement);
             }

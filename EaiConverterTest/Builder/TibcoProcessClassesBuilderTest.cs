@@ -281,6 +281,42 @@
             this.tibcoBwProcessBuilder.RemoveDuplicateFields(tibcoBwProcessClassModel);
             Assert.AreEqual(1, tibcoBwProcessClassModel.Members.Count);
         }
+
+        [Test]
+        public void Should_Generate_End_InvocationCode()
+        {
+
+            this.tibcoBwProcess.StartActivity = new Activity ("Start", ActivityType.startType);
+            this.tibcoBwProcess.EndActivity = new Activity ("End", ActivityType.endType);
+            var xml =
+                @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
+    <EquityRecord>            
+        <xmlString>
+            <xsl:value-of select=""'TestString'""/>
+        </xmlString>
+    </EquityRecord>
+</pd:inputBindings>
+";
+            XElement doc = XElement.Parse(xml);
+            this.tibcoBwProcess.EndActivity.InputBindings = doc.Nodes();
+            this.tibcoBwProcess.EndActivity.Parameters = new List<ClassParameter>{
+                new ClassParameter{
+                    Name = "EquityRecord", 
+                    Type= "EquityRecord"}
+            };
+
+            var expected = @"this.logger.Info(""Start Activity: End of type: endType"");
+EquityRecord EquityRecord = new EquityRecord();
+EquityRecord.xmlString = ""TestString"";
+
+return EquityRecord;
+";
+
+            var codeCollection = this.tibcoBwProcessBuilder.GenerateEndActivityInvocationCode (this.tibcoBwProcess);
+            string actual = TestCodeGeneratorUtils.GenerateCode(codeCollection);
+
+            Assert.AreEqual(expected,actual);
+        }
 	}
 }
 
