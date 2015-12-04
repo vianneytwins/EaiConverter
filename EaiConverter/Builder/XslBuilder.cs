@@ -75,6 +75,7 @@ namespace EaiConverter.Builder
                     {
                         packageName = string.Empty;
                     }
+
                     string variableReference = this.DefineVariableReference(element, parent);
                     isAlistElement = this.IsAListElement(element, inputNodes);
                     var hasTheListBeenInitialised = false;
@@ -143,19 +144,19 @@ namespace EaiConverter.Builder
                         if (string.IsNullOrEmpty(parent))
                         {
                             codeStatements.Append(this.tab);
-                            codeStatements.Append(this.Build(element.Nodes(), element.Name.LocalName));
+                            codeStatements.Append(this.Build(element.Nodes(), ConvertToSafeType(element.Name.LocalName)));
                         }
                         else
                         {
                             codeStatements.Append(this.tab);
-                            codeStatements.Append(this.Build(element.Nodes(), parent + "." + element.Name.LocalName));
+                            codeStatements.Append(this.Build(element.Nodes(), parent + "." + ConvertToSafeType(element.Name.LocalName)));
                         }
                     }
                     if (isAlistElement)
                     {
                         //recursive call to get the value
                         //codeStatements.Append(variableReference + ".Add(" + this.Build(element.Nodes(), parent) + ");\n");
-                        codeStatements.Append(variableReference + ".Add(temp" + element.Name.LocalName + ");\n");
+                        codeStatements.Append(variableReference + ".Add(temp" + ConvertToSafeType(element.Name.LocalName) + ");\n");
                     }
 
                 }
@@ -202,7 +203,7 @@ namespace EaiConverter.Builder
         private string BuildAttribute(XElement element, string parent)
         {
             //return this.xpathBuilder.Build(element.Attribute("select").Value);
-            string elementName = element.Attribute("name").Value;
+            string elementName = ConvertToSafeType(element.Attribute("name").Value);
             var assignationString = parent + "." + elementName;
 
             if (elementName != "xsi:nil")
@@ -318,9 +319,9 @@ namespace EaiConverter.Builder
             RetrieveAllTypeInTheElement(nodes, elementTypes);
             if (parent == null)
             {
-                return elementTypes[0];
+                return ConvertToSafeType(elementTypes[0]);
             }
-            return parent + "." + elementTypes[0];
+            return parent + "." + ConvertToSafeType(elementTypes[0]);
         }
 
         public bool IsAListElement(XElement inputElement, IEnumerable<XNode> inputNodes)

@@ -339,12 +339,12 @@ sqlParams.AdminID = null;
             var xml =
                 @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" >
     <sqlParams>        
-        <param>
+        <parameter>
             <xsl:value-of select=""'testvalue1'""/>
-        </param>
-        <param >
+        </parameter>
+        <parameter >
             <xsl:value-of select=""'testvalue2'""/>
-        </param>
+        </parameter>
     </sqlParams>  
 </pd:inputBindings>
 ";
@@ -353,14 +353,14 @@ sqlParams.AdminID = null;
             var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build (doc.Nodes()));
 
             Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
-sqlParams.param = new List<System.String>();
-System.String tempparam;
-tempparam = ""testvalue1"";
-sqlParams.param.Add(tempparam);
-tempparam = ""testvalue2"";
-sqlParams.param.Add(tempparam);
+sqlParams.parameter = new List<System.String>();
+System.String tempparameter;
+tempparameter = ""testvalue1"";
+sqlParams.parameter.Add(tempparameter);
+tempparameter = ""testvalue2"";
+sqlParams.parameter.Add(tempparameter);
 
-", generateCode.ToString());
+", generateCode);
         }
 
         [Test]
@@ -402,11 +402,11 @@ sqlParams.parameter.Add(tempparameter);
 		{
 			var packageName = "MyPackage.";
 			var xml =
-				@"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" >
+                @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" >
     <sqlParams>        
-        <param>
+        <parameter>
             <xsl:value-of select=""'testvalue1'""/>
-        </param>
+        </parameter>
     </sqlParams>  
 </pd:inputBindings>
 ";
@@ -414,7 +414,7 @@ sqlParams.parameter.Add(tempparameter);
 
 			var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build(packageName, doc.Nodes()));
 
-            Assert.AreEqual ("MyPackage.sqlParams sqlParams = new MyPackage.sqlParams();\nsqlParams.param = \"testvalue1\";\n\n", generateCode.ToString());
+            Assert.AreEqual("MyPackage.sqlParams sqlParams = new MyPackage.sqlParams();\nsqlParams.parameter = \"testvalue1\";\n\n", generateCode.ToString());
 		}
 
 		[Test]
@@ -424,9 +424,9 @@ sqlParams.parameter.Add(tempparameter);
 			var xml =
 				@"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" >
     <sqlParams>        
-        <param>
+        <parameter>
             <xsl:value-of select=""'testvalue1'""/>
-        </param>
+        </parameter>
     </sqlParams>  
 </pd:inputBindings>
 ";
@@ -434,7 +434,7 @@ sqlParams.parameter.Add(tempparameter);
 
 			var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build(packageName, doc.Nodes()));
 
-            Assert.AreEqual ("MyPackage.sqlParams sqlParams = new MyPackage.sqlParams();\nsqlParams.param = \"testvalue1\";\n\n", generateCode.ToString());
+            Assert.AreEqual ("MyPackage.sqlParams sqlParams = new MyPackage.sqlParams();\nsqlParams.parameter = \"testvalue1\";\n\n", generateCode.ToString());
 		}
 
 		[Test]
@@ -454,7 +454,7 @@ sqlParams.parameter.Add(tempparameter);
 
 			var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build(packageName, doc.Nodes()));
 
-            Assert.AreEqual ("System.String param;\nparam = \"testvalue1\";\n\n", generateCode.ToString());
+            Assert.AreEqual ("System.String @param;\n@param = \"testvalue1\";\n\n", generateCode.ToString());
 		}
 
 		[Test]
