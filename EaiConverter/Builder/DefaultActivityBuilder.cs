@@ -97,7 +97,7 @@ namespace EaiConverter.Builder
             {
                 foreach (var parameter in existingParamaters)
                 {
-                    parameterLists.Add(new CodeSnippetExpression(parameter));
+                    parameterLists.Add(new CodeSnippetExpression(VariableHelper.ToSafeType(parameter)));
                 }
             }
 

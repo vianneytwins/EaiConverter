@@ -144,19 +144,19 @@ namespace EaiConverter.Builder
                         if (string.IsNullOrEmpty(parent))
                         {
                             codeStatements.Append(this.tab);
-                            codeStatements.Append(this.Build(element.Nodes(), ConvertToSafeType(element.Name.LocalName)));
+                            codeStatements.Append(this.Build(element.Nodes(), VariableHelper.ToSafeType(element.Name.LocalName)));
                         }
                         else
                         {
                             codeStatements.Append(this.tab);
-                            codeStatements.Append(this.Build(element.Nodes(), parent + "." + ConvertToSafeType(element.Name.LocalName)));
+                            codeStatements.Append(this.Build(element.Nodes(), parent + "." + VariableHelper.ToSafeType(element.Name.LocalName)));
                         }
                     }
                     if (isAlistElement)
                     {
                         //recursive call to get the value
                         //codeStatements.Append(variableReference + ".Add(" + this.Build(element.Nodes(), parent) + ");\n");
-                        codeStatements.Append(variableReference + ".Add(temp" + ConvertToSafeType(element.Name.LocalName) + ");\n");
+                        codeStatements.Append(variableReference + ".Add(temp" + VariableHelper.ToSafeType(element.Name.LocalName) + ");\n");
                     }
 
                 }
@@ -203,7 +203,7 @@ namespace EaiConverter.Builder
         private string BuildAttribute(XElement element, string parent)
         {
             //return this.xpathBuilder.Build(element.Attribute("select").Value);
-            string elementName = ConvertToSafeType(element.Attribute("name").Value);
+            string elementName = VariableHelper.ToSafeType(element.Attribute("name").Value);
             var assignationString = parent + "." + elementName;
 
             if (elementName != "xsi:nil")
@@ -293,23 +293,10 @@ namespace EaiConverter.Builder
             if (elementTypes.Count > 1 && IsBasicReturnType(elementTypes[1]))
             //if (elementTypes.Count == 2)
             {
-                return ConvertToSafeType(elementTypes[1]);
+                return VariableHelper.ToSafeType(elementTypes[1]);
             }
 
-            return ConvertToSafeType(elementTypes[0]);
-        }
-
-        private static string ConvertToSafeType(string elementType)
-        {
-            if (elementType == "param")
-            {
-                return "@param";
-            }
-            if (elementType == "params")
-            {
-                return "@params";
-            }
-            return elementType;
+            return VariableHelper.ToSafeType(elementTypes[0]);
         }
 
         public string DefineVariableReference(XElement inputedElement, string parent)
@@ -319,9 +306,9 @@ namespace EaiConverter.Builder
             RetrieveAllTypeInTheElement(nodes, elementTypes);
             if (parent == null)
             {
-                return ConvertToSafeType(elementTypes[0]);
+                return VariableHelper.ToSafeType(elementTypes[0]);
             }
-            return parent + "." + ConvertToSafeType(elementTypes[0]);
+            return parent + "." + VariableHelper.ToSafeType(elementTypes[0]);
         }
 
         public bool IsAListElement(XElement inputElement, IEnumerable<XNode> inputNodes)

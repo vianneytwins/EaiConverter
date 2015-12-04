@@ -48,6 +48,11 @@ namespace EaiConverter.CodeGenerator.Utils
             {
                 return "@param";
             }
+            
+            if (variableNameToFormat == "params")
+            {
+                return "@params";
+            }
             if (variableNameToFormat[0] >= '0' && variableNameToFormat[0] <= '9')
             {
                 return "a" + variableNameToFormat;
