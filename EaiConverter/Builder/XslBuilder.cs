@@ -39,6 +39,7 @@ namespace EaiConverter.Builder
             string codeinString = codeInStringList.ToString();
             // TODO : remove this ugly fix !!!
             codeinString = codeinString.Replace("NTMMessage.NTMTrade.", "((NTMTrade)NTMMessage.Items[0]).");
+            codeinString = codeinString.Replace("NTMMessage.NTMTrades", "NTMMessage.Items");
             codeinString = codeinString.Replace("NTMMessage.NTMTrade", "NTMMessage.Items[0]");
 
             var codeSnippet = new CodeSnippetStatement(codeinString);
@@ -74,7 +75,7 @@ namespace EaiConverter.Builder
                     {
                         packageName = string.Empty;
                     }
-                    string variableReference = DefineVariableReference(element, parent);
+                    string variableReference = this.DefineVariableReference(element, parent);
                     isAlistElement = this.IsAListElement(element, inputNodes);
                     var hasTheListBeenInitialised = false;
 
@@ -102,7 +103,7 @@ namespace EaiConverter.Builder
                             }
                         }
 
-                        codeStatements.Append(this.Build(element.Nodes(), "temp"+ element.Name.LocalName));
+                        codeStatements.Append(this.Build(element.Nodes(), "temp" + element.Name.LocalName));
                     }
                     else if (returnType == null)
                     {
@@ -383,7 +384,7 @@ namespace EaiConverter.Builder
                 return string.Empty;
             }
 
-            if (packageName.EndsWith(".") )
+            if (packageName.EndsWith("."))
             {
                 return packageName;
             }

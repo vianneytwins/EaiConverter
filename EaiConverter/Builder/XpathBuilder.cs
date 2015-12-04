@@ -64,15 +64,15 @@
         private static string ManageMathOperation(string expression)
         {
             expression = expression.Replace(" div ", " / ");
+            expression = expression.Replace("\ndiv\n", " / ");
             expression = expression.Replace(" or ", " || ");
+            expression = expression.Replace(" or\n", " || ");
+            expression = expression.Replace("\nor\n", " || ");
+            expression = expression.Replace("\nor ", " || ");
             expression = expression.Replace(" and ", " && ");
             expression = expression.Replace("\nand\n", " && ");
             expression = expression.Replace("\nand ", " && ");
             expression = expression.Replace(" and\n", " && ");
-            expression = expression.Replace("\ndiv\n", " / ");
-            expression = expression.Replace("\nor\n", " || ");
-            expression = expression.Replace("\nor ", " || ");
-            expression = expression.Replace(" or\n", " || ");
             expression = expression.Replace("=", "==");
             return expression;
         }
@@ -110,26 +110,22 @@
 
             expression = expression.Replace("lower-case(", "TibcoXslHelper.LowerCase(");
 
-            expression = expression.Replace("tib:left(", "TibcoXslHelper.Left(");
-
-            expression = expression.Replace("tib:index-of(", "TibcoXslHelper.IndexOf(");
-
             expression = expression.Replace("substring(", "TibcoXslHelper.Substring(");
 
             expression = expression.Replace("round(", "TibcoXslHelper.Round(");
 
             expression = expression.Replace("not(", "!(");
 
-            expression = expression.Replace("tib:add-to-date(", "TibcoXslHelper.AddToDate(");
-
-            expression = expression.Replace("tib:tokenize(", "TibcoXslHelper.Tokenize(");
-            
-
             return expression;
         }
 
         private static string ManageTibcoXpathFunction(string expression)
         {
+            expression = expression.Replace("tib:left(", "TibcoXslHelper.Left(");
+            expression = expression.Replace("tib:index-of(", "TibcoXslHelper.IndexOf(");
+            expression = expression.Replace("tib:add-to-date(", "TibcoXslHelper.AddToDate(");
+            expression = expression.Replace("tib:tokenize(", "TibcoXslHelper.Tokenize(");
+
             // return a string, usage sample : tib:string-round-fraction($Start/root/inputdata, 2)
             // for exemple tib:string-round-fraction(round(1.100), 2) Output as 1.00
             expression = expression.Replace("tib:string-round-fraction(", "TibcoXslHelper.StringRoundFraction(");
