@@ -26,9 +26,5 @@ namespace EaiConverter.CodeGenerator
             log.Info(classesInString);
         }
 
-        public void Init()
-        {
-            // Do nothing
-        }
     }
 }

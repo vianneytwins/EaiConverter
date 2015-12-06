@@ -42,6 +42,7 @@
                 }
                 
                 fileFilter = new FileFilter(initFilePath);
+                ConfigurationApp.SaveProperty(ProjectDirectory, sourceDirectory);
 
 				if (mode == "S_Csharp")
                 {
@@ -51,7 +52,7 @@
                     globalVariableProcessor = new GlobalVariableProcessor(sourceCodeGeneratorService);
                     adapterFileProcessorService = new AdapterFileProcessorService(sourceCodeGeneratorService);
                     tibcoFileReaderService = new TibcoBWDirectoryProcessorService(tibcoFileProcessorService, xsdFileProcessorService, globalVariableProcessor, adapterFileProcessorService, fileFilter);
-                    ConfigurationApp.SaveProperty(ProjectDirectory, sourceDirectory);
+
 					tibcoFileReaderService.Process(sourceDirectory);
 				}
                 else if (mode == "G_Csharp")
@@ -62,9 +63,7 @@
                     globalVariableProcessor = new GlobalVariableProcessor(sourceCodeGeneratorService);
                     adapterFileProcessorService = new AdapterFileProcessorService(sourceCodeGeneratorService);
                     tibcoFileReaderService = new TibcoBWDirectoryProcessorService(tibcoFileProcessorService, xsdFileProcessorService, globalVariableProcessor, adapterFileProcessorService, fileFilter);
-                    ConfigurationApp.SaveProperty(ProjectDirectory, sourceDirectory);
-
-				    sourceCodeGeneratorService.Init();
+               
 					tibcoFileReaderService.Process(sourceDirectory);
 				}
                 else if (mode == "A")

@@ -22,97 +22,59 @@ namespace EaiConverter.CodeGenerator
 
         private const string LineToReplace = "    <!-- insert file Generated here -->";
 
-        public void Generate(CodeCompileUnit targetUnit)
-        {
-            CodeDomProvider provider = CodeDomProvider.CreateProvider("CSharp");
-            CodeGeneratorOptions options = new CodeGeneratorOptions();
-            options.BracingStyle = "C";
-            options.IndentString = "    ";
-            options.BlankLinesBetweenMembers = true;
+        private int Counter;
+        private CodeDomProvider provider;
+        private CodeGeneratorOptions options;
+        private string fileExtension;
 
-            //this.CreateSolutionDirectory();
-
-            // Build the output file name.
-            foreach (CodeNamespace namespaceUnit in targetUnit.Namespaces)
-            {
-                var namespaceName = namespaceUnit.Name;
-
-                if (namespaceUnit.Types.Count > 0)
-                {
-                    string sourceFile;
-                    string relativeSourceFile;
-
-                    if (provider.FileExtension[0] == '.')
-                    {
-                        sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + GetFileSeparator() + namespaceUnit.Types[0].Name + provider.FileExtension;
-                        relativeSourceFile = ConvertNamespaceToPath(namespaceName) + GetFileSeparator() + namespaceUnit.Types[0].Name + provider.FileExtension;
-                    }
-                    else
-                    {
-                        sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + GetFileSeparator() + namespaceUnit.Types[0].Name + "." + provider.FileExtension;
-                        relativeSourceFile = ConvertNamespaceToPath(namespaceName) + GetFileSeparator() + namespaceUnit.Types[0].Name + "." + provider.FileExtension;
-                    }
-
-                    if (ConfigurationApp.GetProperty(sourceFile) != "true")
-                    {
-                        ConfigurationApp.SaveProperty(sourceFile, "true");
-                        using (var sw = new StreamWriter(sourceFile, false))
-                        {
-                            var tw = new IndentedTextWriter(sw, "    ");
-                            provider.GenerateCodeFromNamespace(namespaceUnit, tw, options);
-                            tw.Close();
-                        }
-
-                       // using (var file = new StreamWriter(ProjectDestinationPath + "\\GeneratedSolution.csproj", true))
-                       // {
-                       //     file.WriteLine("    <Compile Include=\"" + relativeSourceFile + "\"/>\n");
-                       // }
-
-                        if (File.Exists(ProjectDestinationPath + "/GeneratedSolution.csproj"))
-                        {
-                            string projectFile = File.ReadAllText(ProjectDestinationPath + "/GeneratedSolution.csproj");
-                            projectFile = projectFile.Replace(
-                                LineToReplace,
-                                LineToReplace + "\n" + "    <Compile Include=\"" + relativeSourceFile + "\"/>");
-                            File.WriteAllText(ProjectDestinationPath + "/GeneratedSolution.csproj", projectFile);
-                        }
-
-                        log.Info(sourceFile + " has been generated");
-                    }
-                    else
-                    {
-                        log.Warn("############## Warning" + sourceFile + " has already been generated");
-                    }
-
-                }
-                else
-                {
-                    log.Warn("################### Warning" + namespaceName + " is empty");
-                }
-            }
-        }
-
-        public void Init()
+        public CsharpSourceCodeGeneratorService()
         {
             this.CreateSolutionDirectory();
-            using (var file = new StreamWriter(SolutionDestinationPath + "/GeneratedSolution.sln"))
-            {
-                file.Write(GeneratedSolution_sln);
-            }
+            this.CreateSolutionAndProjectFiles();
+            this.InitCodeDomProvider();
 
-            using (var file = new StreamWriter(ProjectDestinationPath + "/GeneratedSolution.csproj"))
-            {
-                file.Write(GeneratedSolution_csproj);
-            }
+        }
 
-            using (var file = new StreamWriter(ProjectDestinationPath + "/Properties/AssemblyInfo.cs"))
-            {
-                file.Write(AssemblyInfo_cs);
-            }
+        public void Generate(CodeCompileUnit targetUnit)
+        {
 
-            using (var file = new StreamWriter(ProjectDestinationPath + GetFileSeparator() + ConvertNamespaceToPath(TargetAppNameSpaceService.xmlToolsNameSpace) + "/TibcoXslHelper.cs"))
+            foreach (CodeNamespace codeNamespace in targetUnit.Namespaces)
             {
-                file.Write(TibcoXslHelper_cs);
+                var namespaceName = codeNamespace.Name;
+
+                foreach (CodeTypeDeclaration codeType in codeNamespace.Types)
+                {
+                    string filename = codeType.Name + this.fileExtension;
+
+                    string sourceFile;
+                    sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + GetFileSeparator() + filename;
+                    if (File.Exists(sourceFile))
+                    {
+                        log.Warn("############## Warning" + sourceFile + " has already been generated ");
+                        // TODO add counter to fiel name
+                        this.Counter++;
+                        filename = codeType.Name + this.Counter + this.fileExtension;
+                        sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + GetFileSeparator() + filename;
+
+                    }
+                    var newCodeNamespace = new CodeNamespace(codeNamespace.Name);
+                    newCodeNamespace.Types.Add(codeType);
+                    foreach (CodeNamespaceImport import in codeNamespace.Imports)
+                    {
+                        newCodeNamespace.Imports.Add(import);
+                    }
+
+                    using (var sw = new StreamWriter(sourceFile, false))
+                    {
+                        var tw = new IndentedTextWriter(sw, "    ");
+                        provider.GenerateCodeFromNamespace(newCodeNamespace, tw, this.options);
+                        tw.Close();
+                    }
+
+                    this.AddFileToCsproj(namespaceName, filename);
+
+                    log.Info(sourceFile + " has been generated");
+                }
             }
         }
 
@@ -129,6 +91,55 @@ namespace EaiConverter.CodeGenerator
             Directory.CreateDirectory(ProjectDestinationPath);
             Directory.CreateDirectory(ProjectDestinationPath + "/Properties");
             Directory.CreateDirectory(ProjectDestinationPath + "/" + ConvertNamespaceToPath(TargetAppNameSpaceService.xmlToolsNameSpace));
+        }
+
+        private void CreateSolutionAndProjectFiles()
+        {
+            using (var file = new StreamWriter(SolutionDestinationPath + "/GeneratedSolution.sln"))
+            {
+                file.Write(GeneratedSolution_sln);
+            }
+            using (var file = new StreamWriter(ProjectDestinationPath + "/GeneratedSolution.csproj"))
+            {
+                file.Write(GeneratedSolution_csproj);
+            }
+            using (var file = new StreamWriter(ProjectDestinationPath + "/Properties/AssemblyInfo.cs"))
+            {
+                file.Write(AssemblyInfo_cs);
+            }
+            using (var file = new StreamWriter(ProjectDestinationPath + GetFileSeparator() + ConvertNamespaceToPath(TargetAppNameSpaceService.xmlToolsNameSpace) + "/TibcoXslHelper.cs"))
+            {
+                file.Write(TibcoXslHelper_cs);
+            }
+        }
+
+        private void InitCodeDomProvider()
+        {
+            this.provider = CodeDomProvider.CreateProvider("CSharp");
+            this.options = new CodeGeneratorOptions();
+            options.BracingStyle = "C";
+            options.IndentString = "    ";
+            options.BlankLinesBetweenMembers = true;
+            if (provider.FileExtension[0] == '.')
+            {
+                fileExtension = provider.FileExtension;
+                //filename = namespaceUnit.Types[0].Name + provider.FileExtension;
+            }
+            else
+            {
+                fileExtension = "." + provider.FileExtension;
+            }
+        }
+
+        public void AddFileToCsproj(string namespaceName, string filename)
+        {
+            string relativeSourceFile = ConvertNamespaceToPath(namespaceName) + GetFileSeparator() + filename;
+            if (File.Exists(ProjectDestinationPath + "/GeneratedSolution.csproj"))
+            {
+                string projectFile = File.ReadAllText(ProjectDestinationPath + "/GeneratedSolution.csproj");
+                projectFile = projectFile.Replace(LineToReplace, LineToReplace + "\n" + "    <Compile Include=\"" + relativeSourceFile + "\"/>");
+                File.WriteAllText(ProjectDestinationPath + "/GeneratedSolution.csproj", projectFile);
+            }
         }
 
         // TODO refactor because not really SRP
