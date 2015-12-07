@@ -51,7 +51,7 @@ var my_Call_Process_Activity = this.processToCall.Start(xmlString);
         [Test]
         public void Should_Return_constructor_parameter()
         {
-            var expected = "Process.DAI.PNO.ProcessToCall";
+            var expected = "Process.DAI.PNO.IProcessToCall";
             var constructorFields = this.CallProcessActivityBuilder.GenerateConstructorParameter(this.activity);
             Assert.AreEqual(expected, constructorFields[0].Type.BaseType);
         }

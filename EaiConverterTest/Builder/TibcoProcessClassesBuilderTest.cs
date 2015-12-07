@@ -29,6 +29,13 @@
 			this.tibcoBwProcess = new TibcoBWProcess("MyNamespace/myProcessTest.process");
 			this.tibcoBwProcess.Activities = new List<Activity>();
 		}
+        [Test]
+        public void Should_Generate_Process_Interface()
+        {
+            var expected ="IMyProcessTest";
+            var classToGenerate = this.tibcoBwProcessBuilder.Build(this.tibcoBwProcess);
+            Assert.AreEqual (expected, classToGenerate.Namespaces[3].Types[0].Name);
+        }
 
 		[Test]
 		public void Should_Return_simple_Constructor_When_NoActivies_are_declared()

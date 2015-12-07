@@ -120,7 +120,7 @@ namespace EaiConverter.Builder
 
         private static CodeTypeReference GetServiceFieldType(CallProcessActivity callProcessActivity)
 		{
-            return new CodeTypeReference(callProcessActivity.TibcoProcessToCall.ShortNameSpace + "." + VariableHelper.ToClassName(callProcessActivity.TibcoProcessToCall.ProcessName));
+            return new CodeTypeReference(callProcessActivity.TibcoProcessToCall.ShortNameSpace + ".I" + VariableHelper.ToClassName(callProcessActivity.TibcoProcessToCall.ProcessName));
 		}
 
 		private static string GetServiceFieldName(CallProcessActivity callProcessActivity)

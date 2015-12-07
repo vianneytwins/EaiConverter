@@ -41,13 +41,17 @@
 
             processNamespace.Imports.AddRange(this.GenerateImport(tibcoBwProcessToGenerate));
 
-            var tibcoBwProcessClassModel = new CodeTypeDeclaration(tibcoBwProcessToGenerate.ProcessName)
+            var tibcoBwProcessClassModel = new CodeTypeDeclaration(VariableHelper.ToClassName(tibcoBwProcessToGenerate.ProcessName))
                                                {
                                                    IsClass = true,
                                                    TypeAttributes = TypeAttributes.Public
                                                };
+            
+            tibcoBwProcessClassModel.BaseTypes.Add(tibcoBwProcessToGenerate.InterfaceName);
 
             tibcoBwProcessClassModel.Comments.Add(new CodeCommentStatement(tibcoBwProcessToGenerate.Description));
+
+
 
             // 3 les membres privee : les activité injecte
             tibcoBwProcessClassModel.Members.AddRange(this.GeneratePrivateFields(tibcoBwProcessToGenerate));
@@ -97,7 +101,20 @@
             // 8 la methode start avec input starttype et return du endtype
             tibcoBwProcessClassModel.Members.AddRange(this.GenerateMethod(tibcoBwProcessToGenerate, activityNameToServiceNameDictionnary));
 
+            var interfaceNameSpace = this.GenerateProcessInterface(tibcoBwProcessToGenerate, tibcoBwProcessClassModel);
+            targetUnit.Namespaces.Add(interfaceNameSpace);
+
             return targetUnit;
+        }
+
+        public CodeNamespace GenerateProcessInterface(TibcoBWProcess tibcoBwProcessToGenerate, CodeTypeDeclaration tibcoBwProcessClassModel)
+        {
+            var interfaceNameSpace = InterfaceExtractorFromClass.Extract(tibcoBwProcessClassModel, tibcoBwProcessToGenerate.ShortNameSpace);
+            if ((tibcoBwProcessToGenerate.StartActivity != null && tibcoBwProcessToGenerate.StartActivity.Parameters != null) || (tibcoBwProcessToGenerate.EndActivity != null && tibcoBwProcessToGenerate.EndActivity.Parameters != null))
+            {
+                interfaceNameSpace.Imports.Add(new CodeNamespaceImport(tibcoBwProcessToGenerate.InputAndOutputNameSpace));
+            }
+            return interfaceNameSpace;
         }
 
         /// <summary>

@@ -1,4 +1,6 @@
-﻿namespace EaiConverter.Model
+﻿using EaiConverter.CodeGenerator.Utils;
+
+namespace EaiConverter.Model
 {
     using System.Collections.Generic;
 
@@ -55,6 +57,15 @@
         }
 
         public string ProcessName { get; private set;}
+
+        public string InterfaceName
+        {
+            get
+            {
+                return "I" + ProcessName;
+            }
+        }
+
 		public string FullProcessName { get; private set;}
 
         public string Description { get; set;}
