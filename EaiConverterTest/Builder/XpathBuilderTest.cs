@@ -87,7 +87,7 @@
         [Test]
         public void Should_Remove_prefix_complex_usecase()
         {
-            Assert.AreEqual(@"TibcoXslHelper.Concat(getInstanceInfo.out.GetProcessInstanceInfo[1].ProcessInstanceName,"" "", getInstanceInfo.out.GetProcessInstanceInfo[1].MainProcessName,"""", start_logInfo.message,"""", TibcoXslHelper.RenderXml((getExceptions.out, true))",
+            Assert.AreEqual(@"TibcoXslHelper.Concat(getInstanceInfo.out.GetProcessInstanceInfo[1].ProcessInstanceName,"" "", getInstanceInfo.out.GetProcessInstanceInfo[1].MainProcessName,"""", start_logInfo.message,"""", TibcoXslHelper.RenderXml(getExceptions.out, true))",
                 this.xpathBuilder.Build("concat($GetInstanceInfo/pfx4:out/pfx4:GetProcessInstanceInfo[1]/ProcessInstanceName,' ', $GetInstanceInfo/pfx4:out/pfx4:GetProcessInstanceInfo[1]/MainProcessName,'', $Start/pfx3:logInfo/message,'', tib:render-xml($GetExceptions/pfx4:out, true()))"));
         }
         

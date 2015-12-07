@@ -67,6 +67,7 @@
                     classes.AddRange(this.GenerateClassForParameters(parameter.ChildProperties));
                 }
             }
+
             return classes;
         }
 

@@ -300,13 +300,15 @@
             XElement doc = XElement.Parse(xml);
             this.tibcoBwProcess.EndActivity.InputBindings = doc.Nodes();
             this.tibcoBwProcess.EndActivity.Parameters = new List<ClassParameter>{
-                new ClassParameter{
+                new ClassParameter
+                {
                     Name = "EquityRecord", 
-                    Type= "EquityRecord"}
+                    Type = "EquityRecord"
+                }
             };
 
             var expected = @"this.logger.Info(""Start Activity: End of type: endType"");
-EquityRecord EquityRecord = new EquityRecord();
+MyNamespace.myProcessTestInputOutputModel.EquityRecord EquityRecord = new MyNamespace.myProcessTestInputOutputModel.EquityRecord();
 EquityRecord.xmlString = ""TestString"";
 
 return EquityRecord;
@@ -315,7 +317,7 @@ return EquityRecord;
             var codeCollection = this.tibcoBwProcessBuilder.GenerateEndActivityInvocationCode (this.tibcoBwProcess);
             string actual = TestCodeGeneratorUtils.GenerateCode(codeCollection);
 
-            Assert.AreEqual(expected,actual);
+            Assert.AreEqual(expected, actual);
         }
 	}
 }

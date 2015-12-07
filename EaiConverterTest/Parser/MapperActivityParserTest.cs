@@ -1,10 +1,12 @@
-﻿using EaiConverter.Parser;
-using System.Xml.Linq;
-using NUnit.Framework;
-using EaiConverter.Model;
-
-namespace EaiConverter.Test.Parser
+﻿namespace EaiConverter.Test.Parser
 {
+    using System.Xml.Linq;
+
+    using EaiConverter.Model;
+    using EaiConverter.Parser;
+
+    using NUnit.Framework;
+
     [TestFixture]
     public class MapperActivityParserTest
     {

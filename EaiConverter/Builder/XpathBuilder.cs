@@ -131,7 +131,7 @@
             expression = expression.Replace("tib:string-round-fraction(", "TibcoXslHelper.StringRoundFraction(");
 
             //return a string, usage sample : tib:render-xml(myvariable, true()) 
-            expression = expression.Replace("tib:render-xml(", "TibcoXslHelper.RenderXml((");
+            expression = expression.Replace("tib:render-xml(", "TibcoXslHelper.RenderXml(");
 
             // usage tib:trim : tib:trim(myvariable) 
             expression = expression.Replace("tib:trim(", "TibcoXslHelper.Trim(");

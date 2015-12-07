@@ -396,10 +396,8 @@
 
             if (returnType.BaseType != CSharpTypeConstant.SystemVoid)
             {
-                
-
                 statements.AddRange(DefaultActivityBuilder.LogActivity(tibcoBwProcessToGenerate.EndActivity));
-                statements.AddRange(new XslBuilder(new XpathBuilder()).Build(tibcoBwProcessToGenerate.EndActivity.InputBindings));
+                statements.AddRange(new XslBuilder(new XpathBuilder()).Build(tibcoBwProcessToGenerate.InputAndOutputNameSpace, tibcoBwProcessToGenerate.EndActivity.InputBindings));
                 var returnName = tibcoBwProcessToGenerate.EndActivity.Parameters[0].Name;
            
                 var returnStatement = new CodeMethodReturnStatement(new CodeVariableReferenceExpression(returnName));

@@ -132,7 +132,7 @@
 		}
 			
 		[Test]
-		public void Should_return_1_activity_when_Only_One_is_defined ()
+		public void Should_return_1_activity_when_Only_One_is_defined()
 		{
 			string xml =
 				@"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
@@ -216,6 +216,34 @@
                 </pd:ProcessDefinition>";
             var tibcoBWProcess = this.tibcoBwProcessLinqParser.Parse(XElement.Parse(xml));
             Assert.AreEqual("NotHandleYet", tibcoBWProcess.StarterActivity.Type.ToString());
+        }
+
+        [Test]
+        public void Should_return_ReturnBinding_in_end_Activity_inputBinding()
+        {
+            string xml = @"<pd:ProcessDefinition xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"" xmlns:xsl=""http://w3.org/1999/XSL/Transform""><pd:name>repertoire/myProcessName.process</pd:name><pd:startName>Start</pd:startName><pd:startType><xsd:element name=""adminID"" type=""xsd:string"" /></pd:startType>
+
+    <pd:endName>End</pd:endName>    
+<pd:endType>
+        <xsd:element name=""result"">
+            <xsd:complexType>
+                <xsd:sequence>
+                    <xsd:element name=""xmlstring"" type=""xsd:string""/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:element>
+    </pd:endType>
+    <pd:returnBindings>
+        <result>
+            <xmlstring>
+                <xsl:value-of select=""test""/>
+            </xmlstring>
+        </result>
+    </pd:returnBindings>
+</pd:ProcessDefinition>";
+            var tibcoBWProcess = this.tibcoBwProcessLinqParser.Parse(XElement.Parse(xml));
+            Assert.AreEqual("result", tibcoBWProcess.EndActivity.Parameters[0].Name);
+            Assert.IsTrue(tibcoBWProcess.EndActivity.InputBindings != null);
         }
 	}
 }

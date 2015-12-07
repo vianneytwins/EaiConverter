@@ -1,5 +1,3 @@
-using EaiConverter.Builder.Utils;
-
 namespace EaiConverter.CodeGenerator
 {
     using System;
@@ -7,22 +5,23 @@ namespace EaiConverter.CodeGenerator
     using System.CodeDom.Compiler;
     using System.IO;
 
+    using EaiConverter.Builder.Utils;
     using EaiConverter.Processor;
 
     using log4net;
 
     public class CsharpSourceCodeGeneratorService : ISourceCodeGeneratorService
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof(CsharpSourceCodeGeneratorService));
-
-        //TODO VC : Put the output directory as a parameter";
+        // TODO VC : Put the output directory as a parameter";
         public const string SolutionDestinationPath = "./GeneratedSolution";
 
         public const string ProjectDestinationPath = "./GeneratedSolution/GeneratedSolution";
 
         private const string LineToReplace = "    <!-- insert file Generated here -->";
 
-        private int Counter;
+        private static readonly ILog Log = LogManager.GetLogger(typeof(CsharpSourceCodeGeneratorService));
+
+        private int counter;
         private CodeDomProvider provider;
         private CodeGeneratorOptions options;
         private string fileExtension;
@@ -32,12 +31,10 @@ namespace EaiConverter.CodeGenerator
             this.CreateSolutionDirectory();
             this.CreateSolutionAndProjectFiles();
             this.InitCodeDomProvider();
-
         }
 
         public void Generate(CodeCompileUnit targetUnit)
         {
-
             foreach (CodeNamespace codeNamespace in targetUnit.Namespaces)
             {
                 var namespaceName = codeNamespace.Name;
@@ -46,17 +43,17 @@ namespace EaiConverter.CodeGenerator
                 {
                     string filename = codeType.Name + this.fileExtension;
 
-                    string sourceFile;
-                    sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + GetFileSeparator() + filename;
+                    string sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + GetFileSeparator() + filename;
                     if (File.Exists(sourceFile))
                     {
-                        log.Warn("############## Warning" + sourceFile + " has already been generated ");
-                        // TODO add counter to fiel name
-                        this.Counter++;
-                        filename = codeType.Name + this.Counter + this.fileExtension;
-                        sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + GetFileSeparator() + filename;
+                        Log.Warn("############## Warning" + sourceFile + " has already been generated ");
 
+                        // TODO add counter to fiel name
+                        this.counter++;
+                        filename = codeType.Name + this.counter + this.fileExtension;
+                        sourceFile = this.PathFromNamespace(ProjectDestinationPath, namespaceName) + GetFileSeparator() + filename;
                     }
+
                     var newCodeNamespace = new CodeNamespace(codeNamespace.Name);
                     newCodeNamespace.Types.Add(codeType);
                     foreach (CodeNamespaceImport import in codeNamespace.Imports)
@@ -67,13 +64,13 @@ namespace EaiConverter.CodeGenerator
                     using (var sw = new StreamWriter(sourceFile, false))
                     {
                         var tw = new IndentedTextWriter(sw, "    ");
-                        provider.GenerateCodeFromNamespace(newCodeNamespace, tw, this.options);
+                        this.provider.GenerateCodeFromNamespace(newCodeNamespace, tw, this.options);
                         tw.Close();
                     }
 
                     this.AddFileToCsproj(namespaceName, filename);
 
-                    log.Info(sourceFile + " has been generated");
+                    Log.Info(sourceFile + " has been generated");
                 }
             }
         }
@@ -99,14 +96,17 @@ namespace EaiConverter.CodeGenerator
             {
                 file.Write(GeneratedSolution_sln);
             }
+
             using (var file = new StreamWriter(ProjectDestinationPath + "/GeneratedSolution.csproj"))
             {
                 file.Write(GeneratedSolution_csproj);
             }
+
             using (var file = new StreamWriter(ProjectDestinationPath + "/Properties/AssemblyInfo.cs"))
             {
                 file.Write(AssemblyInfo_cs);
             }
+
             using (var file = new StreamWriter(ProjectDestinationPath + GetFileSeparator() + ConvertNamespaceToPath(TargetAppNameSpaceService.xmlToolsNameSpace) + "/TibcoXslHelper.cs"))
             {
                 file.Write(TibcoXslHelper_cs);
@@ -117,21 +117,20 @@ namespace EaiConverter.CodeGenerator
         {
             this.provider = CodeDomProvider.CreateProvider("CSharp");
             this.options = new CodeGeneratorOptions();
-            options.BracingStyle = "C";
-            options.IndentString = "    ";
-            options.BlankLinesBetweenMembers = true;
-            if (provider.FileExtension[0] == '.')
+            this.options.BracingStyle = "C";
+            this.options.IndentString = "    ";
+            this.options.BlankLinesBetweenMembers = true;
+            if (this.provider.FileExtension[0] == '.')
             {
-                fileExtension = provider.FileExtension;
-                //filename = namespaceUnit.Types[0].Name + provider.FileExtension;
+                this.fileExtension = this.provider.FileExtension;
             }
             else
             {
-                fileExtension = "." + provider.FileExtension;
+                this.fileExtension = "." + this.provider.FileExtension;
             }
         }
 
-        public void AddFileToCsproj(string namespaceName, string filename)
+        private void AddFileToCsproj(string namespaceName, string filename)
         {
             string relativeSourceFile = ConvertNamespaceToPath(namespaceName) + GetFileSeparator() + filename;
             if (File.Exists(ProjectDestinationPath + "/GeneratedSolution.csproj"))
@@ -145,7 +144,7 @@ namespace EaiConverter.CodeGenerator
         // TODO refactor because not really SRP
         private string PathFromNamespace(string outputPath, string ns)
         {
-            var path = String.Format("{0}/{1}", outputPath, ConvertNamespaceToPath(ns));
+            var path = string.Format("{0}/{1}", outputPath, ConvertNamespaceToPath(ns));
 
             Directory.CreateDirectory(path);
             return path;

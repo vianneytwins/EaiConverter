@@ -113,10 +113,22 @@
                 {
                     var inputReferences = xElement.Attribute("ref").Value.Split(':');
 
-                    activity.Parameters = new List<ClassParameter> { new ClassParameter { Name = inputReferences[1],
-                                                                                          // TODO : find out to convert prefix in type
-                                                                                          Type = inputReferences[1] } };
+                    activity.Parameters = new List<ClassParameter>
+                    {
+                        new ClassParameter
+                        {
+                            Name = inputReferences[1],
+                            // TODO : find out to convert prefix in type
+                            Type = inputReferences[1]
+                        }
+                    };
                 }
+            }
+
+            var returnBindingElement = allFileElement.Element(XmlnsConstant.tibcoProcessNameSpace + "returnBindings");
+            if (activityType == ActivityType.endType && returnBindingElement != null)
+            {
+                activity.InputBindings = returnBindingElement.Nodes();
             }
 
 			return activity;
@@ -274,6 +286,7 @@
             {
                 activity = new Activity(element.Attribute("name").Value, ActivityType.NotHandleYet);
             }
+
             return activity;
         }
 	}
