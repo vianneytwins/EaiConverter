@@ -1,12 +1,12 @@
-using EaiConverter.Model;
-using System.Xml.Linq;
-using EaiConverter.Parser.Utils;
-
 namespace EaiConverter.Parser
 {
-    public class RdvPublishActivityParser :IActivityParser
+    using System.Xml.Linq;
+
+    using EaiConverter.Model;
+    using EaiConverter.Parser.Utils;
+
+    public class RdvPublishActivityParser : IActivityParser
 	{
-        #region IActivityParser implementation
         public Activity Parse(XElement inputElement)
         {
             var activity = new RdvPublishActivity();
@@ -20,16 +20,17 @@ namespace EaiConverter.Parser
             activity.SharedChannel = XElementParserUtils.GetStringValue(configElement.Element("sharedChannel"));
             activity.isXmlEncode = XElementParserUtils.GetBoolValue(configElement.Element("xmlEncoding"));
 
-            if (configElement.Element("XsdString").Attribute("ref") != null)
+            var xsdStringElement = configElement.Element("xsdString");
+            if (xsdStringElement.Attribute("ref") != null)
             {
-                activity.XsdString = configElement.Element("XsdString").Attribute("ref").ToString();
+                activity.XsdString = xsdStringElement.Attribute("ref").ToString();
             }
             else
             {
-                activity.ObjectXNodes = configElement.Element("XsdString").Nodes();
+                activity.ObjectXNodes = xsdStringElement.Nodes();
             }
 
-            if (inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings") != null )
+            if (inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings") != null)
             {
                 activity.InputBindings = inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Nodes();
                 activity.Parameters = new XslParser().Parse(activity.InputBindings);
@@ -37,7 +38,6 @@ namespace EaiConverter.Parser
 
             return activity;
         }
-        #endregion
         
 	}
 

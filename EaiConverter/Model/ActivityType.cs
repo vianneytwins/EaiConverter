@@ -35,7 +35,7 @@
         public static readonly ActivityType nullActivityType = new ActivityType("com.tibco.plugin.timer.NullActivity");
         public static readonly ActivityType sleepActivity = new ActivityType("com.tibco.plugin.timer.SleepActivity");
 
-        public static readonly ActivityType rdvPubActivityType = new ActivityType("com.plugin.tibrv.RVPubActivity");
+        public static readonly ActivityType rdvPubActivityType = new ActivityType("com.tibco.plugin.tibrv.RVPubActivity");
 
         public static readonly ActivityType ConfirmActivityType = new ActivityType("com.tibco.pe.core.ConfirmActivity");
 

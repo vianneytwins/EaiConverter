@@ -1,15 +1,17 @@
-﻿using System;
-using NUnit.Framework;
-using EaiConverter.Builder;
-using EaiConverter.Model;
-using System.Collections.Generic;
-using EaiConverter.Test.Utils;
-using EaiConverter.Processor;
-using System.Xml.Linq;
-
-namespace EaiConverter.Test.Builder
+﻿namespace EaiConverter.Test.Builder
 {
-	[TestFixture]
+    using System;
+    using System.Collections.Generic;
+    using System.Xml.Linq;
+
+    using EaiConverter.Builder;
+    using EaiConverter.Model;
+    using EaiConverter.Processor;
+    using EaiConverter.Test.Utils;
+
+    using NUnit.Framework;
+
+    [TestFixture]
 	public class RdvPublishActivityBuilderTest
 	{
 		RdvPublishActivityBuilder activityBuilder;
@@ -20,7 +22,7 @@ namespace EaiConverter.Test.Builder
 		public void SetUp()
 		{
 			this.activityBuilder = new RdvPublishActivityBuilder(new XslBuilder(new XpathBuilder()));
-			this.activity = new RdvPublishActivity( "My Activity Name", ActivityType.rdvPubActivityType);
+			this.activity = new RdvPublishActivity("My Activity Name", ActivityType.rdvPubActivityType);
 			this.activity.XsdString = "pfx:FileStatisticalData";
 			this.activity.Subject = "MY.Tibco.subject";
 			var xml =
@@ -37,7 +39,8 @@ namespace EaiConverter.Test.Builder
 			this.activity.Parameters = new List<ClassParameter>{
 				new ClassParameter{
 					Name = "ActivityInput",
-					Type= "ActivityInput"}
+					Type = "ActivityInput"
+                }
 			};
 		}
 
@@ -119,7 +122,7 @@ namespace EaiConverter.Test.Builder
 		[Test]
 		public void Should_return_invocation_Code()
 		{
-			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.plugin.tibrv.RVPubActivity"");
+			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.tibrv.RVPubActivity"");
 ActivityInput ActivityInput = new ActivityInput();
 ActivityInput.body = ""TestString"";
 

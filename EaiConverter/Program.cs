@@ -46,7 +46,7 @@
 
 				if (mode == "S_Csharp")
                 {
-					sourceCodeGeneratorService = new CsharpSimulationSourceCodeGeneratorService ();
+					sourceCodeGeneratorService = new CsharpSimulationSourceCodeGeneratorService();
 					tibcoFileProcessorService = new TibcoFileProcessorService(sourceCodeGeneratorService);
                     xsdFileProcessorService = new XsdFileProcessorService(sourceCodeGeneratorService);
                     globalVariableProcessor = new GlobalVariableProcessor(sourceCodeGeneratorService);
@@ -79,11 +79,10 @@
                 {
                     Log.Error("Program is going to exit - sorry only MODE S_Csharp, G_Csharp and A are managed for the moment");
 				}
-
 			}
 			else
             {
-				DisplayErrorMessage ();
+				DisplayErrorMessage();
 				return;
 			}
                 
