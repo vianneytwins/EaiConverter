@@ -54,7 +54,7 @@ FundName = ""testvalue"";
             var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual (@"Double FundValue;
+            Assert.AreEqual (@"Double? FundValue;
 FundValue = TibcoXslHelper.ParseNumber(""testvalue"");
 
 ",
@@ -76,7 +76,7 @@ FundValue = TibcoXslHelper.ParseNumber(""testvalue"");
             var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual (@"DateTime FundDate;
+            Assert.AreEqual (@"DateTime? FundDate;
 FundDate = TibcoXslHelper.ParseDateTime(""MMM dd yyyy"", mystuff.do);
 
 ", generateCode);

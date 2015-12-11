@@ -270,19 +270,19 @@ namespace EaiConverter.Builder
             {
                 case CSharpTypeConstant.SystemString:
                     return true;
-                case "Double":
+                case "Double?":
                     return true;
-                case "double":
+                case "double?":
                     return true;
-                case "Int":
+                case "Int?":
                     return true;
-                case "Int32":
+                case "Int32?":
                     return true;
-                case "bool":
+                case "bool?":
                     return true;
                 case "string":
                     return true;
-                case "DateTime":
+                case "DateTime?":
                     return true;
                 default:
                     return false;
@@ -359,15 +359,15 @@ namespace EaiConverter.Builder
                 {
                     if (item.Attribute("select").Value.Contains("tib:parse-date"))
                     {
-                        elementTypes.Add("DateTime");
+                        elementTypes.Add("DateTime?");
                     }
                     else if (item.Attribute("select").Value.StartsWith("number("))
                     {
-                        elementTypes.Add("Double");
+                        elementTypes.Add("Double?");
                     }
                     else if(Int32.TryParse(item.Attribute("select").Value,out number))
                     {
-                        elementTypes.Add("Int32");
+                        elementTypes.Add("Int32?");
                     }    
                     else
                     {

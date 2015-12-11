@@ -12,9 +12,9 @@
         private Dictionary<string, string> xsdTypeToCSharpType = new Dictionary<string, string>
         {
             { "string", CSharpTypeConstant.SystemString },
-            { "date", "System.DateTime" },
-            { "decimal", "System.Double" },
-            { "integer",  CSharpTypeConstant.SystemInt32 },
+            { "date", CSharpTypeConstant.SystemDateTime },
+            { "decimal", CSharpTypeConstant.SystemDouble },
+            { ,  CSharpTypeConstant.SystemInt32 },
         };
 
         public List<ClassParameter> Parse(IEnumerable<XNode> inputNodes, string targetNameSpace)
