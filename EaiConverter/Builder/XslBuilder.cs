@@ -63,7 +63,7 @@ namespace EaiConverter.Builder
 
             bool isAlistElement = false;
 
-            var listElements = new Dictionary<string, bool>();
+            var listElements = new Dictionary<string, int>();
 
             foreach (var inputNode in inputNodes)
             {
@@ -83,28 +83,37 @@ namespace EaiConverter.Builder
                     if (isAlistElement)
                     {
                         hasTheListBeenInitialised = listElements.ContainsKey(element.Name.LocalName);
+
                         if (!hasTheListBeenInitialised)
                         {
-                            if (string.IsNullOrEmpty(parent))
-                            {
-                                codeStatements.Append(this.tab + "List<" + returnType + "> ");
-                            }
+                            //if (string.IsNullOrEmpty(parent))
+                            //{
+                            codeStatements.Append(this.tab + "List<" + returnType + "> ");
+                            //}
 
-                            codeStatements.Append(variableReference + " = new List<" + returnType + ">();\n");
-                            listElements.Add(element.Name.LocalName, true);
-                            if (!IsBasicReturnType(returnType))
-                            {
-                                codeStatements.Append(
-                                    returnType + " temp" + element.Name.LocalName + " = new " + returnType + "();\n");
-                            }
-                            else
-                            {
-                                codeStatements.Append(
-                                    returnType + " temp" + element.Name.LocalName + ";\n");
-                            }
+                            codeStatements.Append("temp" + element.Name.LocalName + "List = new List<" + returnType + ">();\n");
+                            listElements.Add(element.Name.LocalName, 1);
+                        }
+                        var counter = listElements[element.Name.LocalName];
+                        if (!IsBasicReturnType(returnType))
+                        {
+                            codeStatements.Append(
+                                returnType + " temp" + element.Name.LocalName + counter + " = new " + returnType + "();\n");
+                        }
+                        else
+                        {
+                            codeStatements.Append(
+                                returnType + " temp" + element.Name.LocalName + counter + ";\n");
                         }
 
-                        codeStatements.Append(this.Build(element.Nodes(), "temp" + element.Name.LocalName));
+
+                        codeStatements.Append(this.Build(element.Nodes(), "temp" + element.Name.LocalName + counter));
+                        codeStatements.Append("temp" + element.Name.LocalName + "List.Add(temp" + element.Name.LocalName + counter + ");\n");
+                        if (this.IsTheLastElementOfTheList(element, inputNodes,counter))
+                        {
+                            codeStatements.Append(variableReference + " = temp" + element.Name.LocalName + "List.ToArray();\n");
+                        }
+                        listElements[element.Name.LocalName] = counter + 1;
                     }
                     else if (returnType == null)
                     {
@@ -152,12 +161,12 @@ namespace EaiConverter.Builder
                             codeStatements.Append(this.Build(element.Nodes(), parent + "." + VariableHelper.ToSafeType(element.Name.LocalName)));
                         }
                     }
-                    if (isAlistElement)
-                    {
+                    //if (isAlistElement)
+                    //{
                         //recursive call to get the value
                         //codeStatements.Append(variableReference + ".Add(" + this.Build(element.Nodes(), parent) + ");\n");
-                        codeStatements.Append(variableReference + ".Add(temp" + VariableHelper.ToSafeType(element.Name.LocalName) + ");\n");
-                    }
+
+                    //}
 
                 }
                 else
@@ -318,6 +327,19 @@ namespace EaiConverter.Builder
                          select a).Count();
 
             if (count > 1)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public bool IsTheLastElementOfTheList(XElement inputElement, IEnumerable<XNode> inputNodes, int counter)
+        {
+            int count = (from a in inputNodes
+                where ((XElement)a).Name == inputElement.Name
+                select a).Count();
+
+            if (count == counter)
             {
                 return true;
             }

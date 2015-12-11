@@ -353,12 +353,14 @@ sqlParams.AdminID = null;
             var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build (doc.Nodes()));
 
             Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
-sqlParams.parameter = new List<System.String>();
-System.String tempparameter;
-tempparameter = ""testvalue1"";
-sqlParams.parameter.Add(tempparameter);
-tempparameter = ""testvalue2"";
-sqlParams.parameter.Add(tempparameter);
+List<System.String> tempparameterList = new List<System.String>();
+System.String tempparameter1;
+tempparameter1 = ""testvalue1"";
+tempparameterList.Add(tempparameter1);
+System.String tempparameter2;
+tempparameter2 = ""testvalue2"";
+tempparameterList.Add(tempparameter2);
+sqlParams.parameter = tempparameterList.ToArray();
 
 ", generateCode);
         }
@@ -386,12 +388,14 @@ sqlParams.parameter.Add(tempparameter);
             var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build (doc.Nodes()));
 
             Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
-sqlParams.parameter = new List<parameter>();
-parameter tempparameter = new parameter();
-tempparameter.subParam = ""testvalue1"";
-sqlParams.parameter.Add(tempparameter);
-tempparameter.subParam = ""testvalue2"";
-sqlParams.parameter.Add(tempparameter);
+List<parameter> tempparameterList = new List<parameter>();
+parameter tempparameter1 = new parameter();
+tempparameter1.subParam = ""testvalue1"";
+tempparameterList.Add(tempparameter1);
+parameter tempparameter2 = new parameter();
+tempparameter2.subParam = ""testvalue2"";
+tempparameterList.Add(tempparameter2);
+sqlParams.parameter = tempparameterList.ToArray();
 
 ", generateCode.ToString());
         }
