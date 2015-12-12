@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
+    using System.Xml.Serialization;
 
     public class TibcoXslHelper
     {
@@ -88,10 +90,25 @@
             return inputString.Substring (startindex-1, endindex-1);
         }
 
-        //usage a string, usage sample : tib:render-xml(myvariable, true()) 
-        public static string RenderXml(string inputString, bool isSomething)
+        public static string RenderXml(object dataToSerialize)
         {
-            return inputString;
+            return RenderXml(dataToSerialize, true);
+        }
+
+        //usage a string, usage sample : tib:render-xml(myvariable, true()) 
+        public static string RenderXml(object dataToSerialize, bool isSomething)
+        {
+            if (dataToSerialize == null)
+            {
+                return null;
+            }
+
+            using (StringWriter stringwriter = new System.IO.StringWriter())
+            {
+                var serializer = new XmlSerializer(dataToSerialize.GetType());
+                serializer.Serialize(stringwriter, dataToSerialize);
+                return stringwriter.ToString();
+            }
         }
 
         // usage tib:trim : tib:trim(myvariable)

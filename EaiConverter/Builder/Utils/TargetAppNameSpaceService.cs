@@ -4,18 +4,18 @@
 
     public class TargetAppNameSpaceService
     {
-        public const string myAppName = "MyApp";
-        public const string domainServiceNamespaceName = myAppName + ".Mydomain.Service";
-        public const string dataAccessNamespace = myAppName + ".Mydomain.DataAccess";
-        public const string dataAccessCommonNamespace = myAppName + ".Mydomain.DataAccess.Common";
-        public const string loggerNameSpace = myAppName + ".Tools.Logging";
-        public const string xmlToolsNameSpace = myAppName + ".Tools.Xml";
-        public const string sharedVariableNameSpace = myAppName + ".Tools.SharedVariable";
-        public const string EventSourcingNameSpace = myAppName + ".Tools.EventSourcing";
-        public const string domainContractNamespaceName = myAppName + ".Mydomain.Service.Contract";
-        public const string javaToolsNameSpace = myAppName + ".Tools.Java";
+        public static string myAppName = "MyApp";
+        public static string domainServiceNamespaceName = myAppName + ".Mydomain.Service";
+        public static string dataAccessNamespace = myAppName + ".Mydomain.DataAccess";
+        public static string dataAccessCommonNamespace = myAppName + ".Mydomain.DataAccess.Common";
+        public static string loggerNameSpace = myAppName + ".Tools.Logging";
+        public static string xmlToolsNameSpace = myAppName + ".Tools.Xml";
+        public static string sharedVariableNameSpace = myAppName + ".Tools.SharedVariable";
+        public static string EventSourcingNameSpace = myAppName + ".Tools.EventSourcing";
+        public static string domainContractNamespaceName = myAppName + ".Mydomain.Service.Contract";
+        public static string javaToolsNameSpace = myAppName + ".Tools.Java";
 
-        public const string EngineCommandNamespace = myAppName + ".Tools.EngineCommand";
+        public static string EngineCommandNamespace = myAppName + ".Tools.EngineCommand";
 
         public static string ConvertXsdImportToNameSpace(string schemaLocation)
 		{

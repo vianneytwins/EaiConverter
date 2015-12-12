@@ -14,7 +14,7 @@
             { "string", CSharpTypeConstant.SystemString },
             { "date", CSharpTypeConstant.SystemDateTime },
             { "decimal", CSharpTypeConstant.SystemDouble },
-            { ,  CSharpTypeConstant.SystemInt32 },
+            { "integer",  CSharpTypeConstant.SystemInt32 },
         };
 
         public List<ClassParameter> Parse(IEnumerable<XNode> inputNodes, string targetNameSpace)

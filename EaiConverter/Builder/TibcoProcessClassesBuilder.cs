@@ -37,7 +37,7 @@
             var targetUnit = new CodeCompileUnit();
 
             // create the namespace
-            var processNamespace = new CodeNamespace(tibcoBwProcessToGenerate.ShortNameSpace);
+            var processNamespace = new CodeNamespace(TargetAppNameSpaceService.myAppName + "." + tibcoBwProcessToGenerate.ShortNameSpace);
 
             processNamespace.Imports.AddRange(this.GenerateImport(tibcoBwProcessToGenerate));
 
@@ -141,7 +141,7 @@
             {
                 foreach (var xsdImport in tibcoBwProcessToGenerate.XsdImports)
                 {
-					imports.Add(new CodeNamespaceImport("global::" + TargetAppNameSpaceService.ConvertXsdImportToNameSpace(xsdImport.SchemaLocation)));
+                    imports.Add(new CodeNamespaceImport(TargetAppNameSpaceService.myAppName + "." + TargetAppNameSpaceService.ConvertXsdImportToNameSpace(xsdImport.SchemaLocation)));
                 }
             }
 

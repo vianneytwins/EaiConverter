@@ -1,4 +1,6 @@
-﻿namespace EaiConverter
+﻿using EaiConverter.Builder.Utils;
+
+namespace EaiConverter
 {
     using System;
 
@@ -40,7 +42,15 @@
                     initFilePath = args[2];
                     Log.Info("You've inputed FILTERING FILE: " + initFilePath);
                 }
-                
+
+                // TODO VC : improve arg management in input
+                if (args.Length > 3)
+                {
+                    var targetApplicationName = args[3];
+                    TargetAppNameSpaceService.myAppName = targetApplicationName;
+                    Log.Info("You've inputed an application namespace: " + targetApplicationName);
+                }
+
                 fileFilter = new FileFilter(initFilePath);
                 ConfigurationApp.SaveProperty(ProjectDirectory, sourceDirectory);
 
