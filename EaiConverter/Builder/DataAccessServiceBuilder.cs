@@ -11,7 +11,6 @@
 
     public class DataAccessServiceBuilder
     {
-        
         const string DataAccessVariableName = "dataAccess";
 
         public const string ExecuteSqlQueryMethodName = "ExecuteQuery";
@@ -20,7 +19,7 @@
         public CodeNamespace Build(JdbcQueryActivity jdbcQueryActivity)
         {
 
-            var serviceNameSpace = new CodeNamespace(TargetAppNameSpaceService.domainServiceNamespaceName);
+            var serviceNameSpace = new CodeNamespace(TargetAppNameSpaceService.domainServiceNamespaceName());
             serviceNameSpace.Imports.AddRange(this.GenerateServiceImport(jdbcQueryActivity));
 
 
@@ -46,8 +45,8 @@
             var imports = new List<CodeNamespaceImport>
             {
                 new CodeNamespaceImport("System"),
-                new CodeNamespaceImport(TargetAppNameSpaceService.domainContractNamespaceName),
-                new CodeNamespaceImport(TargetAppNameSpaceService.dataAccessNamespace)
+                new CodeNamespaceImport(TargetAppNameSpaceService.domainContractNamespaceName()),
+                new CodeNamespaceImport(TargetAppNameSpaceService.dataAccessNamespace())
             };
 
             if (jdbcQueryActivity.QueryOutputStatementParameters != null)
@@ -64,7 +63,7 @@
             var fields = new List<CodeMemberField> {
                 new CodeMemberField {
                     Name = DataAccessVariableName,
-                    Type = new CodeTypeReference (VariableHelper.ToClassName (jdbcQueryActivity.ClassName) + "DataAccess"),
+                    Type = new CodeTypeReference(VariableHelper.ToClassName("I" + jdbcQueryActivity.ClassName) + "DataAccess"),
                     Attributes = MemberAttributes.Private 
                 },
             };

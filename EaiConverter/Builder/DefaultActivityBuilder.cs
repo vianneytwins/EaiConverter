@@ -21,7 +21,7 @@ namespace EaiConverter.Builder
 		{
 			return new List<CodeNamespaceImport>
 			{
-				new CodeNamespaceImport (TargetAppNameSpaceService.domainContractNamespaceName)
+				new CodeNamespaceImport (TargetAppNameSpaceService.domainContractNamespaceName())
 			};
 		}
 

@@ -1,14 +1,15 @@
-﻿using System.CodeDom;
-using System.Reflection;
-using EaiConverter.Builder.Utils;
-
-namespace EaiConverter.Builder
+﻿namespace EaiConverter.Builder
 {
-	public class DatabaseAttributeBuilder
+    using System.CodeDom;
+    using System.Reflection;
+
+    using EaiConverter.Builder.Utils;
+
+    public class DatabaseAttributeBuilder
 	{
 		public CodeNamespace Build (string dataBaseAttributeName)
 		{
-			var dataBaseAttributeNameSpace = new CodeNamespace (TargetAppNameSpaceService.dataAccessCommonNamespace);
+			var dataBaseAttributeNameSpace = new CodeNamespace (TargetAppNameSpaceService.dataAccessCommonNamespace());
 			dataBaseAttributeNameSpace.Imports.Add (new CodeNamespaceImport ("System"));
 
 			var dataAccessToGenerate = new CodeTypeDeclaration ();

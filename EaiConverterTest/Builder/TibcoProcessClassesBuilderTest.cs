@@ -133,7 +133,7 @@
             var className = classToGenerate.Namespaces[3].Types[0].Name;
 
             Assert.AreEqual("group", className);
-            Assert.AreEqual("MyNamespace.myProcessTestVariables", classToGenerate.Namespaces[3].Name);
+            Assert.AreEqual("MyApp.MyNamespace.myProcessTestVariables", classToGenerate.Namespaces[3].Name);
         }
 
 
@@ -315,7 +315,7 @@
             };
 
             var expected = @"this.logger.Info(""Start Activity: End of type: endType"");
-MyNamespace.myProcessTestInputOutputModel.EquityRecord EquityRecord = new MyNamespace.myProcessTestInputOutputModel.EquityRecord();
+MyApp.MyNamespace.myProcessTestInputOutputModel.EquityRecord EquityRecord = new MyApp.MyNamespace.myProcessTestInputOutputModel.EquityRecord();
 EquityRecord.xmlString = ""TestString"";
 
 return EquityRecord;

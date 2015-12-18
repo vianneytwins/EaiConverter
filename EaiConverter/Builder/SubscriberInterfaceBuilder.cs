@@ -24,7 +24,7 @@ namespace EaiConverter.Builder
         private CodeNamespace GenerateSubscriberInterface()
         {
             var subscriberInterfaceNamespace = new CodeNamespace();
-            subscriberInterfaceNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace;
+            subscriberInterfaceNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace();
             subscriberInterfaceNamespace.Imports.Add(new CodeNamespaceImport("System"));
 
             var subscriberInterfaceClass = new CodeTypeDeclaration(InterfaceSubscriberName);

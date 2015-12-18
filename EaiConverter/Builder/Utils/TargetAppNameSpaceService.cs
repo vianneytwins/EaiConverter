@@ -4,18 +4,64 @@
 
     public class TargetAppNameSpaceService
     {
-        public static string myAppName = "MyApp";
-        public static string domainServiceNamespaceName = myAppName + ".Mydomain.Service";
-        public static string dataAccessNamespace = myAppName + ".Mydomain.DataAccess";
-        public static string dataAccessCommonNamespace = myAppName + ".Mydomain.DataAccess.Common";
-        public static string loggerNameSpace = myAppName + ".Tools.Logging";
-        public static string xmlToolsNameSpace = myAppName + ".Tools.Xml";
-        public static string sharedVariableNameSpace = myAppName + ".Tools.SharedVariable";
-        public static string EventSourcingNameSpace = myAppName + ".Tools.EventSourcing";
-        public static string domainContractNamespaceName = myAppName + ".Mydomain.Service.Contract";
-        public static string javaToolsNameSpace = myAppName + ".Tools.Java";
+        private static string myAppFirstName = "MyApp";
 
-        public static string EngineCommandNamespace = myAppName + ".Tools.EngineCommand";
+        public static string MyAppName { get; set; }
+
+        public static string myAppName()
+        {
+            return MyAppName == null ? myAppFirstName: MyAppName ;
+        }
+
+        public static string domainServiceNamespaceName()
+        {
+            return myAppName() + ".Mydomain.Service";
+        }
+
+        public static string dataAccessNamespace()
+        {
+            return myAppName() + ".Mydomain.DataAccess";
+        }
+
+        public static string dataAccessCommonNamespace()
+        {
+            return myAppName() + ".Mydomain.DataAccess.Common";
+        }
+
+        public static string loggerNameSpace()
+        {
+            return myAppName() + ".Tools.Logging";
+        }
+
+        public static string xmlToolsNameSpace()
+        {
+            return myAppName() + ".Tools.Xml";
+        }
+
+        public static string sharedVariableNameSpace()
+        {
+            return myAppName() + ".Tools.SharedVariable";
+        }
+
+        public static string EventSourcingNameSpace()
+        {
+            return myAppName() + ".Tools.EventSourcing";
+        }
+
+        public static string domainContractNamespaceName()
+        {
+            return myAppName() + ".Mydomain.Service.Contract";
+        }
+
+        public static string javaToolsNameSpace()
+        {
+            return myAppName() + ".Tools.Java";
+        }
+
+        public static string EngineCommandNamespace()
+        {
+            return myAppName() + ".Tools.EngineCommand";
+        }
 
         public static string ConvertXsdImportToNameSpace(string schemaLocation)
 		{

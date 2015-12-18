@@ -55,7 +55,7 @@
  
 		public List<CodeNamespaceImport> GenerateImports(Activity activity)
 		{
-			return new List<CodeNamespaceImport>{new CodeNamespaceImport(TargetAppNameSpaceService.xmlToolsNameSpace)};
+			return new List<CodeNamespaceImport>{new CodeNamespaceImport(TargetAppNameSpaceService.xmlToolsNameSpace())};
 		}
 
         public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
@@ -157,7 +157,7 @@
 
 		private string TargetNamespace(Activity activity)
 		{
-			return TargetAppNameSpaceService.domainContractNamespaceName + "." + VariableHelper.ToClassName(activity.Name); 
+			return TargetAppNameSpaceService.domainContractNamespaceName() + "." + VariableHelper.ToClassName(activity.Name); 
 		}
     }
 }

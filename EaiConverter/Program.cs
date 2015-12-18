@@ -47,7 +47,7 @@ namespace EaiConverter
                 if (args.Length > 3)
                 {
                     var targetApplicationName = args[3];
-                    TargetAppNameSpaceService.myAppName = targetApplicationName;
+                    TargetAppNameSpaceService.MyAppName = targetApplicationName;
                     Log.Info("You've inputed an application namespace: " + targetApplicationName);
                 }
 

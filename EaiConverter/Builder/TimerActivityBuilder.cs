@@ -44,7 +44,7 @@ namespace EaiConverter.Builder
 		{
 			return new List<CodeNamespaceImport>
 			{
-				new CodeNamespaceImport(TargetAppNameSpaceService.EventSourcingNameSpace),
+				new CodeNamespaceImport(TargetAppNameSpaceService.EventSourcingNameSpace()),
 				new CodeNamespaceImport("System.Threading")
 			};
 		}
@@ -104,7 +104,7 @@ namespace EaiConverter.Builder
         private CodeNamespace GenerateTimerSubscriberImplementation()
         {
             var timerSubscriberNamespace = new CodeNamespace();
-            timerSubscriberNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace;
+            timerSubscriberNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace();
             timerSubscriberNamespace.Imports.Add(new CodeNamespaceImport("System"));
 
             var timerSubscriberClass = new CodeTypeDeclaration("TimerSubscriber");

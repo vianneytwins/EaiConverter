@@ -116,7 +116,7 @@
 
         private string TargetNamespace (Activity activity)
 		{
-			return TargetAppNameSpaceService.domainContractNamespaceName + "." + VariableHelper.ToClassName(activity.Name); 
+            return TargetAppNameSpaceService.domainContractNamespaceName() + "." + VariableHelper.ToClassName(activity.Name); 
 		}
     }
 }

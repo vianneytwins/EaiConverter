@@ -1,16 +1,16 @@
-﻿using System.CodeDom;
-
-using EaiConverter.Builder.Utils;
-using EaiConverter.Utils;
-
-namespace EaiConverter.Builder
+﻿namespace EaiConverter.Builder
 {
-	public class DataAccessInterfacesCommonBuilder
+    using System.CodeDom;
+
+    using EaiConverter.Builder.Utils;
+    using EaiConverter.Utils;
+
+    public class DataAccessInterfacesCommonBuilder
 	{
 
 
 		public CodeNamespace Build () {
-			var namespaceResult = new CodeNamespace (TargetAppNameSpaceService.dataAccessCommonNamespace);
+			var namespaceResult = new CodeNamespace (TargetAppNameSpaceService.dataAccessCommonNamespace());
 
 			this.GenerateImports (namespaceResult);
 

@@ -38,7 +38,7 @@
         {
             return new List<CodeNamespaceImport>
             {
-                new CodeNamespaceImport(TargetAppNameSpaceService.EventSourcingNameSpace),
+                new CodeNamespaceImport(TargetAppNameSpaceService.EventSourcingNameSpace()),
                 new CodeNamespaceImport("System.Threading")
             };
         }

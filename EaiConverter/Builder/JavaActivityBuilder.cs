@@ -40,7 +40,7 @@ namespace EaiConverter.Builder
             if (ConfigurationApp.GetProperty ("IsJavaInterfaceAlreadyGenerated") != "true")
             {
                 //TODO : Refactor because it's a bit dirty
-                var javaServiceInterfaceNameSpace = InterfaceExtractorFromClass.Extract(javaClass, TargetAppNameSpaceService.javaToolsNameSpace);
+                var javaServiceInterfaceNameSpace = InterfaceExtractorFromClass.Extract(javaClass, TargetAppNameSpaceService.javaToolsNameSpace());
                 javaServiceInterfaceNameSpace.Types[0].Name = IJavaActivityService;
                 codeNameSpaces.Add(javaServiceInterfaceNameSpace);
                 ConfigurationApp.SaveProperty("IsJavaInterfaceAlreadyGenerated", "true");
@@ -54,8 +54,8 @@ namespace EaiConverter.Builder
         {
             return new List<CodeNamespaceImport>
             {
-                new CodeNamespaceImport(TargetAppNameSpaceService.javaToolsNameSpace),
-                new CodeNamespaceImport(TargetAppNameSpaceService.javaToolsNameSpace)
+                new CodeNamespaceImport(TargetAppNameSpaceService.javaToolsNameSpace()),
+                new CodeNamespaceImport(TargetAppNameSpaceService.javaToolsNameSpace())
             };
         }
 
@@ -76,7 +76,7 @@ namespace EaiConverter.Builder
 
         public CodeNamespaceImport[] GenerateImports()
         {
-            return new CodeNamespaceImport[2] { new CodeNamespaceImport("System"), new CodeNamespaceImport(TargetAppNameSpaceService.javaToolsNameSpace) };
+            return new CodeNamespaceImport[2] { new CodeNamespaceImport("System"), new CodeNamespaceImport(TargetAppNameSpaceService.javaToolsNameSpace()) };
         }
 
         public CodeTypeDeclaration GenerateClass(JavaActivity activity)

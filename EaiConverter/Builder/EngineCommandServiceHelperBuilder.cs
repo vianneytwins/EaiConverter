@@ -19,7 +19,7 @@
 
         public CodeNamespaceCollection Build()
         {
-            var engineCommandNamespace = new CodeNamespace(TargetAppNameSpaceService.EngineCommandNamespace);
+            var engineCommandNamespace = new CodeNamespace(TargetAppNameSpaceService.EngineCommandNamespace());
 
             // Generate the Service
             engineCommandNamespace.Imports.AddRange(this.GenerateImports());
@@ -27,7 +27,7 @@
             engineCommandNamespace.Types.Add(engineCommandServiceClass);
 
             // Generate the corresponding interface
-            var engineCommandInterface = InterfaceExtractorFromClass.Extract(engineCommandServiceClass, TargetAppNameSpaceService.EngineCommandNamespace);
+            var engineCommandInterface = InterfaceExtractorFromClass.Extract(engineCommandServiceClass, TargetAppNameSpaceService.EngineCommandNamespace());
             engineCommandInterface.Types.AddRange(this.GenerateReturnOutputClasses());
 
             return new CodeNamespaceCollection { engineCommandNamespace, engineCommandInterface };

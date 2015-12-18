@@ -37,7 +37,7 @@
             var targetUnit = new CodeCompileUnit();
 
             // create the namespace
-            var processNamespace = new CodeNamespace(TargetAppNameSpaceService.myAppName + "." + tibcoBwProcessToGenerate.ShortNameSpace);
+            var processNamespace = new CodeNamespace(TargetAppNameSpaceService.myAppName() + "." + tibcoBwProcessToGenerate.ShortNameSpace);
 
             processNamespace.Imports.AddRange(this.GenerateImport(tibcoBwProcessToGenerate));
 
@@ -87,8 +87,8 @@
             this.RemoveDuplicateFields(tibcoBwProcessClassModel);
 
             // Generate ouput and input classes from start and End Activity
-            targetUnit.Namespaces.Add(this.GenerateInputOutputClasses(tibcoBwProcessToGenerate.EndActivity, tibcoBwProcessToGenerate.InputAndOutputNameSpace));
-            targetUnit.Namespaces.Add(this.GenerateInputOutputClasses(tibcoBwProcessToGenerate.StartActivity, tibcoBwProcessToGenerate.InputAndOutputNameSpace));
+            targetUnit.Namespaces.Add(this.GenerateInputOutputClasses(tibcoBwProcessToGenerate.EndActivity, TargetAppNameSpaceService.myAppName() + "." + tibcoBwProcessToGenerate.InputAndOutputNameSpace));
+            targetUnit.Namespaces.Add(this.GenerateInputOutputClasses(tibcoBwProcessToGenerate.StartActivity, TargetAppNameSpaceService.myAppName() + "." + tibcoBwProcessToGenerate.InputAndOutputNameSpace));
 
             // Add the invocation code of the End if any
             if (tibcoBwProcessToGenerate.EndActivity != null)
@@ -109,10 +109,10 @@
 
         public CodeNamespace GenerateProcessInterface(TibcoBWProcess tibcoBwProcessToGenerate, CodeTypeDeclaration tibcoBwProcessClassModel)
         {
-            var interfaceNameSpace = InterfaceExtractorFromClass.Extract(tibcoBwProcessClassModel, tibcoBwProcessToGenerate.ShortNameSpace);
+            var interfaceNameSpace = InterfaceExtractorFromClass.Extract(tibcoBwProcessClassModel, TargetAppNameSpaceService.myAppName() + "." + tibcoBwProcessToGenerate.ShortNameSpace);
             if ((tibcoBwProcessToGenerate.StartActivity != null && tibcoBwProcessToGenerate.StartActivity.Parameters != null) || (tibcoBwProcessToGenerate.EndActivity != null && tibcoBwProcessToGenerate.EndActivity.Parameters != null))
             {
-                interfaceNameSpace.Imports.Add(new CodeNamespaceImport(tibcoBwProcessToGenerate.InputAndOutputNameSpace));
+                interfaceNameSpace.Imports.Add(new CodeNamespaceImport(TargetAppNameSpaceService.myAppName() + "." +tibcoBwProcessToGenerate.InputAndOutputNameSpace));
             }
             return interfaceNameSpace;
         }
@@ -127,21 +127,21 @@
             var imports = new List<CodeNamespaceImport>
             {
                 new CodeNamespaceImport("System"),
-                new CodeNamespaceImport(TargetAppNameSpaceService.xmlToolsNameSpace),
-                new CodeNamespaceImport(TargetAppNameSpaceService.loggerNameSpace)
+                new CodeNamespaceImport(TargetAppNameSpaceService.xmlToolsNameSpace()),
+                new CodeNamespaceImport(TargetAppNameSpaceService.loggerNameSpace())
             };
 
             if ((tibcoBwProcessToGenerate.StartActivity != null && tibcoBwProcessToGenerate.StartActivity.Parameters != null)
                 || (tibcoBwProcessToGenerate.EndActivity != null && tibcoBwProcessToGenerate.EndActivity.Parameters != null))
             {
-                imports.Add(new CodeNamespaceImport(tibcoBwProcessToGenerate.InputAndOutputNameSpace));
+                imports.Add(new CodeNamespaceImport(TargetAppNameSpaceService.myAppName() + "." + tibcoBwProcessToGenerate.InputAndOutputNameSpace));
             }
 
             if (tibcoBwProcessToGenerate.XsdImports != null)
             {
                 foreach (var xsdImport in tibcoBwProcessToGenerate.XsdImports)
                 {
-                    imports.Add(new CodeNamespaceImport(TargetAppNameSpaceService.myAppName + "." + TargetAppNameSpaceService.ConvertXsdImportToNameSpace(xsdImport.SchemaLocation)));
+                    imports.Add(new CodeNamespaceImport(TargetAppNameSpaceService.myAppName() + "." + TargetAppNameSpaceService.ConvertXsdImportToNameSpace(xsdImport.SchemaLocation)));
                 }
             }
 
@@ -414,7 +414,7 @@
             if (returnType.BaseType != CSharpTypeConstant.SystemVoid)
             {
                 statements.AddRange(DefaultActivityBuilder.LogActivity(tibcoBwProcessToGenerate.EndActivity));
-                statements.AddRange(new XslBuilder(new XpathBuilder()).Build(tibcoBwProcessToGenerate.InputAndOutputNameSpace, tibcoBwProcessToGenerate.EndActivity.InputBindings));
+                statements.AddRange(new XslBuilder(new XpathBuilder()).Build(TargetAppNameSpaceService.myAppName() + "." + tibcoBwProcessToGenerate.InputAndOutputNameSpace, tibcoBwProcessToGenerate.EndActivity.InputBindings));
                 var returnName = tibcoBwProcessToGenerate.EndActivity.Parameters[0].Name;
            
                 var returnStatement = new CodeMethodReturnStatement(new CodeVariableReferenceExpression(returnName));
@@ -447,7 +447,7 @@
                         try
                         {
                                 processVariableNameNamespaces.Add(
-                                    this.xsdClassGenerator.Build(item.ObjectXNodes, tibcoBwProcessToGenerate.VariablesNameSpace));
+                                    this.xsdClassGenerator.Build(item.ObjectXNodes, TargetAppNameSpaceService.myAppName() + "." + tibcoBwProcessToGenerate.VariablesNameSpace));
                         }
                         catch (Exception e)
                         {

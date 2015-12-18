@@ -34,7 +34,7 @@ namespace EaiConverter.Builder
 
         public List<CodeNamespaceImport> GenerateImports(Activity activity)
         {
-            return new List<CodeNamespaceImport>{new CodeNamespaceImport(TargetAppNameSpaceService.sharedVariableNameSpace)};
+            return new List<CodeNamespaceImport>{new CodeNamespaceImport(TargetAppNameSpaceService.sharedVariableNameSpace())};
         }
 
         public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)

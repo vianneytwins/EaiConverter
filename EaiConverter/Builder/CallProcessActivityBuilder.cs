@@ -30,10 +30,10 @@ namespace EaiConverter.Builder
         {
 			var import4Activities = new List<CodeNamespaceImport>();
 			var callProcessActivity = (CallProcessActivity)activity;
-            import4Activities.Add(new CodeNamespaceImport(TargetAppNameSpaceService.myAppName + "." + TargetAppNameSpaceService.RemoveFirstDot(callProcessActivity.TibcoProcessToCall.ShortNameSpace)));
+            import4Activities.Add(new CodeNamespaceImport(TargetAppNameSpaceService.myAppName() + "." + TargetAppNameSpaceService.RemoveFirstDot(callProcessActivity.TibcoProcessToCall.ShortNameSpace)));
             if (IsTheProcessInputRequiresAnImport(callProcessActivity))
             {
-                import4Activities.Add(new CodeNamespaceImport(TargetAppNameSpaceService.myAppName + "." + TargetAppNameSpaceService.RemoveFirstDot(callProcessActivity.TibcoProcessToCall.InputAndOutputNameSpace)));
+                import4Activities.Add(new CodeNamespaceImport(TargetAppNameSpaceService.myAppName() + "." + TargetAppNameSpaceService.RemoveFirstDot(callProcessActivity.TibcoProcessToCall.InputAndOutputNameSpace)));
             }
 
 			return import4Activities;
@@ -89,7 +89,7 @@ namespace EaiConverter.Builder
             {
                 invocationCodeCollection.AddRange(
                     this.xslBuilder.Build(
-                        callProcessActivity.TibcoProcessToCall.InputAndOutputNameSpace,
+                        TargetAppNameSpaceService.myAppName() + "." + callProcessActivity.TibcoProcessToCall.InputAndOutputNameSpace,
                         callProcessActivity.InputBindings));
             }
             else
@@ -120,7 +120,7 @@ namespace EaiConverter.Builder
 
         private static CodeTypeReference GetServiceFieldType(CallProcessActivity callProcessActivity)
 		{
-            return new CodeTypeReference(TargetAppNameSpaceService.myAppName + "." + callProcessActivity.TibcoProcessToCall.ShortNameSpace + ".I" + VariableHelper.ToClassName(callProcessActivity.TibcoProcessToCall.ProcessName));
+            return new CodeTypeReference(TargetAppNameSpaceService.myAppName() + "." + callProcessActivity.TibcoProcessToCall.ShortNameSpace + ".I" + VariableHelper.ToClassName(callProcessActivity.TibcoProcessToCall.ProcessName));
 		}
 
 		private static string GetServiceFieldName(CallProcessActivity callProcessActivity)

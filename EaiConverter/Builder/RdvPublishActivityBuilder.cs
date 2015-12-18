@@ -44,7 +44,7 @@ namespace EaiConverter.Builder
 		public CodeNamespace GeneratePublisherInterface ()
 		{
 			var publisherInterfaceNamespace = new CodeNamespace ();
-			publisherInterfaceNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace;
+            publisherInterfaceNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace();
 			publisherInterfaceNamespace.Imports.Add (new CodeNamespaceImport("System"));
 
 			var publisherInterfaceClass = new CodeTypeDeclaration(interfaceSubscriberName);
@@ -61,12 +61,12 @@ namespace EaiConverter.Builder
 		CodeNamespace GenerateTibcoPublisherImplementation ()
 		{
 			var publisherRdvImplementationNamespace = new CodeNamespace ();
-			publisherRdvImplementationNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace;
+            publisherRdvImplementationNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace();
 			publisherRdvImplementationNamespace.Imports.Add (new CodeNamespaceImport("System"));
 
 			var publisherImplementationClass = new CodeTypeDeclaration("RdvPublisher");
 			publisherImplementationClass.IsClass = true;
-			publisherImplementationClass.BaseTypes.Add (TargetAppNameSpaceService.EventSourcingNameSpace+ "." + interfaceSubscriberName);
+            publisherImplementationClass.BaseTypes.Add(TargetAppNameSpaceService.EventSourcingNameSpace() + "." + interfaceSubscriberName);
 
 			var sendMethod = this.GenerateSendMethod();
 
@@ -120,7 +120,7 @@ namespace EaiConverter.Builder
 		{
 			return new List<CodeNamespaceImport>
 			{
-				new CodeNamespaceImport(TargetAppNameSpaceService.EventSourcingNameSpace),
+				new CodeNamespaceImport(TargetAppNameSpaceService.EventSourcingNameSpace()),
 			};
 		}
 

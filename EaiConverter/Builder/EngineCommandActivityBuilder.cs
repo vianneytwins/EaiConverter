@@ -39,7 +39,7 @@
 		{
 			return new List<CodeNamespaceImport>
 			           {
-			               new CodeNamespaceImport(TargetAppNameSpaceService.EngineCommandNamespace)
+			               new CodeNamespaceImport(TargetAppNameSpaceService.EngineCommandNamespace())
 			           };
 		}
 

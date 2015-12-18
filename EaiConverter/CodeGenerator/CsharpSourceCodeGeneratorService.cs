@@ -87,7 +87,7 @@ namespace EaiConverter.CodeGenerator
             Directory.CreateDirectory(SolutionDestinationPath);
             Directory.CreateDirectory(ProjectDestinationPath);
             Directory.CreateDirectory(ProjectDestinationPath + "/Properties");
-            Directory.CreateDirectory(ProjectDestinationPath + "/" + ConvertNamespaceToPath(TargetAppNameSpaceService.xmlToolsNameSpace));
+            Directory.CreateDirectory(ProjectDestinationPath + "/" + ConvertNamespaceToPath(TargetAppNameSpaceService.xmlToolsNameSpace()));
         }
 
         private void CreateSolutionAndProjectFiles()
@@ -107,7 +107,7 @@ namespace EaiConverter.CodeGenerator
                 file.Write(AssemblyInfo_cs);
             }
 
-            using (var file = new StreamWriter(ProjectDestinationPath + GetFileSeparator() + ConvertNamespaceToPath(TargetAppNameSpaceService.xmlToolsNameSpace) + "/TibcoXslHelper.cs"))
+            using (var file = new StreamWriter(ProjectDestinationPath + GetFileSeparator() + ConvertNamespaceToPath(TargetAppNameSpaceService.xmlToolsNameSpace()) + "/TibcoXslHelper.cs"))
             {
                 file.Write(TibcoXslHelper_cs);
             }
@@ -234,7 +234,7 @@ EndGlobal
     <Reference Include=""System.Xml"" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include=""" + ConvertNamespaceToPath(TargetAppNameSpaceService.xmlToolsNameSpace) + @"\TibcoXslHelper.cs"" />
+    <Compile Include=""" + ConvertNamespaceToPath(TargetAppNameSpaceService.xmlToolsNameSpace()) + @"\TibcoXslHelper.cs"" />
     <Compile Include=""Properties\AssemblyInfo.cs"" />
     <!-- insert file Generated here -->
   </ItemGroup>
@@ -287,7 +287,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyFileVersion(""1.0.0.0"")]
 ";
 
-        public static string TibcoXslHelper_cs = @"namespace MyApp.Tools.Xml
+        public static string TibcoXslHelper_cs = "namespace " + TargetAppNameSpaceService.myAppName() + @".Tools.Xml
 {
     using System;
     using System.Collections.Generic;

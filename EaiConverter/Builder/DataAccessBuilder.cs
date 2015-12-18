@@ -21,7 +21,7 @@
 
         public CodeNamespace Build(JdbcQueryActivity jdbcQueryActivity)
         {
-            var dataAccessNameSpace = new CodeNamespace(TargetAppNameSpaceService.dataAccessNamespace);
+            var dataAccessNameSpace = new CodeNamespace(TargetAppNameSpaceService.dataAccessNamespace());
             dataAccessNameSpace.Imports.AddRange(this.GenerateImport(jdbcQueryActivity));
 
             var dataAccessToGenerate = new CodeTypeDeclaration();
@@ -45,12 +45,12 @@
             {
                 new CodeNamespaceImport("System"),
                 new CodeNamespaceImport("System.Linq"),
-                new CodeNamespaceImport(TargetAppNameSpaceService.dataAccessCommonNamespace)
+                new CodeNamespaceImport(TargetAppNameSpaceService.dataAccessCommonNamespace())
             };
 
             if (jdbcQueryActivity.QueryOutputStatementParameters != null)
             {
-                imports.Add(new CodeNamespaceImport(TargetAppNameSpaceService.domainContractNamespaceName));
+                imports.Add(new CodeNamespaceImport(TargetAppNameSpaceService.domainContractNamespaceName()));
                 imports.Add(new CodeNamespaceImport("System.Collections.Generic"));
             }
 

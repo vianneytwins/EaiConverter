@@ -56,7 +56,7 @@ namespace EaiConverter.Test.Builder
 		{
 			var resultSetNameSpace = this.resultSetBuilder.Build (this.jdbcQueryActivity);
 			var generatedCode = TestCodeGeneratorUtils.GenerateCode (resultSetNameSpace);
-			Assert.AreEqual (@"namespace "+TargetAppNameSpaceService.domainContractNamespaceName+ @"
+			Assert.AreEqual (@"namespace "+TargetAppNameSpaceService.domainContractNamespaceName()+ @"
 {
     using System;
     

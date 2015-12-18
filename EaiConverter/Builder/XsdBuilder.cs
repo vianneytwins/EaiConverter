@@ -99,7 +99,7 @@
         public CodeNamespace Build(string fileName)
         {
             var xsdCodeNamespace = new CodeNamespace();
-            var convertXsdImportToNameSpace = TargetAppNameSpaceService.myAppName + "." + TargetAppNameSpaceService.ConvertXsdImportToNameSpace(fileName);
+            var convertXsdImportToNameSpace = TargetAppNameSpaceService.myAppName() + "." + TargetAppNameSpaceService.ConvertXsdImportToNameSpace(fileName);
             try
             {
                 var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read);

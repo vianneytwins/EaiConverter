@@ -40,7 +40,7 @@ namespace EaiConverter.Builder
 		CodeNamespace GenerateTibcoSubscriberImplementation()
 		{
 			var subscriberRdvClassNamespace = new CodeNamespace();
-			subscriberRdvClassNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace;
+            subscriberRdvClassNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace();
 			subscriberRdvClassNamespace.Imports.Add (new CodeNamespaceImport("System"));
 
 			var subscriberRdvClass = new CodeTypeDeclaration("TibcoPublisher");
@@ -89,7 +89,7 @@ namespace EaiConverter.Builder
 		{
 			return new List<CodeNamespaceImport>
 			{
-				new CodeNamespaceImport(TargetAppNameSpaceService.EventSourcingNameSpace),
+				new CodeNamespaceImport(TargetAppNameSpaceService.EventSourcingNameSpace()),
 				new CodeNamespaceImport("System.Threading")
 			};
 		}

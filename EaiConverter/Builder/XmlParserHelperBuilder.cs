@@ -17,7 +17,7 @@ namespace EaiConverter.Builder
 
         public CodeNamespaceCollection Build()
         {
-            var xmlParserHelperNameSpace = new CodeNamespace(TargetAppNameSpaceService.xmlToolsNameSpace);
+            var xmlParserHelperNameSpace = new CodeNamespace(TargetAppNameSpaceService.xmlToolsNameSpace());
 
             // Generate the Service
             xmlParserHelperNameSpace.Imports.AddRange(this.GenerateImports());
@@ -25,7 +25,7 @@ namespace EaiConverter.Builder
             xmlParserHelperNameSpace.Types.Add(xmlParserHelperService);
 
             // Generate the corresponding interface
-            var xmlParserHelperServiceInterfaceNameSpace = InterfaceExtractorFromClass.Extract(xmlParserHelperService, TargetAppNameSpaceService.xmlToolsNameSpace);
+            var xmlParserHelperServiceInterfaceNameSpace = InterfaceExtractorFromClass.Extract(xmlParserHelperService, TargetAppNameSpaceService.xmlToolsNameSpace());
 
             return new CodeNamespaceCollection{xmlParserHelperNameSpace, xmlParserHelperServiceInterfaceNameSpace};
         }

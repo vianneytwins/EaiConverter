@@ -11,7 +11,7 @@
 
         public CodeNamespaceCollection Build()
         {
-            var TibcoXslHelperNameSpace = new CodeNamespace(TargetAppNameSpaceService.xmlToolsNameSpace);
+            var TibcoXslHelperNameSpace = new CodeNamespace(TargetAppNameSpaceService.xmlToolsNameSpace());
 
             // Generate the Service
             TibcoXslHelperNameSpace.Imports.AddRange(this.GenerateImports());

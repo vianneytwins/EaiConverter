@@ -20,7 +20,8 @@
 		const string select = "Select 1";
 
 		[SetUp]
-		public void SetUp() {
+		public void SetUp()
+        {
             jdbcQueryActivity = new JdbcQueryActivity ("Currency" , ActivityType.jdbcQueryActivityType);
 			jdbcQueryActivity.QueryStatement = select;
 			jdbcQueryActivity.ClassName = jdbcQueryActivity.Name;
@@ -61,6 +62,13 @@
 			CodeNamespaceCollection classToGenerate = jdbcQueryActivityBuilder.GenerateClassesToGenerate (jdbcQueryActivity);
 			Assert.AreEqual ("sqlQueryStatement", classToGenerate [0].Types[0].Members[0].Name);
 		}
+
+        [Test]
+        public void Should_Return_Interface_Of_DataAccess_as_fields()
+        {
+            CodeNamespaceCollection classToGenerate = jdbcQueryActivityBuilder.GenerateClassesToGenerate(jdbcQueryActivity);
+            Assert.AreEqual("ICurrencyDataAccess", ((CodeMemberField)classToGenerate[2].Types[0].Members[0]).Type.BaseType);
+        }
 
 		[Test]
 		public void Should_Return_One_constant_fields_With_Value_equals_to_the_activity_Query_Value(){

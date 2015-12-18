@@ -81,17 +81,17 @@ namespace EaiConverter.Builder
                 }
 
                 var dataAccessNameSpace = this.dataAccessBuilder.Build(jdbcQueryActivity);
-                var dataAccessInterfaceNameSpace = InterfaceExtractorFromClass.Extract(dataAccessNameSpace.Types[0], TargetAppNameSpaceService.dataAccessNamespace);
+                var dataAccessInterfaceNameSpace = InterfaceExtractorFromClass.Extract(dataAccessNameSpace.Types[0], TargetAppNameSpaceService.dataAccessNamespace());
                 if (jdbcQueryActivity.QueryOutputStatementParameters != null
                     && jdbcQueryActivity.QueryOutputStatementParameters.Count != 0)
                 {
-                    dataAccessInterfaceNameSpace.Imports.Add(new CodeNamespaceImport(TargetAppNameSpaceService.domainContractNamespaceName));
+                    dataAccessInterfaceNameSpace.Imports.Add(new CodeNamespaceImport(TargetAppNameSpaceService.domainContractNamespaceName()));
                 }
 
                 dataAccessNameSpace.Types[0].BaseTypes.Add(new CodeTypeReference(dataAccessInterfaceNameSpace.Types[0].Name));
 
                 var serviceNameSpace = this.dataAccessServiceBuilder.Build(jdbcQueryActivity);
-                var serviceInterfaceNameSpace = InterfaceExtractorFromClass.Extract(serviceNameSpace.Types[0], TargetAppNameSpaceService.domainContractNamespaceName);
+                var serviceInterfaceNameSpace = InterfaceExtractorFromClass.Extract(serviceNameSpace.Types[0], TargetAppNameSpaceService.domainContractNamespaceName());
                 
                 serviceNameSpace.Types[0].BaseTypes.Add(new CodeTypeReference(serviceInterfaceNameSpace.Types[0].Name));
 
@@ -166,7 +166,7 @@ namespace EaiConverter.Builder
 
             var imports = new List<CodeNamespaceImport>
 			{
-				new CodeNamespaceImport(TargetAppNameSpaceService.domainContractNamespaceName)
+				new CodeNamespaceImport(TargetAppNameSpaceService.domainContractNamespaceName())
 			};
 
             if (jdbcQueryActivity.QueryOutputStatementParameters != null)

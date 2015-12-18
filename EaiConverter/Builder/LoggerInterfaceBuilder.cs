@@ -9,7 +9,7 @@ namespace EaiConverter.Builder
 
 
 		public CodeNamespace Build () {
-			var namespaceResult = new CodeNamespace (TargetAppNameSpaceService.loggerNameSpace);
+            var namespaceResult = new CodeNamespace(TargetAppNameSpaceService.loggerNameSpace());
 			namespaceResult.Imports.Add (new CodeNamespaceImport ("System"));
 			var dataAccessInterface = new CodeTypeDeclaration ();
 			dataAccessInterface.Name = "ILogger";

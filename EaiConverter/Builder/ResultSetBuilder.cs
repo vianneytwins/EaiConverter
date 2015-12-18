@@ -13,7 +13,7 @@ namespace EaiConverter.Builder
 	{
         public CodeNamespace Build(JdbcQueryActivity jdbcQueryActivity)
         {
-            var resultSetNameSpace = new CodeNamespace(TargetAppNameSpaceService.domainContractNamespaceName);
+            var resultSetNameSpace = new CodeNamespace(TargetAppNameSpaceService.domainContractNamespaceName());
             resultSetNameSpace.Imports.AddRange(this.GenerateImport(jdbcQueryActivity));
 
             var resultSetClass = new CodeTypeDeclaration();

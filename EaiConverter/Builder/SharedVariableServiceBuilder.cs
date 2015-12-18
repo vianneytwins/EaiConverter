@@ -16,7 +16,7 @@ namespace EaiConverter.Builder
 
         public CodeNamespaceCollection Build()
         {
-            var sharedVariableServiceNameSpace = new CodeNamespace(TargetAppNameSpaceService.sharedVariableNameSpace);
+            var sharedVariableServiceNameSpace = new CodeNamespace(TargetAppNameSpaceService.sharedVariableNameSpace());
 
             // Generate the Service
             sharedVariableServiceNameSpace.Imports.AddRange(this.GenerateImports());
@@ -24,7 +24,7 @@ namespace EaiConverter.Builder
             sharedVariableServiceNameSpace.Types.Add(sharedVariableService);
             
             // Generate the corresponding interface
-            var sharedVariableServiceInterfaceNameSpace = InterfaceExtractorFromClass.Extract(sharedVariableService, TargetAppNameSpaceService.sharedVariableNameSpace);
+            var sharedVariableServiceInterfaceNameSpace = InterfaceExtractorFromClass.Extract(sharedVariableService, TargetAppNameSpaceService.sharedVariableNameSpace());
 
             return new CodeNamespaceCollection{sharedVariableServiceNameSpace, sharedVariableServiceInterfaceNameSpace};
         }
