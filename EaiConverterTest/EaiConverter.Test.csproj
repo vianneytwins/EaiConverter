@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Builder\SubscriberBuilderTest.cs" />
+    <Compile Include="Builder\Utils\XpathUtilsTest.cs" />
     <Compile Include="Parser\AdapterSchemaParserTest.cs" />
     <Compile Include="Parser\ConfigurationParserTest.cs" />
     <Compile Include="Parser\EngineCommandActivityParserTest.cs" />
