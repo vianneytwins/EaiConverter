@@ -23,17 +23,16 @@ namespace EaiConverter.Builder
 
             serviceToGenerate.Name = serviceManagerInterfaceName;
 
-            var interfaceParam = new CodeParameterDeclarationExpression ("TInterface", "interfaceName");
-            var implemParam = new CodeParameterDeclarationExpression ("TConcreteType", "implemParam");
-
-            var parameters = new CodeParameterDeclarationExpressionCollection ();
-            parameters.Add (interfaceParam);
-            parameters.Add (implemParam);
-
             var voidReturnType = new CodeTypeReference (CSharpTypeConstant.SystemVoid);
 
             var registerServiceMethod = new CodeMemberMethod { Name = registerServiceMethodName, ReturnType = voidReturnType };
-            registerServiceMethod.Parameters.AddRange (parameters);
+            CodeTypeParameter tInterfaceTypeParameter = new CodeTypeParameter("TInterface");
+            CodeTypeParameter tConcreteTypeParameter = new CodeTypeParameter("TConcreteType");
+
+            var parameters = new CodeParameterDeclarationExpressionCollection ();
+
+            registerServiceMethod.TypeParameters.Add(tInterfaceTypeParameter);
+            registerServiceMethod.TypeParameters.Add(tConcreteTypeParameter);
 
             serviceToGenerate.Members.Add (registerServiceMethod);
 

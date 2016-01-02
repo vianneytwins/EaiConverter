@@ -42,7 +42,7 @@ public class MyAppModule
     
     public void RegisterServices()
     {
-        this.serviceManager.RegisterApplicationService(ITruc, Truc);
+        this.serviceManager.RegisterApplicationService <ITruc, Truc>();
     }
 }
 ";

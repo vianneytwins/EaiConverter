@@ -93,11 +93,14 @@ namespace EaiConverter.Builder
 
             foreach (var elements in myServiceDisctionnary)
             {
-                var methodArgumentReferences = new CodeArgumentReferenceExpression [2];
-                methodArgumentReferences[0] = new CodeArgumentReferenceExpression(elements.Key);
-                methodArgumentReferences[1] = new CodeArgumentReferenceExpression(elements.Value);
-
-                var invocationExpression = new CodeMethodInvokeExpression(registerServiceFieldReference, ServiceManagerInterfaceBuilder.registerServiceMethodName, methodArgumentReferences);
+                var invocationExpression = new CodeMethodInvokeExpression(
+                    new CodeMethodReferenceExpression(
+                        registerServiceFieldReference,
+                        ServiceManagerInterfaceBuilder.registerServiceMethodName,
+                        new CodeTypeReference[] {
+                        new CodeTypeReference(elements.Key),
+                        new CodeTypeReference(elements.Value),}),
+                    new CodeExpression[0]);
 
                 registerMethod.Statements.Add(invocationExpression);
             }
