@@ -81,6 +81,7 @@
     <Compile Include="Parser\JdbcCallActivityParserTest.cs" />
     <Compile Include="Parser\JdbcQueryActivityParserTest.cs" />
     <Compile Include="Parser\MapperActivityParserTest.cs" />
+    <Compile Include="Parser\SleepActivityParserTest.cs" />
     <Compile Include="Parser\NullActivityParserTest.cs" />
     <Compile Include="Parser\TibcoBWProcessLinqParserTest.cs" />
     <Compile Include="Parser\WriteToLogActivityParserTest.cs" />
@@ -95,7 +96,6 @@
     <Compile Include="Builder\XsdBuilderTest.cs" />
     <Compile Include="Parser\GlobalVariableParserTest.cs" />
     <Compile Include="Builder\GlobalVariableBuilderTest.cs" />
-    <Compile Include="Parser\SleepActivityParserTest.cs" />
     <Compile Include="Builder\SleepActivityBuilderTest.cs" />
     <Compile Include="Builder\ResultSetBuilderTest.cs" />
     <Compile Include="Builder\RdvEventSourceActivityBuilderTest.cs" />
@@ -108,6 +108,7 @@
     <Compile Include="Builder\SetSharedVariableActivityBuilderTest.cs" />
     <Compile Include="Builder\GetSharedVariableActivityBuilderTest.cs" />
     <Compile Include="Builder\XslSyntaxBuilderTest .cs" />
+    <Compile Include="Builder\ModuleBuilderTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />

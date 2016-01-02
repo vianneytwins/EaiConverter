@@ -172,6 +172,8 @@
     <Compile Include="Processor\TibcoDependencyAnalyserProcessorService.cs" />
     <Compile Include="Processor\AnalyserFileProcessorService.cs" />
     <Compile Include="Processor\IDirectoryProcessorService.cs" />
+    <Compile Include="Builder\ModuleBuilder.cs" />
+    <Compile Include="Builder\ServiceManagerInterfaceBuilder.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup />
