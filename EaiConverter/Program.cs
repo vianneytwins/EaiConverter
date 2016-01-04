@@ -4,6 +4,7 @@ namespace EaiConverter
 {
     using System;
 
+    using EaiConverter.Builder;
     using EaiConverter.CodeGenerator;
     using EaiConverter.Processor;
 
@@ -26,6 +27,7 @@ namespace EaiConverter
             IFileProcessorService globalVariableProcessor;
             IFileProcessorService adapterFileProcessorService;
 			ISourceCodeGeneratorService sourceCodeGeneratorService;
+            PostProcessor postProcessor;
 			IFileFilter fileFilter;
 
 			if (args.Length > 1)
@@ -62,8 +64,10 @@ namespace EaiConverter
                     globalVariableProcessor = new GlobalVariableProcessor(sourceCodeGeneratorService);
                     adapterFileProcessorService = new AdapterFileProcessorService(sourceCodeGeneratorService);
                     tibcoFileReaderService = new TibcoBWDirectoryProcessorService(tibcoFileProcessorService, xsdFileProcessorService, globalVariableProcessor, adapterFileProcessorService, fileFilter);
+                    postProcessor = new PostProcessor(sourceCodeGeneratorService);
 
 					tibcoFileReaderService.Process(sourceDirectory);
+                    postProcessor.Process();
 				}
                 else if (mode == "G_Csharp")
                 {
@@ -73,8 +77,10 @@ namespace EaiConverter
                     globalVariableProcessor = new GlobalVariableProcessor(sourceCodeGeneratorService);
                     adapterFileProcessorService = new AdapterFileProcessorService(sourceCodeGeneratorService);
                     tibcoFileReaderService = new TibcoBWDirectoryProcessorService(tibcoFileProcessorService, xsdFileProcessorService, globalVariableProcessor, adapterFileProcessorService, fileFilter);
-               
-					tibcoFileReaderService.Process(sourceDirectory);
+                    postProcessor = new PostProcessor(sourceCodeGeneratorService);
+
+                    tibcoFileReaderService.Process(sourceDirectory);
+                    postProcessor.Process();
 				}
                 else if (mode == "A")
                 {

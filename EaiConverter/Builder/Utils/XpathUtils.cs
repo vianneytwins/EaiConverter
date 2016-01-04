@@ -18,7 +18,6 @@
                 var element = (XElement)inputNode;
                 var expression = element.ToString();
                 variables.AddRange(this.GetVariableNames(expression));
-
             }
             return variables.Distinct().ToList();
         }

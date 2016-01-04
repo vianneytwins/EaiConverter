@@ -1,7 +1,5 @@
-﻿using System;
-using System.CodeDom;
+﻿using System.CodeDom;
 using EaiConverter.Builder.Utils;
-using System.Reflection;
 using EaiConverter.Utils;
 
 namespace EaiConverter.Builder
@@ -17,19 +15,23 @@ namespace EaiConverter.Builder
             var serviceNameSpace = new CodeNamespace(TargetAppNameSpaceService.MyAppName);
             //serviceNameSpace.Imports.AddRange(this.GenerateImports());
 
-            var serviceToGenerate = new CodeTypeDeclaration();
-            serviceToGenerate.IsInterface = true;
-            serviceToGenerate.TypeAttributes = TypeAttributes.Public;
+            var serviceToGenerate = new CodeTypeDeclaration
+                                        {
+                                            IsInterface = true,
+                                            IsClass = false,
+                                            Name = serviceManagerInterfaceName
+                                        };
 
-            serviceToGenerate.Name = serviceManagerInterfaceName;
+            var voidReturnType = new CodeTypeReference(CSharpTypeConstant.SystemVoid);
 
-            var voidReturnType = new CodeTypeReference (CSharpTypeConstant.SystemVoid);
+            var registerServiceMethod = new CodeMemberMethod
+                                            {
+                                                Name = registerServiceMethodName, ReturnType = voidReturnType,
+                                                Attributes = MemberAttributes.Final | MemberAttributes.Public
+                                            };
 
-            var registerServiceMethod = new CodeMemberMethod { Name = registerServiceMethodName, ReturnType = voidReturnType };
-            CodeTypeParameter tInterfaceTypeParameter = new CodeTypeParameter("TInterface");
-            CodeTypeParameter tConcreteTypeParameter = new CodeTypeParameter("TConcreteType");
-
-            var parameters = new CodeParameterDeclarationExpressionCollection ();
+            var tInterfaceTypeParameter = new CodeTypeParameter("TInterface");
+            var tConcreteTypeParameter = new CodeTypeParameter("TConcreteType");
 
             registerServiceMethod.TypeParameters.Add(tInterfaceTypeParameter);
             registerServiceMethod.TypeParameters.Add(tConcreteTypeParameter);
