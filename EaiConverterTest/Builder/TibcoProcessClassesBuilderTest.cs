@@ -29,12 +29,21 @@
 			this.tibcoBwProcess = new TibcoBWProcess("MyNamespace/myProcessTest.process");
 			this.tibcoBwProcess.Activities = new List<Activity>();
 		}
+
         [Test]
         public void Should_Generate_Process_Interface()
         {
             var expected ="IMyProcessTest";
             var classToGenerate = this.tibcoBwProcessBuilder.Build(this.tibcoBwProcess);
             Assert.AreEqual (expected, classToGenerate.Namespaces[3].Types[0].Name);
+        }
+
+        [Test]
+        public void Should_Add_Interface_and_implem_To_Register_Module()
+        {
+            var expected = "MyApp.MyNamespace.MyProcessTest";
+            var classToGenerate = this.tibcoBwProcessBuilder.Build(this.tibcoBwProcess);
+            Assert.AreEqual(expected, ModuleBuilder.GetValue("MyApp.MyNamespace.IMyProcessTest"));
         }
 
 		[Test]

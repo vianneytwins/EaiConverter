@@ -109,11 +109,14 @@
 
         public CodeNamespace GenerateProcessInterface(TibcoBWProcess tibcoBwProcessToGenerate, CodeTypeDeclaration tibcoBwProcessClassModel)
         {
+            var namespaceName = TargetAppNameSpaceService.myAppName() + "." + tibcoBwProcessToGenerate.ShortNameSpace;
             var interfaceNameSpace = InterfaceExtractorFromClass.Extract(tibcoBwProcessClassModel, TargetAppNameSpaceService.myAppName() + "." + tibcoBwProcessToGenerate.ShortNameSpace);
             if ((tibcoBwProcessToGenerate.StartActivity != null && tibcoBwProcessToGenerate.StartActivity.Parameters != null) || (tibcoBwProcessToGenerate.EndActivity != null && tibcoBwProcessToGenerate.EndActivity.Parameters != null))
             {
                 interfaceNameSpace.Imports.Add(new CodeNamespaceImport(TargetAppNameSpaceService.myAppName() + "." +tibcoBwProcessToGenerate.InputAndOutputNameSpace));
             }
+
+            ModuleBuilder.AddServiceToRegister(namespaceName + "." + interfaceNameSpace.Types[0].Name, namespaceName + "." + tibcoBwProcessClassModel.Name);
             return interfaceNameSpace;
         }
 

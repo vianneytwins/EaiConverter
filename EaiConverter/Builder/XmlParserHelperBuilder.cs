@@ -27,6 +27,7 @@ namespace EaiConverter.Builder
             // Generate the corresponding interface
             var xmlParserHelperServiceInterfaceNameSpace = InterfaceExtractorFromClass.Extract(xmlParserHelperService, TargetAppNameSpaceService.xmlToolsNameSpace());
 
+            ModuleBuilder.AddServiceToRegister(IXmlParserHelperServiceName, XmlParserHelperServiceName);
             return new CodeNamespaceCollection{xmlParserHelperNameSpace, xmlParserHelperServiceInterfaceNameSpace};
         }
 

@@ -114,6 +114,13 @@ namespace EaiConverter.Builder
                 myServiceDisctionnary.Add(interfaceName, implementationName);
             }
         }
+
+        public static string GetValue(string interfaceName)
+        {
+            string myResult;
+            myServiceDisctionnary.TryGetValue(interfaceName, out myResult);
+            return myResult;
+        }
     }
 }
 

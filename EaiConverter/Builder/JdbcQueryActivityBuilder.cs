@@ -115,6 +115,9 @@ namespace EaiConverter.Builder
                     result.Add(dataBaseAttributeNamespace);
                     ConfigurationApp.SaveProperty(dataCustomAttributeName, "true");
                 }
+
+                ModuleBuilder.AddServiceToRegister(dataAccessInterfaceNameSpace.Types[0].Name, dataAccessNameSpace.Types[0].Name);
+                ModuleBuilder.AddServiceToRegister(serviceInterfaceNameSpace.Types[0].Name, this.ServiceToInvoke);
             }
 
             return result;
