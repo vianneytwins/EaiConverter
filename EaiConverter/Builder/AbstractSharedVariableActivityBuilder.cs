@@ -7,6 +7,7 @@ using System.CodeDom;
 using EaiConverter.Processor;
 using EaiConverter.CodeGenerator.Utils;
 using EaiConverter.Builder.Utils;
+using EaiConverter.Utils;
 
 namespace EaiConverter.Builder
 {
@@ -86,7 +87,10 @@ namespace EaiConverter.Builder
             return VariableHelper.ToVariableName(VariableHelper.ToClassName (SharedVariableServiceBuilder.SharedVariableServiceName));
         }
           
-		
+        public string GetReturnType (Activity activity)
+        {
+            return CSharpTypeConstant.SystemObject;
+        }
 		
 	}
 

@@ -55,6 +55,11 @@ namespace EaiConverter.Builder
 		{
             return new List<CodeMemberField>();
 		}
+
+        public string GetReturnType (Activity activity)
+        {
+            return CSharpTypeConstant.SystemVoid;
+        }
 	}
 
 }

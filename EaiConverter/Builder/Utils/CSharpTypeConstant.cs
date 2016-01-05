@@ -15,6 +15,7 @@ namespace EaiConverter.Utils
         public const string SystemInt32Nullable = "System.Int32?";
         public const string SystemDoubleNullable = "System.Double?";
         public const string SystemDateTimeNullable = "System.DateTime?";
+        public const string  SystemException = "System.Exception";
     }
 }
 

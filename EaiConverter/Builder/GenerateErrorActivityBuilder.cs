@@ -1,3 +1,5 @@
+using EaiConverter.Utils;
+
 namespace EaiConverter.Builder
 {
     using System.CodeDom;
@@ -74,6 +76,12 @@ namespace EaiConverter.Builder
                 new CodeThrowExceptionStatement(
                     new CodeObjectCreateExpression(new CodeTypeReference(typeof(System.Exception)), stringFormatCall));
             return throwException;
+        }
+
+
+        public string GetReturnType (Activity activity)
+        {
+            return CSharpTypeConstant.SystemException;
         }
     }
 }

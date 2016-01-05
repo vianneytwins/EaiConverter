@@ -7,6 +7,7 @@
 
     public interface IActivityBuilder
     {
+
         CodeNamespaceCollection GenerateClassesToGenerate (Activity activity);
 
         CodeStatementCollection GenerateInvocationCode (Activity activity);
@@ -18,6 +19,8 @@
         CodeStatementCollection GenerateConstructorCodeStatement(Activity activity);
 
         List<CodeMemberField> GenerateFields(Activity activity);
+
+        string GetReturnType (Activity activity);
 
     }
 }

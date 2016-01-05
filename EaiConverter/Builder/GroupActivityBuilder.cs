@@ -1,3 +1,5 @@
+using EaiConverter.Utils;
+
 namespace EaiConverter.Builder
 {
     using System;
@@ -216,6 +218,11 @@ namespace EaiConverter.Builder
             }
 
             return invocationCodeCollection;
+        }
+
+        public string GetReturnType (Activity activity)
+        {
+            return CSharpTypeConstant.SystemVoid;
         }
     }
 }

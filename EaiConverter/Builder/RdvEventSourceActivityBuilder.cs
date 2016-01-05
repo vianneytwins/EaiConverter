@@ -143,6 +143,11 @@ namespace EaiConverter.Builder
 		{
 			return Builder.SubscriberInterfaceBuilder.Subscriber;
 		}
+
+        public string GetReturnType (Activity activity)
+        {
+            return CSharpTypeConstant.SystemObject;
+        }
 	}
 
 }

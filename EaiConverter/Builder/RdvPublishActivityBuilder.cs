@@ -170,6 +170,11 @@ namespace EaiConverter.Builder
 		{
 			return VariableHelper.ToVariableName(activity.Name)+ "RdvPublisher";
 		}
+
+        public string GetReturnType (Activity activity)
+        {
+            return CSharpTypeConstant.SystemVoid;
+        }
 	}
 
 }

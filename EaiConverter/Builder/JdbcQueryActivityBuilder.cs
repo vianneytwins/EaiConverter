@@ -1,3 +1,5 @@
+using EaiConverter.Utils;
+
 namespace EaiConverter.Builder
 {
     using System.CodeDom;
@@ -140,19 +142,12 @@ namespace EaiConverter.Builder
 
             var parameters = DefaultActivityBuilder.GenerateParameters(jdbcQueryActivity);
 
+            var returnType = GetReturnType(activity);
 
-			if (jdbcQueryActivity.QueryOutputStatementParameters != null && jdbcQueryActivity.QueryOutputStatementParameters.Count > 0)
-            {   
-                if (ActivityType.jdbcCallActivityType != jdbcQueryActivity.Type)
-                {
-                    var codeInvocation = new CodeVariableDeclarationStatement(new CodeTypeReference("List<" + VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet>"), VariableHelper.ToVariableName(jdbcQueryActivity.Name) + "ResultSet", new CodeMethodInvokeExpression(activityServiceReference, DataAccessServiceBuilder.ExecuteSqlQueryMethodName, parameters));
-                    invocationCodeCollection.Add(codeInvocation);
-                }
-                else
-                {
-                    var codeInvocation = new CodeVariableDeclarationStatement(new CodeTypeReference(VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet"), VariableHelper.ToVariableName(jdbcQueryActivity.Name) + "ResultSet", new CodeMethodInvokeExpression(activityServiceReference, DataAccessServiceBuilder.ExecuteSqlQueryMethodName, parameters));
-                    invocationCodeCollection.Add(codeInvocation);
-                }
+            if (!returnType.Equals(CSharpTypeConstant.SystemVoid))
+            {  
+                var codeInvocation = new CodeVariableDeclarationStatement(new CodeTypeReference(returnType), VariableHelper.ToVariableName(jdbcQueryActivity.Name) + "ResultSet", new CodeMethodInvokeExpression(activityServiceReference, DataAccessServiceBuilder.ExecuteSqlQueryMethodName, parameters));
+                invocationCodeCollection.Add(codeInvocation);
             }
             else
             {
@@ -273,6 +268,28 @@ namespace EaiConverter.Builder
         private string GetDataCustomAttributeName(CodeNamespace dataAccessNameSpace)
         {
             return ((CodeMemberMethod)dataAccessNameSpace.Types[0].Members[2]).Parameters[0].CustomAttributes[0].Name;
+        }
+
+        public string GetReturnType (Activity activity)
+        {
+            var jdbcQueryActivity = (JdbcQueryActivity)activity;
+            jdbcQueryActivity.ClassName = GenerateClassName(jdbcQueryActivity);
+
+            if (jdbcQueryActivity.QueryOutputStatementParameters != null && jdbcQueryActivity.QueryOutputStatementParameters.Count > 0)
+            {   
+                if (ActivityType.jdbcCallActivityType != jdbcQueryActivity.Type)
+                {
+                    return "List<" + VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet>";
+                }
+                else
+                {
+                    return VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet";
+                }
+            }
+            else
+            {
+                return CSharpTypeConstant.SystemVoid;
+            }
         }
     }
 }
