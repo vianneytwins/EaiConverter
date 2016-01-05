@@ -1,24 +1,23 @@
-using System;
-using EaiConverter.Model;
-using System.Collections.Generic;
-using System.CodeDom;
-using EaiConverter.Builder.Utils;
-using EaiConverter.Processor;
-using EaiConverter.Utils;
-using EaiConverter.CodeGenerator.Utils;
-
 namespace EaiConverter.Builder
 {
-	public class RdvPublishActivityBuilder : IActivityBuilder
+    using System.CodeDom;
+    using System.Collections.Generic;
+
+    using EaiConverter.Builder.Utils;
+    using EaiConverter.CodeGenerator.Utils;
+    using EaiConverter.Model;
+    using EaiConverter.Processor;
+    using EaiConverter.Utils;
+
+    public class RdvPublishActivityBuilder : IActivityBuilder
 	{
-		private readonly XslBuilder xslBuilder;
+        public const string IsPublisherInterfaceAlreadyGenerated = "IsPublisherInterfaceAlreadyGenerated";
+		public const string IsTibcoPublisherImplemAlreadyGenerated = "IsTibcoPublisherImplemAlreadyGenerated";
+        private const string InterfaceSubscriberName = "IPublisher";
+        private const string ImplementationName = "RdvPublisher";
+        private readonly XslBuilder xslBuilder;
 
-		public const string interfaceSubscriberName = "IPublisher";
-
-		public const string isPublisherInterfaceAlreadyGenerated = "IsPublisherInterfaceAlreadyGenerated";
-		public const string isTibcoPublisherImplemAlreadyGenerated = "IsTibcoPublisherImplemAlreadyGenerated";
-
-		public RdvPublishActivityBuilder(XslBuilder xslBuilder)
+        public RdvPublishActivityBuilder(XslBuilder xslBuilder)
 		{
 			this.xslBuilder = xslBuilder;
 		}
@@ -26,31 +25,30 @@ namespace EaiConverter.Builder
 		public CodeNamespaceCollection GenerateClassesToGenerate (EaiConverter.Model.Activity activity)
 		{
 			var namespaces = new CodeNamespaceCollection ();
-			if (ConfigurationApp.GetProperty(isPublisherInterfaceAlreadyGenerated) != "true")
+			if (ConfigurationApp.GetProperty(IsPublisherInterfaceAlreadyGenerated) != "true")
 			{
 				namespaces.Add(this.GeneratePublisherInterface());
-				ConfigurationApp.SaveProperty (isPublisherInterfaceAlreadyGenerated, "true");
+				ConfigurationApp.SaveProperty (IsPublisherInterfaceAlreadyGenerated, "true");
 			}
 				
-			if (ConfigurationApp.GetProperty(isTibcoPublisherImplemAlreadyGenerated) != "true")
+			if (ConfigurationApp.GetProperty(IsTibcoPublisherImplemAlreadyGenerated) != "true")
 			{
-				namespaces.Add (this.GenerateTibcoPublisherImplementation ());
-				ConfigurationApp.SaveProperty (isTibcoPublisherImplemAlreadyGenerated, "true");
+				namespaces.Add(this.GenerateTibcoPublisherImplementation());
+				ConfigurationApp.SaveProperty(IsTibcoPublisherImplemAlreadyGenerated, "true");
 			}
-            ModuleBuilder.AddServiceToRegister(interfaceSubscriberName, "RdvPublisher");
+
+            ModuleBuilder.AddServiceToRegister(InterfaceSubscriberName, ImplementationName);
 			return namespaces;
 		}
 
-		public CodeNamespace GeneratePublisherInterface ()
+		public CodeNamespace GeneratePublisherInterface()
 		{
-			var publisherInterfaceNamespace = new CodeNamespace ();
-            publisherInterfaceNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace();
-			publisherInterfaceNamespace.Imports.Add (new CodeNamespaceImport("System"));
+			var publisherInterfaceNamespace = new CodeNamespace { Name = TargetAppNameSpaceService.EventSourcingNameSpace() };
+		    publisherInterfaceNamespace.Imports.Add(new CodeNamespaceImport("System"));
 
-			var publisherInterfaceClass = new CodeTypeDeclaration(interfaceSubscriberName);
-			publisherInterfaceClass.IsInterface = true;
+			var publisherInterfaceClass = new CodeTypeDeclaration(InterfaceSubscriberName) { IsInterface = true };
 
-			var sendMethod = this.GenerateSendMethod ();
+		    var sendMethod = this.GenerateSendMethod();
 
 			publisherInterfaceClass.Members.Add(sendMethod);
 
@@ -58,27 +56,10 @@ namespace EaiConverter.Builder
 			return publisherInterfaceNamespace;
 		}
 
-		CodeNamespace GenerateTibcoPublisherImplementation ()
+		public CodeMemberMethod GenerateSendMethod()
 		{
-			var publisherRdvImplementationNamespace = new CodeNamespace ();
-            publisherRdvImplementationNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace();
-			publisherRdvImplementationNamespace.Imports.Add (new CodeNamespaceImport("System"));
-
-			var publisherImplementationClass = new CodeTypeDeclaration("RdvPublisher");
-			publisherImplementationClass.IsClass = true;
-            publisherImplementationClass.BaseTypes.Add(TargetAppNameSpaceService.EventSourcingNameSpace() + "." + interfaceSubscriberName);
-
-			var sendMethod = this.GenerateSendMethod();
-
-			publisherImplementationClass.Members.Add(sendMethod);
-
-			publisherRdvImplementationNamespace.Types.Add (publisherImplementationClass);
-			return publisherRdvImplementationNamespace;
-		}
-
-		public CodeMemberMethod GenerateSendMethod ()
-		{
-			var sendMethod = new CodeMemberMethod {
+			var sendMethod = new CodeMemberMethod
+            {
 				Name = "Send",
 				ReturnType = new CodeTypeReference (CSharpTypeConstant.SystemVoid),
 				Attributes = MemberAttributes.Public
@@ -89,7 +70,7 @@ namespace EaiConverter.Builder
 			return sendMethod;
 		}
 
-		public System.CodeDom.CodeStatementCollection GenerateInvocationCode (EaiConverter.Model.Activity activity)
+		public CodeStatementCollection GenerateInvocationCode (Activity activity)
 		{
 			var rdvPublishActivity = (RdvPublishActivity) activity;
 			var invocationCodeCollection = new CodeStatementCollection();
@@ -150,10 +131,11 @@ namespace EaiConverter.Builder
 		public List<System.CodeDom.CodeMemberField> GenerateFields (EaiConverter.Model.Activity activity)
 		{
 			var fields = new List<CodeMemberField>
-			{new CodeMemberField
+			{
+                new CodeMemberField
 				{
-					Type = GetServiceFieldType(),
-					Name = GetServiceFieldName(activity),
+					Type = this.GetServiceFieldType(),
+					Name = this.GetServiceFieldName(activity),
 					Attributes = MemberAttributes.Private
 				}
 			};
@@ -161,19 +143,36 @@ namespace EaiConverter.Builder
 			return fields;
 		}
 
-		CodeTypeReference GetServiceFieldType ()
-		{
-			return new CodeTypeReference (interfaceSubscriberName);
-		}
-
-		string GetServiceFieldName (Activity activity)
-		{
-			return VariableHelper.ToVariableName(activity.Name)+ "RdvPublisher";
-		}
-
-        public string GetReturnType (Activity activity)
+        public string GetReturnType(Activity activity)
         {
             return CSharpTypeConstant.SystemVoid;
+        }
+
+        private CodeTypeReference GetServiceFieldType()
+		{
+			return new CodeTypeReference (InterfaceSubscriberName);
+		}
+
+		private string GetServiceFieldName (Activity activity)
+		{
+			return VariableHelper.ToVariableName(activity.Name)+ ImplementationName;
+		}
+
+        private CodeNamespace GenerateTibcoPublisherImplementation()
+        {
+            var publisherRdvImplementationNamespace = new CodeNamespace();
+            publisherRdvImplementationNamespace.Name = TargetAppNameSpaceService.EventSourcingNameSpace();
+            publisherRdvImplementationNamespace.Imports.Add(new CodeNamespaceImport("System"));
+
+            var publisherImplementationClass = new CodeTypeDeclaration(ImplementationName) { IsClass = true };
+            publisherImplementationClass.BaseTypes.Add(TargetAppNameSpaceService.EventSourcingNameSpace() + "." + InterfaceSubscriberName);
+
+            var sendMethod = this.GenerateSendMethod();
+
+            publisherImplementationClass.Members.Add(sendMethod);
+
+            publisherRdvImplementationNamespace.Types.Add(publisherImplementationClass);
+            return publisherRdvImplementationNamespace;
         }
 	}
 

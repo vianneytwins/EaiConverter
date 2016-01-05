@@ -83,8 +83,8 @@
 		[Test]
 		public void Should_return_2_Classes_To_Generate_if_they_are_not_already_generated ()
 		{
-			ConfigurationApp.SaveProperty(RdvPublishActivityBuilder.isPublisherInterfaceAlreadyGenerated, "false");
-			ConfigurationApp.SaveProperty(RdvPublishActivityBuilder.isTibcoPublisherImplemAlreadyGenerated, "false");
+			ConfigurationApp.SaveProperty(RdvPublishActivityBuilder.IsPublisherInterfaceAlreadyGenerated, "false");
+			ConfigurationApp.SaveProperty(RdvPublishActivityBuilder.IsTibcoPublisherImplemAlreadyGenerated, "false");
 
 			var namespaces = this.activityBuilder.GenerateClassesToGenerate(activity);
 			Assert.AreEqual (2, namespaces.Count);
@@ -93,8 +93,8 @@
 		[Test]
 		public void Should_return_1_Classe_To_Generate_if_they_are_not_already_generated ()
 		{
-			ConfigurationApp.SaveProperty(RdvPublishActivityBuilder.isPublisherInterfaceAlreadyGenerated, "true");
-			ConfigurationApp.SaveProperty(RdvPublishActivityBuilder.isTibcoPublisherImplemAlreadyGenerated, "false");
+			ConfigurationApp.SaveProperty(RdvPublishActivityBuilder.IsPublisherInterfaceAlreadyGenerated, "true");
+			ConfigurationApp.SaveProperty(RdvPublishActivityBuilder.IsTibcoPublisherImplemAlreadyGenerated, "false");
 
 			var namespaces = this.activityBuilder.GenerateClassesToGenerate(activity);
 			Assert.AreEqual (1, namespaces.Count);
