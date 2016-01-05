@@ -118,6 +118,26 @@
 		{
             return TargetAppNameSpaceService.domainContractNamespaceName() + "." + VariableHelper.ToClassName(activity.Name); 
 		}
+
+        public string GetReturnType (Activity activity)
+        {
+            var mapperActivity = (MapperActivity)activity;
+
+
+            string variableReturnType;
+
+            if (mapperActivity.XsdReference != null)
+            {
+                variableReturnType = this.GetReturnType(mapperActivity.XsdReference);
+            }
+            else
+            {
+                // TODO : make a utils method in the parser to simplify this
+                variableReturnType = this.xsdParser.Parse(mapperActivity.ObjectXNodes, this.TargetNamespace(activity))[0].Type;
+            }
+
+            return variableReturnType;
+        }
     }
 }
 

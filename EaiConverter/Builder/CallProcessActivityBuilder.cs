@@ -1,3 +1,5 @@
+using EaiConverter.Utils;
+
 namespace EaiConverter.Builder
 {
     using System;
@@ -127,6 +129,12 @@ namespace EaiConverter.Builder
 		{
 			return VariableHelper.ToVariableName(callProcessActivity.TibcoProcessToCall.ProcessName);
 		}
+
+        public string GetReturnType (Activity activity)
+        {
+            // TODO VC : parse the target process to get its return type
+            return CSharpTypeConstant.SystemObject;
+        }
 
     }
 }

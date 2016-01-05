@@ -1,3 +1,5 @@
+using EaiConverter.Utils;
+
 namespace EaiConverter.Builder
 {
     using System.CodeDom;
@@ -127,6 +129,11 @@ namespace EaiConverter.Builder
 		{
 			return VariableHelper.ToVariableName(VariableHelper.ToClassName(activity.Name + "Service"));
 		}
+
+        public string GetReturnType (Activity activity)
+        {
+            return CSharpTypeConstant.SystemVoid;
+        }
     }
 }
 

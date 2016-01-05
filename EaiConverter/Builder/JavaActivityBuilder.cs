@@ -210,6 +210,11 @@ namespace EaiConverter.Builder
             invokeCall.Method = invokeMethod;
             return invokeCall;
         }
+
+        public string GetReturnType (Activity activity)
+        {
+            return CSharpTypeConstant.SystemVoid;
+        }
     }
 }
 

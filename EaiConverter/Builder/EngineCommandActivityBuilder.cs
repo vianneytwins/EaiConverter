@@ -114,6 +114,11 @@
 		{
             return VariableHelper.ToVariableName(EngineCommandServiceHelperBuilder.EngineCommandServiceName);
 		}
+
+        public string GetReturnType (Activity activity)
+        {
+            return EngineCommandServiceHelperBuilder.returnType;
+        }
     }
 }
 

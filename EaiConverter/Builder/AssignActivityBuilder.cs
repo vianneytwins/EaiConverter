@@ -2,6 +2,7 @@
 using System.CodeDom;
 using EaiConverter.CodeGenerator.Utils;
 using System.Collections.Generic;
+using EaiConverter.Utils;
 
 namespace EaiConverter.Builder
 {
@@ -51,6 +52,11 @@ namespace EaiConverter.Builder
             var codeInvocation = new CodeAssignStatement (variableToAssignReference, new CodeVariableReferenceExpression(VariableHelper.ToVariableName(assignActivity.VariableName)));
             invocationCodeCollection.Add(codeInvocation);
             return invocationCodeCollection;
+        }
+
+        public string GetReturnType (Activity activity)
+        {
+            return CSharpTypeConstant.SystemVoid;
         }
     }
 }

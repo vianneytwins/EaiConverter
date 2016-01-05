@@ -3,6 +3,7 @@ using EaiConverter.Model;
 using System.CodeDom;
 using EaiConverter.CodeGenerator.Utils;
 using System.Collections.Generic;
+using EaiConverter.Utils;
 
 namespace EaiConverter.Builder
 {
@@ -77,6 +78,11 @@ namespace EaiConverter.Builder
             var loggerReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToVariableName("logger"));
             var methodInvocation = new CodeMethodInvokeExpression(loggerReference, activity.Role, stringFormatCall);
             return methodInvocation;
+        }
+
+        public string GetReturnType (Activity activity)
+        {
+            return CSharpTypeConstant.SystemVoid;
         }
     }
 }

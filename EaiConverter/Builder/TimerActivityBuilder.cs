@@ -151,6 +151,11 @@ namespace EaiConverter.Builder
             timerSubscriberNamespace.Types.Add(timerSubscriberClass);
             return timerSubscriberNamespace;
         }
+
+        public string GetReturnType (Activity activity)
+        {
+            return CSharpTypeConstant.SystemVoid;
+        }
 	}
 
 }

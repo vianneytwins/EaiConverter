@@ -108,20 +108,7 @@
 
             // Add the invocation itself
             // TODO : need to put it in the parser to get the real ReturnType !!
-			var variableReturnType = "System.String";
-			if (xmlParseActivity.XsdReference != null)
-            {
-				variableReturnType = xmlParseActivity.XsdReference.Split(':')[1];
-			}
-			else
-			{
-				// TODO : make a utils method in the parser to simplify this
-                if (this.xsdParser.Parse(xmlParseActivity.ObjectXNodes, this.TargetNamespace(activity)).Count > 0)
-			    {
-			        variableReturnType =
-			            (this.xsdParser.Parse(xmlParseActivity.ObjectXNodes, this.TargetNamespace(activity)))[0].Type;
-			    }
-			}
+			var variableReturnType = GetReturnType(activity);
 
             var variableName = VariableHelper.ToVariableName(xmlParseActivity.Name);
 
@@ -159,6 +146,26 @@
 		{
 			return TargetAppNameSpaceService.domainContractNamespaceName() + "." + VariableHelper.ToClassName(activity.Name); 
 		}
+
+        public string GetReturnType(Activity activity)
+        {
+            XmlParseActivity xmlParseActivity = (XmlParseActivity)activity;
+            var variableReturnType = "System.String";
+            if (xmlParseActivity.XsdReference != null)
+            {
+                variableReturnType = xmlParseActivity.XsdReference.Split(':')[1];
+            }
+            else
+            {
+                // TODO : make a utils method in the parser to simplify this
+                if (this.xsdParser.Parse(xmlParseActivity.ObjectXNodes, this.TargetNamespace(activity)).Count > 0)
+                {
+                    variableReturnType = (this.xsdParser.Parse(xmlParseActivity.ObjectXNodes, this.TargetNamespace(activity)))[0].Type;
+                }
+            }
+            return variableReturnType;
+        }
+
     }
 }
 

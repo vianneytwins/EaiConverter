@@ -2,6 +2,7 @@ using EaiConverter.Model;
 
 using System.CodeDom;
 using System.Collections.Generic;
+using EaiConverter.Utils;
 
 namespace EaiConverter.Builder
 {
@@ -38,6 +39,12 @@ namespace EaiConverter.Builder
             invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(activity));
 
             return invocationCodeCollection;
+        }
+
+
+        public string GetReturnType (Activity activity)
+        {
+            return CSharpTypeConstant.SystemVoid;
         }
     }
 }

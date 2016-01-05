@@ -1,4 +1,6 @@
-﻿namespace EaiConverter.Builder
+﻿using EaiConverter.Utils;
+
+namespace EaiConverter.Builder
 {
     using System.CodeDom;
     using System.Collections.Generic;
@@ -91,6 +93,11 @@
         string GetServiceFieldName()
         {
             return "subscriber";
+        }
+
+        public string GetReturnType (Activity activity)
+        {
+            return CSharpTypeConstant.SystemObject;
         }
     }
 }

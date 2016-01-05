@@ -17,6 +17,8 @@
         public const string GetProcessInstanceExceptionMethodName = "GetProcessInstanceExceptions";
         public const string ProcessInstanceExceptionClassName = "ProcessInstanceException";
 
+        public const string returnType = "List<ProcessInstanceInfo>";
+
         public CodeNamespaceCollection Build()
         {
             var engineCommandNamespace = new CodeNamespace(TargetAppNameSpaceService.EngineCommandNamespace());
@@ -65,7 +67,7 @@
             newMethod.Name = GetProcessInstanceInfoMethodName;
             newMethod.Attributes = MemberAttributes.Final | MemberAttributes.Public;
 
-            newMethod.ReturnType = new CodeTypeReference("List<ProcessInstanceInfo>");
+            newMethod.ReturnType = new CodeTypeReference(returnType);
 
             newMethod.Statements.Add(new CodeSnippetStatement(@"            return new List<ProcessInstanceInfo>(); "));
 
