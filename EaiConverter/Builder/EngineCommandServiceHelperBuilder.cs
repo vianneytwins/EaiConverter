@@ -30,6 +30,7 @@
             var engineCommandInterface = InterfaceExtractorFromClass.Extract(engineCommandServiceClass, TargetAppNameSpaceService.EngineCommandNamespace());
             engineCommandInterface.Types.AddRange(this.GenerateReturnOutputClasses());
 
+            ModuleBuilder.AddServiceToRegister(IEngineCommandServiceName, EngineCommandServiceName);
             return new CodeNamespaceCollection { engineCommandNamespace, engineCommandInterface };
         }
 

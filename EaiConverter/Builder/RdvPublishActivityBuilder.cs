@@ -37,7 +37,7 @@ namespace EaiConverter.Builder
 				namespaces.Add (this.GenerateTibcoPublisherImplementation ());
 				ConfigurationApp.SaveProperty (isTibcoPublisherImplemAlreadyGenerated, "true");
 			}
-
+            ModuleBuilder.AddServiceToRegister(interfaceSubscriberName, "RdvPublisher");
 			return namespaces;
 		}
 
