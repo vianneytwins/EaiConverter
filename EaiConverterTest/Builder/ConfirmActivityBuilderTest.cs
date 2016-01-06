@@ -1,13 +1,13 @@
-﻿using System;
-using NUnit.Framework;
-using EaiConverter.Builder;
-using EaiConverter.Model;
-using System.Xml.Linq;
-using System.Collections.Generic;
-using EaiConverter.Test.Utils;
-
-namespace EaiConverter.Test.Builder
+﻿namespace EaiConverter.Test.Builder
 {
+    using System.Collections.Generic;
+
+    using EaiConverter.Builder;
+    using EaiConverter.Model;
+    using EaiConverter.Test.Utils;
+
+    using NUnit.Framework;
+
     [TestFixture]
 	public class ConfirmActivityBuilderTest
     {
@@ -29,7 +29,7 @@ namespace EaiConverter.Test.Builder
 // TODO: Should be this.subscriber.Confirm(message);
 this.subscriber.Confirm();
 ";
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateInvocationCode(this.activity));
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateMethod(this.activity, new Dictionary<string, string>()).Statements);
             Assert.AreEqual(expected,generatedCode);
         }
     }

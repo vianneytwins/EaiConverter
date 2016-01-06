@@ -12,7 +12,7 @@
     public class XpathUtilsTest
     {
         [Test]
-        public void Should_Return_Start_when_InputBinding_contains_a_xpath_formula_with_dollar_start()
+        public void Should_Return_start_when_InputBinding_contains_a_xpath_formula_with_dollar_start()
         {
             var xml =
     @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"">           
@@ -25,6 +25,22 @@
             var inputBindings = doc.Nodes();
             Assert.AreEqual("start", new XpathUtils().GetVariableNames(inputBindings).FirstOrDefault());
             
+        }
+
+        [Test]
+        public void Should_Return_Start_when_InputBinding_contains_a_xpath_formula_with_dollar_start()
+        {
+            var xml =
+    @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"">           
+        <xmlString>
+            <xsl:value-of select=""$Start""/>
+        </xmlString>
+</pd:inputBindings>
+";
+            XElement doc = XElement.Parse(xml);
+            var inputBindings = doc.Nodes();
+            Assert.AreEqual("Start", new XpathUtils().GetVariableNames(inputBindings).FirstOrDefault());
+
         }
 
         [Test]

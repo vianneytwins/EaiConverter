@@ -56,7 +56,7 @@
 System.String xmlString;
 xmlString = ""TestString"";
 
-EquityRecord my_Activity_Name = this.xmlParserHelperService.FromXml<EquityRecord>(xmlString);
+return this.xmlParserHelperService.FromXml<EquityRecord>(xmlString);
 ";
             }
             else
@@ -65,11 +65,11 @@ EquityRecord my_Activity_Name = this.xmlParserHelperService.FromXml<EquityRecord
 System.String xmlString;
 xmlString = ""TestString"";
 
-EquityRecord my_Activity_Name = this.xmlParserHelperService.FromXml <EquityRecord>(xmlString);
+return this.xmlParserHelperService.FromXml <EquityRecord>(xmlString);
 ";
             }
 
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateInvocationCode(this.activity));
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateMethod(this.activity, null).Statements);
             Assert.AreEqual(expected, generatedCode);
         }
 
@@ -90,7 +90,7 @@ EquityRecord my_Activity_Name = this.xmlParserHelperService.FromXml <EquityRecor
 System.String xmlString;
 xmlString = ""TestString"";
 
-MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord my_Activity_Name = this.xmlParserHelperService.FromXml<MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord>(xmlString);
+return this.xmlParserHelperService.FromXml<MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord>(xmlString);
 ";
 		    }
 		    else
@@ -99,11 +99,11 @@ MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord my_Activity_Name =
 System.String xmlString;
 xmlString = ""TestString"";
 
-MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord my_Activity_Name = this.xmlParserHelperService.FromXml <MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord>(xmlString);
+return this.xmlParserHelperService.FromXml <MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord>(xmlString);
 ";
 		    }
 
-		    var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateInvocationCode(this.activity));
+		    var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateMethod(this.activity,null).Statements);
 			Assert.AreEqual(expected,generatedCode);
 		}
 
@@ -111,7 +111,7 @@ MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord my_Activity_Name =
 		public void Should_Generate_Classes_method_When_XsdReference_is_present()
 		{
 			ConfigurationApp.SaveProperty("IsXmlParserHelperAlreadyGenerated", "false");
-			var generatedClasses = xmlParseActivityBuilder.GenerateClassesToGenerate (this.activity);
+			var generatedClasses = xmlParseActivityBuilder.GenerateClassesToGenerate (this.activity, null);
 			Assert.AreEqual(2, generatedClasses.Count);
 		}
 
@@ -124,7 +124,7 @@ MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord my_Activity_Name =
 			XElement doc = XElement.Parse(xsdElement);
 			this.activity.ObjectXNodes = doc.Nodes();
 
-			var generatedClasses = xmlParseActivityBuilder.GenerateClassesToGenerate (this.activity);
+			var generatedClasses = xmlParseActivityBuilder.GenerateClassesToGenerate (this.activity, null);
 			Assert.AreEqual(3, generatedClasses.Count);
 			Assert.AreEqual("EquityRecord", generatedClasses[2].Types[0].Name);
 		}

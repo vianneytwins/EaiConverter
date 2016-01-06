@@ -47,7 +47,7 @@ message = ""testvalue"";
 var configName = ""myconfigPath"";
 this.sharedVariableService.Set(configName, message);
 ";
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateInvocationCode(this.activity));
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateMethod(this.activity,null).Statements);
             Assert.IsTrue(generatedCode.EndsWith(expected));
         }
     }

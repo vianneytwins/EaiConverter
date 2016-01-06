@@ -1,17 +1,15 @@
-using System;
-using EaiConverter.Builder;
-using EaiConverter.Model;
-using System.Xml.Linq;
-using System.Collections.Generic;
-using System.CodeDom;
-using EaiConverter.Processor;
-using EaiConverter.CodeGenerator.Utils;
-using EaiConverter.Builder.Utils;
-using EaiConverter.Utils;
-
 namespace EaiConverter.Builder
 {
-	public abstract class AbstractSharedVariableActivityBuilder : IActivityBuilder
+    using System.CodeDom;
+    using System.Collections.Generic;
+
+    using EaiConverter.Builder.Utils;
+    using EaiConverter.CodeGenerator.Utils;
+    using EaiConverter.Model;
+    using EaiConverter.Processor;
+    using EaiConverter.Utils;
+
+    public abstract class AbstractSharedVariableActivityBuilder : AbstractActivityBuilder
 	{
         private SharedVariableServiceBuilder sharedVariableServiceBuilder;
 
@@ -20,7 +18,7 @@ namespace EaiConverter.Builder
             this.sharedVariableServiceBuilder = new SharedVariableServiceBuilder();
         }
 
-		public CodeNamespaceCollection GenerateClassesToGenerate (Activity activity)
+        public override CodeNamespaceCollection GenerateClassesToGenerate(Activity activity, Dictionary<string, string> variables)
 		{
             var result = new CodeNamespaceCollection();
             if (ConfigurationApp.GetProperty("IsSharedVariableServiceAlreadyGenerated") != "true")
@@ -32,13 +30,12 @@ namespace EaiConverter.Builder
             return result;
 		}
 
-
-        public List<CodeNamespaceImport> GenerateImports(Activity activity)
+        public override List<CodeNamespaceImport> GenerateImports(Activity activity)
         {
-            return new List<CodeNamespaceImport>{new CodeNamespaceImport(TargetAppNameSpaceService.sharedVariableNameSpace())};
+            return new List<CodeNamespaceImport> {new CodeNamespaceImport(TargetAppNameSpaceService.sharedVariableNameSpace())};
         }
 
-        public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
+        public override CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
         {
             var parameters = new CodeParameterDeclarationExpressionCollection
                 {
@@ -48,7 +45,7 @@ namespace EaiConverter.Builder
             return parameters;
         }
 
-        public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
+        public override CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
         {
             var parameterReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), GetServiceFieldName());
 
@@ -60,7 +57,7 @@ namespace EaiConverter.Builder
             return statements;
         }
 
-        public System.Collections.Generic.List<CodeMemberField> GenerateFields(Activity activity)
+        public override List<CodeMemberField> GenerateFields(Activity activity)
         {
             var fields = new List<CodeMemberField>
                 {new CodeMemberField
@@ -74,9 +71,6 @@ namespace EaiConverter.Builder
             return fields;
         }
 
-
-        public abstract CodeStatementCollection GenerateInvocationCode(Activity activity);
-
         private static CodeTypeReference GetServiceFieldType()
         {
             return new CodeTypeReference(SharedVariableServiceBuilder.ISharedVariableServiceName);
@@ -87,11 +81,13 @@ namespace EaiConverter.Builder
             return VariableHelper.ToVariableName(VariableHelper.ToClassName (SharedVariableServiceBuilder.SharedVariableServiceName));
         }
           
-        public string GetReturnType (Activity activity)
+        public override string GetReturnType (Activity activity)
         {
             return CSharpTypeConstant.SystemObject;
         }
-		
+
+
+
 	}
 
 }

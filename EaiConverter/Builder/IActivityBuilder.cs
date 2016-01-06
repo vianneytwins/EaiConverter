@@ -7,12 +7,13 @@
 
     public interface IActivityBuilder
     {
+        CodeNamespaceCollection GenerateClassesToGenerate(Activity activity, Dictionary<string, string> variables);
 
-        CodeNamespaceCollection GenerateClassesToGenerate (Activity activity);
+        CodeStatementCollection GenerateInvocationCode(Activity activity, Dictionary<string, string> variables);
 
-        CodeStatementCollection GenerateInvocationCode (Activity activity);
+        CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables);
 
-        List<CodeNamespaceImport> GenerateImports (Activity activity);
+        List<CodeNamespaceImport> GenerateImports(Activity activity);
 
         CodeParameterDeclarationExpressionCollection GenerateConstructorParameter (Activity activity);
 
@@ -20,7 +21,7 @@
 
         List<CodeMemberField> GenerateFields(Activity activity);
 
-        string GetReturnType (Activity activity);
+        string GetReturnType(Activity activity);
 
     }
 }

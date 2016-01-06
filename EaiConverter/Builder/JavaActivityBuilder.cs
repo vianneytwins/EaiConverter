@@ -1,15 +1,16 @@
-﻿using EaiConverter.Model;
-using System.CodeDom;
-using EaiConverter.Builder.Utils;
-using EaiConverter.CodeGenerator.Utils;
-using System.Reflection;
-using System.Collections.Generic;
-using EaiConverter.Processor;
-using EaiConverter.Utils;
-
-namespace EaiConverter.Builder
+﻿namespace EaiConverter.Builder
 {
-    public class JavaActivityBuilder : IActivityBuilder
+    using System.CodeDom;
+    using System.Collections.Generic;
+    using System.Reflection;
+
+    using EaiConverter.Builder.Utils;
+    using EaiConverter.CodeGenerator.Utils;
+    using EaiConverter.Model;
+    using EaiConverter.Processor;
+    using EaiConverter.Utils;
+
+    public class JavaActivityBuilder : AbstractActivityBuilder
     { 
         XslBuilder xslBuilder;
 
@@ -23,7 +24,8 @@ namespace EaiConverter.Builder
         }
 
 
-        public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity){
+        public override CodeNamespaceCollection GenerateClassesToGenerate(Activity activity, Dictionary<string, string> variables)
+        {
             JavaActivity javaActivity = (JavaActivity) activity;
 
             var javaNamespace = new CodeNamespace(javaActivity.PackageName);
@@ -50,7 +52,7 @@ namespace EaiConverter.Builder
         }
 
 
-        public List<CodeNamespaceImport> GenerateImports(Activity activity)
+        public override List<CodeNamespaceImport> GenerateImports(Activity activity)
         {
             return new List<CodeNamespaceImport>
             {
@@ -59,22 +61,7 @@ namespace EaiConverter.Builder
             };
         }
 
-        public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
-        {
-            return new CodeParameterDeclarationExpressionCollection();
-        }
-
-        public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
-        {
-            return new CodeStatementCollection();
-        }
-
-        public List<CodeMemberField> GenerateFields(Activity activity)
-        {
-            return new List<CodeMemberField>();
-        }
-
-        public CodeNamespaceImport[] GenerateImports()
+        private CodeNamespaceImport[] GenerateImports()
         {
             return new CodeNamespaceImport[2] { new CodeNamespaceImport("System"), new CodeNamespaceImport(TargetAppNameSpaceService.javaToolsNameSpace()) };
         }
@@ -107,15 +94,15 @@ namespace EaiConverter.Builder
             }
         }
 
-        public CodeStatementCollection GenerateInvocationCode(Activity activity)
+        public override CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
         {
+            var activityMethod = base.GenerateMethod(activity, variables);
+
             var javaActivity = (JavaActivity)activity;
 
             var invocationCodeCollection = new CodeStatementCollection();
-            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(javaActivity));
 
             invocationCodeCollection.AddRange(this.xslBuilder.Build(javaActivity.InputBindings));
-
 
             var variableReturnType = new CodeTypeReference(javaActivity.PackageName + "." + javaActivity.FileName);
             var creation = new CodeObjectCreateExpression (variableReturnType, new CodeExpression[0]);
@@ -148,7 +135,8 @@ namespace EaiConverter.Builder
 
             invocationCodeCollection.AddRange(this.GenerateOutputCallOnJavaClass(javaActivity, javaClassReference, activityClassReference));
 
-            return invocationCodeCollection;
+            activityMethod.Statements.AddRange(invocationCodeCollection);
+            return activityMethod;
         }
 
         private CodeStatementCollection GenerateInputCallOnJavaClass(JavaActivity javaActivity, CodeVariableReferenceExpression javaClassReference)
@@ -211,7 +199,7 @@ namespace EaiConverter.Builder
             return invokeCall;
         }
 
-        public string GetReturnType (Activity activity)
+        public override string GetReturnType (Activity activity)
         {
             return CSharpTypeConstant.SystemVoid;
         }

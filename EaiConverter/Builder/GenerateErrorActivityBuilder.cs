@@ -7,7 +7,7 @@ namespace EaiConverter.Builder
 
     using EaiConverter.Model;
 
-    public class GenerateErrorActivityBuilder : IActivityBuilder
+    public class GenerateErrorActivityBuilder : AbstractActivityBuilder
     {
         XslBuilder xslBuilder;
 
@@ -16,38 +16,13 @@ namespace EaiConverter.Builder
             this.xslBuilder = xslBuilder;
         }
 
-        public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity)
-        {
-			return new CodeNamespaceCollection();
-        }
-
-		public List<CodeNamespaceImport> GenerateImports(Activity activity)
-		{
-			return new List<CodeNamespaceImport>();
-		}
-
-		public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
-		{
-			return new CodeParameterDeclarationExpressionCollection();
-		}
-
-		public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
-		{
-			return new CodeStatementCollection();
-		}
-
-		public List<CodeMemberField> GenerateFields(Activity activity)
-		{
-			return new List<CodeMemberField>();
-		}
-
-        public CodeStatementCollection GenerateInvocationCode(Activity activity)
+        public override CodeStatementCollection GenerateInvocationCode(Activity activity, Dictionary<string, string> variables )
         {
             var errorActivity = (GenerateErrorActivity)activity;
             var invocationCodeCollection = new CodeStatementCollection();
 
             // add log
-            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(errorActivity));
+            invocationCodeCollection.AddRange(this.LogActivity(errorActivity));
             //add the input
             invocationCodeCollection.AddRange(this.xslBuilder.Build(activity.InputBindings));
 
@@ -60,7 +35,7 @@ namespace EaiConverter.Builder
         private CodeThrowExceptionStatement GenerateExceptionStatement(GenerateErrorActivity activity)
         {
             var parameters =
-                DefaultActivityBuilder.GenerateParameters(
+                this.GenerateParameters(
                     new List<string> { @"""Message : {0}\nMessage code : {1} """ },
                     activity);
 
@@ -79,7 +54,7 @@ namespace EaiConverter.Builder
         }
 
 
-        public string GetReturnType (Activity activity)
+        public override string GetReturnType (Activity activity)
         {
             return CSharpTypeConstant.SystemException;
         }

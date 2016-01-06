@@ -1,5 +1,3 @@
-using EaiConverter.Utils;
-
 namespace EaiConverter.Builder
 {
     using System.CodeDom;
@@ -8,18 +6,11 @@ namespace EaiConverter.Builder
     using EaiConverter.Builder.Utils;
     using EaiConverter.CodeGenerator.Utils;
     using EaiConverter.Model;
+    using EaiConverter.Utils;
 
-    public class DefaultActivityBuilder : IActivityBuilder
+    public class DefaultActivityBuilder : AbstractActivityBuilder
     {
-        public DefaultActivityBuilder(XslBuilder xslbuilder)
-        {}
-
-        public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity)
-        {
-            return new CodeNamespaceCollection();
-        }
-
-		public List<CodeNamespaceImport> GenerateImports(Activity activity)
+        public override List<CodeNamespaceImport> GenerateImports(Activity activity)
 		{
 			return new List<CodeNamespaceImport>
 			{
@@ -27,7 +18,7 @@ namespace EaiConverter.Builder
 			};
 		}
 
-		public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
+        public override CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
 		{
 			var parameters = new CodeParameterDeclarationExpressionCollection
 			{
@@ -37,7 +28,7 @@ namespace EaiConverter.Builder
 			return parameters;
 		}
 
-		public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
+        public override CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
 		{
 			var parameterReference = new CodeFieldReferenceExpression(
 				new CodeThisReferenceExpression(), GetServiceFieldName(activity));
@@ -50,7 +41,7 @@ namespace EaiConverter.Builder
 			return statements;
 		}
 
-		public System.Collections.Generic.List<CodeMemberField> GenerateFields(Activity activity)
+        public override List<CodeMemberField> GenerateFields(Activity activity)
 		{
 		    var fields = new List<CodeMemberField>
 		                     {
@@ -65,74 +56,35 @@ namespace EaiConverter.Builder
 		    return fields;
 		}
 
-        public CodeStatementCollection GenerateInvocationCode(Activity activity)
+        private CodeStatementCollection GenerateCoreMethod(Activity activity)
         {
             var activityServiceReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToVariableName(activity.Name));
             var methodInvocation = new CodeMethodInvokeExpression(activityServiceReference, "Execute", new CodeExpression[] { });
-            var invocationCodeCollection = new CodeStatementCollection();
-            invocationCodeCollection.AddRange(LogActivity(activity));
-            invocationCodeCollection.Add(methodInvocation);
+            var invocationCodeCollection = new CodeStatementCollection { methodInvocation };
             return invocationCodeCollection;
         }
 
-        public static CodeStatementCollection LogActivity(Activity activity)
+        private static CodeTypeReference GetServiceFieldType(Activity activity)
         {
-            var activityServiceReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToVariableName("logger"));
-            var methodInvocation = new CodeMethodInvokeExpression(
-                activityServiceReference,
-                "Info",
-                new CodeExpression[]
-                {
-                    new CodePrimitiveExpression("Start Activity: " + activity.Name + " of type: " + activity.Type)
-                });
-
-            var logCallStatements = new CodeStatementCollection();
-            logCallStatements.Add(methodInvocation);
-            return logCallStatements;
+            return new CodeTypeReference("I" + VariableHelper.ToClassName(activity.Name + "Service"));
         }
 
-        public static CodeExpression[] GenerateParameters(List<string> existingParamaters, Activity activity)
+        private static string GetServiceFieldName(Activity activity)
         {
-            var parameterLists = new List<CodeExpression> { };
-            //Add existing Parameter
-            if (existingParamaters != null)
-            {
-                foreach (var parameter in existingParamaters)
-                {
-                    parameterLists.Add(new CodeSnippetExpression(VariableHelper.ToSafeType(parameter)));
-                }
-            }
-
-            //Add Activity Paramters
-            if (activity.Parameters != null)
-            {
-                foreach (var parameter in activity.Parameters)
-                {
-                    parameterLists.Add(new CodeSnippetExpression(parameter.Name));
-                }
-            }
-
-            return parameterLists.ToArray();
+            return VariableHelper.ToVariableName(VariableHelper.ToClassName(activity.Name + "Service"));
         }
 
-        public static CodeExpression[] GenerateParameters(Activity activity)
-        {
-            return GenerateParameters(null, activity);
-        }
-
-		private static CodeTypeReference GetServiceFieldType (Activity activity)
-		{
-			return new CodeTypeReference("I" + VariableHelper.ToClassName(activity.Name + "Service"));
-		}
-
-		private static string GetServiceFieldName(Activity activity)
-		{
-			return VariableHelper.ToVariableName(VariableHelper.ToClassName(activity.Name + "Service"));
-		}
-
-        public string GetReturnType (Activity activity)
+        public override string GetReturnType (Activity activity)
         {
             return CSharpTypeConstant.SystemVoid;
+        }
+
+        public CodeMemberMethod GenerateMethod (Activity activity, Dictionary<string, string> variables)
+        {
+            var activityMethod = base.GenerateMethod(activity, variables);
+            activityMethod.Statements.AddRange(this.GenerateCoreMethod(activity));
+
+            return activityMethod;
         }
     }
 }

@@ -53,7 +53,7 @@ msgCode = ""EVL"";
 
 this.logger.Error(String.Format(""Message : {0}\nMessage code : {1} "", message, msgCode));
 ";
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateInvocationCode(this.activity));
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateMethod(this.activity,null).Statements);
             Assert.AreEqual(expected,generatedCode);
         }
     }

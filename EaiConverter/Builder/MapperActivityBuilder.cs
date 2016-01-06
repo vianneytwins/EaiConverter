@@ -8,7 +8,7 @@
     using EaiConverter.Model;
     using EaiConverter.Parser;
 
-    public class MapperActivityBuilder : IActivityBuilder
+    public class MapperActivityBuilder : AbstractActivityBuilder
     { 
         private readonly XslBuilder xslBuilder;
 		private readonly XsdBuilder xsdBuilder;
@@ -33,34 +33,11 @@
             return result;
         }
 
-		public List<CodeNamespaceImport> GenerateImports(Activity activity)
-		{
-			return new List<CodeNamespaceImport>();
-		}
-
-		public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
-		{
-			return new CodeParameterDeclarationExpressionCollection();
-		}
-
-		public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
-		{
-			return new CodeStatementCollection();
-		}
-
-		public List<CodeMemberField> GenerateFields(Activity activity)
-		{
-			return new List<CodeMemberField>();
-		}
-
-        public CodeStatementCollection GenerateInvocationCode(Activity activity)
+        public override CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
         {
+            var activityMethod = base.GenerateMethod(activity, variables);
             var mapperActivity = (MapperActivity)activity;
             var invocationCodeCollection = new CodeStatementCollection();
-
-            // Add the Log
-            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(mapperActivity));
-
 
             // Add the invocation
             // TODO : need to put it in the parser to get the real ReturnType !!
@@ -82,15 +59,11 @@
             var packageName = this.RemoveFinalType(variableReturnType);
             // Add the mapping
             invocationCodeCollection.AddRange(this.xslBuilder.Build(packageName, mapperActivity.InputBindings));
-
-
-            var variableName = VariableHelper.ToVariableName(mapperActivity.Name);
-
-            var code = new CodeVariableDeclarationStatement(variableReturnType, variableName, parameter);
-
-            invocationCodeCollection.Add(code);
-
-            return invocationCodeCollection;
+            activityMethod.Statements.AddRange(invocationCodeCollection);
+            
+            var code = new CodeMethodReturnStatement(parameter);
+            activityMethod.Statements.Add(code);
+            return activityMethod;
         }
 
         private string RemoveFinalType(string variableReturnType)
@@ -119,7 +92,7 @@
             return TargetAppNameSpaceService.domainContractNamespaceName() + "." + VariableHelper.ToClassName(activity.Name); 
 		}
 
-        public string GetReturnType (Activity activity)
+        public override string GetReturnType (Activity activity)
         {
             var mapperActivity = (MapperActivity)activity;
 

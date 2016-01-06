@@ -323,8 +323,7 @@
                 }
             };
 
-            var expected = @"this.logger.Info(""Start Activity: End of type: endType"");
-MyApp.MyNamespace.myProcessTestInputOutputModel.EquityRecord EquityRecord = new MyApp.MyNamespace.myProcessTestInputOutputModel.EquityRecord();
+            var expected = @"MyApp.MyNamespace.myProcessTestInputOutputModel.EquityRecord EquityRecord = new MyApp.MyNamespace.myProcessTestInputOutputModel.EquityRecord();
 EquityRecord.xmlString = ""TestString"";
 
 return EquityRecord;

@@ -27,7 +27,7 @@ namespace EaiConverter.Builder
 
         public ActivityBuilderFactory()
 		{
-			this.xpathBuilder = new XpathBuilder ();
+			this.xpathBuilder = new XpathBuilder();
 			this.xslBuilder = new XslBuilder(this.xpathBuilder);
 			this.dataAccessBuilder = new DataAccessBuilder ();
 			this.dataAccessServiceBuilder = new DataAccessServiceBuilder ();
@@ -89,7 +89,7 @@ namespace EaiConverter.Builder
             }
             else if (activityType == ActivityType.loopGroupActivityType || activityType == ActivityType.criticalSectionGroupActivityType)
             {
-                return new GroupActivityBuilder(this.xslBuilder);
+                return new GroupActivityBuilder();
             }
 			else if (activityType == ActivityType.RdvEventSourceActivityType)
 			{
@@ -120,7 +120,7 @@ namespace EaiConverter.Builder
                 return new ConfirmActivityBuilder();
             }
 
-            return new DefaultActivityBuilder(this.xslBuilder);
+            return new DefaultActivityBuilder();
         }
     }
 }

@@ -32,7 +32,7 @@
 				}
 			};
 			jdbcQueryActivity.JdbcSharedConfig = string.Empty;
-			jdbcQueryActivityBuilder = new JdbcQueryActivityBuilder (
+			jdbcQueryActivityBuilder = new JdbcQueryActivityBuilder(
                 new DataAccessBuilder (),
                 new DataAccessServiceBuilder (),
                 new DataAccessInterfacesCommonBuilder(),
@@ -103,7 +103,7 @@
         [Test]
         public void Should_Return_void_Invocation_Code_When_Activity_has_no_return_type_And_No_Input(){
             this.jdbcQueryActivityBuilder.ServiceToInvoke = "MyService";
-            CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateInvocationCode (this.jdbcQueryActivity);
+            CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateMethod(this.jdbcQueryActivity, new Dictionary<string, string>()).Statements;
             Assert.AreEqual ("this.logger.Info(\"Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity\");\n\nthis.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
         }
 
@@ -118,8 +118,8 @@
                                                                                     Type = "System.String"
                                                                                 }
                                                                         };
-            CodeStatementCollection invocationExpression = this.jdbcQueryActivityBuilder.GenerateInvocationCode(this.jdbcQueryActivity);
-            Assert.AreEqual("this.logger.Info(\"Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity\");\n\nList<CurrencyResultSet> currencyResultSet = this.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
+            CodeStatementCollection invocationExpression = this.jdbcQueryActivityBuilder.GenerateMethod(this.jdbcQueryActivity, new Dictionary<string, string>()).Statements;
+            Assert.AreEqual("this.logger.Info(\"Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity\");\n\nreturn this.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
         }
 
         [Test]
@@ -141,7 +141,7 @@
             };
             this.jdbcQueryActivityBuilder.ServiceToInvoke = "MyService";
 
-            CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateInvocationCode (this.jdbcQueryActivity);
+            CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateMethod(this.jdbcQueryActivity, new Dictionary<string, string>()).Statements;
             Assert.AreEqual (
                 @"this.logger.Info(""Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity"");
 System.String IdBbUnique;

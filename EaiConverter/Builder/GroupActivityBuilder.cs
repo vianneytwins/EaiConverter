@@ -15,22 +15,25 @@ namespace EaiConverter.Builder
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(GroupActivityBuilder));
 
-        private XslBuilder xslBuilder;
         private readonly CoreProcessBuilder coreProcessBuilder;
         private Dictionary<string, CodeStatementCollection> activityNameToServiceNameDictionnary = new Dictionary<string, CodeStatementCollection>();
 		private readonly ActivityBuilderFactory activityBuilderFactory;
 
         private IXpathBuilder xpathBuilder;
 
-        public GroupActivityBuilder(XslBuilder xslBuilder)
+        public GroupActivityBuilder()
         {
-            this.xslBuilder = xslBuilder;
             this.coreProcessBuilder = new CoreProcessBuilder();
             this.xpathBuilder = new XpathBuilder();
 			this.activityBuilderFactory = new ActivityBuilderFactory();
         }
-            
-		public List<CodeNamespaceImport> GenerateImports(Activity groupActivity)
+
+        public CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
+        {
+            return new CodeMemberMethod();
+        }
+
+        public List<CodeNamespaceImport> GenerateImports(Activity groupActivity)
         {
 			var import4Activities = new List<CodeNamespaceImport>();
 
@@ -94,7 +97,7 @@ namespace EaiConverter.Builder
 			return fields;
         }
 
-        public CodeNamespaceCollection GenerateClassesToGenerate(Activity groupActivity)
+        public CodeNamespaceCollection GenerateClassesToGenerate(Activity groupActivity, Dictionary<string, string> variables)
         {
             this.activityNameToServiceNameDictionnary = new Dictionary<string, CodeStatementCollection>();
             var activities = ((GroupActivity)groupActivity).Activities;
@@ -104,16 +107,16 @@ namespace EaiConverter.Builder
             {
                 var activityBuilder = activityBuilderFactory.Get(activity.Type);
 
-				activityClasses.AddRange(activityBuilder.GenerateClassesToGenerate(activity));
-				this.activityNameToServiceNameDictionnary.Add(activity.Name, activityBuilder.GenerateInvocationCode(activity));
+                activityClasses.AddRange(activityBuilder.GenerateClassesToGenerate(activity, variables));
+				this.activityNameToServiceNameDictionnary.Add(activity.Name, activityBuilder.GenerateInvocationCode(activity, variables));
             }
             return activityClasses;
         }
 
-        public CodeStatementCollection GenerateInvocationCode(Activity activity)
+        public CodeStatementCollection GenerateInvocationCode(Activity activity, Dictionary<string, string> variables)
         {
             var invocationCodeCollection = new CodeStatementCollection();
-            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(activity));
+            //invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(activity));
 
             var groupActivity = (GroupActivity)activity;
 

@@ -86,7 +86,7 @@
 			ConfigurationApp.SaveProperty(RdvPublishActivityBuilder.IsPublisherInterfaceAlreadyGenerated, "false");
 			ConfigurationApp.SaveProperty(RdvPublishActivityBuilder.IsTibcoPublisherImplemAlreadyGenerated, "false");
 
-			var namespaces = this.activityBuilder.GenerateClassesToGenerate(activity);
+            var namespaces = this.activityBuilder.GenerateClassesToGenerate(activity, null);
 			Assert.AreEqual (2, namespaces.Count);
 		}
 
@@ -96,7 +96,7 @@
 			ConfigurationApp.SaveProperty(RdvPublishActivityBuilder.IsPublisherInterfaceAlreadyGenerated, "true");
 			ConfigurationApp.SaveProperty(RdvPublishActivityBuilder.IsTibcoPublisherImplemAlreadyGenerated, "false");
 
-			var namespaces = this.activityBuilder.GenerateClassesToGenerate(activity);
+            var namespaces = this.activityBuilder.GenerateClassesToGenerate(activity, null);
 			Assert.AreEqual (1, namespaces.Count);
 		}
 
@@ -129,7 +129,7 @@ ActivityInput.body = ""TestString"";
 string subject = ""MY.Tibco.subject"";
 this.my_Activity_NameRdvPublisher.Send(subject, ActivityInput);
 ";
-			var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.activityBuilder.GenerateInvocationCode(this.activity));
+			var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.activityBuilder.GenerateMethod(this.activity,null).Statements);
 			Assert.AreEqual(expected, generatedCode);
 		}
 

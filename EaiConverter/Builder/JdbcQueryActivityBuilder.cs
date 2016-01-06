@@ -10,7 +10,7 @@ namespace EaiConverter.Builder
     using EaiConverter.Model;
     using EaiConverter.Processor;
 
-    public class JdbcQueryActivityBuilder : IActivityBuilder
+    public class JdbcQueryActivityBuilder : AbstractActivityBuilder
     {
         private readonly DataAccessBuilder dataAccessBuilder;
         private readonly DataAccessServiceBuilder dataAccessServiceBuilder;
@@ -125,28 +125,27 @@ namespace EaiConverter.Builder
             return result;
         }
 
-        public CodeStatementCollection GenerateInvocationCode(Activity activity)
+        public override CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
         {
+            var activityMethod = base.GenerateMethod(activity, variables);
+
             var jdbcQueryActivity = (JdbcQueryActivity)activity;
 
             var invocationCodeCollection = new CodeStatementCollection();
-
-            // Add the log
-            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(jdbcQueryActivity));
-
+            
             // Add the input bindings
             invocationCodeCollection.AddRange(this.xslBuilder.Build(jdbcQueryActivity.InputBindings));
 
             // Add the invocation itself
             var activityServiceReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToVariableName(this.ServiceToInvoke));
 
-            var parameters = DefaultActivityBuilder.GenerateParameters(jdbcQueryActivity);
+            var parameters = this.GenerateParameters(jdbcQueryActivity);
 
-            var returnType = GetReturnType(activity);
+            var returnType = this.GetReturnType(activity);
 
             if (!returnType.Equals(CSharpTypeConstant.SystemVoid))
-            {  
-                var codeInvocation = new CodeVariableDeclarationStatement(new CodeTypeReference(returnType), VariableHelper.ToVariableName(jdbcQueryActivity.Name) + "ResultSet", new CodeMethodInvokeExpression(activityServiceReference, DataAccessServiceBuilder.ExecuteSqlQueryMethodName, parameters));
+            {
+                var codeInvocation = new CodeMethodReturnStatement(new CodeMethodInvokeExpression(activityServiceReference, DataAccessServiceBuilder.ExecuteSqlQueryMethodName, parameters));
                 invocationCodeCollection.Add(codeInvocation);
             }
             else
@@ -155,10 +154,12 @@ namespace EaiConverter.Builder
                 invocationCodeCollection.Add(codeInvocation);
             }
 
-            return invocationCodeCollection;
+            activityMethod.Statements.AddRange(invocationCodeCollection);
+
+            return activityMethod;
         }
 
-		public List<CodeNamespaceImport> GenerateImports(Activity activity)
+        public override List<CodeNamespaceImport> GenerateImports(Activity activity)
 		{
 		    var jdbcQueryActivity = (JdbcQueryActivity)activity;
 
@@ -175,30 +176,30 @@ namespace EaiConverter.Builder
 		    return imports;
 		}
 
-        public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
+        public override CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
         {
 			var parameters = new CodeParameterDeclarationExpressionCollection
 			{
-				new CodeParameterDeclarationExpression(GetServiceFieldType((JdbcQueryActivity) activity), GetServiceFieldName((JdbcQueryActivity)activity))
+				new CodeParameterDeclarationExpression(this.GetServiceFieldType((JdbcQueryActivity) activity), this.GetServiceFieldName((JdbcQueryActivity)activity))
 			};
 
 			return parameters;
         }
 
-		public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
+		public override CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
 		{
 			var parameterReference = new CodeFieldReferenceExpression(
-                new CodeThisReferenceExpression(), GetServiceFieldName((JdbcQueryActivity)activity));
+                new CodeThisReferenceExpression(), this.GetServiceFieldName((JdbcQueryActivity)activity));
 
 			var statements = new CodeStatementCollection
 			{
-				new CodeAssignStatement(parameterReference, new CodeArgumentReferenceExpression(GetServiceFieldName((JdbcQueryActivity)activity)))
+				new CodeAssignStatement(parameterReference, new CodeArgumentReferenceExpression(this.GetServiceFieldName((JdbcQueryActivity)activity)))
 			};
 
 			return statements;
 		}
 
-		public List<CodeMemberField> GenerateFields(Activity activity)
+		public override List<CodeMemberField> GenerateFields(Activity activity)
 		{
 			var fields = new List<CodeMemberField>
 			{
@@ -250,19 +251,17 @@ namespace EaiConverter.Builder
             {
                 return jdbcQueryActivity.QueryStatement;
             }
-            else
+            
+            if (!SqlRequestToActivityMapper.IsThisJdbcActivityNameUsed(jdbcQueryActivity.Name))
             {
-                if (!SqlRequestToActivityMapper.IsThisJdbcActivityNameUsed(jdbcQueryActivity.Name))
-                {
-                    SqlRequestToActivityMapper.SetThisJdbcActivityNameHasUsed(jdbcQueryActivity.Name);
-                    return VariableHelper.ToClassName(jdbcQueryActivity.Name);
-                }
-
-                var className = VariableHelper.ToClassName(jdbcQueryActivity.Name) + SqlRequestToActivityMapper.Counter;
-                SqlRequestToActivityMapper.Counter++;
-
-                return className;
+                SqlRequestToActivityMapper.SetThisJdbcActivityNameHasUsed(jdbcQueryActivity.Name);
+                return VariableHelper.ToClassName(jdbcQueryActivity.Name);
             }
+
+            var className = VariableHelper.ToClassName(jdbcQueryActivity.Name) + SqlRequestToActivityMapper.Counter;
+            SqlRequestToActivityMapper.Counter++;
+
+            return className;
         }
 
         private string GetDataCustomAttributeName(CodeNamespace dataAccessNameSpace)
@@ -270,10 +269,10 @@ namespace EaiConverter.Builder
             return ((CodeMemberMethod)dataAccessNameSpace.Types[0].Members[2]).Parameters[0].CustomAttributes[0].Name;
         }
 
-        public string GetReturnType (Activity activity)
+        public override string GetReturnType (Activity activity)
         {
             var jdbcQueryActivity = (JdbcQueryActivity)activity;
-            jdbcQueryActivity.ClassName = GenerateClassName(jdbcQueryActivity);
+            jdbcQueryActivity.ClassName = this.GenerateClassName(jdbcQueryActivity);
 
             if (jdbcQueryActivity.QueryOutputStatementParameters != null && jdbcQueryActivity.QueryOutputStatementParameters.Count > 0)
             {   
@@ -281,15 +280,16 @@ namespace EaiConverter.Builder
                 {
                     return "List<" + VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet>";
                 }
-                else
-                {
-                    return VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet";
-                }
+
+                return VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet";
             }
-            else
-            {
-                return CSharpTypeConstant.SystemVoid;
-            }
+            
+            return CSharpTypeConstant.SystemVoid;
+        }
+
+        protected override string GetReturnVariableName(Activity activity)
+        {
+            return VariableHelper.ToVariableName(activity.Name) + "ResultSet";
         }
     }
 }

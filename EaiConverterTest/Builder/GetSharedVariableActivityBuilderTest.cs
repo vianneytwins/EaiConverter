@@ -27,11 +27,10 @@ namespace EaiConverter.Test.Builder
         [Test]
         public void Should_Generate_invocation_method()
         {
-			var expected = @"
-var configName = ""myconfigPath"";
-var myActivityName = this.sharedVariableService.Get(configName);
+            var expected = @"var configName = ""myconfigPath"";
+return this.sharedVariableService.Get(configName);
 ";
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateInvocationCode(this.activity));
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateMethod(this.activity, new Dictionary<string, string>()).Statements);
             Assert.IsTrue(generatedCode.EndsWith(expected));
         }
     }

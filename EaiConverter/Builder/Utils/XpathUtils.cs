@@ -12,6 +12,10 @@
     {
         public List<string> GetVariableNames(IEnumerable<XNode> inputBindings)
         {
+            if (inputBindings == null)
+            {
+                return new List<string>();
+            }
             var variables = new List<string>();
             foreach (var inputNode in inputBindings)
             {
@@ -44,7 +48,7 @@
                 string variableNameToModify = variable.Groups[0].ToString();
                 expression = variableNameToModify.Replace(
                     variableNameToModify,
-                    VariableHelper.ToVariableName(variableNameToModify.Replace("$", string.Empty).Replace('-', '_').Replace('.', '_').Replace("/", string.Empty).Replace(@"""", string.Empty)));
+                    variableNameToModify.Replace("$", string.Empty).Replace('-', '_').Replace('.', '_').Replace("/", string.Empty).Replace(@"""", string.Empty));
                 names.Add(expression);
             }
             

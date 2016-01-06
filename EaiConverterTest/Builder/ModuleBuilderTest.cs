@@ -14,7 +14,7 @@ namespace EaiConverterTest.Builder
         public void SetUp()
         {
             this.moduleBuilder = new ModuleBuilder();
-            ModuleBuilder.AddServiceToRegister("ITruc","Truc");
+            ModuleBuilder.AddServiceToRegister("ITruc", "Truc");
         }
 
         [Test]

@@ -12,7 +12,7 @@
 
     using log4net;
 
-    public class XmlParseActivityBuilder : IActivityBuilder
+    public class XmlParseActivityBuilder : AbstractActivityBuilder
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(XmlParseActivityBuilder));
 
@@ -29,7 +29,7 @@
 			this.xsdParser = xsdParser;
         }
 
-        public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity)
+        public override CodeNamespaceCollection GenerateClassesToGenerate(Activity activity, Dictionary<string, string> variables)
         {
             var result = new CodeNamespaceCollection();
             if (ConfigurationApp.GetProperty("IsXmlParserHelperAlreadyGenerated") != "true")
@@ -52,13 +52,13 @@
 
             return result;
         }
- 
-		public List<CodeNamespaceImport> GenerateImports(Activity activity)
+
+        public override List<CodeNamespaceImport> GenerateImports(Activity activity)
 		{
 			return new List<CodeNamespaceImport>{new CodeNamespaceImport(TargetAppNameSpaceService.xmlToolsNameSpace())};
 		}
 
-        public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
+        public override CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
         {
 			var parameters = new CodeParameterDeclarationExpressionCollection
 			{
@@ -68,7 +68,7 @@
 			return parameters;
         }
 
-        public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
+        public override CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
         {
 			var parameterReference = new CodeFieldReferenceExpression(
 				new CodeThisReferenceExpression(), GetServiceFieldName());
@@ -81,10 +81,11 @@
 			return statements;
         }
 
-        public System.Collections.Generic.List<CodeMemberField> GenerateFields(Activity activity)
+        public override List<CodeMemberField> GenerateFields(Activity activity)
         {
 			var fields = new List<CodeMemberField>
-			{new CodeMemberField
+			{
+                new CodeMemberField
 				{
 					Type = GetServiceFieldType(),
 					Name = GetServiceFieldName(),
@@ -95,22 +96,18 @@
 			return fields;
         }
 
-        public CodeStatementCollection GenerateInvocationCode(Activity activity)
+        public override CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
         {
+            var activityMethod = base.GenerateMethod(activity, variables);
             var xmlParseActivity = (XmlParseActivity) activity;
             var invocationCodeCollection = new CodeStatementCollection();
-
-            // Add log at the beginning
-            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(xmlParseActivity));
 
             // Add the input bindings
             invocationCodeCollection.AddRange(this.xslBuilder.Build(xmlParseActivity.InputBindings));
 
             // Add the invocation itself
             // TODO : need to put it in the parser to get the real ReturnType !!
-			var variableReturnType = GetReturnType(activity);
-
-            var variableName = VariableHelper.ToVariableName(xmlParseActivity.Name);
+			var variableReturnType = this.GetReturnType(activity);
 
             var activityServiceReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToVariableName(XmlParserHelperBuilder.XmlParserHelperServiceName));
 
@@ -126,10 +123,13 @@
 
             var codeInvocation = new CodeMethodInvokeExpression(new CodeMethodReferenceExpression(activityServiceReference, XmlParserHelperBuilder.FromXmlMethodName, new CodeTypeReference(variableReturnType)), parameters);
 
-            var code = new CodeVariableDeclarationStatement(variableReturnType, variableName, codeInvocation);
+            var code = new CodeMethodReturnStatement(codeInvocation);
 
             invocationCodeCollection.Add(code);
-            return invocationCodeCollection;
+
+            activityMethod.Statements.AddRange(invocationCodeCollection);
+
+            return activityMethod;
         }
 
 		private static CodeTypeReference GetServiceFieldType()
@@ -147,7 +147,7 @@
 			return TargetAppNameSpaceService.domainContractNamespaceName() + "." + VariableHelper.ToClassName(activity.Name); 
 		}
 
-        public string GetReturnType(Activity activity)
+        public override string GetReturnType(Activity activity)
         {
             XmlParseActivity xmlParseActivity = (XmlParseActivity)activity;
             var variableReturnType = "System.String";

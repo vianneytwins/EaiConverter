@@ -1,5 +1,3 @@
-using EaiConverter.Utils;
-
 namespace EaiConverter.Builder
 {
     using System;
@@ -11,24 +9,18 @@ namespace EaiConverter.Builder
     using EaiConverter.Builder.Utils;
     using EaiConverter.CodeGenerator.Utils;
     using EaiConverter.Model;
+    using EaiConverter.Utils;
 
-    public class CallProcessActivityBuilder : IActivityBuilder
+    public class CallProcessActivityBuilder : AbstractActivityBuilder
     {
-        XslBuilder xslBuilder;
+        private readonly XslBuilder xslBuilder;
 
         public CallProcessActivityBuilder(XslBuilder xslBuilder)
         {
             this.xslBuilder = xslBuilder;
         }
 
-
-        public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity)
-        {
-            return new CodeNamespaceCollection();
-        }
-
-
-		public List<CodeNamespaceImport> GenerateImports(Activity activity)
+		public override List<CodeNamespaceImport> GenerateImports(Activity activity)
         {
 			var import4Activities = new List<CodeNamespaceImport>();
 			var callProcessActivity = (CallProcessActivity)activity;
@@ -41,7 +33,7 @@ namespace EaiConverter.Builder
 			return import4Activities;
         }
 
-        public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
+        public override CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
         {
 			var callProcessActivity = (CallProcessActivity)activity;
 			var parameters = new CodeParameterDeclarationExpressionCollection
@@ -52,7 +44,7 @@ namespace EaiConverter.Builder
 			return parameters;
         }
 
-        public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
+        public override CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
         {
 			var callProcessActivity = (CallProcessActivity)activity;
 			var parameterReference = new CodeFieldReferenceExpression(
@@ -66,7 +58,7 @@ namespace EaiConverter.Builder
 			return statements;
         }
 
-        public System.Collections.Generic.List<CodeMemberField> GenerateFields(Activity activity)
+        public override List<CodeMemberField> GenerateFields(Activity activity)
         {
 			var callProcessActivity = (CallProcessActivity)activity;
 			return new List<CodeMemberField>
@@ -82,10 +74,11 @@ namespace EaiConverter.Builder
 
         public CodeStatementCollection GenerateInvocationCode(Activity activity)
         {
-            CallProcessActivity callProcessActivity = (CallProcessActivity)activity;
+
+
+            var callProcessActivity = (CallProcessActivity)activity;
             var invocationCodeCollection = new CodeStatementCollection();
-            // Add the Log
-            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(callProcessActivity));
+
             // Add the mapping
             if (IsTheProcessInputRequiresAnImport(callProcessActivity))
             {
@@ -103,7 +96,7 @@ namespace EaiConverter.Builder
             // Add the invocation
             var processToCallReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToVariableName(callProcessActivity.TibcoProcessToCall.ProcessName));
 
-            var parameters = DefaultActivityBuilder.GenerateParameters(callProcessActivity);
+            var parameters = this.GenerateParameters(callProcessActivity);
 
             // TODO : WARNING not sure the start method ProcessName is indeed START
             var methodInvocation = new CodeMethodInvokeExpression(processToCallReference, "Start", parameters);
@@ -130,7 +123,7 @@ namespace EaiConverter.Builder
 			return VariableHelper.ToVariableName(callProcessActivity.TibcoProcessToCall.ProcessName);
 		}
 
-        public string GetReturnType (Activity activity)
+        public override string GetReturnType(Activity activity)
         {
             // TODO VC : parse the target process to get its return type
             return CSharpTypeConstant.SystemObject;

@@ -47,9 +47,9 @@
 EquityRecord EquityRecord = new EquityRecord();
 EquityRecord.xmlString = ""TestString"";
 
-EquityRecord my_Activity_Name = EquityRecord;
+return EquityRecord;
 ";
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.mapperActivityBuilder.GenerateInvocationCode(this.activity));
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.mapperActivityBuilder.GenerateMethod(this.activity, new Dictionary<string, string>()).Statements);
             Assert.AreEqual(expected, generatedCode);
         }
 
@@ -60,12 +60,12 @@ EquityRecord my_Activity_Name = EquityRecord;
 EquityRecord EquityRecord = new EquityRecord();
 EquityRecord.xmlString = ""TestString"";
 
-EquityRecord my_Activity_Name = EquityRecord;
+return EquityRecord;
 ";
 
-            this.activity.XsdReference = "EquityRecord"; 
+            this.activity.XsdReference = "EquityRecord";
 
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.mapperActivityBuilder.GenerateInvocationCode(this.activity));
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.mapperActivityBuilder.GenerateMethod(this.activity, new Dictionary<string, string>()).Statements);
             Assert.AreEqual(expected, generatedCode);
         }
 
@@ -81,9 +81,9 @@ EquityRecord my_Activity_Name = EquityRecord;
 MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord EquityRecord = new MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord();
 EquityRecord.xmlString = ""TestString"";
 
-MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord my_Activity_Name = EquityRecord;
+return EquityRecord;
 ";
-			var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.mapperActivityBuilder.GenerateInvocationCode(this.activity));
+			var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.mapperActivityBuilder.GenerateMethod(this.activity, new Dictionary<string, string>()).Statements);
 			Assert.AreEqual(expected, generatedCode);
 		}
 

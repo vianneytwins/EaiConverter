@@ -9,7 +9,7 @@ namespace EaiConverter.Builder
     using EaiConverter.Processor;
     using EaiConverter.Utils;
 
-    public class RdvPublishActivityBuilder : IActivityBuilder
+    public class RdvPublishActivityBuilder : AbstractActivityBuilder
 	{
         public const string IsPublisherInterfaceAlreadyGenerated = "IsPublisherInterfaceAlreadyGenerated";
 		public const string IsTibcoPublisherImplemAlreadyGenerated = "IsTibcoPublisherImplemAlreadyGenerated";
@@ -22,7 +22,7 @@ namespace EaiConverter.Builder
 			this.xslBuilder = xslBuilder;
 		}
 
-		public CodeNamespaceCollection GenerateClassesToGenerate (EaiConverter.Model.Activity activity)
+        public override CodeNamespaceCollection GenerateClassesToGenerate(Activity activity, Dictionary<string, string> variables)
 		{
 			var namespaces = new CodeNamespaceCollection ();
 			if (ConfigurationApp.GetProperty(IsPublisherInterfaceAlreadyGenerated) != "true")
@@ -70,14 +70,12 @@ namespace EaiConverter.Builder
 			return sendMethod;
 		}
 
-		public CodeStatementCollection GenerateInvocationCode (Activity activity)
-		{
+        public override CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
+        {
+            var activityMethod = base.GenerateMethod(activity, variables);
 			var rdvPublishActivity = (RdvPublishActivity) activity;
 			var invocationCodeCollection = new CodeStatementCollection();
-
-			// Add the Log
-			invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(rdvPublishActivity));
-
+            
 			// Add the mapping
 			invocationCodeCollection.AddRange(this.xslBuilder.Build(rdvPublishActivity.InputBindings));
             invocationCodeCollection.Add(new CodeSnippetStatement("string subject = \"" + rdvPublishActivity.Subject+ "\";"));
@@ -89,15 +87,17 @@ namespace EaiConverter.Builder
                 {
                     "subject"
                 };
-			var parameters = DefaultActivityBuilder.GenerateParameters(initParameters, rdvPublishActivity);
+			var parameters = this.GenerateParameters(initParameters, rdvPublishActivity);
 
 			var codeInvocation = new CodeMethodInvokeExpression(activityServiceReference, "Send", parameters);
 			invocationCodeCollection.Add(codeInvocation);
 
-			return invocationCodeCollection;
+            activityMethod.Statements.AddRange(invocationCodeCollection);
+
+            return activityMethod;
 		}
 
-		public List<System.CodeDom.CodeNamespaceImport> GenerateImports (EaiConverter.Model.Activity activity)
+		public override List<System.CodeDom.CodeNamespaceImport> GenerateImports(Activity activity)
 		{
 			return new List<CodeNamespaceImport>
 			{
@@ -105,7 +105,7 @@ namespace EaiConverter.Builder
 			};
 		}
 
-		public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter (EaiConverter.Model.Activity activity)
+        public override CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
 		{
 			var parameters = new CodeParameterDeclarationExpressionCollection
 			{
@@ -115,20 +115,20 @@ namespace EaiConverter.Builder
 			return parameters;
 		}
 
-		public CodeStatementCollection GenerateConstructorCodeStatement (EaiConverter.Model.Activity activity)
+        public override CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
 		{
 			var parameterReference = new CodeFieldReferenceExpression(
-				new CodeThisReferenceExpression(), GetServiceFieldName(activity));
+                new CodeThisReferenceExpression(), this.GetServiceFieldName(activity));
 
 			var statements = new CodeStatementCollection
 			{
-				new CodeAssignStatement(parameterReference, new CodeArgumentReferenceExpression(GetServiceFieldName(activity)))
+				new CodeAssignStatement(parameterReference, new CodeArgumentReferenceExpression(this.GetServiceFieldName(activity)))
 			};
 
 			return statements;
 		}
 
-		public List<System.CodeDom.CodeMemberField> GenerateFields (EaiConverter.Model.Activity activity)
+		public List<CodeMemberField> GenerateFields (Activity activity)
 		{
 			var fields = new List<CodeMemberField>
 			{
@@ -143,7 +143,7 @@ namespace EaiConverter.Builder
 			return fields;
 		}
 
-        public string GetReturnType(Activity activity)
+        public override string GetReturnType(Activity activity)
         {
             return CSharpTypeConstant.SystemVoid;
         }

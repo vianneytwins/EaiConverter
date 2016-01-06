@@ -1,11 +1,10 @@
-using EaiConverter.Parser;
-using System.CodeDom;
-using EaiConverter.CodeGenerator.Utils;
-using System.Collections.Generic;
-
 namespace EaiConverter.Builder
 {
-	using EaiConverter.Model;
+    using System.CodeDom;
+    using System.Collections.Generic;
+
+    using EaiConverter.CodeGenerator.Utils;
+    using EaiConverter.Model;
 
     public class GetSharedVariableActivityBuilder : AbstractSharedVariableActivityBuilder
 	{
@@ -16,13 +15,12 @@ namespace EaiConverter.Builder
             this.xslBuilder = xslBuilder;
         }
 
-        public override CodeStatementCollection GenerateInvocationCode(Activity activity)
+        public override CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
         {
-            var sharedVariableActivity = (SharedVariableActivity) activity;
-            var invocationCodeCollection = new CodeStatementCollection();
+            var activityMethod = base.GenerateMethod(activity, variables);
 
-            // Add log at the beginning
-            invocationCodeCollection.AddRange(DefaultActivityBuilder.LogActivity(sharedVariableActivity));
+            var sharedVariableActivity = (SharedVariableActivity)activity;
+            var invocationCodeCollection = new CodeStatementCollection();
 
             // Add the input bindings
             invocationCodeCollection.AddRange(this.xslBuilder.Build(sharedVariableActivity.InputBindings));
@@ -38,10 +36,11 @@ namespace EaiConverter.Builder
 
             var codeInvocation = new CodeMethodInvokeExpression(new CodeMethodReferenceExpression(activityServiceReference, SharedVariableServiceBuilder.GetMethodName), parameters);
 
-            var code = new CodeVariableDeclarationStatement(new CodeTypeReference("var"), variableName, codeInvocation);
+            var code = new CodeMethodReturnStatement(codeInvocation);
 
             invocationCodeCollection.Add(code);
-            return invocationCodeCollection;
+            activityMethod.Statements.AddRange(invocationCodeCollection);
+            return activityMethod;
         }
 	}
 

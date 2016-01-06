@@ -70,7 +70,7 @@ this.subscriber.ResponseReceived += this.OnEvent;
 			ConfigurationApp.SaveProperty("IsSubscriberInterfaceAlreadyGenerated", "false");
 			ConfigurationApp.SaveProperty("IsTibcoSubscriberImplemAlreadyGenerated", "false");
 
-			var namespaces = this.activityBuilder.GenerateClassesToGenerate(activity);
+			var namespaces = this.activityBuilder.GenerateClassesToGenerate(activity, null);
 			Assert.AreEqual (2, namespaces.Count);
 		}
 
@@ -80,7 +80,7 @@ this.subscriber.ResponseReceived += this.OnEvent;
 			ConfigurationApp.SaveProperty("IsSubscriberInterfaceAlreadyGenerated", "true");
 			ConfigurationApp.SaveProperty("IsTibcoSubscriberImplemAlreadyGenerated", "false");
 
-			var namespaces = this.activityBuilder.GenerateClassesToGenerate(activity);
+            var namespaces = this.activityBuilder.GenerateClassesToGenerate(activity, null);
 			Assert.AreEqual (1, namespaces.Count);
 		}
 	}

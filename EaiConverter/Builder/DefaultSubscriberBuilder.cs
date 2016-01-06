@@ -18,7 +18,7 @@ namespace EaiConverter.Builder
             this.subscriberBuilder = subscriberBuilder;
         }
 
-        public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity)
+        public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity, Dictionary<string, string> variables )
         {
             var namespaces = new CodeNamespaceCollection();
             if (ConfigurationApp.GetProperty("IsSubscriberInterfaceAlreadyGenerated") != "true")
@@ -29,12 +29,17 @@ namespace EaiConverter.Builder
 
             return namespaces;
         }
-            
 
-        public System.CodeDom.CodeStatementCollection GenerateInvocationCode(Activity activity)
+        public CodeStatementCollection GenerateInvocationCode(Activity activity, Dictionary<string, string> variables)
         {
             return new CodeStatementCollection();
         }
+
+        public CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
+        {
+            return new CodeMemberMethod();
+        }
+
 
         public List<System.CodeDom.CodeNamespaceImport> GenerateImports(Activity activity)
         {
