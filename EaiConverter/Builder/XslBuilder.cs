@@ -203,6 +203,14 @@ namespace EaiConverter.Builder
                     {
                         codeStatements.Append(this.ManageIterationTag(element, parent));
                     }
+                    else if (element.Name.LocalName == "variable")
+                    {
+                        string returnType = DefineReturnType(element);
+                        codeStatements.Append(this.tab);
+                        codeStatements.Append(returnType + " ");
+
+                        codeStatements.Append(this.Build(element.Nodes(), VariableHelper.ToSafeType(element.Attribute("name").Value)));
+                    }
                 }
             }
 

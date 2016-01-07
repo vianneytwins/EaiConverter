@@ -571,14 +571,7 @@ sqlParams.parameter = tempparameterList.ToArray();
                 @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" xmlns:pfx1=""http://www.SomeWhere.com"">
             <inputs>
                 <xsl:variable name=""params"">
-                    <xsl:for-each select=""$Start/pfx3:logInfo/param"">
-                        <xsl:if test=""name !='xml'"">
-                            <xsl:value-of select=""concat(' [', name, '=', value, ']')""/>
-                        </xsl:if>
-                    </xsl:for-each>
-                    <xsl:if test=""exists($Start/pfx3:logInfo/param[name='xml'])"">
-                        <xsl:value-of select=""concat('&#xA;&#x9;', translate($Start/pfx3:logInfo/param[name='xml']/value, '&#xA;', ''))""/>
-                    </xsl:if>
+                    <xsl:value-of select=""'myvalue'""/>
                 </xsl:variable>
                 
                 <Message>
@@ -593,7 +586,10 @@ sqlParams.parameter = tempparameterList.ToArray();
             var codeStatement = xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual("logInfo logInfo = new logInfo();\nlogInfo.FundStruct = new FundStruct();\nlogInfo.FundStruct.FundName = \"testvalue\";\n\n", generateCode);
+            Assert.AreEqual(@"inputs inputs = new inputs();
+System.String @params = ""myvalue"";
+inputs.Message = TibcoXslHelper.Concat(start_logInfo.message, "" "", @params);
+", generateCode);
         }
 	}
 }

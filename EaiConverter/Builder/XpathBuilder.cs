@@ -191,7 +191,7 @@
             var variables = regex.Match(expression);
             if (variables.Success)
             {
-                string variableNameToModify = variables.Groups[0].ToString();
+                string variableNameToModify = variables.Groups[1].ToString();
                 expression = expression.Replace(
                     variableNameToModify,
                     VariableHelper.ToVariableName(variableNameToModify.Replace("$", string.Empty).Replace('-', '_').Replace('.', '_')));
