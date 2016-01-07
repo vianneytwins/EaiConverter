@@ -68,14 +68,14 @@
         [Test]
         public void Should_Replace_rename_startactivity_variable()
         {
-            Assert.AreEqual("start_root", this.xpathBuilder.Build("$Start/root"));
-            Assert.AreEqual("start_root", this.xpathBuilder.Build("$start/root"));
+            Assert.AreEqual(@"""start_root""", this.xpathBuilder.Build(@"""$Start/root"""));
+            Assert.AreEqual(@"""start_root""", this.xpathBuilder.Build(@"""$start/root"""));
         }
 
         [Test]
         public void Should_Remove_prefix()
         {
-            Assert.AreEqual("start_root", this.xpathBuilder.Build("$Start/pfx1:root"));
+            Assert.AreEqual(@"""start_root""", this.xpathBuilder.Build(@"""$Start/pfx1:root"""));
         }
 
         [Test]

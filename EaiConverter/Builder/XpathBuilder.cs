@@ -9,7 +9,7 @@
         public string Build(string expression)
         {
 
-            expression = ChangeStartActivtyVariableName(expression);
+            expression = ChangeStartActivityVariableName(expression);
 
             // TODO : Get what between $ and next / to Convert to variable name ? at least remove the . in the process name
 
@@ -48,6 +48,13 @@
 
             expression = ManageCondition(expression);
 
+            return expression;
+        }
+
+        public static string ChangeStartActivityVariableName(string expression)
+        {
+            expression = expression.Replace("$Start/", "$start_");
+            expression = expression.Replace("$start/", "$start_");
             return expression;
         }
 
@@ -170,23 +177,17 @@
             return expression;
         }
 
-        private static string ChangeStartActivtyVariableName(string expression)
-        {
-            expression = expression.Replace("$Start/", "start_");
-            expression = expression.Replace("$start/", "start_");
-            return expression;
-        }
-
         private static string FormatActivityNameInXpath(string expression)
         {
             // @"\$([^/]*)\/"
             // \$             # Escaped parenthesis, means "starts with a '$' character"
             //    (           # Parentheses in a regex mean "put (capture) the stuff in between into the Groups array"     
-            //        [^/]    # Any character that is not a '/' character
-            //        *       # Zero or more occurrences of the aforementioned "non '/' char"
+            //        [^/"")]    # Any character that is not a '/', '"', ',', ')' character 
+            //        *       # Zero or more occurrences of the aforementioned chars"
             //    )           # Close the capturing group
-            //    \/          # "Ends with a '/' character"
-            var regex = new Regex(@"\$([^/]*)\/");
+            //    \/"")          # "Ends with a '/', '"', ',', ')' character 
+            //var regex = new Regex(@"\$([^/]*)\/");
+            var regex = new Regex(@"\$([^/"",)]*)[/"",)]");
             var variables = regex.Match(expression);
             if (variables.Success)
             {
@@ -226,7 +227,7 @@
             return expression;
         }
         
-        private static string RemovePrefix(string expression)
+        public static string RemovePrefix(string expression)
         {
             // @"pfx([^:]*)\:"
             // pfx # Escaped parenthesis, means "starts with a 'pfx' "

@@ -75,8 +75,9 @@ namespace EaiConverter.Parser
 
                 if (inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings") != null && inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("inputs") != null && inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("inputs").Element("inputSet") != null)
                 {
-                    jdbcQueryActivity.InputBindings = inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("inputs").Element("inputSet").Nodes();
-                    jdbcQueryActivity.Parameters = new XslParser().Parse(jdbcQueryActivity.InputBindings);
+                    //jdbcQueryActivity.InputBindings = inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("inputs").Element("inputSet").Nodes();
+                    jdbcQueryActivity.InputBindings = inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("inputs").Nodes();
+                    jdbcQueryActivity.Parameters = new XslParser().Parse(inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("inputs").Element("inputSet").Nodes());
                 }
             }
             else
@@ -101,8 +102,9 @@ namespace EaiConverter.Parser
 
                 if (inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings") != null && inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("jdbcQueryActivityInput") != null)
                 {
-                    jdbcQueryActivity.InputBindings = inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("jdbcQueryActivityInput").Nodes();
-                    jdbcQueryActivity.Parameters = new XslParser().Parse(jdbcQueryActivity.InputBindings);
+                    //jdbcQueryActivity.InputBindings = inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("jdbcQueryActivityInput").Nodes();
+                    jdbcQueryActivity.InputBindings = inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Nodes();
+                    jdbcQueryActivity.Parameters = new XslParser().Parse(inputElement.Element(XmlnsConstant.tibcoProcessNameSpace + "inputBindings").Element("jdbcQueryActivityInput").Nodes());
                 }
             }
             

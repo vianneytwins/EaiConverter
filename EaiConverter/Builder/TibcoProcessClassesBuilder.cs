@@ -108,11 +108,9 @@
 
             if (tibcoBwProcessToGenerate.StartActivity != null && tibcoBwProcessToGenerate.StartActivity.Parameters != null)
             {
-                // TODO find a solution for the start because it can have multiple input
-                processVariablesDictionary[tibcoBwProcessToGenerate.StartActivity.Name] = CSharpTypeConstant.SystemObject;
                 foreach (var startMethodParameter in tibcoBwProcessToGenerate.StartActivity.Parameters)
                 {
-                    processVariablesDictionary[startMethodParameter.Name] = startMethodParameter.Type;
+                    processVariablesDictionary["start_" + startMethodParameter.Name] = startMethodParameter.Type;
                 }
             }
 

@@ -104,7 +104,7 @@
         public void Should_Return_void_Invocation_Code_When_Activity_has_no_return_type_And_No_Input(){
             this.jdbcQueryActivityBuilder.ServiceToInvoke = "MyService";
             CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateMethod(this.jdbcQueryActivity, new Dictionary<string, string>()).Statements;
-            Assert.AreEqual ("this.logger.Info(\"Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity\");\n\nthis.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
+            Assert.AreEqual ("this.logger.Info(\"Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity\");\nthis.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
         }
 
         [Test]
@@ -119,19 +119,20 @@
                                                                                 }
                                                                         };
             CodeStatementCollection invocationExpression = this.jdbcQueryActivityBuilder.GenerateMethod(this.jdbcQueryActivity, new Dictionary<string, string>()).Statements;
-            Assert.AreEqual("this.logger.Info(\"Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity\");\n\nreturn this.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
+            Assert.AreEqual("this.logger.Info(\"Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity\");\nreturn this.myService.ExecuteQuery();\n", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
         }
 
         [Test]
         public void Should_Return_void_Invocation_Code_When_Activity_has_no_return_type_And_1_input_parameter(){
             
             var xml =
-                @"
+                @"<inputBindings>
         <jdbcQueryActivityInput xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
             <IdBbUnique xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
                 <xsl:value-of select=""'test'""/>
             </IdBbUnique>
         </jdbcQueryActivityInput>
+</inputBindings>
 ";
             XElement doc = XElement.Parse(xml);
 

@@ -4,6 +4,8 @@ namespace EaiConverter.Builder
 {
     using System.CodeDom;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Xml.Linq;
 
     using EaiConverter.Builder.Utils;
     using EaiConverter.CodeGenerator.Utils;
@@ -134,7 +136,17 @@ namespace EaiConverter.Builder
             var invocationCodeCollection = new CodeStatementCollection();
             
             // Add the input bindings
-            invocationCodeCollection.AddRange(this.xslBuilder.Build(jdbcQueryActivity.InputBindings));
+
+            
+            if (jdbcQueryActivity.InputBindings != null && jdbcQueryActivity.InputBindings.FirstOrDefault() != null)
+            {
+                var firstOrDefault = (XElement)jdbcQueryActivity.InputBindings.FirstOrDefault();
+
+                var inputNodes = firstOrDefault.Nodes();
+
+                invocationCodeCollection.AddRange(
+                    this.xslBuilder.Build(inputNodes));
+            }
 
             // Add the invocation itself
             var activityServiceReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToVariableName(this.ServiceToInvoke));

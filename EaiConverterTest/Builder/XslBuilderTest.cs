@@ -563,6 +563,38 @@ sqlParams.parameter = tempparameterList.ToArray();
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
             Assert.AreEqual("logInfo logInfo = new logInfo();\nlogInfo.FundStruct = new FundStruct();\nlogInfo.FundStruct.FundName = \"testvalue\";\n\n", generateCode);
         }
+        
+        [Test]
+        public void Should_manage_variable_tag()
+        {
+            var xml =
+                @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" xmlns:pfx1=""http://www.SomeWhere.com"">
+            <inputs>
+                <xsl:variable name=""params"">
+                    <xsl:for-each select=""$Start/pfx3:logInfo/param"">
+                        <xsl:if test=""name !='xml'"">
+                            <xsl:value-of select=""concat(' [', name, '=', value, ']')""/>
+                        </xsl:if>
+                    </xsl:for-each>
+                    <xsl:if test=""exists($Start/pfx3:logInfo/param[name='xml'])"">
+                        <xsl:value-of select=""concat('&#xA;&#x9;', translate($Start/pfx3:logInfo/param[name='xml']/value, '&#xA;', ''))""/>
+                    </xsl:if>
+                </xsl:variable>
+                
+                <Message>
+                    <xsl:value-of select=""concat($Start/pfx3:logInfo/message, ' ', $params)""/>
+                </Message>
+                
+            </inputs>
+</pd:inputBindings>
+";
+            XElement doc = XElement.Parse(xml);
+
+            var codeStatement = xslBuilder.Build(doc.Nodes());
+
+            string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
+            Assert.AreEqual("logInfo logInfo = new logInfo();\nlogInfo.FundStruct = new FundStruct();\nlogInfo.FundStruct.FundName = \"testvalue\";\n\n", generateCode);
+        }
 	}
 }
 
