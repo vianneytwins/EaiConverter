@@ -48,6 +48,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builder\InterfaceExtractorFromClassTest.cs" />
     <Compile Include="Builder\SubscriberBuilderTest.cs" />
     <Compile Include="Builder\Utils\XpathUtilsTest.cs" />
     <Compile Include="Parser\AdapterSchemaParserTest.cs" />

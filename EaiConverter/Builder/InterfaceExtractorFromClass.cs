@@ -18,7 +18,7 @@
 			                              };
 		    foreach (CodeTypeMember member in classToTranformInInterface.Members)
             {
-				if (member is CodeMemberMethod)
+                if (member is CodeMemberMethod && !member.Attributes.HasFlag(MemberAttributes.Private))
                 {
 					interfaceToGenerate.Members.Add(member);
 				}
