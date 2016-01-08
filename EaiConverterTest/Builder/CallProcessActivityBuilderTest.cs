@@ -42,9 +42,9 @@ namespace EaiConverter.Test.Builder
             var expected = @"System.String xmlString;
 xmlString = ""TestString"";
 
-var my_Call_Process_Activity = this.processToCall.Start(xmlString);
+return this.processToCall.Start(xmlString);
 ";
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.CallProcessActivityBuilder.GenerateInvocationCode(this.activity));
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.CallProcessActivityBuilder.GenerateMethod(this.activity, new Dictionary<string, string>()));
             Assert.IsTrue(generatedCode.EndsWith(expected));
         }
 
