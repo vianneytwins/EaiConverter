@@ -21,9 +21,8 @@
 			this.xsdParser = xsdParser;
         }
 
-        public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity)
+        public override CodeNamespaceCollection GenerateClassesToGenerate(Activity activity, Dictionary<string, string> variables)
         {
-            
             var result = new CodeNamespaceCollection();
             if (activity.ObjectXNodes != null)
             {
