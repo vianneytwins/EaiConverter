@@ -95,7 +95,7 @@ return EquityRecord;
 			XElement doc = XElement.Parse(xsdElement);
 			this.activity.ObjectXNodes = doc.Nodes();
 
-			var generatedClasses = this.mapperActivityBuilder.GenerateClassesToGenerate(this.activity);
+			var generatedClasses = this.mapperActivityBuilder.GenerateClassesToGenerate(this.activity, new Dictionary<string, string>());
 			Assert.AreEqual(1, generatedClasses.Count);
 			Assert.AreEqual("EquityRecord", generatedClasses[0].Types[0].Name);
 		}

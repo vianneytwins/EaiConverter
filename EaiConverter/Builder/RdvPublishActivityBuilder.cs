@@ -128,7 +128,7 @@ namespace EaiConverter.Builder
 			return statements;
 		}
 
-		public List<CodeMemberField> GenerateFields (Activity activity)
+		public override List<CodeMemberField> GenerateFields(Activity activity)
 		{
 			var fields = new List<CodeMemberField>
 			{

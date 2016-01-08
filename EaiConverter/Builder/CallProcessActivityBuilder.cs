@@ -72,10 +72,9 @@ namespace EaiConverter.Builder
 			};
         }
 
-        public CodeStatementCollection GenerateInvocationCode(Activity activity)
+        public override CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
         {
-
-
+            var activityMethod = base.GenerateMethod(activity, variables);
             var callProcessActivity = (CallProcessActivity)activity;
             var invocationCodeCollection = new CodeStatementCollection();
 
@@ -101,11 +100,13 @@ namespace EaiConverter.Builder
             // TODO : WARNING not sure the start method ProcessName is indeed START
             var methodInvocation = new CodeMethodInvokeExpression(processToCallReference, "Start", parameters);
 
-            var code = new CodeVariableDeclarationStatement("var", VariableHelper.ToVariableName(callProcessActivity.Name), methodInvocation);
+            var code = new CodeMethodReturnStatement(methodInvocation);
 
             invocationCodeCollection.Add(code);
 
-            return invocationCodeCollection;
+            activityMethod.Statements.AddRange(invocationCodeCollection);
+
+            return activityMethod;
         }
 
         private static bool IsTheProcessInputRequiresAnImport(CallProcessActivity callProcessActivity)
