@@ -1,14 +1,14 @@
-﻿using System.CodeDom;
-using EaiConverter.Builder.Utils;
-using EaiConverter.Utils;
-
-namespace EaiConverter.Builder
+﻿namespace EaiConverter.Builder
 {
-	public class LoggerInterfaceBuilder
+    using System.CodeDom;
+
+    using EaiConverter.Builder.Utils;
+    using EaiConverter.Utils;
+
+    public class LoggerInterfaceBuilder
 	{
-
-
-		public CodeNamespace Build () {
+		public CodeNamespace Build ()
+        {
             var namespaceResult = new CodeNamespace(TargetAppNameSpaceService.loggerNameSpace());
 			namespaceResult.Imports.Add (new CodeNamespaceImport ("System"));
 			var dataAccessInterface = new CodeTypeDeclaration ();
@@ -34,7 +34,7 @@ namespace EaiConverter.Builder
 			errorMethod.Parameters.AddRange (parameters);
 			dataAccessInterface.Members.Add (errorMethod);
 
-			var warnMethod = new CodeMemberMethod { Name = "Warn", ReturnType = voidReturnType };
+			var warnMethod = new CodeMemberMethod { Name = "Warning", ReturnType = voidReturnType };
 			warnMethod.Parameters.AddRange (parameters);
 			dataAccessInterface.Members.Add (warnMethod);
 

@@ -62,7 +62,7 @@ namespace EaiConverter.Builder
             return serviceToInvoke;
         }
 
-        public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity)
+        public override CodeNamespaceCollection GenerateClassesToGenerate(Activity activity, Dictionary<string, string> variables)
         {
             var jdbcQueryActivity = (JdbcQueryActivity)activity;
 

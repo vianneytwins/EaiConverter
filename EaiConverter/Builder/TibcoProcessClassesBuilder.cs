@@ -163,6 +163,8 @@
                 interfaceNameSpace.Imports.Add(new CodeNamespaceImport(TargetAppNameSpaceService.myAppName() + "." +tibcoBwProcessToGenerate.InputAndOutputNameSpace));
             }
 
+            interfaceNameSpace.Imports.AddRange(this.GenerateXsdImports(tibcoBwProcessToGenerate).ToArray());
+
             ModuleBuilder.AddServiceToRegister(namespaceName + "." + interfaceNameSpace.Types[0].Name, namespaceName + "." + tibcoBwProcessClassModel.Name);
             return interfaceNameSpace;
         }
@@ -187,15 +189,26 @@
                 imports.Add(new CodeNamespaceImport(TargetAppNameSpaceService.myAppName() + "." + tibcoBwProcessToGenerate.InputAndOutputNameSpace));
             }
 
+            imports.AddRange(this.GenerateXsdImports(tibcoBwProcessToGenerate));
+
+            return imports.ToArray();
+        }
+
+        private List<CodeNamespaceImport> GenerateXsdImports(TibcoBWProcess tibcoBwProcessToGenerate)
+        {
+            var imports = new List<CodeNamespaceImport>();
             if (tibcoBwProcessToGenerate.XsdImports != null)
             {
                 foreach (var xsdImport in tibcoBwProcessToGenerate.XsdImports)
                 {
-                    imports.Add(new CodeNamespaceImport(TargetAppNameSpaceService.myAppName() + "." + TargetAppNameSpaceService.ConvertXsdImportToNameSpace(xsdImport.SchemaLocation)));
+                    imports.Add(
+                        new CodeNamespaceImport(
+                            TargetAppNameSpaceService.myAppName() + "."
+                            + TargetAppNameSpaceService.ConvertXsdImportToNameSpace(xsdImport.SchemaLocation)));
                 }
             }
 
-            return imports.ToArray();
+            return imports;
         }
 
         public CodeMemberField[] GeneratePrivateFields(TibcoBWProcess tibcoBwProcessToGenerate)

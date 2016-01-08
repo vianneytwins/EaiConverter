@@ -77,7 +77,7 @@
             var activityMethod = new CodeMemberMethod
                                      {
                                          Attributes = MemberAttributes.Private | MemberAttributes.Final,
-                                         Name = VariableHelper.ToClassName(activity.Name)
+                                         Name = VariableHelper.ToClassName(activity.Name) + "Call"
                                      };
             var dependantVariables = new XpathUtils().GetVariableNames(activity.InputBindings);
 
