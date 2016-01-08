@@ -74,6 +74,21 @@
         }
 
         [Test]
+        public void Should_Return_variableName_when_InputBinding_contains_a_xpath_formula_with_dollar_followed_by_the_variable_name_and_add_operator()
+        {
+            var xml =
+    @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"">           
+        <xmlString>
+            <xsl:value-of select=""$myVar+1""/>
+        </xmlString>
+</pd:inputBindings>
+";
+            XElement doc = XElement.Parse(xml);
+            var inputBindings = doc.Nodes();
+            Assert.AreEqual("myVar", new XpathUtils().GetVariableNames(inputBindings).FirstOrDefault());
+        }
+
+        [Test]
         public void Should_Return_variableNames_when_InputBinding_contains_a_xpath_formula_with_several_dollars_and_variables()
         {
             var xml =

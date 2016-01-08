@@ -188,14 +188,11 @@
             //    \/"")          # "Ends with a '/', '"', ',', ')' character 
             //var regex = new Regex(@"\$([^/]*)\/");
             var regex = new Regex(@"\$([^/"",)]*)[/"",)]");
-            var variables = regex.Match(expression);
-            if (variables.Success)
+            var variables = regex.Matches(expression);
+            foreach (Match variable in variables)
             {
-                string variableNameToModify = variables.Groups[1].ToString();
-                expression = expression.Replace(
-                    variableNameToModify,
-                    VariableHelper.ToVariableName(variableNameToModify.Replace("$", string.Empty).Replace('-', '_').Replace('.', '_')));
-                expression = FormatActivityNameInXpath(expression);
+                string variableNameToModify = variable.Groups[1].ToString();
+                expression = expression.Replace("$" + variableNameToModify, VariableHelper.ToVariableName(variableNameToModify.Replace("$", string.Empty).Replace('-', '_').Replace('.', '_')));
             }
 
             //expression = expression.Replace("$", string.Empty);

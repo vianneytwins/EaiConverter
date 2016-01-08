@@ -238,7 +238,7 @@
                         new CodeMemberField
                         {
                             Type = typeReference,
-                            Name = VariableHelper.ToVariableName(variable.Parameter.Name),
+                            Name = variable.Parameter.Name,
                             Attributes = MemberAttributes.Private
                         });
                 }

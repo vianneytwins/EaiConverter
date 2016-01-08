@@ -69,7 +69,7 @@
             //    )           # Close the capturing group
             //    \/"")          # "Ends with a '/' character" or a '"' character 
             //var regex = new Regex(@"\$([^/]*)\/");
-            var regex = new Regex(@"\$([^/"",)]*)[/"",)]");
+            var regex = new Regex(@"\$([^/"",)+]*)[/"",)+]");
             var variables = regex.Matches(expression);
             var array = new Match[variables.Count];
             variables.CopyTo(array, 0);

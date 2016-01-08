@@ -16,7 +16,7 @@ namespace EaiConverter.CodeGenerator.Utils
 
             var firstCharOfTheVariable = variableNameToFormat.Substring(0, 1);
             var endOfTheVariable = variableNameToFormat.Substring(1, variableNameToFormat.Length - 1);
-            return ToSafeType((firstCharOfTheVariable.ToLowerInvariant() + endOfTheVariable).Replace(" ", string.Empty));
+            return (firstCharOfTheVariable.ToLowerInvariant() + endOfTheVariable).Replace(" ", string.Empty);
         }
 
         public static string ToClassName(string name)
@@ -53,6 +53,7 @@ namespace EaiConverter.CodeGenerator.Utils
             {
                 return "@params";
             }
+
             if (variableNameToFormat[0] >= '0' && variableNameToFormat[0] <= '9')
             {
                 return "a" + variableNameToFormat;

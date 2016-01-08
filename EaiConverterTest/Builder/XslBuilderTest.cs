@@ -589,7 +589,8 @@ sqlParams.parameter = tempparameterList.ToArray();
             Assert.AreEqual(@"inputs inputs = new inputs();
 System.String @params = ""myvalue"";
 inputs.Message = TibcoXslHelper.Concat(start_logInfo.message, "" "", @params);
-", generateCode);
+
+".RemoveWindowsReturnLineChar(), generateCode.RemoveWindowsReturnLineChar());
         }
 	}
 }
