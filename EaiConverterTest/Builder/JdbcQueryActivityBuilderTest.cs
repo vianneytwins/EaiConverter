@@ -123,7 +123,7 @@
         }
 
         [Test]
-        public void Should_Return_void_Invocation_Code_When_Activity_has_no_return_type_And_1_input_parameter(){
+        public void Should_Return_Methodbody_Code_When_Activity_has_no_return_type_And_1_input_parameter(){
             
             var xml =
                 @"<inputBindings>
@@ -145,6 +145,41 @@
             CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateMethod(this.jdbcQueryActivity, new Dictionary<string, string>()).Statements;
             Assert.AreEqual (
                 @"this.logger.Info(""Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity"");
+System.String IdBbUnique;
+IdBbUnique = ""test"";
+
+this.myService.ExecuteQuery(IdBbUnique);
+", TestCodeGeneratorUtils.GenerateCode(invocationExpression));
+        }
+
+        [Test]
+        public void Should_Return_void_MethodBody_Code_When_Activity_has_no_return_type_And_1_input_parameter(){
+
+            var xml =
+                @"
+        <inputs xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
+            <xsl:variable name=""params"" select=""'mytempValue'""/>
+            <inputSet>
+                <IdBbUnique xmlns:xsl=""http://w3.org/1999/XSL/Transform"">
+                    <xsl:value-of select=""'test'""/>
+                </IdBbUnique>
+            </inputSet>
+        </inputs>
+
+";
+            XElement doc = XElement.Parse(xml);
+
+            this.jdbcQueryActivity.InputBindings = doc.Nodes();
+            jdbcQueryActivity.Parameters = new List<ClassParameter> {
+                new ClassParameter{ Name = "IdBbUnique", Type = "string" }
+            };
+            this.jdbcQueryActivityBuilder.ServiceToInvoke = "MyService";
+
+            CodeStatementCollection invocationExpression = jdbcQueryActivityBuilder.GenerateMethod(this.jdbcQueryActivity, new Dictionary<string, string>()).Statements;
+            Assert.AreEqual (
+                @"this.logger.Info(""Start Activity: Currency of type: com.tibco.plugin.jdbc.JDBCQueryActivity"");
+System.String @params = ""mytempValue"";
+
 System.String IdBbUnique;
 IdBbUnique = ""test"";
 

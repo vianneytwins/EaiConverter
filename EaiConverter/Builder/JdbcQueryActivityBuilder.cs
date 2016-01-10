@@ -136,16 +136,22 @@ namespace EaiConverter.Builder
             var invocationCodeCollection = new CodeStatementCollection();
             
             // Add the input bindings
-
-            
-            if (jdbcQueryActivity.InputBindings != null && jdbcQueryActivity.InputBindings.FirstOrDefault() != null)
+            if (jdbcQueryActivity.InputBindings != null)
             {
-                var firstOrDefault = (XElement)jdbcQueryActivity.InputBindings.FirstOrDefault();
-
-                var inputNodes = firstOrDefault.Nodes();
-
-                invocationCodeCollection.AddRange(
-                    this.xslBuilder.Build(inputNodes));
+                foreach (var element in jdbcQueryActivity.InputBindings)
+                {
+                    //var firstOrDefault = (XElement)jdbcQueryActivity.InputBindings.FirstOrDefault();
+                    
+                    //var inputNodes = firstOrDefault.Nodes();
+                    if (((XElement)element).Name.LocalName == "inputSet" || ((XElement)element).Name.LocalName == "jdbcQueryActivityInput")
+                    {
+                        invocationCodeCollection.AddRange(this.xslBuilder.Build(((XElement)element).Nodes()));
+                    }
+                    else
+                    {
+                        invocationCodeCollection.AddRange(this.xslBuilder.Build(new List<XNode> {element}));
+                    }
+                }
             }
 
             // Add the invocation itself
