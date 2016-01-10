@@ -175,6 +175,21 @@
             var inputBindings = doc.Nodes();
             Assert.AreEqual("start_Something", new XpathUtils().GetVariableNames(inputBindings).FirstOrDefault());
         }
+
+        [Test]
+        public void Should_Return_variableName_composition_when_InputBinding_contains_a_xpath_formula_with_key_word_dollar_start_and_nonSafeType()
+        {
+            var xml =
+                @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"">           
+        <xmlString>
+            <xsl:value-of select=""$start/param""/>
+        </xmlString>
+</pd:inputBindings>
+";
+            XElement doc = XElement.Parse(xml);
+            var inputBindings = doc.Nodes();
+            Assert.AreEqual("start_param", new XpathUtils().GetVariableNames(inputBindings).FirstOrDefault());
+        }
         
         [Test]
         public void Should_Return_variableName_composition_and_remove_prefix_when_InputBinding_contains_a_xpath_formula_with_key_word_dollar_start()
