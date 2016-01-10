@@ -157,7 +157,7 @@ namespace EaiConverter.Builder
             // Add the invocation itself
             var activityServiceReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToVariableName(this.ServiceToInvoke));
 
-            var parameters = this.GenerateParameters(jdbcQueryActivity);
+            var parameters = GenerateParameters(jdbcQueryActivity);
 
             var returnType = this.GetReturnType(activity);
 

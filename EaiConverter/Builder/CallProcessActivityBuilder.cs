@@ -96,7 +96,7 @@ namespace EaiConverter.Builder
             // Add the invocation
             var processToCallReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToVariableName(callProcessActivity.TibcoProcessToCall.ProcessName));
 
-            var parameters = this.GenerateParameters(callProcessActivity);
+            var parameters = GenerateParameters(callProcessActivity);
 
             // TODO : WARNING not sure the start method ProcessName is indeed START
             var methodInvocation = new CodeMethodInvokeExpression(processToCallReference, "Start", parameters);

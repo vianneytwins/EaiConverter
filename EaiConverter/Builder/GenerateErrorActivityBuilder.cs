@@ -7,7 +7,7 @@ namespace EaiConverter.Builder
 
     using EaiConverter.Model;
 
-    public class GenerateErrorActivityBuilder : AbstractActivityBuilder
+    public class GenerateErrorActivityBuilder : IActivityBuilder
     {
         XslBuilder xslBuilder;
 
@@ -16,13 +16,44 @@ namespace EaiConverter.Builder
             this.xslBuilder = xslBuilder;
         }
 
-        public override CodeStatementCollection GenerateInvocationCode(Activity activity, Dictionary<string, string> variables )
+        public CodeNamespaceCollection GenerateClassesToGenerate(Activity activity, Dictionary<string, string> variables)
+        {
+            return new CodeNamespaceCollection();
+        }
+
+        public List<CodeNamespaceImport> GenerateImports(Activity activity)
+        {
+            return new List<CodeNamespaceImport>();
+        }
+
+        public CodeParameterDeclarationExpressionCollection GenerateConstructorParameter(Activity activity)
+        {
+            return new CodeParameterDeclarationExpressionCollection();
+        }
+
+        public CodeStatementCollection GenerateConstructorCodeStatement(Activity activity)
+        {
+            return new CodeStatementCollection();
+        }
+
+        public List<CodeMemberField> GenerateFields(Activity activity)
+        {
+            return new List<CodeMemberField>();
+        }
+
+        public CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
+        {
+            return null;
+        }
+
+        public CodeStatementCollection GenerateInvocationCode(Activity activity, Dictionary<string, string> variables )
         {
             var errorActivity = (GenerateErrorActivity)activity;
             var invocationCodeCollection = new CodeStatementCollection();
 
             // add log
-            invocationCodeCollection.AddRange(this.LogActivity(errorActivity));
+            invocationCodeCollection.AddRange(AbstractActivityBuilder.LogActivity(errorActivity));
+
             //add the input
             invocationCodeCollection.AddRange(this.xslBuilder.Build(activity.InputBindings));
 
@@ -35,7 +66,7 @@ namespace EaiConverter.Builder
         private CodeThrowExceptionStatement GenerateExceptionStatement(GenerateErrorActivity activity)
         {
             var parameters =
-                this.GenerateParameters(
+                AbstractActivityBuilder.GenerateParameters(
                     new List<string> { @"""Message : {0}\nMessage code : {1} """ },
                     activity);
 
@@ -54,7 +85,7 @@ namespace EaiConverter.Builder
         }
 
 
-        public override string GetReturnType (Activity activity)
+        public string GetReturnType (Activity activity)
         {
             return CSharpTypeConstant.SystemException;
         }

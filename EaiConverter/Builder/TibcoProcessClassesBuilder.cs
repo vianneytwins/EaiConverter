@@ -60,7 +60,11 @@
 				var activityBuilder = this.activityBuilderFactory.Get(activity.Type);
                 targetUnit.Namespaces.AddRange(activityBuilder.GenerateClassesToGenerate(activity, processVariablesDictionary));
 				activityNameToServiceNameDictionnary.Add(activity.Name, activityBuilder.GenerateInvocationCode(activity, processVariablesDictionary));
-                tibcoBwProcessClassModel.Members.Add(activityBuilder.GenerateMethod(activity, processVariablesDictionary));
+                var codeMemberMethod = activityBuilder.GenerateMethod(activity, processVariablesDictionary);
+                if (codeMemberMethod != null)
+                {
+                    tibcoBwProcessClassModel.Members.Add(codeMemberMethod);
+                }
 				processNamespace.Imports.AddRange(activityBuilder.GenerateImports(activity).ToArray());
 				tibcoBwProcessClassModel.Members.AddRange(activityBuilder.GenerateFields (activity).ToArray());
 			}
