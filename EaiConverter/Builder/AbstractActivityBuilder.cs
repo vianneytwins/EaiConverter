@@ -83,7 +83,10 @@
 
             foreach(var variable in dependantVariables)
             {
-                activityMethod.Parameters.Add(new CodeParameterDeclarationExpression(variables[variable], variable));
+                if (variables.ContainsKey(variable))
+                {
+                    activityMethod.Parameters.Add(new CodeParameterDeclarationExpression(variables[variable], variable));
+                }
             }
 
             activityMethod.ReturnType = new CodeTypeReference(this.GetReturnType(activity));
