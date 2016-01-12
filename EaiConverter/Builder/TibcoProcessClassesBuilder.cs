@@ -126,11 +126,27 @@
 
             foreach (var activity in tibcoBwProcessToGenerate.Activities)
             {
-                var activityBuilder = this.activityBuilderFactory.Get(activity.Type);
-                processVariablesDictionary[activity.Name] = activityBuilder.GetReturnType(activity);
+                this.ExtractVariableFromActivity(activity, processVariablesDictionary);
             }
 
             return processVariablesDictionary;
+        }
+
+        private void ExtractVariableFromActivity(Activity activity, Dictionary<string, string> processVariablesDictionary)
+        {
+            var activityBuilder = this.activityBuilderFactory.Get(activity.Type);
+            if (activityBuilder is GroupActivityBuilder)
+            {
+                var groupActivity = (GroupActivity)activity;
+                foreach (var childActivity in groupActivity.Activities)
+                {
+                    this.ExtractVariableFromActivity(childActivity, processVariablesDictionary);   
+                }
+            }
+            else
+            {
+                processVariablesDictionary[activity.Name] = activityBuilder.GetReturnType(activity);
+            }
         }
 
         private CodeTypeDeclaration GenerateSqueletonClassModel(TibcoBWProcess tibcoBwProcessToGenerate)

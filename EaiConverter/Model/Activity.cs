@@ -32,7 +32,7 @@
 
         public static string FormatActivityName(string value)
         {
-            return value.Replace(' ', '_').Replace('.', '_').Replace('-', '_').Replace("=", "Equals").Replace("+", "Add");
+            return value.Replace(' ', '_').Replace('.', '_').Replace('-', '_').Replace("=", "Equals").Replace("+", "Add").Replace("&", "");
         }
 
         public ActivityType Type { get; set; }

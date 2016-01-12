@@ -28,8 +28,24 @@ namespace EaiConverter.Builder
 			this.activityBuilderFactory = new ActivityBuilderFactory();
         }
 
-        public List<CodeMemberMethod> GenerateMethods(Activity activity, Dictionary<string, string> variables)
+        public List<CodeMemberMethod> GenerateMethods(Activity groupActivity, Dictionary<string, string> variables)
         {
+            var methods = new List<CodeMemberMethod>();
+            foreach (var activity in ((GroupActivity)groupActivity).Activities)
+            {
+                var activityBuilder = this.activityBuilderFactory.Get(activity.Type);
+                var codeMemberMethod = activityBuilder.GenerateMethods(activity, variables);
+                if (codeMemberMethod != null)
+                {
+                    methods.AddRange(codeMemberMethod.ToArray());
+                }
+            }
+
+            if (methods.Count > 0)
+            {
+                return methods;
+            }
+
             return null;
         }
 
