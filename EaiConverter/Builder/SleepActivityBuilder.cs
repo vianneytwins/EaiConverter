@@ -20,9 +20,9 @@ namespace EaiConverter.Builder
             return new List<CodeNamespaceImport> { new CodeNamespaceImport("System.Timers") };
 		}
 
-        public override CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
+        public override List<CodeMemberMethod> GenerateMethods(Activity activity, Dictionary<string, string> variables)
         {
-            var activityMethod = base.GenerateMethod(activity, variables);
+            var activityMethods = base.GenerateMethods(activity, variables);
             var invocationCodeCollection = new CodeStatementCollection();
 
             // Add the mapping
@@ -32,8 +32,8 @@ namespace EaiConverter.Builder
             var code = new CodeSnippetStatement("new Timer(" + activity.Parameters[0].Name + ");");
             invocationCodeCollection.Add(code);
 
-            activityMethod.Statements.AddRange(invocationCodeCollection);
-            return activityMethod;
+            activityMethods[0].Statements.AddRange(invocationCodeCollection);
+            return activityMethods;
         }
 
         public override string GetReturnType (Activity activity)

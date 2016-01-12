@@ -28,7 +28,7 @@ namespace EaiConverter.Builder
 			this.activityBuilderFactory = new ActivityBuilderFactory();
         }
 
-        public CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
+        public List<CodeMemberMethod> GenerateMethods(Activity activity, Dictionary<string, string> variables)
         {
             return null;
         }

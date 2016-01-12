@@ -72,7 +72,7 @@
             return activity.Name;
         }
 
-        public virtual CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
+        public virtual List<CodeMemberMethod> GenerateMethods(Activity activity, Dictionary<string, string> variables)
         {
             var activityMethod = new CodeMemberMethod
                                      {
@@ -92,7 +92,7 @@
             invocationLogCodeCollection.AddRange(LogActivity(activity));
             activityMethod.Statements.AddRange(invocationLogCodeCollection);
 
-            return activityMethod;
+            return new List<CodeMemberMethod>{activityMethod};
         }
 
         public static CodeStatementCollection LogActivity(Activity activity)

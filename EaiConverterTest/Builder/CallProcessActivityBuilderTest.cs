@@ -1,12 +1,14 @@
-﻿using NUnit.Framework;
-using EaiConverter.Model;
-using System.Xml.Linq;
-using System.Collections.Generic;
-using EaiConverter.Builder;
-using EaiConverter.Test.Utils;
-
-namespace EaiConverter.Test.Builder
+﻿namespace EaiConverter.Test.Builder
 {
+    using System.Collections.Generic;
+    using System.Xml.Linq;
+
+    using EaiConverter.Builder;
+    using EaiConverter.Model;
+    using EaiConverter.Test.Utils;
+
+    using NUnit.Framework;
+
     [TestFixture]
     public class CallProcessActivityBuilderTest
     {
@@ -44,7 +46,7 @@ xmlString = ""TestString"";
 
 return this.processToCall.Start(xmlString);
 ";
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.CallProcessActivityBuilder.GenerateMethod(this.activity, new Dictionary<string, string>()));
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.CallProcessActivityBuilder.GenerateMethods(this.activity, new Dictionary<string, string>())[0]);
             Assert.IsTrue(generatedCode.EndsWith(expected));
         }
 

@@ -129,7 +129,7 @@ ActivityInput.body = ""TestString"";
 string subject = ""MY.Tibco.subject"";
 this.my_Activity_NameRdvPublisher.Send(subject, ActivityInput);
 ";
-			var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.activityBuilder.GenerateMethod(this.activity,null).Statements);
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.activityBuilder.GenerateMethods(this.activity, null)[0].Statements);
 			Assert.AreEqual(expected, generatedCode);
 		}
 

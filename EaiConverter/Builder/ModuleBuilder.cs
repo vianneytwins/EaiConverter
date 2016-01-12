@@ -114,6 +114,11 @@ namespace EaiConverter.Builder
                 myServiceDisctionnary.Add(interfaceName, implementationName);
             }
         }
+        
+        public static void EmptyServiceToRegisterList()
+        {
+            myServiceDisctionnary.Clear();
+        }
 
         public static string GetValue(string interfaceName)
         {

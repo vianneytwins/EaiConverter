@@ -16,9 +16,9 @@ namespace EaiConverter.Builder
             this.xslBuilder = xslBuilder;
         }
 
-        public override CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
+        public override List<CodeMemberMethod> GenerateMethods(Activity activity, Dictionary<string, string> variables)
         {
-            var activityMethod = base.GenerateMethod(activity, variables);
+            var activityMethod = base.GenerateMethods(activity, variables);
             var write2LogActivity = (WriteToLogActivity)activity;
             var invocationCodeCollection = new CodeStatementCollection();
 
@@ -28,7 +28,7 @@ namespace EaiConverter.Builder
             //Add the logger call
             invocationCodeCollection.Add(this.GenerateLoggerCodeInvocation(write2LogActivity));
 
-            activityMethod.Statements.AddRange(invocationCodeCollection);
+            activityMethod[0].Statements.AddRange(invocationCodeCollection);
 
             return activityMethod;
         }

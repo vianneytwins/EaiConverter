@@ -127,9 +127,9 @@ namespace EaiConverter.Builder
             return result;
         }
 
-        public override CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
+        public override List<CodeMemberMethod> GenerateMethods(Activity activity, Dictionary<string, string> variables)
         {
-            var activityMethod = base.GenerateMethod(activity, variables);
+            var activityMethod = base.GenerateMethods(activity, variables);
 
             var jdbcQueryActivity = (JdbcQueryActivity)activity;
 
@@ -172,7 +172,7 @@ namespace EaiConverter.Builder
                 invocationCodeCollection.Add(codeInvocation);
             }
 
-            activityMethod.Statements.AddRange(invocationCodeCollection);
+            activityMethod[0].Statements.AddRange(invocationCodeCollection);
 
             return activityMethod;
         }

@@ -30,7 +30,7 @@ namespace EaiConverter.Test.Builder
             var expected = @"var configName = ""myconfigPath"";
 return this.sharedVariableService.Get(configName);
 ";
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateMethod(this.activity, new Dictionary<string, string>()).Statements);
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateMethods(this.activity, new Dictionary<string, string>())[0].Statements);
             Assert.IsTrue(generatedCode.EndsWith(expected));
         }
     }

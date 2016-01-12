@@ -78,9 +78,9 @@
 			return fields;
         }
 
-        public override CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
+        public override List<CodeMemberMethod> GenerateMethods(Activity activity, Dictionary<string, string> variables)
         {
-            var activityMethod = base.GenerateMethod(activity, variables);
+            var activityMethod = base.GenerateMethods(activity, variables);
             var engineCommandActivity = (EngineCommandActivity) activity;
             var invocationCodeCollection = new CodeStatementCollection();
 
@@ -94,7 +94,7 @@
 
             var code = new CodeMethodReturnStatement(codeInvocation);
             invocationCodeCollection.Add(code);
-            activityMethod.Statements.AddRange(invocationCodeCollection);
+            activityMethod[0].Statements.AddRange(invocationCodeCollection);
 
             return activityMethod;
         }

@@ -35,9 +35,9 @@ namespace EaiConverter.Builder
             return new CodeStatementCollection();
         }
 
-        public CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
+        public List<CodeMemberMethod> GenerateMethods(Activity activity, Dictionary<string, string> variables)
         {
-            return new CodeMemberMethod();
+            return null;
         }
 
 

@@ -13,9 +13,9 @@ namespace EaiConverter.Builder
             return CSharpTypeConstant.SystemVoid;
         }
 
-        public override CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
+        public override List<CodeMemberMethod> GenerateMethods(Activity activity, Dictionary<string, string> variables)
         {
-            var activityMethod = base.GenerateMethod(activity, variables);
+            var activityMethod = base.GenerateMethods(activity, variables);
             
             var confirmActivity = (ConfirmActivity)activity;
             var invocationCodeCollection = new CodeStatementCollection();
@@ -24,7 +24,7 @@ namespace EaiConverter.Builder
             invocationCodeCollection.Add(new CodeCommentStatement ("TODO: Should be this.subscriber.Confirm(message);"));
             invocationCodeCollection.Add(new CodeSnippetStatement("this.subscriber.Confirm();"));
 
-            activityMethod.Statements.AddRange(invocationCodeCollection);
+            activityMethod[0].Statements.AddRange(invocationCodeCollection);
 
             return activityMethod;
         }

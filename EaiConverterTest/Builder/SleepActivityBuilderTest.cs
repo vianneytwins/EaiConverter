@@ -45,7 +45,7 @@ IntervalInMillisec = 3000;
 
 new Timer(IntervalInMillisec);
 ";
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateMethod(this.activity, null).Statements);
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateMethods(this.activity, null)[0].Statements);
             Assert.AreEqual(expected,generatedCode);
         }
     }

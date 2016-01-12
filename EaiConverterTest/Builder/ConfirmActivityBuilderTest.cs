@@ -29,7 +29,7 @@
 // TODO: Should be this.subscriber.Confirm(message);
 this.subscriber.Confirm();
 ";
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateMethod(this.activity, new Dictionary<string, string>()).Statements);
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(activityBuilder.GenerateMethods(this.activity, new Dictionary<string, string>())[0].Statements);
             Assert.AreEqual(expected,generatedCode);
         }
     }

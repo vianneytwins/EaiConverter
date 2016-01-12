@@ -49,7 +49,7 @@ EquityRecord.xmlString = ""TestString"";
 
 return EquityRecord;
 ";
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.mapperActivityBuilder.GenerateMethod(this.activity, new Dictionary<string, string>()).Statements);
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.mapperActivityBuilder.GenerateMethods(this.activity, new Dictionary<string, string>())[0].Statements);
             Assert.AreEqual(expected, generatedCode);
         }
 
@@ -65,7 +65,7 @@ return EquityRecord;
 
             this.activity.XsdReference = "EquityRecord";
 
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.mapperActivityBuilder.GenerateMethod(this.activity, new Dictionary<string, string>()).Statements);
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.mapperActivityBuilder.GenerateMethods(this.activity, new Dictionary<string, string>())[0].Statements);
             Assert.AreEqual(expected, generatedCode);
         }
 
@@ -83,7 +83,7 @@ EquityRecord.xmlString = ""TestString"";
 
 return EquityRecord;
 ";
-			var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.mapperActivityBuilder.GenerateMethod(this.activity, new Dictionary<string, string>()).Statements);
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.mapperActivityBuilder.GenerateMethods(this.activity, new Dictionary<string, string>())[0].Statements);
 			Assert.AreEqual(expected, generatedCode);
 		}
 

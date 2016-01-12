@@ -70,9 +70,9 @@ namespace EaiConverter.Builder
 			return sendMethod;
 		}
 
-        public override CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
+        public override List<CodeMemberMethod> GenerateMethods(Activity activity, Dictionary<string, string> variables)
         {
-            var activityMethod = base.GenerateMethod(activity, variables);
+            var activityMethod = base.GenerateMethods(activity, variables);
 			var rdvPublishActivity = (RdvPublishActivity) activity;
 			var invocationCodeCollection = new CodeStatementCollection();
             
@@ -92,7 +92,7 @@ namespace EaiConverter.Builder
 			var codeInvocation = new CodeMethodInvokeExpression(activityServiceReference, "Send", parameters);
 			invocationCodeCollection.Add(codeInvocation);
 
-            activityMethod.Statements.AddRange(invocationCodeCollection);
+            activityMethod[0].Statements.AddRange(invocationCodeCollection);
 
             return activityMethod;
 		}

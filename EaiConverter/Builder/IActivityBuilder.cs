@@ -11,7 +11,7 @@
 
         CodeStatementCollection GenerateInvocationCode(Activity activity, Dictionary<string, string> variables);
 
-        CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables);
+        List<CodeMemberMethod> GenerateMethods(Activity activity, Dictionary<string, string> variables);
 
         List<CodeNamespaceImport> GenerateImports(Activity activity);
 

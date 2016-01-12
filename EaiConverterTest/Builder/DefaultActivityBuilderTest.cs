@@ -1,11 +1,12 @@
-﻿using NUnit.Framework;
-using EaiConverter.Builder;
-using EaiConverter.Test.Utils;
-using EaiConverter.Model;
-
-namespace EaiConverter.Test.Builder
+﻿namespace EaiConverter.Test.Builder
 {
     using System.Collections.Generic;
+
+    using EaiConverter.Builder;
+    using EaiConverter.Model;
+    using EaiConverter.Test.Utils;
+
+    using NUnit.Framework;
 
     [TestFixture]
     public class DefaultActivityBuilderTest
@@ -24,9 +25,9 @@ namespace EaiConverter.Test.Builder
         [Test]
         public void Should_Log_Activity_Start()
         {
-            var logCode = defaultBuilder.GenerateMethod(activity, new Dictionary<string, string>());
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(logCode.Statements);
-            Assert.AreEqual("this.logger.Info(\"Start Activity: test_Activity of type: "+ActivityType.NotHandleYet+"\");\n", generatedCode);
+            var logCode = defaultBuilder.GenerateMethods(this.activity, new Dictionary<string, string>());
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(logCode[0].Statements);
+            Assert.AreEqual("this.logger.Info(\"Start Activity: test_Activity of type: " + ActivityType.NotHandleYet + "\");\nthis.test_Activity.Execute();\n", generatedCode);
         }
     }
 }

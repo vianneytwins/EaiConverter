@@ -69,7 +69,7 @@ return this.xmlParserHelperService.FromXml <EquityRecord>(xmlString);
 ";
             }
 
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateMethod(this.activity, null).Statements);
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateMethods(this.activity, null)[0].Statements);
             Assert.AreEqual(expected, generatedCode);
         }
 
@@ -103,7 +103,7 @@ return this.xmlParserHelperService.FromXml <MyApp.Mydomain.Service.Contract.My_A
 ";
 		    }
 
-		    var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateMethod(this.activity,null).Statements);
+            var generatedCode = TestCodeGeneratorUtils.GenerateCode(xmlParseActivityBuilder.GenerateMethods(this.activity, null)[0].Statements);
 			Assert.AreEqual(expected,generatedCode);
 		}
 

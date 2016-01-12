@@ -32,9 +32,9 @@
             return result;
         }
 
-        public override CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
+        public override List<CodeMemberMethod> GenerateMethods(Activity activity, Dictionary<string, string> variables)
         {
-            var activityMethod = base.GenerateMethod(activity, variables);
+            var activityMethod = base.GenerateMethods(activity, variables);
             var mapperActivity = (MapperActivity)activity;
             var invocationCodeCollection = new CodeStatementCollection();
 
@@ -58,10 +58,10 @@
             var packageName = this.RemoveFinalType(variableReturnType);
             // Add the mapping
             invocationCodeCollection.AddRange(this.xslBuilder.Build(packageName, mapperActivity.InputBindings));
-            activityMethod.Statements.AddRange(invocationCodeCollection);
+            activityMethod[0].Statements.AddRange(invocationCodeCollection);
             
             var code = new CodeMethodReturnStatement(parameter);
-            activityMethod.Statements.Add(code);
+            activityMethod[0].Statements.Add(code);
             return activityMethod;
         }
 
