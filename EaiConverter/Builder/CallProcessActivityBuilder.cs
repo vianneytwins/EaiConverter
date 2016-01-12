@@ -75,6 +75,7 @@ namespace EaiConverter.Builder
         public override CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
         {
             var activityMethod = base.GenerateMethod(activity, variables);
+
             var callProcessActivity = (CallProcessActivity)activity;
             var invocationCodeCollection = new CodeStatementCollection();
 
