@@ -79,7 +79,7 @@ namespace EaiConverter.Builder
             return CSharpTypeConstant.SystemVoid;
         }
 
-        public CodeMemberMethod GenerateMethod (Activity activity, Dictionary<string, string> variables)
+        public override CodeMemberMethod GenerateMethod (Activity activity, Dictionary<string, string> variables)
         {
             var activityMethod = base.GenerateMethod(activity, variables);
             activityMethod.Statements.AddRange(this.GenerateCoreMethod(activity));

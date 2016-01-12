@@ -45,7 +45,7 @@
 
         public virtual CodeStatementCollection GenerateInvocationCode(Activity activity, Dictionary<string, string> variables)
         {
-            var parameters = this.GenerateParameters(new XpathUtils().GetVariableNames(activity.InputBindings), null);
+            var parameters = GenerateParameters(new XpathUtils().GetVariableNames(activity.InputBindings), null);
 
             var invocationCodeCollection = new CodeStatementCollection();
 
@@ -89,13 +89,13 @@
             activityMethod.ReturnType = new CodeTypeReference(this.GetReturnType(activity));
 
             var invocationLogCodeCollection = new CodeStatementCollection();
-            invocationLogCodeCollection.AddRange(this.LogActivity(activity));
+            invocationLogCodeCollection.AddRange(LogActivity(activity));
             activityMethod.Statements.AddRange(invocationLogCodeCollection);
 
             return activityMethod;
         }
 
-        protected CodeStatementCollection LogActivity(Activity activity)
+        public static CodeStatementCollection LogActivity(Activity activity)
         {
             var activityServiceReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToVariableName("logger"));
             var methodInvocation = new CodeMethodInvokeExpression(
@@ -111,14 +111,14 @@
             return logCallStatements;
         }
 
-        protected CodeExpression[] GenerateParameters(Activity activity)
+        public static CodeExpression[] GenerateParameters(Activity activity)
         {
             return GenerateParameters(null, activity);
         }
 
 
 
-        protected CodeExpression[] GenerateParameters(List<string> existingParamaters, Activity activity)
+        public static  CodeExpression[] GenerateParameters(List<string> existingParamaters, Activity activity)
         {
             var parameterLists = new List<CodeExpression> { };
             //Add existing Parameter

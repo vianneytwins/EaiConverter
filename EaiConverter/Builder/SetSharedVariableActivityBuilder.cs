@@ -32,7 +32,7 @@ namespace EaiConverter.Builder
 
             var activityServiceReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToVariableName(SharedVariableServiceBuilder.SharedVariableServiceName));
 
-            var parameters = this.GenerateParameters(new List<string> { "configName" }, sharedVariableActivity);
+            var parameters = GenerateParameters(new List<string> { "configName" }, sharedVariableActivity);
 
             var codeInvocation = new CodeMethodInvokeExpression(new CodeMethodReferenceExpression(activityServiceReference, SharedVariableServiceBuilder.SetMethodName), parameters);
 

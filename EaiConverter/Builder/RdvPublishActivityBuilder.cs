@@ -87,7 +87,7 @@ namespace EaiConverter.Builder
                 {
                     "subject"
                 };
-			var parameters = this.GenerateParameters(initParameters, rdvPublishActivity);
+			var parameters = GenerateParameters(initParameters, rdvPublishActivity);
 
 			var codeInvocation = new CodeMethodInvokeExpression(activityServiceReference, "Send", parameters);
 			invocationCodeCollection.Add(codeInvocation);

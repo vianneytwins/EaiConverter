@@ -35,7 +35,7 @@ namespace EaiConverter.Builder
 
         private CodeMethodInvokeExpression GenerateLoggerCodeInvocation(WriteToLogActivity activity)
         {
-            var parameters = this.GenerateParameters(
+            var parameters = GenerateParameters(
                 new List<string> { @"""Message : {0}\nMessage code : {1} """ },
                 activity);
 

@@ -30,7 +30,7 @@ namespace EaiConverter.Builder
 
         public CodeMemberMethod GenerateMethod(Activity activity, Dictionary<string, string> variables)
         {
-            return new CodeMemberMethod();
+            return null;
         }
 
         public List<CodeNamespaceImport> GenerateImports(Activity groupActivity)

@@ -208,8 +208,14 @@ namespace EaiConverter.Builder
                         string returnType = DefineReturnType(element);
                         codeStatements.Append(this.tab);
                         codeStatements.Append(returnType + " ");
-
-                        codeStatements.Append(this.Build(element.Nodes(), VariableHelper.ToSafeType(element.Attribute("name").Value)));
+                        if(element.Attribute("select") == null)
+                        {
+                            codeStatements.Append(this.Build(element.Nodes(), VariableHelper.ToSafeType(element.Attribute("name").Value)));
+                        }
+                        else
+                        {
+                            codeStatements.Append(ReturnValue(element, VariableHelper.ToSafeType(element.Attribute("name").Value)));
+                        }
                     }
                 }
             }
@@ -356,7 +362,7 @@ namespace EaiConverter.Builder
 
         private static void RetrieveAllTypeInTheElement(IEnumerable<XNode> inputedElement, List<string> elementTypes)
         {
-            int number = 0;
+            
             foreach (XElement item in inputedElement)
             {
                 if (!Regex.IsMatch(item.Name.NamespaceName, XmlnsConstant.xslNameSpace))
@@ -365,26 +371,18 @@ namespace EaiConverter.Builder
                 }
                 else if (item.Name.LocalName == "value-of")
                 {
-                    if (item.Attribute("select").Value.Contains("tib:parse-date"))
-                    {
-                        elementTypes.Add("DateTime?");
-                    }
-                    else if (item.Attribute("select").Value.StartsWith("number("))
-                    {
-                        elementTypes.Add("Double?");
-                    }
-                    else if(Int32.TryParse(item.Attribute("select").Value,out number))
-                    {
-                        elementTypes.Add("Int32?");
-                    }    
-                    else
-                    {
-                        elementTypes.Add(CSharpTypeConstant.SystemString);
-                    }
+                    elementTypes.Add(GetTypeFromAttribute(item));
                 }
                 else if (item.Name.LocalName == "variable")
                 {
-                    elementTypes.Add(item.Attribute("name").Value);
+                    if (item.Attribute("select") != null)
+                    {
+                        elementTypes.Add(GetTypeFromAttribute(item));
+                    }
+                    else
+                    {
+                        elementTypes.Add(item.Attribute("name").Value);
+                    }
                 }
                 else if (item.Name.LocalName == "attribute")
                 {
@@ -396,6 +394,34 @@ namespace EaiConverter.Builder
                     RetrieveAllTypeInTheElement(item.Nodes(), elementTypes);
                 }
             }
+        }
+
+        static string GetTypeFromAttribute(XElement item)
+        {
+            int number = 0;
+            if (item.Attribute("select") != null)
+            {
+                if (item.Attribute("select").Value.Contains("tib:parse-date"))
+                {
+                    return "DateTime?";
+                }
+                else if (item.Attribute("select").Value.StartsWith("number("))
+                {
+                    return "Double?";
+                }
+                else
+                {
+                    if (Int32.TryParse(item.Attribute("select").Value, out number))
+                    {
+                        return "Int32?";
+                    }
+                    else
+                    {
+                        return CSharpTypeConstant.SystemString;
+                    }
+                }
+            }
+            return String.Empty;
         }
 
         public static string FormatCorrectlyPackageName(string packageName)
