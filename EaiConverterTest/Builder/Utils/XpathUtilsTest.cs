@@ -59,6 +59,25 @@
         }
 
         [Test]
+        public void Should_Return_variableName_when_InputBinding_contains_a_local_prefix_()
+        {
+            var xml =
+    @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" xmlns:ns=""http://mynamespace/schemas"">           
+            <ns:logInfo>
+<param>
+                <message>
+                    <xsl:value-of select=""$Start/sqlParams/FundName""/>
+                </message>
+</param>
+</ns:logInfo>
+</pd:inputBindings>
+";
+            XElement doc = XElement.Parse(xml);
+            var inputBindings = doc.Nodes();
+            Assert.AreEqual("start_sqlParams", new XpathUtils().GetVariableNames(inputBindings).FirstOrDefault());
+        }
+        
+        [Test]
         public void Should_Return_variableName_when_InputBinding_contains_a_xpath_formula_with_dollar_followed_by_the_variable_name_slash()
         {
             var xml =

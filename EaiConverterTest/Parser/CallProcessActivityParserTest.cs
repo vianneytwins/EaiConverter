@@ -1,11 +1,12 @@
-﻿using EaiConverter.Parser;
-using System.Xml.Linq;
-using NUnit.Framework;
-using EaiConverter.Model;
-
-namespace EaiConverter.Test.Parser
+﻿namespace EaiConverter.Test.Parser
 {
     using System.Linq;
+    using System.Xml.Linq;
+
+    using EaiConverter.Model;
+    using EaiConverter.Parser;
+
+    using NUnit.Framework;
 
     [TestFixture]
     public class CallProcessActivityParserTest
@@ -39,7 +40,8 @@ namespace EaiConverter.Test.Parser
         }
 
         [Test]
-        public void Should_Return_Activity_Type_Is_CallProcessActivity (){
+        public void Should_Return_Activity_Type_Is_CallProcessActivity ()
+        {
             CallProcessActivity callProcessActivity = (CallProcessActivity) callProcessActivityParser.Parse (doc);
 
             Assert.AreEqual ("com.tibco.pe.core.CallProcessActivity", callProcessActivity.Type.ToString());
@@ -47,20 +49,21 @@ namespace EaiConverter.Test.Parser
 
 
         [Test]
-        public void Should_Return_ProcessName_in_config(){
+        public void Should_Return_ProcessName_in_config()
+        {
             CallProcessActivity callProcessActivity = (CallProcessActivity) callProcessActivityParser.Parse (doc);
 
             Assert.AreEqual ("/Process/DAI/PrLookup.Fund.process", callProcessActivity.ProcessName);
         }
         
         [Test]
-        public void Should_Return_ProcessName_in_config2(){
+        public void Should_Return_Namespace_of_input_paramter_in_config()
+        {
             var xml =
     @"<pd:activity name=""LookUp Strat"" xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" xmlns:pfx3=""http://pfx3Transform"">
 <pd:type>com.tibco.pe.core.CallProcessActivity</pd:type>
 <config>
-<processName>/Process/DAI/PrLookup.Fund.process</processName>
-
+    <processName>/Process/DAI/PrLookup.Fund.process</processName>
 </config>
 <pd:inputBindings>
     <pfx3:sqlParams>
@@ -75,10 +78,12 @@ namespace EaiConverter.Test.Parser
 </pd:activity>";
             var doc2 = XElement.Parse(xml);
             
-            CallProcessActivity callProcessActivity = (CallProcessActivity) callProcessActivityParser.Parse (doc2);
+            CallProcessActivity callProcessActivity = (CallProcessActivity)this.callProcessActivityParser.Parse(doc2);
 
             Assert.AreEqual("http://pfx3Transform", ((XElement)callProcessActivity.InputBindings.First()).Name.Namespace.ToString());
         }
+
+
     
     }
 }

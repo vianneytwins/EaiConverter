@@ -1,9 +1,9 @@
-using System.Xml.Linq;
-using EaiConverter.Model;
-using EaiConverter.Parser.Utils;
-
 namespace EaiConverter.Parser
 {
+    using System.Xml.Linq;
+
+    using EaiConverter.Model;
+    using EaiConverter.Parser.Utils;
 
     public class CallProcessActivityParser : IActivityParser
 	{

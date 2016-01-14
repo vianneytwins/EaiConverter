@@ -1,25 +1,24 @@
-﻿using System.Xml.Linq;
-using System.Collections.Generic;
-
-namespace EaiConverter.Model
+﻿namespace EaiConverter.Model
 {
     public class CallProcessActivity : Activity
     {
         private string processName;
 
-        public CallProcessActivity (string name, ActivityType type) : base (name, type)
+        public CallProcessActivity(string name, ActivityType type) : base(name, type)
         {
         }
 
-        public CallProcessActivity () 
+        public CallProcessActivity() 
         {
         }
 
-        public string ProcessName {
+        public string ProcessName
+        {
             get
             {
                 return this.processName;
             }
+
             set
             {
                 this.processName = value;
@@ -28,8 +27,6 @@ namespace EaiConverter.Model
         }
 
         public TibcoBWProcess TibcoProcessToCall {get; private set;}
-
-        public IEnumerable<XNode> InputBindings {get; set;}
     }
 }
 

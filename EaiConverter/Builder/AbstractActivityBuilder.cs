@@ -45,7 +45,12 @@
 
         public virtual CodeStatementCollection GenerateInvocationCode(Activity activity, Dictionary<string, string> variables)
         {
-            var parameters = GenerateParameters(new XpathUtils().GetVariableNames(activity.InputBindings), null);
+            var existingParamaters = new XpathUtils().GetVariableNames(activity.InputBindings);
+            for (int i = 0; i < existingParamaters.Count; i++)
+            {
+                existingParamaters[i] = VariableHelper.ToVariableName(existingParamaters[i]);
+            }
+            var parameters = GenerateParameters(existingParamaters, null);
 
             var invocationCodeCollection = new CodeStatementCollection();
 
