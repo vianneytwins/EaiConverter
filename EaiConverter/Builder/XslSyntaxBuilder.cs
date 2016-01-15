@@ -49,7 +49,7 @@ namespace EaiConverter.Builder
                 var xslElement = new XslSyntaxElement
                 {
                     Name = element.Name.LocalName,
-                    ReturnType = XslBuilder.DefineReturnType(element),
+                    ReturnType = XslBuilder.DefineReturnType(null, element),
                     PackageName = packageName !=null ? packageName : string.Empty,
                     Value = GetValue(element.Nodes())
                 };

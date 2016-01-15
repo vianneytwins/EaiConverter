@@ -17,7 +17,7 @@ namespace EaiConverter.Builder
     {
 
         private IXpathBuilder xpathBuilder;
-        //xsi:nil="true"
+        
         private Tab tab = new Tab();
 
         public XslBuilder(IXpathBuilder xpathBuilder)
@@ -38,14 +38,20 @@ namespace EaiConverter.Builder
             
             string codeinString = codeInStringList.ToString();
             // TODO : remove this ugly fix !!!
-            codeinString = codeinString.Replace("NTMMessage.NTMTrade.", "((NTMTrade)NTMMessage.Items[0]).");
-            codeinString = codeinString.Replace("NTMMessage.NTMTrades", "NTMMessage.Items");
-            codeinString = codeinString.Replace("NTMMessage.NTMTrade", "NTMMessage.Items[0]");
+            codeinString = MyUglyModification(codeinString);
 
             var codeSnippet = new CodeSnippetStatement(codeinString);
             var codeStatements = new CodeStatementCollection();
             codeStatements.Add(codeSnippet);
             return codeStatements;
+        }
+
+        private static string MyUglyModification(string codeinString)
+        {
+            codeinString = codeinString.Replace("NTMMessage.NTMTrade.", "((NTMTrade)NTMMessage.Items[0]).");
+            codeinString = codeinString.Replace("NTMMessage.NTMTrades", "NTMMessage.Items");
+            codeinString = codeinString.Replace("NTMMessage.NTMTrade", "NTMMessage.Items[0]");
+            return codeinString;
         }
 
         private StringBuilder Build(IEnumerable<XNode> inputNodes, string parent)
@@ -70,7 +76,7 @@ namespace EaiConverter.Builder
                 var element = (XElement)inputNode;
                 if (!Regex.IsMatch(element.Name.NamespaceName, XmlnsConstant.xslNameSpace))
                 {
-                    string returnType = DefineReturnType(element);
+                    string returnType = DefineReturnType(parent, element);
                     if (IsBasicReturnType(returnType))
                     {
                         packageName = string.Empty;
@@ -105,14 +111,14 @@ namespace EaiConverter.Builder
                             codeStatements.Append(
                                 returnType + " temp" + element.Name.LocalName + counter + ";\n");
                         }
-
-
+                        
                         codeStatements.Append(this.Build(element.Nodes(), "temp" + element.Name.LocalName + counter));
                         codeStatements.Append("temp" + element.Name.LocalName + "List.Add(temp" + element.Name.LocalName + counter + ");\n");
-                        if (this.IsTheLastElementOfTheList(element, inputNodes,counter))
+                        if (this.IsTheLastElementOfTheList(element, inputNodes, counter))
                         {
                             codeStatements.Append(variableReference + " = temp" + element.Name.LocalName + "List.ToArray();\n");
                         }
+
                         listElements[element.Name.LocalName] = counter + 1;
                     }
                     else if (returnType == null)
@@ -158,7 +164,8 @@ namespace EaiConverter.Builder
                         else
                         {
                             codeStatements.Append(this.tab);
-                            codeStatements.Append(this.Build(element.Nodes(), parent + "." + VariableHelper.ToSafeType(element.Name.LocalName)));
+                            var nextParentName = parent + "." + VariableHelper.ToSafeType(parent, element.Name.LocalName);
+                            codeStatements.Append(this.Build(element.Nodes(), nextParentName));
                         }
                     }
                     //if (isAlistElement)
@@ -205,7 +212,7 @@ namespace EaiConverter.Builder
                     }
                     else if (element.Name.LocalName == "variable")
                     {
-                        string returnType = DefineReturnType(element);
+                        string returnType = DefineReturnType(parent, element);
                         codeStatements.Append(this.tab);
                         codeStatements.Append(returnType + " ");
                         if(element.Attribute("select") == null)
@@ -240,7 +247,7 @@ namespace EaiConverter.Builder
         public StringBuilder ManageIterationTag(XElement element, string parent)
         {
             var codeStatements = new StringBuilder();
-            var returnType = DefineReturnType(element);
+            var returnType = DefineReturnType(parent, element);
             var variableReference = this.DefineVariableReference((XElement)element.FirstNode, null);
             var variableListReference = this.DefineVariableReference((XElement)element.FirstNode, parent) + "s";
             codeStatements.Append(this.tab + variableListReference + " = new List<" + returnType + ">();\n");
@@ -303,7 +310,7 @@ namespace EaiConverter.Builder
             }
         }
 
-        public static string DefineReturnType(XElement inputedElement)
+        public static string DefineReturnType(string parent, XElement inputedElement)
         {
             if (inputedElement.Attribute(XmlnsConstant.xsiNameSpace + "nil") != null && inputedElement.Attribute(XmlnsConstant.xsiNameSpace + "nil").Value == "true")
             {
@@ -313,13 +320,19 @@ namespace EaiConverter.Builder
             var elementTypes = new List<string>();
             var nodes = new List<XNode> { inputedElement };
             RetrieveAllTypeInTheElement(nodes, elementTypes);
-            if (elementTypes.Count > 1 && IsBasicReturnType(elementTypes[1]))
-            //if (elementTypes.Count == 2)
+            string returnType;
+            if (elementTypes.Count > 1 && IsBasicReturnType(elementTypes[1])) //if (elementTypes.Count == 2)
             {
-                return VariableHelper.ToSafeType(elementTypes[1]);
+                returnType = elementTypes[1];
+            }
+            else
+            {
+                returnType = elementTypes[0];
             }
 
-            return VariableHelper.ToSafeType(elementTypes[0]);
+            returnType = VariableHelper.ToSafeType(parent, returnType);
+
+            return returnType;
         }
 
         public string DefineVariableReference(XElement inputedElement, string parent)
@@ -331,7 +344,8 @@ namespace EaiConverter.Builder
             {
                 return VariableHelper.ToSafeType(elementTypes[0]);
             }
-            return parent + "." + VariableHelper.ToSafeType(elementTypes[0]);
+            
+            return parent + "." + VariableHelper.ToSafeType(parent, elementTypes[0]);
         }
 
         public bool IsAListElement(XElement inputElement, IEnumerable<XNode> inputNodes)
@@ -357,6 +371,7 @@ namespace EaiConverter.Builder
             {
                 return true;
             }
+
             return false;
         }
 

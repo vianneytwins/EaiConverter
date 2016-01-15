@@ -441,6 +441,96 @@ sqlParams.parameter = tempparameterList.ToArray();
             Assert.AreEqual ("MyPackage.sqlParams sqlParams = new MyPackage.sqlParams();\nsqlParams.parameter = \"testvalue1\";\n\n", generateCode.ToString());
 		}
 
+        [Test]
+        public void Should_manage_safeType_when_they_are_child()
+        {
+            var packageName = "MyPackage";
+            var xml =
+                @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" >
+    <logInfo>        
+        <param>
+            <xsl:value-of select=""'testvalue1'""/>
+        </param>
+    </logInfo>  
+</pd:inputBindings>
+";
+            XElement doc = XElement.Parse(xml);
+
+            var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build(packageName, doc.Nodes()));
+
+            Assert.AreEqual("MyPackage.logInfo logInfo = new MyPackage.logInfo();\nlogInfo.param = \"testvalue1\";\n\n", generateCode.ToString());
+        }
+
+        [Test]
+        public void Should_manage_safeType_when_they_are_child_and_List()
+        {
+            var packageName = "MyPackage";
+            var xml =
+                @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" >
+    <logInfo>        
+        <param>
+            <xsl:value-of select=""'testvalue1'""/>
+        </param>
+        <param>
+            <xsl:value-of select=""'testvalue2'""/>
+        </param>
+    </logInfo>  
+</pd:inputBindings>
+";
+            XElement doc = XElement.Parse(xml);
+
+            var generateCode = TestCodeGeneratorUtils.GenerateCode(this.xslBuilder.Build(packageName, doc.Nodes()));
+
+            Assert.AreEqual(@"MyPackage.logInfo logInfo = new MyPackage.logInfo();
+List<System.String> tempparamList = new List<System.String>();
+System.String tempparam1;
+tempparam1 = ""testvalue1"";
+tempparamList.Add(tempparam1);
+System.String tempparam2;
+tempparam2 = ""testvalue2"";
+tempparamList.Add(tempparam2);
+logInfo.param = tempparamList.ToArray();
+
+".RemoveWindowsReturnLineChar(), generateCode.ToString());
+        }
+
+        [Test]
+        public void Should_manage_safeType_when_they_are_child_and_List_with_children()
+        {
+            var packageName = "MyPackage";
+            var xml =
+                @"<pd:inputBindings xmlns:pd=""http://xmlns.tibco.com/bw/process/2003"" xmlns:xsl=""http://w3.org/1999/XSL/Transform"" >
+    <logInfo>        
+        <param>
+            <name>
+                <xsl:value-of select=""'testvalue1'""/>
+            </name>
+        </param>
+        <param>
+            <name>
+                <xsl:value-of select=""'testvalue2'""/>
+            </name>
+        </param>
+    </logInfo>  
+</pd:inputBindings>
+";
+            XElement doc = XElement.Parse(xml);
+
+            var generateCode = TestCodeGeneratorUtils.GenerateCode(this.xslBuilder.Build(packageName, doc.Nodes()));
+
+            Assert.AreEqual(@"MyPackage.logInfo logInfo = new MyPackage.logInfo();
+List<logInfoParam> tempparamList = new List<logInfoParam>();
+logInfoParam tempparam1 = new logInfoParam();
+tempparam1.name = ""testvalue1"";
+tempparamList.Add(tempparam1);
+logInfoParam tempparam2 = new logInfoParam();
+tempparam2.name = ""testvalue2"";
+tempparamList.Add(tempparam2);;
+logInfo.param = tempparamList.ToArray();
+
+".RemoveWindowsReturnLineChar(), generateCode.ToString());
+        }
+
 		[Test]
 		public void Should_manage_NOT_add_package_name_When_type_is_basic_and_when_its_inputed()
 		{

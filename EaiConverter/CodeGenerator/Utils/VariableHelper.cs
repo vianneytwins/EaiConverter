@@ -11,19 +11,24 @@ namespace EaiConverter.CodeGenerator.Utils
 
             variableNameToFormat = ToSafeType(variableNameToFormat);
 
-            variableNameToFormat = variableNameToFormat.Replace("-", "_");
-            variableNameToFormat = variableNameToFormat.Replace("&", "");
+            variableNameToFormat = RemoveSpecialChar(variableNameToFormat);
 
             var firstCharOfTheVariable = variableNameToFormat.Substring(0, 1);
             var endOfTheVariable = variableNameToFormat.Substring(1, variableNameToFormat.Length - 1);
             return (firstCharOfTheVariable.ToLowerInvariant() + endOfTheVariable).Replace(" ", string.Empty);
         }
 
+        private static string RemoveSpecialChar(string variableNameToFormat)
+        {
+            variableNameToFormat = variableNameToFormat.Replace("-", "_");
+            variableNameToFormat = variableNameToFormat.Replace("&", "");
+            return variableNameToFormat;
+        }
+
         public static string ToClassName(string name)
         {
             var className = name.Substring(0, 1).ToUpper() + name.Substring(1, name.Length - 1).Replace(" ", string.Empty);
-            className = className.Replace("-", "_");
-            className = className.Replace("&", "");
+            className = RemoveSpecialChar(className);
             return className;
         }
 
@@ -58,6 +63,26 @@ namespace EaiConverter.CodeGenerator.Utils
             {
                 return "a" + variableNameToFormat;
             }
+
+            return variableNameToFormat;
+        }
+
+        public static string ToSafeType(string parent, string variableNameToFormat)
+        {
+            var variableNameToLowerCase = RemoveSpecialChar(variableNameToFormat).ToLower();
+            if (variableNameToLowerCase == "interface"
+                || variableNameToLowerCase == "object"
+                || variableNameToLowerCase == "param"
+                || variableNameToLowerCase == "params")
+            {
+                return parent + ToClassName(variableNameToFormat);
+            }
+
+
+/**            if (variableNameToFormat[0] >= '0' && variableNameToFormat[0] <= '9')
+            {
+                return "a" + variableNameToFormat;
+            }*/
 
             return variableNameToFormat;
         }

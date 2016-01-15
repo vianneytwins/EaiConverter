@@ -26,7 +26,7 @@ namespace EaiConverter.Parser
                 var element = (XElement) inputNode;
                 if (!Regex.IsMatch(element.Name.NamespaceName, XmlnsConstant.xslNameSpace))
                 {
-                    string returnType = XslBuilder.DefineReturnType(element);
+                    string returnType = XslBuilder.DefineReturnType(null, element);
                     if (XslBuilder.IsBasicReturnType(returnType))
                     {
                         paramaters.Add(new ClassParameter{Type=returnType,Name = element.Name.LocalName});
