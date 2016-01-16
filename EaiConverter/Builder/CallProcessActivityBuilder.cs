@@ -1,3 +1,6 @@
+using EaiConverter.Parser;
+using EaiConverter.Processor;
+
 namespace EaiConverter.Builder
 {
     using System;
@@ -14,10 +17,12 @@ namespace EaiConverter.Builder
     public class CallProcessActivityBuilder : AbstractActivityBuilder
     {
         private readonly XslBuilder xslBuilder;
+        private readonly TibcoBWProcessLinqParser parser;
 
-        public CallProcessActivityBuilder(XslBuilder xslBuilder)
+        public CallProcessActivityBuilder(XslBuilder xslBuilder, TibcoBWProcessLinqParser parser)
         {
             this.xslBuilder = xslBuilder;
+            this.parser = parser;
         }
 
 		public override List<CodeNamespaceImport> GenerateImports(Activity activity)
@@ -98,8 +103,7 @@ namespace EaiConverter.Builder
 
             var parameters = GenerateParameters(callProcessActivity);
 
-            // TODO : WARNING not sure the start method ProcessName is indeed START
-            var methodInvocation = new CodeMethodInvokeExpression(processToCallReference, "Start", parameters);
+            var methodInvocation = new CodeMethodInvokeExpression(processToCallReference, GetCalledProcess(activity).StartActivity.Name, parameters);
 
             var code = new CodeMethodReturnStatement(methodInvocation);
 
@@ -110,26 +114,38 @@ namespace EaiConverter.Builder
             return activityMethod;
         }
 
+
+        public override string GetReturnType(Activity activity)
+        {
+            var tibcoProcessToCall = GetCalledProcess(activity);
+            if (tibcoProcessToCall.EndActivity.Parameters != null && tibcoProcessToCall.EndActivity.Parameters.Count > 0)
+            {
+                return tibcoProcessToCall.EndActivity.Parameters[0].Type;
+            }
+            return CSharpTypeConstant.SystemVoid;
+        }
+
+        private TibcoBWProcess GetCalledProcess(Activity activity)
+        {
+            var processName = ((CallProcessActivity)activity).ProcessName;
+            var projectDirectory = ConfigurationApp.GetProperty(MainClass.ProjectDirectory);
+            var tibcoProcessToCall = this.parser.Parse(projectDirectory + processName);
+            return tibcoProcessToCall;
+        }
+
         private static bool IsTheProcessInputRequiresAnImport(CallProcessActivity callProcessActivity)
         {
             return callProcessActivity.InputBindings != null && callProcessActivity.InputBindings.Count() != 0 && String.IsNullOrEmpty(((XElement)callProcessActivity.InputBindings.First()).Name.Namespace.ToString());
         }
 
         private static CodeTypeReference GetServiceFieldType(CallProcessActivity callProcessActivity)
-		{
-            return new CodeTypeReference(TargetAppNameSpaceService.myAppName() + "." + callProcessActivity.TibcoProcessToCall.ShortNameSpace + ".I" + VariableHelper.ToClassName(callProcessActivity.TibcoProcessToCall.ProcessName));
-		}
-
-		private static string GetServiceFieldName(CallProcessActivity callProcessActivity)
-		{
-			return VariableHelper.ToVariableName(callProcessActivity.TibcoProcessToCall.ProcessName);
-		}
-
-        public override string GetReturnType(Activity activity)
         {
-            // TODO VC : parse the target process to get its return type
-            return CSharpTypeConstant.SystemObject;
+            return new CodeTypeReference(TargetAppNameSpaceService.myAppName() + "." + callProcessActivity.TibcoProcessToCall.ShortNameSpace + ".I" + VariableHelper.ToClassName(callProcessActivity.TibcoProcessToCall.ProcessName));
         }
 
+        private static string GetServiceFieldName(CallProcessActivity callProcessActivity)
+        {
+            return VariableHelper.ToVariableName(callProcessActivity.TibcoProcessToCall.ProcessName);
+        }
     }
 }

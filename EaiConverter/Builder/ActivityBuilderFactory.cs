@@ -73,7 +73,7 @@ namespace EaiConverter.Builder
             }
             else if (activityType == ActivityType.callProcessActivityType)
             {
-                return new CallProcessActivityBuilder(this.xslBuilder);
+                return new CallProcessActivityBuilder(this.xslBuilder, new TibcoBWProcessLinqParser());
             }
 			else if (activityType == ActivityType.writeToLogActivityType)
             {

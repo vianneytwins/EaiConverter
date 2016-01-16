@@ -1,4 +1,6 @@
-﻿namespace EaiConverter.Test.Builder
+﻿using EaiConverter.Parser;
+
+namespace EaiConverter.Test.Builder
 {
     using System.Collections.Generic;
     using System.Xml.Linq;
@@ -18,7 +20,7 @@
         [SetUp]
         public void SetUp()
         {
-            this.CallProcessActivityBuilder = new CallProcessActivityBuilder(new XslBuilder(new XpathBuilder()));
+            this.CallProcessActivityBuilder = new CallProcessActivityBuilder(new XslBuilder(new XpathBuilder()), new OverideTibcoBWProcessLinqParser());
             this.activity = new CallProcessActivity("My Call Process Activity", ActivityType.callProcessActivityType);
             this.activity.ProcessName = "/Process/DAI/PNO/process.To.Call.process";
             var xml =
@@ -112,15 +114,16 @@ return this.processToCall.Start(xmlString);
                 }
             };
 
-
-            var expected = @"System.String xmlString;
-xmlString = ""TestString"";
-
-return this.processToCall.Start(xmlString);
-";
             var executeQueryMethod = this.CallProcessActivityBuilder.GenerateMethods(activity, new Dictionary<string, string> { { "start_sqlParams", "start_sqlParams" }, { "Lookup_Strategy", "Lookup_Strategy" } })[0];
             
             Assert.AreEqual(2, executeQueryMethod.Parameters.Count);
+        }
+
+        [Test]
+        public void Should_Return_Called_Process_return_type()
+        {
+            var expected = "MyType";
+            Assert.AreEqual(expected, this.CallProcessActivityBuilder.GetReturnType(this.activity));
         }
     }
 }

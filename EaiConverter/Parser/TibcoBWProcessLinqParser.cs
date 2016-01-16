@@ -19,7 +19,7 @@
             this.activityParserFactory = new ActivityParserFactory();
         }
 
-        public TibcoBWProcess Parse(string filePath)
+        public virtual TibcoBWProcess Parse(string filePath)
 		{
 			XElement allFileElement = XElement.Load(filePath);
 			return this.Parse(allFileElement);

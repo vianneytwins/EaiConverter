@@ -110,6 +110,7 @@
     <Compile Include="Builder\GetSharedVariableActivityBuilderTest.cs" />
     <Compile Include="Builder\XslSyntaxBuilderTest .cs" />
     <Compile Include="Builder\ModuleBuilderTest.cs" />
+    <Compile Include="Builder\OverrideTibcoBWProcessLinqParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ressources\Account.xsd" />
