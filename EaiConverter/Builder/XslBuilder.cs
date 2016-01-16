@@ -164,7 +164,7 @@ namespace EaiConverter.Builder
                         else
                         {
                             codeStatements.Append(this.tab);
-                            var nextParentName = parent + "." + VariableHelper.ToSafeType(parent, element.Name.LocalName);
+                            var nextParentName = parent + "." + element.Name.LocalName;
                             codeStatements.Append(this.Build(element.Nodes(), nextParentName));
                         }
                     }
@@ -345,7 +345,7 @@ namespace EaiConverter.Builder
                 return VariableHelper.ToSafeType(elementTypes[0]);
             }
             
-            return parent + "." + VariableHelper.ToSafeType(parent, elementTypes[0]);
+            return parent + "." + elementTypes[0];
         }
 
         public bool IsAListElement(XElement inputElement, IEnumerable<XNode> inputNodes)

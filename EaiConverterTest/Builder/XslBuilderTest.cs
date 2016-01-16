@@ -525,7 +525,7 @@ tempparam1.name = ""testvalue1"";
 tempparamList.Add(tempparam1);
 logInfoParam tempparam2 = new logInfoParam();
 tempparam2.name = ""testvalue2"";
-tempparamList.Add(tempparam2);;
+tempparamList.Add(tempparam2);
 logInfo.param = tempparamList.ToArray();
 
 ".RemoveWindowsReturnLineChar(), generateCode.ToString());

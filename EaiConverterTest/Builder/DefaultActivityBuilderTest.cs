@@ -25,15 +25,9 @@ namespace EaiConverter.Test.Builder
         [Test]
         public void Should_Log_Activity_Start()
         {
-<<<<<<< Upstream, based on origin/master
             var logCode = defaultBuilder.GenerateMethods(this.activity, new Dictionary<string, string>());
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(logCode[0].Statements);
             Assert.AreEqual("this.logger.Info(\"Start Activity: test_Activity of type: " + ActivityType.NotHandleYet + "\");\nthis.test_Activity.Execute();\n", generatedCode);
-=======
-            var logCode = defaultBuilder.GenerateMethod(activity, new Dictionary<string, string>());
-            var generatedCode = TestCodeGeneratorUtils.GenerateCode(logCode.Statements);
-            Assert.AreEqual("this.logger.Info(\"Start Activity: test_Activity of type: "+ActivityType.NotHandleYet+"\");\nthis.test_Activity.Execute();\n", generatedCode);
->>>>>>> f4d0958 fix defaultActivity builder unit test
         }
     }
 }
