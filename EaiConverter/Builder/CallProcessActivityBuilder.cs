@@ -105,9 +105,15 @@ namespace EaiConverter.Builder
 
             var methodInvocation = new CodeMethodInvokeExpression(processToCallReference, GetCalledProcess(activity).StartActivity.Name, parameters);
 
-            var code = new CodeMethodReturnStatement(methodInvocation);
-
-            invocationCodeCollection.Add(code);
+            if (this.GetReturnType(activity) == CSharpTypeConstant.SystemVoid)
+            {
+                invocationCodeCollection.Add(methodInvocation);
+            }
+            else
+            {
+                var code = new CodeMethodReturnStatement(methodInvocation);
+                invocationCodeCollection.Add(code);
+            }
 
             activityMethod[0].Statements.AddRange(invocationCodeCollection);
 
@@ -117,7 +123,7 @@ namespace EaiConverter.Builder
 
         public override string GetReturnType(Activity activity)
         {
-            var tibcoProcessToCall = GetCalledProcess(activity);
+            var tibcoProcessToCall = this.GetCalledProcess(activity);
             if (tibcoProcessToCall.EndActivity.Parameters != null && tibcoProcessToCall.EndActivity.Parameters.Count > 0)
             {
                 return tibcoProcessToCall.EndActivity.Parameters[0].Type;

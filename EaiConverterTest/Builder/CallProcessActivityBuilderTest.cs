@@ -48,7 +48,7 @@ namespace EaiConverter.Test.Builder
             var expected = @"System.String xmlString;
 xmlString = ""TestString"";
 
-return this.processToCall.Start(xmlString);
+return this.processToCall.start(xmlString);
 ";
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.CallProcessActivityBuilder.GenerateMethods(this.activity, new Dictionary<string, string>())[0]);
             Assert.IsTrue(generatedCode.EndsWith(expected));
@@ -125,6 +125,18 @@ return this.processToCall.Start(xmlString);
             var expected = "MyType";
             Assert.AreEqual(expected, this.CallProcessActivityBuilder.GetReturnType(this.activity));
         }
+    }
+
+    public class OverideTibcoBWProcessLinqParser : TibcoBWProcessLinqParser 
+    {
+        public override TibcoBWProcess Parse(string filePath)
+        {
+            return new TibcoBWProcess("tata")
+                       {
+                           StartActivity = new Activity("start",ActivityType.startType),
+                           EndActivity = new Activity("End",ActivityType.endType){Parameters = new List<ClassParameter>{new ClassParameter(){Type = "MyType", Name = "myEndVar"}}}
+                       };
+        } 
     }
 }
 
