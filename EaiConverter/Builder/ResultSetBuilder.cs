@@ -16,11 +16,12 @@ namespace EaiConverter.Builder
             var resultSetNameSpace = new CodeNamespace(TargetAppNameSpaceService.domainContractNamespaceName());
             resultSetNameSpace.Imports.AddRange(this.GenerateImport(jdbcQueryActivity));
 
-            var resultSetClass = new CodeTypeDeclaration();
-            resultSetClass.IsClass = true;
-            resultSetClass.TypeAttributes = TypeAttributes.Public;
-
-            resultSetClass.Name = VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet";
+            var resultSetClass = new CodeTypeDeclaration
+                                     {
+                                         IsClass = true,
+                                         TypeAttributes = TypeAttributes.Public,
+                                         Name = VariableHelper.ToClassName(jdbcQueryActivity.ClassName)
+                                     };
 
             resultSetClass.Members.AddRange(this.GenererateProperties(jdbcQueryActivity));
 
@@ -31,7 +32,8 @@ namespace EaiConverter.Builder
 
         public CodeNamespaceImport[] GenerateImport(JdbcQueryActivity jdbcQueryActivity)
         {
-            return new CodeNamespaceImport[1] {
+            return new[]
+            {
                 new CodeNamespaceImport ("System")
             };
         }

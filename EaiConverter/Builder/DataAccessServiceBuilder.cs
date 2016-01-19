@@ -138,11 +138,11 @@
             {
                 if (ActivityType.jdbcCallActivityType != jdbcQueryActivity.Type)
                 {
-                    method.ReturnType = new CodeTypeReference("List<" + VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet>");
+                    method.ReturnType = new CodeTypeReference("List<" + VariableHelper.ToClassName(jdbcQueryActivity.ClassName + ">"));
                 }
                 else
                 {
-                    method.ReturnType = new CodeTypeReference(VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet");
+                    method.ReturnType = new CodeTypeReference(VariableHelper.ToClassName(jdbcQueryActivity.ClassName));
                 }
             }
             else

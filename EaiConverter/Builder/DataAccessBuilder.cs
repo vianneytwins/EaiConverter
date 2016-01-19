@@ -134,7 +134,7 @@
             }
             else
             {
-                sb.AppendLine(string.Format("return {0} <{1}>(", dbQuery, VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet"));
+                sb.AppendLine(string.Format("return {0} <{1}>(", dbQuery, VariableHelper.ToClassName(jdbcQueryActivity.ClassName) ));
             }
             tabulation.Increment();
             sb.Append(string.Format("{0}{1}", tabulation, SqlQueryStatement));

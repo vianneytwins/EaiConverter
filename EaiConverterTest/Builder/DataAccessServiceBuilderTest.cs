@@ -55,7 +55,7 @@ namespace EaiConverter.Test.Builder
 
 		[Test]
 		public void Should_Return_queryMethod_return_When_activity_type_is_JDBCXXXactivity_And_output_paramnotNull(){
-			var expected = "List<TestJbdcQueryActivityResultSet>";
+			var expected = "List<TestJbdcQueryActivity>";
 			this.jdbcQueryActivity.QueryOutputStatementParameters = new List<ClassParameter>
 			{
 				new ClassParameter {Name = "idBBUnique1", Type = "VARCHAR"},
@@ -71,7 +71,7 @@ namespace EaiConverter.Test.Builder
 
 		[Test]
 		public void Should_Return_queryMethod_return_When_activity_type_is_JDBCCallactivity_And_output_paramnotNull(){
-			var expected = "TestJbdcQueryActivityResultSet";
+			var expected = "TestJbdcQueryActivity";
 			this.jdbcQueryActivity.QueryOutputStatementParameters = new List<ClassParameter>
 			{
 				new ClassParameter {Name = "idBBUnique1", Type = "VARCHAR"},

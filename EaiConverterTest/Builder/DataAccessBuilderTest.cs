@@ -73,7 +73,7 @@ db.Query(
 		public void Should_Return_string_body_Statement_Of_executeQuery_Method_When_ActivityType_is_JdbcCall_return_type_is_NotVoid_with_No_Param(){
 			var expected = @"using (IDataAccess db = this.dataAccessFactory.CreateAccess())
 {
-return db.Query <TestJbdcQueryActivityResultSet>(
+return db.Query <TestJbdcQueryActivity>(
     sqlQueryStatement).FirstOrDefault();
 }
 
@@ -93,7 +93,7 @@ return db.Query <TestJbdcQueryActivityResultSet>(
 		public void Should_Return_string_body_Statement_Of_executeQuery_Method_When_ActivityType_is_JdbcxxxQuery_return_type_is_NotVoid_with_No_Param(){
 			var expected = @"using (IDataAccess db = this.dataAccessFactory.CreateAccess())
 {
-return db.Query <TestJbdcQueryActivityResultSet>(
+return db.Query <TestJbdcQueryActivity>(
     sqlQueryStatement).ToList();
 }
 

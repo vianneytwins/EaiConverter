@@ -32,12 +32,12 @@
             expression = expression.Replace(".output.GetProcessInstanceExceptions", string.Empty);
 
             // for JbdcQueryActivity
-            expression = expression.Replace(".resultSet.Record[", "ResultSet[");
-            expression = expression.Replace(".resultSet.Record.nb", "ResultSet.Count()");
-            expression = expression.Replace(".resultSet.Record.Length", "ResultSet.Count()");
+            expression = expression.Replace(".resultSet.Record[", "[");
+            expression = expression.Replace(".resultSet.Record.nb", ".Count()");
+            expression = expression.Replace(".resultSet.Record.Length", ".Count()");
             expression = expression.Replace(".Record", string.Empty);
-            expression = expression.Replace(".resultSet.outputSet", "ResultSet");
-            expression = expression.Replace(".resultSet", "ResultSet");
+            expression = expression.Replace(".resultSet.outputSet", "");
+            expression = expression.Replace(".resultSet", "");
 
             // for java activity ouput
             expression = expression.Replace("javaCodeActivityOutput.", string.Empty);

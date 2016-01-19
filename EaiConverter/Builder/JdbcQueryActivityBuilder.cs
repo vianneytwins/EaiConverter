@@ -4,7 +4,6 @@ namespace EaiConverter.Builder
 {
     using System.CodeDom;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Xml.Linq;
 
     using EaiConverter.Builder.Utils;
@@ -31,7 +30,8 @@ namespace EaiConverter.Builder
             this.resultSetBuilder = resultSetBuilder;
         }
 
-        public string ServiceToInvoke {
+        public string ServiceToInvoke
+        {
             get
             {
                 return this.serviceToInvoke;
@@ -296,10 +296,10 @@ namespace EaiConverter.Builder
             {   
                 if (ActivityType.jdbcCallActivityType != jdbcQueryActivity.Type)
                 {
-                    return "List<" + VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet>";
+                    return "List<" + VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + ">";
                 }
 
-                return VariableHelper.ToClassName(jdbcQueryActivity.ClassName) + "ResultSet";
+                return VariableHelper.ToClassName(jdbcQueryActivity.ClassName);
             }
             
             return CSharpTypeConstant.SystemVoid;
@@ -307,7 +307,7 @@ namespace EaiConverter.Builder
 
         protected override string GetReturnVariableName(Activity activity)
         {
-            return VariableHelper.ToVariableName(activity.Name) + "ResultSet";
+            return VariableHelper.ToVariableName(activity.Name);
         }
     }
 }

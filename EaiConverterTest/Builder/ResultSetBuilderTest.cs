@@ -61,7 +61,7 @@ namespace EaiConverter.Test.Builder
     using System;
     
     
-    public class CurrencyResultSet
+    public class Currency
     {
         
         public System.String FirstOutput { get; set; }
