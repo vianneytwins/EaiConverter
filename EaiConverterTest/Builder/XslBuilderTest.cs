@@ -100,8 +100,8 @@ FundDate = TibcoXslHelper.ParseDateTime(""MMM dd yyyy"", mystuff.do);
             var generateCode = TestCodeGeneratorUtils.GenerateCode(this.xslBuilder.Build(doc.Nodes()));
 
             Assert.AreEqual(@"System.String FundName;
-FundName = ""testvalue"";
 System.String AdminID;
+FundName = ""testvalue"";
 AdminID = ""EVL"";
 
 ",
@@ -128,11 +128,13 @@ AdminID = ""EVL"";
             var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build (doc.Nodes()));
 
             Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
+
+
 sqlParams.FundName = ""testvalue"";
 sqlParams.AdminID = ""EVL"";
 
-",
- generateCode.ToString());
+".RemoveWindowsReturnLineChar(),
+ generateCode);
         }
 
 
@@ -158,6 +160,8 @@ sqlParams.AdminID = ""EVL"";
 
             Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
 sqlParams.FundCompany = new FundCompany();
+
+
 sqlParams.FundCompany.FundName = ""testvalue"";
 sqlParams.AdminID = ""EVL"";
 
@@ -181,7 +185,7 @@ sqlParams.AdminID = ""EVL"";
             var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual("if (true)\n{\n    System.String FundName;\n    FundName = \"testvalue\";\n}\n\n", generateCode);
+            Assert.AreEqual("System.String FundName;\nif (true)\n{\n    FundName = \"testvalue\";\n}\n\n".RemoveWindowsReturnLineChar(), generateCode);
         }
 
 	    [Test]
@@ -235,7 +239,7 @@ sqlParams.AdminID = ""EVL"";
             var codeStatement = this.xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual("if (true)\n{\n    System.String FundName;\n    FundName = \"testvalue1\";\n}\nelse\n{\n    System.String FundName;\n    FundName = \"testvalue2\";\n}\n\n", generateCode);
+            Assert.AreEqual("System.String FundName;\nif (true)\n{\n    FundName = \"testvalue1\";\n}\nelse\n{\n    FundName = \"testvalue2\";\n}\n\n", generateCode);
         }
 
         [Test]
@@ -257,7 +261,7 @@ sqlParams.AdminID = ""EVL"";
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
             Assert.AreEqual (
-                "FundCompany FundCompany = new FundCompany();\nFundCompany.FundNames = new List<System.String>();\nforeach (var item in items)\n{\n    System.String FundName;\n    FundName = \"testvalue1\";\n    FundCompany.FundNames.Add(FundName);\n}\n\n", generateCode);
+                "FundCompany FundCompany = new FundCompany();\nSystem.String FundName;\nFundCompany.FundNames = new List<System.String>();\nforeach (var item in items)\n{\n    FundName = \"testvalue1\";\n    FundCompany.FundNames.Add(FundName);\n}\n\n", generateCode);
         }
 
 
@@ -328,6 +332,7 @@ sqlParams.AdminID = ""EVL"";
             var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build (doc.Nodes()));
 
             Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
+
 sqlParams.FundName = ""testvalue"";
 sqlParams.AdminID = null;
 
@@ -355,9 +360,9 @@ sqlParams.AdminID = null;
             Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
 List<System.String> tempparameterList = new List<System.String>();
 System.String tempparameter1;
+System.String tempparameter2;
 tempparameter1 = ""testvalue1"";
 tempparameterList.Add(tempparameter1);
-System.String tempparameter2;
 tempparameter2 = ""testvalue2"";
 tempparameterList.Add(tempparameter2);
 sqlParams.parameter = tempparameterList.ToArray();
@@ -390,9 +395,11 @@ sqlParams.parameter = tempparameterList.ToArray();
             Assert.AreEqual (@"sqlParams sqlParams = new sqlParams();
 List<parameter> tempparameterList = new List<parameter>();
 parameter tempparameter1 = new parameter();
+
+parameter tempparameter2 = new parameter();
+
 tempparameter1.subParam = ""testvalue1"";
 tempparameterList.Add(tempparameter1);
-parameter tempparameter2 = new parameter();
 tempparameter2.subParam = ""testvalue2"";
 tempparameterList.Add(tempparameter2);
 sqlParams.parameter = tempparameterList.ToArray();
@@ -418,7 +425,7 @@ sqlParams.parameter = tempparameterList.ToArray();
 
 			var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build(packageName, doc.Nodes()));
 
-            Assert.AreEqual("MyPackage.sqlParams sqlParams = new MyPackage.sqlParams();\nsqlParams.parameter = \"testvalue1\";\n\n", generateCode.ToString());
+            Assert.AreEqual("MyPackage.sqlParams sqlParams = new MyPackage.sqlParams();\n\nsqlParams.parameter = \"testvalue1\";\n\n", generateCode.ToString());
 		}
 
 		[Test]
@@ -438,7 +445,7 @@ sqlParams.parameter = tempparameterList.ToArray();
 
 			var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build(packageName, doc.Nodes()));
 
-            Assert.AreEqual ("MyPackage.sqlParams sqlParams = new MyPackage.sqlParams();\nsqlParams.parameter = \"testvalue1\";\n\n", generateCode.ToString());
+            Assert.AreEqual("MyPackage.sqlParams sqlParams = new MyPackage.sqlParams();\n\nsqlParams.parameter = \"testvalue1\";\n\n", generateCode.ToString());
 		}
 
         [Test]
@@ -458,7 +465,7 @@ sqlParams.parameter = tempparameterList.ToArray();
 
             var generateCode = TestCodeGeneratorUtils.GenerateCode(xslBuilder.Build(packageName, doc.Nodes()));
 
-            Assert.AreEqual("MyPackage.logInfo logInfo = new MyPackage.logInfo();\nlogInfo.param = \"testvalue1\";\n\n", generateCode.ToString());
+            Assert.AreEqual("MyPackage.logInfo logInfo = new MyPackage.logInfo();\n\nlogInfo.param = \"testvalue1\";\n\n", generateCode.ToString().RemoveWindowsReturnLineChar());
         }
 
         [Test]
@@ -484,14 +491,14 @@ sqlParams.parameter = tempparameterList.ToArray();
             Assert.AreEqual(@"MyPackage.logInfo logInfo = new MyPackage.logInfo();
 List<System.String> tempparamList = new List<System.String>();
 System.String tempparam1;
+System.String tempparam2;
 tempparam1 = ""testvalue1"";
 tempparamList.Add(tempparam1);
-System.String tempparam2;
 tempparam2 = ""testvalue2"";
 tempparamList.Add(tempparam2);
 logInfo.param = tempparamList.ToArray();
 
-".RemoveWindowsReturnLineChar(), generateCode.ToString());
+".RemoveWindowsReturnLineChar(), generateCode.ToString().RemoveWindowsReturnLineChar());
         }
 
         [Test]
@@ -521,9 +528,11 @@ logInfo.param = tempparamList.ToArray();
             Assert.AreEqual(@"MyPackage.logInfo logInfo = new MyPackage.logInfo();
 List<logInfoParam> tempparamList = new List<logInfoParam>();
 logInfoParam tempparam1 = new logInfoParam();
+
+logInfoParam tempparam2 = new logInfoParam();
+
 tempparam1.name = ""testvalue1"";
 tempparamList.Add(tempparam1);
-logInfoParam tempparam2 = new logInfoParam();
 tempparam2.name = ""testvalue2"";
 tempparamList.Add(tempparam2);
 logInfo.param = tempparamList.ToArray();
@@ -567,7 +576,7 @@ logInfo.param = tempparamList.ToArray();
 			var codeStatement = xslBuilder.Build (doc.Nodes());
 
 			string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual ("logInfo logInfo = new logInfo();\nlogInfo.FundName = \"testvalue\";\n\n", generateCode);
+            Assert.AreEqual ("logInfo logInfo = new logInfo();\n\nlogInfo.FundName = \"testvalue\";\n\n", generateCode);
 		}
 
         [Test]
@@ -651,7 +660,7 @@ logInfo.param = tempparamList.ToArray();
             var codeStatement = xslBuilder.Build(doc.Nodes());
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
-            Assert.AreEqual("logInfo logInfo = new logInfo();\nlogInfo.FundStruct = new FundStruct();\nlogInfo.FundStruct.FundName = \"testvalue\";\n\n", generateCode);
+            Assert.AreEqual("logInfo logInfo = new logInfo();\nlogInfo.FundStruct = new FundStruct();\n\nlogInfo.FundStruct.FundName = \"testvalue\";\n\n", generateCode);
         }
         
         [Test]
@@ -677,6 +686,7 @@ logInfo.param = tempparamList.ToArray();
 
             string generateCode = TestCodeGeneratorUtils.GenerateCode(codeStatement);
             Assert.AreEqual(@"inputs inputs = new inputs();
+
 System.String @params = ""myvalue"";
 inputs.Message = TibcoXslHelper.Concat(start_logInfo.message, "" "", @params);
 

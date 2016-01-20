@@ -290,12 +290,13 @@ using System.Runtime.InteropServices;
         public static string TibcoXslHelper_cs = "namespace " + TargetAppNameSpaceService.myAppName() + @".Tools.Xml
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
     using System.Xml.Serialization;
 
-    public class TibcoXslHelper
+    public static class TibcoXslHelper
     {
         public static DateTime ParseDateTime(string format, string inputDate)
         {
@@ -323,7 +324,17 @@ using System.Runtime.InteropServices;
         {
             return string.Concat(list);
         }
-            
+
+        public static int Count(IList myCollection)
+        {
+            return myCollection.Count;
+        }
+
+        public static bool StartsWith(string myString, string prefixToCheck)
+        {
+            return myString.StartsWith(prefixToCheck);
+        }
+    
         public static bool Contains(string value, string inputString)
         {
             return inputString.Contains(value);
@@ -464,7 +475,7 @@ using System.Runtime.InteropServices;
 
         // return a string, usage sample : tib:string-round-fraction($Start/root/inputdata, 2)
         // for exemple tib:string-round-fraction(round(1.100), 2) Output as 1.00
-        public string StringRoundFraction(string myNumber, int nbDecimal)
+        public static string StringRoundFraction(string myNumber, int nbDecimal)
         {
             return Math.Round(decimal.Parse(myNumber), nbDecimal).ToString();
         }

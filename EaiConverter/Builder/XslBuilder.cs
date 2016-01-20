@@ -15,10 +15,11 @@ namespace EaiConverter.Builder
 
     public class XslBuilder
     {
-
         private IXpathBuilder xpathBuilder;
         
         private Tab tab = new Tab();
+
+        private Dictionary<string, string> variableDecleration;
 
         public XslBuilder(IXpathBuilder xpathBuilder)
         {
@@ -32,11 +33,12 @@ namespace EaiConverter.Builder
 
         public CodeStatementCollection Build(string packageName, IEnumerable<XNode> inputNodes)
         {
-            tab = new Tab();
+            this.tab = new Tab();
+            this.variableDecleration = new Dictionary<string, string>();
             var newPackageName = FormatCorrectlyPackageName(packageName);
             var codeInStringList = this.Build(newPackageName, inputNodes, null);
             
-            string codeinString = codeInStringList.ToString();
+            string codeinString = this.GenerateVariableDeclaration() + codeInStringList;
             // TODO : remove this ugly fix !!!
             codeinString = MyUglyModification(codeinString);
 
@@ -46,11 +48,30 @@ namespace EaiConverter.Builder
             return codeStatements;
         }
 
+        public void AddVariableDecleration(string variableName, string variableCode)
+        {
+            if (!this.variableDecleration.ContainsKey(variableName))
+            {
+                this.variableDecleration.Add(variableName, variableCode);
+            }
+        }
+
+        public string GenerateVariableDeclaration()
+        {
+            var sb = new StringBuilder();
+            foreach (var value in this.variableDecleration.Values)
+            {
+                sb.AppendLine(value);
+            }
+            return sb.ToString();
+        }
+
         private static string MyUglyModification(string codeinString)
         {
             codeinString = codeinString.Replace("NTMMessage.NTMTrade.", "((NTMTrade)NTMMessage.Items[0]).");
             codeinString = codeinString.Replace("NTMMessage.NTMTrades", "NTMMessage.Items");
             codeinString = codeinString.Replace("NTMMessage.NTMTrade", "NTMMessage.Items[0]");
+            codeinString = codeinString.Replace(".Resultsets.ResultSet1[1]1[1]", string.Empty);
             return codeinString;
         }
 
@@ -92,24 +113,21 @@ namespace EaiConverter.Builder
 
                         if (!hasTheListBeenInitialised)
                         {
-                            //if (string.IsNullOrEmpty(parent))
-                            //{
-                            codeStatements.Append(this.tab + "List<" + returnType + "> ");
-                            //}
-
-                            codeStatements.Append("temp" + element.Name.LocalName + "List = new List<" + returnType + ">();\n");
+                            // codeStatements.Append(this.tab + "List<" + returnType + "> temp" + element.Name.LocalName + "List = new List<" + returnType + ">();\n");
+                            this.AddVariableDecleration("temp" + element.Name.LocalName + "List", this.tab + "List<" + returnType + "> temp" + element.Name.LocalName + "List = new List<" + returnType + ">();");
                             listElements.Add(element.Name.LocalName, 1);
                         }
                         var counter = listElements[element.Name.LocalName];
+                        var localVar = "temp" + element.Name.LocalName + counter;
                         if (!IsBasicReturnType(returnType))
                         {
-                            codeStatements.Append(
-                                returnType + " temp" + element.Name.LocalName + counter + " = new " + returnType + "();\n");
+                            //codeStatements.Append(returnType + " " + localVar + " = new " + returnType + "();\n");
+                            this.AddVariableDecleration(localVar, returnType + " " + localVar + " = new " + returnType + "();");
                         }
                         else
                         {
-                            codeStatements.Append(
-                                returnType + " temp" + element.Name.LocalName + counter + ";\n");
+                            //codeStatements.Append(returnType + " " + localVar + ";\n");
+                            this.AddVariableDecleration(localVar, returnType + " " + localVar + ";");
                         }
                         
                         codeStatements.Append(this.Build(element.Nodes(), "temp" + element.Name.LocalName + counter));
@@ -134,28 +152,9 @@ namespace EaiConverter.Builder
                     else
                     {
                         // intialise the variable first
-                        if (string.IsNullOrEmpty(parent))
-                        {
-                            codeStatements.Append(this.tab + packageName + returnType + " ");
-                            if (!IsBasicReturnType(returnType))
-                            {
-                                codeStatements.Append(
-                                    variableReference + " = new " + packageName + returnType + "();\n");
-                            }
-                            else
-                            {
-                                codeStatements.Append(variableReference + ";\n");
-                            }
-                        }
-                        else
-                        {
-                            if (!IsBasicReturnType(returnType))
-                            {
-                                codeStatements.Append(
-                                    variableReference + " = new " + packageName + returnType + "();\n");
-                            }
-                        }
+                        this.InitialiseVariable(packageName, parent, returnType, variableReference);
 
+                        // add the value
                         if (string.IsNullOrEmpty(parent))
                         {
                             codeStatements.Append(this.tab);
@@ -228,6 +227,37 @@ namespace EaiConverter.Builder
             }
 
             return codeStatements;
+        }
+
+        private void InitialiseVariable(
+            string packageName,
+            string parent,
+            string returnType,
+            string variableReference)
+        {
+            var codeStatements = new StringBuilder();
+
+            if (string.IsNullOrEmpty(parent))
+            {
+                codeStatements.Append(packageName + returnType + " ");
+                if (!IsBasicReturnType(returnType))
+                {
+                    codeStatements.Append(variableReference + " = new " + packageName + returnType + "();");
+                }
+                else
+                {
+                    codeStatements.Append(variableReference + ";");
+                }
+            }
+            else
+            {
+                if (!IsBasicReturnType(returnType))
+                {
+                    codeStatements.Append(variableReference + " = new " + packageName + returnType + "();");
+                }
+            }
+
+            this.AddVariableDecleration(variableReference,codeStatements.ToString());
         }
 
         private string BuildAttribute(XElement element, string parent)

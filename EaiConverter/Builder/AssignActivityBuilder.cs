@@ -25,8 +25,8 @@
             var invocationCodeCollection = new CodeStatementCollection();
             invocationCodeCollection.AddRange(this.xslBuilder.Build(assignActivity.InputBindings));
 
-            var variableToAssignReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToVariableName(assignActivity.VariableName));
-            var codeInvocation = new CodeAssignStatement(variableToAssignReference, new CodeVariableReferenceExpression(VariableHelper.ToVariableName(assignActivity.VariableName)));
+            var variableToAssignReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), VariableHelper.ToSafeType(assignActivity.VariableName));
+            var codeInvocation = new CodeAssignStatement(variableToAssignReference, new CodeVariableReferenceExpression(VariableHelper.ToSafeType(assignActivity.VariableName)));
             invocationCodeCollection.Add(codeInvocation);
 
             activityMethod[0].Statements.AddRange(invocationCodeCollection);

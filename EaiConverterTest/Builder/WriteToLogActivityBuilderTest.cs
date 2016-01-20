@@ -47,8 +47,8 @@ namespace EaiConverter.Test.Builder
         {
 			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.pe.core.WriteToLogActivity"");
 System.String message;
-message = ""testvalue"";
 System.String msgCode;
+message = ""testvalue"";
 msgCode = ""EVL"";
 
 this.logger.Error(String.Format(""Message : {0}\nMessage code : {1} "", message, msgCode));

@@ -45,12 +45,13 @@
         {
             var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.mapper.MapperActivity"");
 EquityRecord EquityRecord = new EquityRecord();
+
 EquityRecord.xmlString = ""TestString"";
 
 return EquityRecord;
 ";
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.mapperActivityBuilder.GenerateMethods(this.activity, new Dictionary<string, string>())[0].Statements);
-            Assert.AreEqual(expected, generatedCode);
+            Assert.AreEqual(expected.RemoveWindowsReturnLineChar(), generatedCode.RemoveWindowsReturnLineChar());
         }
 
         [Test]
@@ -58,6 +59,7 @@ return EquityRecord;
         {
             var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.mapper.MapperActivity"");
 EquityRecord EquityRecord = new EquityRecord();
+
 EquityRecord.xmlString = ""TestString"";
 
 return EquityRecord;
@@ -79,12 +81,13 @@ return EquityRecord;
 
 			var expected = @"this.logger.Info(""Start Activity: My_Activity_Name of type: com.tibco.plugin.mapper.MapperActivity"");
 MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord EquityRecord = new MyApp.Mydomain.Service.Contract.My_Activity_Name.EquityRecord();
+
 EquityRecord.xmlString = ""TestString"";
 
 return EquityRecord;
 ";
             var generatedCode = TestCodeGeneratorUtils.GenerateCode(this.mapperActivityBuilder.GenerateMethods(this.activity, new Dictionary<string, string>())[0].Statements);
-			Assert.AreEqual(expected, generatedCode);
+			Assert.AreEqual(expected.RemoveWindowsReturnLineChar(), generatedCode.RemoveWindowsReturnLineChar());
 		}
 
 		[Test]

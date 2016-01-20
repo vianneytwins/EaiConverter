@@ -49,8 +49,8 @@
         {
             var expected = @"this.logger.Info(""Start Activity: My of type: com.tibco.pe.core.GenerateErrorActivity"");
 System.String message;
-message = ""testvalue"";
 System.String messageCode;
+message = ""testvalue"";
 messageCode = ""EVL"";
 
 throw new System.Exception(String.Format(""Message : {0}\nMessage code : {1} "", message, messageCode));

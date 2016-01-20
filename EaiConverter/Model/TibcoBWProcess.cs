@@ -62,7 +62,7 @@ namespace EaiConverter.Model
         {
             get
             {
-                return "I" + ProcessName;
+                return "I" + VariableHelper.ToClassName(this.ProcessName);
             }
         }
 

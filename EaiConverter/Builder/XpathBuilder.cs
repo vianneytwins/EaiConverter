@@ -81,12 +81,15 @@
             expression = expression.Replace("\nand ", " && ");
             expression = expression.Replace(" and\n", " && ");
             expression = expression.Replace("=", "==");
+            expression = expression.Replace("!==", "!=");
             return expression;
         }
 
         private static string ManageBooleanValues(string expression)
         {
+            expression = expression.Replace("'true()'", "true");
             expression = expression.Replace("true()", "true");
+            expression = expression.Replace("'false()'", "false");
             expression = expression.Replace("false()", "false");
             return expression;
         }
@@ -120,6 +123,9 @@
             expression = expression.Replace("substring(", "TibcoXslHelper.Substring(");
 
             expression = expression.Replace("round(", "TibcoXslHelper.Round(");
+
+            expression = expression.Replace("count(", "TibcoXslHelper.Count(");
+            expression = expression.Replace("starts-with(", "TibcoXslHelper.StartsWith(");
 
             expression = expression.Replace("not(", "!(");
 

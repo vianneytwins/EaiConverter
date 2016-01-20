@@ -74,7 +74,7 @@
 
         protected virtual string GetReturnVariableName(Activity activity)
         {
-            return activity.Name;
+            return VariableHelper.ToVariableName(activity.Name);
         }
 
         public virtual List<CodeMemberMethod> GenerateMethods(Activity activity, Dictionary<string, string> variables)

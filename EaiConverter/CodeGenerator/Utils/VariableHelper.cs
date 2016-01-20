@@ -70,10 +70,12 @@ namespace EaiConverter.CodeGenerator.Utils
         public static string ToSafeType(string parent, string variableNameToFormat)
         {
             var variableNameToLowerCase = RemoveSpecialChar(variableNameToFormat).ToLower();
-            if (variableNameToLowerCase == "interface"
+            if (parent != null && (variableNameToLowerCase == "interface"
                 || variableNameToLowerCase == "object"
                 || variableNameToLowerCase == "param"
-                || variableNameToLowerCase == "params")
+                || variableNameToLowerCase == "params"
+                || variableNameToLowerCase == "subtypeinfos"
+                || variableNameToLowerCase == "keys"))
             {
                 return parent + ToClassName(variableNameToFormat);
             }
@@ -84,7 +86,7 @@ namespace EaiConverter.CodeGenerator.Utils
                 return "a" + variableNameToFormat;
             }*/
 
-            return variableNameToFormat;
+            return ToSafeType(variableNameToFormat);
         }
 
 

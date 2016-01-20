@@ -324,6 +324,7 @@
             };
 
             var expected = @"MyApp.MyNamespace.myProcessTestInputOutputModel.EquityRecord EquityRecord = new MyApp.MyNamespace.myProcessTestInputOutputModel.EquityRecord();
+
 EquityRecord.xmlString = ""TestString"";
 
 return EquityRecord;
