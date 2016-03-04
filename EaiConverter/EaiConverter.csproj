@@ -49,6 +49,7 @@
     <Compile Include="Builder\TimerActivityBuilder.cs" />
     <Compile Include="Builder\Utils\XpathUtils.cs" />
     <Compile Include="FileFilter.cs" />
+    <Compile Include="FundPerformanceCommentService.cs" />
     <Compile Include="Model\EngineCommandActivity.cs" />
     <Compile Include="Model\TbwConfiguration.cs" />
     <Compile Include="Model\AdapterSchemaModel.cs" />
